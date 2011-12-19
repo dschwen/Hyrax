@@ -38,16 +38,17 @@ public:
   virtual Real computeQpResidual();
 
 protected:
-  Point _p;
   Real _value;
+// Maybe some other things here
 
 private: 
   VariableValue & _coupled_nucleation;
 
-  Elem _true_element;
-  Point _true_point;
+// Will need something like this
+//  Elem _true_element;
+//  Point _true_point;
+// Maybe some other things here
 
-// probably some other stuff here.
 };
 
 
