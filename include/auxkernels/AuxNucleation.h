@@ -24,6 +24,9 @@ class AuxNucleation;
 template<>
 InputParameters validParams<AuxNucleation>();
 
+/**
+ * returns a boolean: true if nucleation occured; false if it didn't.
+ */
 class AuxNucleation : public AuxKernel
 {
 public:
@@ -43,7 +46,5 @@ private:
   double _random_number;
   
 };
-
-// returns a boolean: true if nucleation occured; false if it didn't.
 
 #endif //AUXNUCLEATION_H

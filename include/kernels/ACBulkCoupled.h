@@ -18,9 +18,6 @@
 
 #include "ACBulk.h"
 
-/* This kernel couples the bulk Alan-Cahn equation term with order parameter eta to the conserved field 
-variable term from the Cahn-Hilliard equation (typically concentration)*/
-
 
 //Forward Declarations
 class ACBulkCoupled;
@@ -28,6 +25,10 @@ class ACBulkCoupled;
 template<>
 InputParameters validParams<ACBulkCoupled>();
 
+/**
+ * This kernel couples the bulk Alan-Cahn equation term with order parameter eta to the conserved field
+ * variable term from the Cahn-Hilliard equation (typically concentration)
+ */
 class ACBulkCoupled : public ACBulk
 {
 public:
