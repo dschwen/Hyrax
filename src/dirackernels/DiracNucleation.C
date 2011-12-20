@@ -7,11 +7,11 @@
 *  15 December 2011
 *
 *  This code inherits from DiracKernel in MOOSE
-*  
-*  This code handles the introduction of nuclei as delta functions for 
-*  the concurrent nucleation and growth algorithm first proposed by 
+*
+*  This code handles the introduction of nuclei as delta functions for
+*  the concurrent nucleation and growth algorithm first proposed by
 *  J.P. Simmons.
-*  
+*
 *************************************************************************/
 #include "DiracNucleation.h"
 
@@ -23,9 +23,9 @@ template<>
 InputParameters validParams<DiracNucleation>()
 {
   InputParameters params = validParams<DiracKernel>();
-  params.addRequiredParam<Real>("value", "The value of the point source");
   params.addRequiredCoupledVar("nucleation", "Auxiliary variable: nucleation or not");
 //  in input file, this should always be called "nucleation"
+  params.addRequiredParam<Real>("value", "The value of the point source");
   return params;
 }
 
@@ -39,23 +39,27 @@ DiracNucleation::DiracNucleation(const std::string & name, InputParameters param
 void
 DiracNucleation::addPoints()
 {
-//// search through field variable to find where it is true: is the following correct?
-//   for (_qp = 0; _qp < _qrule->n_points(); _qp++)
-//   {
-//     /* in this case, auxvariable nucleation consists of 0.0s and 2.0s, for true and false - 
-//     *   would use boolean but auxvariable will only return real.*/
-//     if (_coupled_nucleation[_qp] > 1.0) 
+  MeshBase::const_element_iterator       el     = _mesh.active_local_elements_begin();
+  const MeshBase::const_element_iterator end_el = _mesh.active_local_elements_end();
 
-//     {
-//     // pull out the element information -> how/what? into _true_element
-//     // pull out the point information -> how/what? into _true_point
-//     addPoint(_true_element, _true_point);
-//     }
-//   }
-}  
+  for ( ; el != end_el ; ++el)
+  {
+    const Elem* elem = *el;
+    _problem.prepare(elem, 0);
+    _problem.reinitElem(elem, 0);
+
+    for (unsigned int qp = 0; qp < _qrule->n_points(); qp++)
+      if (_coupled_nucleation[qp] > 0.0)
+      {
+//        std::cout << "###DEBUG AddPoints: " << _coupled_nucleation[_qp] << " at " << _qrule->qp(qp) << "\n";
+        addPoint(elem, _qrule->qp(qp));
+      }
+  }
+}
+
 
 // /* this came from ConstantPointSource, to set the position of the point for x,y,z dimensions;
-// *  it was in the constructor.  Should do something like this probably for setting my points 
+// *  it was in the constructor.  Should do something like this probably for setting my points
 // *  locations here, but up in addPoints().  */
 //  _p(0) = _point_param[0];
 
@@ -69,13 +73,19 @@ DiracNucleation::addPoints()
 //    }
 //  }
 
+//void
+//DerivedDirac::addPoints()
+//{
+
+
+
+
+//}
+
 Real
 DiracNucleation::computeQpResidual()
 {
-// need to figure out what the math is here. The below line came from ConstantPointSource
-//  return -_test[_i][_qp]*_value;
-
-  return 0.0;
+//  This is negative because it's a forcing function that has been brought over to the left side
+//  this needs to get changed.  actually, crap.  keep _value.
+  return -_test[_i][_qp]*_value;
 }
-
-

@@ -155,6 +155,17 @@
   [../]
 []
 
+[DiracKernels]
+  active = 'dirac'
+
+  [./dirac]
+    type = DiracNucleation
+    variable = n1 # Is this right?
+    nucleation = nucleation
+    value = 1.0
+  [../]
+[]
+
 [BCs]
 active = 'Periodic'
   [./Periodic]
@@ -202,7 +213,7 @@ active = 'Periodic'
   nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 
+  num_steps = 10
   dt = 0.03
  
   [./Adaptivity]

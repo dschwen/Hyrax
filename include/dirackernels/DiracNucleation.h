@@ -44,11 +44,8 @@ protected:
 private: 
   VariableValue & _coupled_nucleation;
 
-// Will need something like this
-//  Elem _true_element;
-//  Point _true_point;
-// Maybe some other things here
-
+  Elem *_true_element;
+  Point _true_point;
 };
 
 

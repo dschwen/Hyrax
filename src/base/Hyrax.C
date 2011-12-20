@@ -31,6 +31,7 @@
 #include "AuxSupersaturation.h"
 
 //Dirac Kernels
+#include "DiracNucleation.h"
 
 //Boundary Conditions
 
@@ -58,8 +59,13 @@ namespace Hyrax
     registerKernel(ACBulkCoupled);
 
     //Auxiliary Kernels
+    registerAux(AuxNucleation);
+    registerAux(AuxSupersaturation);
+    registerAux(AuxNucleationRate);
+    registerAux(AuxNucleationProbability);
 
     //Dirac Kernels
+    registerDiracKernel(DiracNucleation);
 
     //Boundary Conditions
 
