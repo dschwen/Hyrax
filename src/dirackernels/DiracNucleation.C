@@ -49,7 +49,7 @@ DiracNucleation::addPoints()
     _problem.reinitElem(elem, 0);
 
     for (unsigned int qp = 0; qp < _qrule->n_points(); qp++)
-      if (_coupled_nucleation[qp] > 0.0)
+      if (_coupled_nucleation[qp] > 0.0)  //CJP changed it to >0.0 for rapid nucleation.  This should be >1.0
       {
 //        std::cout << "###DEBUG AddPoints: " << _coupled_nucleation[_qp] << " at " << _qrule->qp(qp) << "\n";
         addPoint(elem, _qrule->qp(qp));

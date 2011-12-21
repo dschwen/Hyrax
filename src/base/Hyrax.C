@@ -43,6 +43,7 @@
 //Dampers
 
 //Executioners
+#include "TransientMultiAMR.h"
 
 //Post Processors
 
@@ -77,7 +78,8 @@ namespace Hyrax
     //Dampers
 
     //Executioners
-    
+    registerExecutioner(TransientMultiAMR);  
+  
     //Post Processors
 
     // Actions
