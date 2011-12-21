@@ -4,16 +4,14 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-*  14 December 2011
-*
-*  This code inherits from AuxKernel in MOOSE
-*  
-*  This code handles the supersaturation calculation in the concurrent
-*  nucleation and growth algorithm first proposed by J.P. Simmons.
-*  
 *************************************************************************/
 
 #include "AuxSupersaturation.h"
+
+/**
+ * AuxSupersaturation handles the supersaturation calculation (tyically C - C1) in the concurrent
+ * nucleation and growth algorithm first proposed by J.P. Simmons (2000).
+ */
 
 template<>
 InputParameters validParams<AuxSupersaturation>()
@@ -37,7 +35,8 @@ AuxSupersaturation::computeValue()
   _supersaturation = _coupled_conc[_qp] - _c1[_qp];  
   if (_supersaturation <= 0.0)
   {
-    _supersaturation = 1.0e-10;  // fixed to some arbitrary small value but preventing division by zero
+    // fixed to some arbitrary small value but preventing division by zero in j_star calculation
+    _supersaturation = 1.0e-10;  
   }
  return _supersaturation;
 }

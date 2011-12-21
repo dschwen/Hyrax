@@ -6,18 +6,20 @@
 *
 *  15 December 2011
 *
-*  This code inherits from DiracKernel in MOOSE
-*
-*  This code handles the introduction of nuclei as delta functions for
-*  the concurrent nucleation and growth algorithm first proposed by
-*  J.P. Simmons.
-*
 *************************************************************************/
 #include "DiracNucleation.h"
 
 /* Remember, in the input file, tell this Dirac Kernel that it's operating on the appropriate
    variable - in this case, on the order parameter variable.  When I've got multiple OPs, this is
    going to get interesting. */
+
+/**
+ *  DiracNucleation works with the AuxNucleation etc. system to determine where and when Dirac delta "spikes"
+ *  are introduced into the order parameter field variable.  This is for the simulation of the explicit
+ *  introduction of nuclei as delta functions for the concurrent nucleation and growth algorithm first 
+ *  proposed by J.P. Simmons (2000). 
+ */
+
 
 template<>
 InputParameters validParams<DiracNucleation>()
@@ -42,45 +44,27 @@ DiracNucleation::addPoints()
   MeshBase::const_element_iterator       el     = _mesh.active_local_elements_begin();
   const MeshBase::const_element_iterator end_el = _mesh.active_local_elements_end();
 
+  // iterate over the elements
   for ( ; el != end_el ; ++el)
   {
     const Elem* elem = *el;
     _problem.prepare(elem, 0);
     _problem.reinitElem(elem, 0);
 
-    for (unsigned int qp = 0; qp < _qrule->n_points(); qp++)
-      if (_coupled_nucleation[qp] > 0.0)  //CJP changed it to >0.0 for rapid nucleation.  This should be >1.0
+    //for (unsigned int qp = 0; qp < _qrule->n_points(); qp++)
+    // shouldn't need the above line for average element value
+      if (_coupled_nucleation[0] > 0.0)  
+      /* access one quadrature point for the element - should give us the same value since it's an 
+      element average value*/
+      //CJP changed the if to >0.0 for rapid nucleation.  This should be >1.0
       {
 //        std::cout << "###DEBUG AddPoints: " << _coupled_nucleation[_qp] << " at " << _qrule->qp(qp) << "\n";
-        addPoint(elem, _qrule->qp(qp));
+        addPoint(elem, _elem->centroid());
+        // this should add the point to the center of the element, which is fine for now
       }
   }
 }
 
-
-// /* this came from ConstantPointSource, to set the position of the point for x,y,z dimensions;
-// *  it was in the constructor.  Should do something like this probably for setting my points
-// *  locations here, but up in addPoints().  */
-//  _p(0) = _point_param[0];
-
-//  if(_point_param.size() > 1)
-//  {
-//    _p(1) = _point_param[1];
-
-//    if(_point_param.size() > 2)
-//    {
-//      _p(2) = _point_param[2];
-//    }
-//  }
-
-//void
-//DerivedDirac::addPoints()
-//{
-
-
-
-
-//}
 
 Real
 DiracNucleation::computeQpResidual()

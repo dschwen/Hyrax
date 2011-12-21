@@ -4,16 +4,15 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-*  14 December 2011
-*
-*  This code inherits from AuxKernel in MOOSE
-*
-*  This code handles the nucleation/no nucleation portion of the concurrent
-*  nucleation and growth algorithm first proposed by J.P. Simmons.
-*
 *************************************************************************/
 
 #include "AuxNucleation.h"
+
+/**
+ *  AuxNucleation handles the nucleation/no nucleation portion of the concurrent
+ *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).
+ *  Returns a sort-of boolean: true if nucleation occured; false if it didn't.
+ */
 
 template<>
 InputParameters validParams<AuxNucleation>()
@@ -28,27 +27,35 @@ AuxNucleation::AuxNucleation(const std::string & name, InputParameters parameter
   : AuxKernel(name, parameters),
   _coupled_probability(coupledValue("coupled_aux_var"))
 {
+  /**
+   * _random_number_seed will start at one and be incremented by one each timestep.
+   */
+  _random_number_seed = 1;
 }
 
 Real
 AuxNucleation::computeValue()
 {
-//  //supersaturation
-//  supersaturation = coupled_val[_qp] - C1;  // C1 a material value.  Should couple that in.
-//  if supersaturation <= 0,
-//   supersaturation = 1x10-10;  // fixed to some arbitrary small value but preventing division by zero
+/* AuxNucleation is the final step in the probabilistic nucleation method.  The steps to get here are 
+ * shown below:
+   1) supersaturation
+      supersaturation = C - C1;  // C1 is from Guo (2008) Landau polynomial.
+      if supersaturation <= 0, supersaturation = 1x10-10; this prevents division by zero or negative in step 2
+   2) nucleation rate equation - this  can be arbitrary  
+      currently: j_star = Kn1 * exp(-1*Kn2 / supersaturation)  
+      Kn1 and Kn2 are going to be supplied from the input file
+   3) probability of nucleation in that location for this timestep
+      p_nm = 1 - exp(-1*j_star*dt)  
+   4) stochastic testing of nucleation: nucleation probability vs random number between 0 and 1
+*/
+    
+   // CJP: You might try Moose::seed(unsigned int) and Moose::rand()
+   
+   // we are controlling the random number seeding this way for reproducibility
+   _random_number_seed += 1;
+   Moose::seed(_random_number_seed);
 
-//  // nucleation rate equation - this  can be arbitrary
-//  j_star = Kn1 * exp(-1*Kn2 / supersaturation)  // Kn1 and Kn2 are going to be supplied from the input file
-
-//  // probability of nucleation in that location for this timestep
-//  p_nm = 1 - exp(-1*j_star*dt)  // the timestep is going to have to be supplied from MOOSE
-
-  // currently will use rand(), the intrinsic random number function.  need a better one, though.
-
-  // CJP: You might try Moose::seed(unsigned int) and Moose::rand()
-
-  _random_number = double (rand()%100000);
+  _random_number = double (Moose::rand()%100000);
   _random_number = _random_number/100000;
 
 

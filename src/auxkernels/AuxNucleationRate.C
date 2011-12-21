@@ -4,16 +4,14 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-*  14 December 2011
-*
-*  This code inherits from AuxKernel in MOOSE
-*  
-*  This code handles the nucleation rate calculation in the concurrent
-*  nucleation and growth algorithm first proposed by J.P. Simmons.
-*  
 *************************************************************************/
 
 #include "AuxNucleationRate.h"
+
+/**
+ *  AuxNucleationRate handles the nucleation rate (j_star) calculation in the concurrent
+ *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).
+ */
 
 template<>
 InputParameters validParams<AuxNucleationRate>()
@@ -37,6 +35,8 @@ AuxNucleationRate::AuxNucleationRate(const std::string & name, InputParameters p
 Real
 AuxNucleationRate::computeValue()
 { 
+ // j_star = Kn1 * exp(-1*Kn2 / supersaturation) 
+ // this should just be for each element
  return _Kn1*exp(-1.0*_Kn2/_coupled_supersaturation[_qp]);
 }
 

@@ -5,11 +5,6 @@
 *  CASL/MOOSE
 *
 *  14 December 2011
-*
-*  This code inherits from AuxKernel in MOOSE
-*  
-*  This code handles the nucleation probability calculation in the concurrent
-*  nucleation and growth algorithm first proposed by J.P. Simmons.
 *  
 *************************************************************************/
 
@@ -18,11 +13,16 @@
 
 #include "AuxKernel.h"
 
-//forward declaration
-class AuxNucleationProbability;  //P_nm
+class AuxNucleationProbability;
 
 template<>
 InputParameters validParams<AuxNucleationProbability>();
+
+/**
+ *  AuxNucleationProbability handles the nucleation probability (P_nm) calculation in the concurrent
+ *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).  
+ *  Returns the nucleation probability over the domain.
+ */
 
 class AuxNucleationProbability : public AuxKernel
 {
@@ -30,12 +30,15 @@ public:
   AuxNucleationProbability(const std::string & name, InputParameters params);
 
 protected:
+  /**
+   * computeValue()
+   * @return returns the nucleation probability for each element, p_nm = 1 - exp(-1*j_star*dt) 
+   */ 
+ 
   virtual Real computeValue();
 
 private:
-  VariableValue & _coupled_nuc_rate;
+  VariableValue & _coupled_nuc_rate;  ///< nucleation rate for the nucleation probability calculation
 };
-
-//  p_nm = 1 - exp(-1*j_star*dt) 
 
 #endif //AUXNUCLEATIONPROBABILITY_H

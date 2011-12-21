@@ -6,12 +6,6 @@
 *
 *  15 December 2011
 *
-*  This code inherits from DiracKernel in MOOSE
-*  
-*  This code handles the introduction of nuclei as delta functions for 
-*  the concurrent nucleation and growth algorithm first proposed by 
-*  J.P. Simmons.
-*  
 *************************************************************************/
 
 #ifndef DIRACNUCLEATION_H
@@ -30,19 +24,32 @@ class DiracNucleation;
 template<>
 InputParameters validParams<DiracNucleation>();
 
+/**
+ *  DiracNucleation works with the AuxNucleation etc. system to determine where and when Dirac delta "spikes"
+ *  are introduced into the order parameter field variable.  This is for the simulation of the explicit
+ *  introduction of nuclei as delta functions for the concurrent nucleation and growth algorithm first 
+ *  proposed by J.P. Simmons (2000). 
+ */
+
 class DiracNucleation : public DiracKernel
 {
 public:
   DiracNucleation(const std::string & name, InputParameters parameters);
+
+  /**
+   * addPoints()
+   * @return void function that adds Dirac spikes where  the nucleation field variable says nucleation
+   * occured during that time step.
+   */
   virtual void addPoints();
   virtual Real computeQpResidual();
 
 protected:
-  Real _value;
+  Real _value;  ///< input value for what you want the Dirac spike to be (probably something like 10.0)
 // Maybe some other things here
 
 private: 
-  VariableValue & _coupled_nucleation;
+  VariableValue & _coupled_nucleation;  ///< AuxVariable for the nucleation yes/no field.
 
   Elem *_true_element;
   Point _true_point;

@@ -6,20 +6,21 @@
 *
 *  16 November 2011
 *
-*  This code inherits from CHBulk in ELK
-*  
-*  This code handles the materials parameters for a coupled 
-*  conserved order parameter, non-conserved order parameter
-*  system. 
 *************************************************************************/
 
 #include "ACBulkCoupled.h"
+
+/**
+ * AcBulkCoupled couples the bulk Alan-Cahn equation term with order parameter eta to the conserved field
+ * variable term from the Cahn-Hilliard equation (typically concentration)
+ */
 
 template<>
 InputParameters validParams<ACBulkCoupled>()
 {
   InputParameters params = validParams<ACBulk>();
   params.addRequiredCoupledVar("coupled_var","The concentration to be coupled to the AC equation");
+  // these are actually kind of extraneous and should get cleaned up
   params.addParam<std::string>("second_landau","A2","Second Landau coefficient"); 
   params.addParam<std::string>("third_landau","A3","Third Landau coefficient"); 
   params.addParam<std::string>("fourth_landau","A4","Fourth Landau coefficient"); 

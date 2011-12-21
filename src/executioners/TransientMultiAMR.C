@@ -15,6 +15,11 @@
 #include <iostream>
 #include <fstream>
 
+/**
+ * Transient executioner without adaptive timestepping that allows for multiple mesh adaptivity steps
+ * within one timestep.  (Designed for use with Dirac kernels for modeling nucleation.)
+ */
+
 template<>
 InputParameters validParams<TransientMultiAMR>()
 {

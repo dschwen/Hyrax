@@ -6,14 +6,14 @@
 *
 *  16 November 2011
 *
-*  This code inherits from CHBulk in ELK
-*  
-*  This code handles the materials parameters for a coupled 
-*  conserved order parameter, non-conserved order parameter
-*  system. 
 *************************************************************************/
 
 #include "PFMobilityLandau.h"
+
+/**
+ * PFMobilityLandau holds the materials information for a phase field model using a Landau polynomial for 
+ * the bulk (chemical) free energy term.
+ */
 
 template<>
 InputParameters validParams<PFMobilityLandau>()

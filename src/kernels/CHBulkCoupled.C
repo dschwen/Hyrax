@@ -6,20 +6,21 @@
 *
 *  16 November 2011
 *
-*  This code inherits from CHBulk in ELK
-*  
-*  This code handles the materials parameters for a coupled 
-*  conserved order parameter, non-conserved order parameter
-*  system. 
 *************************************************************************/
 
 #include "CHBulkCoupled.h"
+
+/** CHBulkCoupled handles the conserved order parameter(probably concentration), 
+ * evolved using the Cahn-Hilliard equation.  It couples to an order 
+ * parameter from the Alan-Cahn equation.
+ */
 
 template<>
 InputParameters validParams<CHBulkCoupled>()
 {
   InputParameters params = validParams<CHBulk>();
   params.addRequiredCoupledVar("coupled_var","The order parameter to be coupled to the CH equation");
+  // this is a little extraneous and can get cleaned up
   params.addParam<std::string>("first_landau","A1","First Landau coefficient"); 
   params.addParam<std::string>("second_landau","A2","Second Landau coefficient"); 
   params.addParam<std::string>("first_well","C1","First Landau well position"); 

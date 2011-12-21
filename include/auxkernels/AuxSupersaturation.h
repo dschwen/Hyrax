@@ -4,13 +4,8 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-*  14 December 2011
+*  15 December 2011
 *
-*  This code inherits from AuxKernel in MOOSE
-*  
-*  This code handles the supersaturation calculation in the concurrent
-*  nucleation and growth algorithm first proposed by J.P. Simmons.
-*  
 *************************************************************************/
 
 #ifndef AUXSUPERSATURATION_H
@@ -21,6 +16,11 @@
 //forward declaration
 class AuxSupersaturation;
 
+/**
+ * AuxSupersaturation handles the supersaturation calculation (tyically C - C1) in the concurrent
+ * nucleation and growth algorithm first proposed by J.P. Simmons (2000).
+ */
+
 template<>
 InputParameters validParams<AuxSupersaturation>();
 
@@ -30,21 +30,19 @@ public:
   AuxSupersaturation(const std::string & name, InputParameters parameters);
 
 protected:
+
+  /**
+   * computeValue() 
+   * @return returns the supersaturation (C-C1), element average value
+   */
+
   virtual Real computeValue();
-
-  // probably some other things here
-  // Concentration coupled in
-
   
 private:
 
-  // may or may not have anything here
-  VariableValue & _coupled_conc;
-  MaterialProperty<Real> & _c1;
-  Real _supersaturation;
+  VariableValue & _coupled_conc;  ///< PDE variable (concentration)
+  MaterialProperty<Real> & _c1;   ///< parameter from landau polynomial (first energy well position in c-space)
+  Real _supersaturation;	  ///< C-C1
 };
-
-// Supersaturation = C - C1
-
 
 #endif //AUXSUPERSATURATION_H

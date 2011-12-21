@@ -3,17 +3,16 @@
 *  Welcome to HYRAX!
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
-*
-*  14 December 2011
-*
-*  This code inherits from AuxKernel in MOOSE
-*  
-*  This code handles the nucleation probability calculation in the concurrent
-*  nucleation and growth algorithm first proposed by J.P. Simmons.
 *  
 *************************************************************************/
 
 #include "AuxNucleationProbability.h"
+
+/**
+ *  AuxNucleationProbability handles the nucleation probability (P_nm) calculation in the concurrent
+ *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).  
+ *  Returns the nucleation probability over the domain.
+ */
 
 template<>
 InputParameters validParams<AuxNucleationProbability>()
@@ -24,8 +23,6 @@ InputParameters validParams<AuxNucleationProbability>()
   return params;
 }
 
-//  p_nm = 1 - exp(-1*j_star*dt) 
-
 AuxNucleationProbability::AuxNucleationProbability(const std::string & name, InputParameters parameters) 
   : AuxKernel(name, parameters),
   _coupled_nuc_rate(coupledValue("coupled_aux_var"))
@@ -34,7 +31,9 @@ AuxNucleationProbability::AuxNucleationProbability(const std::string & name, Inp
 
 Real
 AuxNucleationProbability::computeValue()
-{ 
+{
+ //  p_nm = 1 - exp(-1*j_star*dt)  
+ //  this maybe should just be for each element
  return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt);
 }
 
