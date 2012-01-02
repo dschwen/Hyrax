@@ -26,7 +26,6 @@ InputParameters validParams<TransientMultiAMR>()
   InputParameters params = validParams<Transient>();
   params.addRequiredParam<int>("num_refines","Number of mesh refine steps to perform at each timestep");
   // there will always be a variable in the input file called "num_refines"
-
   return params;
 }
 

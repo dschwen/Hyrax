@@ -9,6 +9,8 @@
 *************************************************************************/
 #include "DiracNucleation.h"
 
+#include "elem.h"
+
 /* Remember, in the input file, tell this Dirac Kernel that it's operating on the appropriate
    variable - in this case, on the order parameter variable.  When I've got multiple OPs, this is
    going to get interesting. */
@@ -34,7 +36,8 @@ InputParameters validParams<DiracNucleation>()
 DiracNucleation::DiracNucleation(const std::string & name, InputParameters parameters) :
     DiracKernel(name, parameters),
     _value(getParam<Real>("value")),
-    _coupled_nucleation(coupledValue("nucleation"))
+    _coupled_nucleation(coupledValue("nucleation")),
+    _my_refine(_mesh)
 {
 }
 
@@ -42,12 +45,12 @@ void
 DiracNucleation::addPoints()
 {
   MeshBase::const_element_iterator       el     = _mesh.active_local_elements_begin();
-  const MeshBase::const_element_iterator end_el = _mesh.active_local_elements_end();
+  MeshBase::const_element_iterator end_el = _mesh.active_local_elements_end();
 
   // iterate over the elements
   for ( ; el != end_el ; ++el)
   {
-    const Elem* elem = *el;
+    Elem* elem = *el;
     _problem.prepare(elem, 0);
     _problem.reinitElem(elem, 0);
 
@@ -59,7 +62,12 @@ DiracNucleation::addPoints()
       //CJP changed the if to >0.0 for rapid nucleation.  This should be >1.0
       {
 //        std::cout << "###DEBUG AddPoints: " << _coupled_nucleation[_qp] << " at " << _qrule->qp(qp) << "\n";
-        addPoint(elem, _elem->centroid());
+
+        addPoint(elem, elem->centroid());
+	// refine the element around the delta function
+	elem->set_refinement_flag(libMesh::Elem::REFINE);
+	_my_refine.refine_elements();
+//	_problem.out().meshChanged();
         // this should add the point to the center of the element, which is fine for now
       }
   }

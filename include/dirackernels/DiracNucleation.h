@@ -14,6 +14,9 @@
 // Moose Includes
 #include "DiracKernel.h"
 
+// Libmesh Includes
+#include "mesh_refinement.h"
+
 /* Remember, in the input file, tell this Dirac Kernel that it's operating on the appropriate
    variable - in this case, on the order parameter variable.  When I've got multiple OPs, this is
    going to get interesting. */
@@ -51,8 +54,10 @@ protected:
 private: 
   VariableValue & _coupled_nucleation;  ///< AuxVariable for the nucleation yes/no field.
 
-  Elem *_true_element;
-  Point _true_point;
+//  Elem *_true_element;
+//  Point _true_point;
+  MeshRefinement _my_refine;
+
 };
 
 

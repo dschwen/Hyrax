@@ -32,6 +32,7 @@
 
 //Dirac Kernels
 #include "DiracNucleation.h"
+#include "DiracForcedAMR.h"
 
 //Boundary Conditions
 
@@ -67,6 +68,7 @@ namespace Hyrax
 
     //Dirac Kernels
     registerDiracKernel(DiracNucleation);
+    registerDiracKernel(DiracForcedAMR);
 
     //Boundary Conditions
 

@@ -55,7 +55,7 @@ AuxNucleation::computeValue()
    _random_number_seed += 1;
    Moose::seed(_random_number_seed);
 
-  _random_number = double (Moose::rand()%100000);
+  _random_number = Moose::rand();
   _random_number = _random_number/100000;
 
 
