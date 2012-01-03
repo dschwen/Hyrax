@@ -21,10 +21,9 @@ template<>
 InputParameters validParams<DiracForcedAMR>();
 
 /**
- * DiracForcedAMR is designed to have the introduction of a point source and force mesh adaptivity
- * at the point source. This kernel is designed to work with the TransientMultiAMR executioner. 
- * The mesh refinement for the element in which the point at which the Dirac kernel was introduced 
- * needs to be forced several levels.
+ * DiracForcedAMR is designed to have the introduction of a point source after some amount of time
+ * has passed.  This kernel is designed to work with the TransientMultiAMR executioner for multiple
+ * refinement levels in one timestep.
  */
 
 class DiracForcedAMR : public ConstantPointSource
@@ -38,7 +37,6 @@ public:
 protected:
 
 private:
-//  MeshRefinement _my_refine;
   Real _active_after;
 };
 

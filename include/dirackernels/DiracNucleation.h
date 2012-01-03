@@ -41,22 +41,17 @@ public:
 
   /**
    * addPoints()
-   * @return void function that adds Dirac spikes where  the nucleation field variable says nucleation
-   * occured during that time step.
+   * @return void function that adds Dirac spikes where the nucleation field variable says nucleation
+   * occured during that time step.  The nucleation field variable is an average element value.
    */
   virtual void addPoints();
   virtual Real computeQpResidual();
 
 protected:
   Real _value;  ///< input value for what you want the Dirac spike to be (probably something like 10.0)
-// Maybe some other things here
 
 private: 
   VariableValue & _coupled_nucleation;  ///< AuxVariable for the nucleation yes/no field.
-
-//  Elem *_true_element;
-//  Point _true_point;
-  MeshRefinement _my_refine;
 
 };
 

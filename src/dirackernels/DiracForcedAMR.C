@@ -13,8 +13,9 @@
 #include "elem.h"
 
 /**
- * This kernel is designed to work with the TransientMultiAMR executioner. The mesh refinement for the 
- * element in which the point at which the Dirac kernel was introduced needs to be forced several levels.
+ * DiracForcedAMR is designed to have the introduction of a point source after some amount of time
+ * has passed.  This kernel is designed to work with the TransientMultiAMR executioner for multiple
+ * refinement levels in one timestep.
  */
 
 template<>
@@ -28,7 +29,6 @@ InputParameters validParams<DiracForcedAMR>()
 
 DiracForcedAMR::DiracForcedAMR(const std::string & name, InputParameters parameters) :
     ConstantPointSource(name, parameters),
-//  _my_refine(_mesh),  //part of the previous attempt at mesh refinement
     _active_after(getParam<int>("active_after"))
 {
 }
@@ -38,16 +38,9 @@ DiracForcedAMR::addPoints()
 {  
   if (_t_step >= _active_after)
   {
-    //get the element info for that point - for use with the refinement forcing
+    //get the element info for that point - for use with the refinement forcing if necessary.
     const Elem * dirac_elem = addPoint(_p);
   }
-
-/* This is what had been come up with, but fails.  
-//    Elem * elem;
-//    elem = const_cast<Elem *> (dirac_elem);
-//    elem->set_refinement_flag(libMesh::Elem::REFINE);
-//    _my_refine.refine_elements();  // This is fun - compiles; but breaks on runtime.
-*/
 }
 
 Real
