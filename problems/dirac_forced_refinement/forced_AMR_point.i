@@ -156,7 +156,7 @@ active = 'Periodic'
 
   start_time = 0.0
   num_steps = 15
-  dt = 0.0003
+  dt = 0.003
 
   num_refines = 2
  
@@ -165,7 +165,7 @@ active = 'Periodic'
     error_estimator = LaplacianErrorEstimator
     refine_fraction = 0.85
     coarsen_fraction = 0.1
-    max_h_level = 6
+    max_h_level = 4
   [../]
 []
 
