@@ -37,7 +37,8 @@ public:
 protected:
 
 private:
-  Real _active_after;
+  int _active_after;
+  int _active_for;
 };
 
 #endif //DIRACFORCEDAMR_H
