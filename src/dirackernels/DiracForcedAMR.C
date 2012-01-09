@@ -41,12 +41,13 @@ DiracForcedAMR::addPoints()
   if (_t_step >= _active_after) 
 // if I want it to operate for however long, we could do a few statements here, where you get what the initial current time is, then if _t >= init_current_time+1.0 or whatever, call addPoints
   {
-    if(_t_step >= _active_after+_active_for)
-    {
-      _value = _value/2.0;
-    }
+//    if(_t_step >= _active_after+_active_for)
+//    {
+//      _value = _value/2.0;
+//    }
     //get the element info for that point - for use with the refinement forcing if necessary.
     const Elem * dirac_elem = addPoint(_p);
+    addPoint(Point(6.002, 6.002, 0));
   }
 
 //  // Do this several more times for more arbitrary points

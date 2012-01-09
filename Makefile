@@ -17,6 +17,7 @@
 ###############################################################################
 CURR_DIR	?= $(shell pwd)
 ROOT_DIR        ?= $(shell dirname `pwd`)
+LIBMESH_DIR     ?= $(ROOT_DIR)/libmesh
 MOOSE_DIR	?= $(ROOT_DIR)/moose
 ELK_DIR         ?= $(ROOT_DIR)/elk
 HYRAX_DIR       ?= $(ROOT_DIR)/hyrax

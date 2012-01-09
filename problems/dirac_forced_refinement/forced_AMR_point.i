@@ -102,9 +102,10 @@
   [./dirac]
     type = DiracForcedAMR
     variable = n1
-    value = 5.0
+    value = 500.0
     point = '6.2 6.2 0'
     active_after = 2
+    active_for = 100
   [../]
 []
 
@@ -155,7 +156,7 @@ active = 'Periodic'
   nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 15
+  num_steps = 100
   dt = 0.003
 
   num_refines = 2
@@ -165,14 +166,29 @@ active = 'Periodic'
     error_estimator = LaplacianErrorEstimator
     refine_fraction = 0.85
     coarsen_fraction = 0.1
-    max_h_level = 4
+    max_h_level = 6
   [../]
 []
+
+[Postprocessors]
+  [./dt]
+    type = PrintDT
+  [../]
+ 
+  [./elapsed_time]
+    type = PrintElapsedTime
+  [../]
+
+  [./num_elem]
+    type = PrintNumElems
+  [../]
+[]
+
 
 [Output]
   file_base = out
   output_initial = true
-  interval = 1
+  interval = 10
   exodus = true
   perf_log = true
 []

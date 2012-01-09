@@ -1,13 +1,13 @@
 [Mesh]
   [./Generation]
     dim = 2
-    nx = 10
-    ny = 10
+    nx = 20
+    ny = 20
     nz = 0
     xmin = 0
-    xmax = 10
+    xmax = 40
     ymin = 0
-    ymax = 10
+    ymax = 40
     zmin = 0
     zmax = 0
     elem_type = QUAD4
@@ -22,14 +22,9 @@
     order = THIRD
     family = HERMITE
     [./InitialCondition]
-      int_width = 1
-      invalue = 0.01
-      outvalue = 0.01
-      radius = 1
-      type = SmoothCircleIC
+      value = 0.1
+      type = ConstantIC
       var_name = concentration
-      x1 = 5
-      y1 = 5
     [../]
   [../]
 
@@ -37,14 +32,9 @@
     order = FIRST
     family = LAGRANGE
     [./InitialCondition]
-      int_width = 1
-      invalue = 1.0
-      outvalue = 0.0
-      radius = 1
-      type = SmoothCircleIC
+      type = ConstantIC
       var_name = n1
-      x1 = 5
-      y1 = 5
+      value = 0.0
     [../]
   [../]
 
@@ -158,11 +148,10 @@
 [DiracKernels]
   active = 'dirac'
   [./dirac]
-    type = DiracForcedAMR
+    type = DiracNucleation
     variable = n1
     value = 5.0
-    point = '6.2 6.2 0'
-    active_after = 2
+    nucleation = nucleation
   [../]
 []
 
@@ -202,7 +191,7 @@ active = 'Periodic'
 
 
 [Executioner]
-  type = TransientMultiAMR
+  type = Transient
   scheme = 'crank-nicolson'
   petsc_options = '-snes_mf_operator -ksp_monitor'
 
@@ -212,19 +201,20 @@ active = 'Periodic'
   l_max_its = 15
   nl_max_its = 10
 
+#  e_max = 6.0e2
+#  e_tol = 5.0e-1
+
   start_time = 0.0
   num_steps = 15
-  dt = 0.003
+  dt = 0.0003
 
-  num_refines = 2
- 
- The adaptivity section should probably be played with at will.
-  [./Adaptivity]
-    error_estimator = LaplacianErrorEstimator
-    refine_fraction = 0.85
-    coarsen_fraction = 0.1
-    max_h_level = 4
-  [../]
+# The adaptivity section should probably be played with at will.
+#  [./Adaptivity]
+#    error_estimator = LaplacianErrorEstimator
+#    refine_fraction = 0.85
+#    coarsen_fraction = 0.1
+#    max_h_level = 4
+#  [../]
 []
 
 [Output]
