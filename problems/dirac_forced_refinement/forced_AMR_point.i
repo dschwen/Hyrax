@@ -31,7 +31,7 @@
     order = THIRD
     family = HERMITE
     [./InitialCondition]
-      value = 0.01
+      value = 0.1
       type = ConstantIC
       var_name = concentration
     [../]
@@ -144,8 +144,8 @@ active = 'Periodic'
 []
 
 [Executioner]
-  type = TransientMultiAMR
-#  type = Transient
+#  type = TransientMultiAMR
+  type = SolutionTimeAdaptive
   scheme = 'crank-nicolson'
   petsc_options = '-snes_mf_operator -ksp_monitor'
 
@@ -159,15 +159,15 @@ active = 'Periodic'
   num_steps = 100
   dt = 0.003
 
-  num_refines = 2
+#  num_refines = 2
  
- The adaptivity section should probably be played with at will.
+# The adaptivity section should probably be played with at will.
   [./Adaptivity]
     error_estimator = LaplacianErrorEstimator
-    refine_fraction = 0.85
-    coarsen_fraction = 0.1
-    max_h_level = 6
-  [../]
+    refine_fraction = 0.99
+#    coarsen_fraction = 0.1
+    max_h_level = 4
+#  [../]
 []
 
 [Postprocessors]
@@ -188,7 +188,7 @@ active = 'Periodic'
 [Output]
   file_base = out
   output_initial = true
-  interval = 10
+  interval = 1
   exodus = true
   perf_log = true
 []

@@ -133,7 +133,7 @@
   [./calc_j_star]
     type = AuxNucleationRate
     variable = j_star
-    Kn1 = 0.001
+    Kn1 = 0.1
     Kn2 = 0.33
     coupled_aux_var = supersaturation
   [../]
@@ -161,13 +161,13 @@ active = 'Periodic'
     [./left_right]
       primary = 0
       secondary = 2
-      translation = '0 10 0'
+      translation = '0 40 0'
     [../]
 
     [./top_bottom]
       primary = 1
       secondary = 3
-      translation = '-10 0 0'
+      translation = '-40 0 0'
     [../]
   [../]
 []
@@ -191,7 +191,7 @@ active = 'Periodic'
 
 
 [Executioner]
-  type = Transient
+  type = SolutionTimeAdaptive
   scheme = 'crank-nicolson'
   petsc_options = '-snes_mf_operator -ksp_monitor'
 
@@ -205,7 +205,7 @@ active = 'Periodic'
 #  e_tol = 5.0e-1
 
   start_time = 0.0
-  num_steps = 15
+  num_steps = 150
   dt = 0.0003
 
 # The adaptivity section should probably be played with at will.

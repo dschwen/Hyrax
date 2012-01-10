@@ -47,19 +47,21 @@ DiracForcedAMR::addPoints()
 //    }
     //get the element info for that point - for use with the refinement forcing if necessary.
     const Elem * dirac_elem = addPoint(_p);
-    addPoint(Point(6.002, 6.002, 0));
+//    addPoint(Point(6.3, 6.3, 0));
   }
 
-//  // Do this several more times for more arbitrary points
-//  if (_t_step >= 5)
-//  {
-//	addPoint(Point(1.2, 2.6, 0.0));
-//  }
+  // Do this several more times for more arbitrary points
+  if (_t_step >= 30)
+  {
+	addPoint(Point(1.2, 2.6, 0.0));
+//	addPoint(Point(1.3, 2.7, 0.0))
+  }
 
-//  if (_t_step >= 7)
-//  {
-//	addPoint(Point(7.4, 3.3, 0.0));
-//  }
+  if (_t_step >= 50)
+  {
+	addPoint(Point(7.4, 3.3, 0.0));
+//	addPoint(Point(7.5, 3.4, 0.0));
+  }
 
 }
 
