@@ -25,8 +25,9 @@ HYRAX_DIR       ?= $(ROOT_DIR)/hyrax
 MAKE_LIBRARY := no
 APPLICATION_NAME := hyrax
 
-include $(MOOSE_DIR)/build.mk
+DEP_APPS    ?= $(shell $(MOOSE_DIR)/scripts/find_dep_apps.py $(APPLICATION_NAME))
 
+include $(MOOSE_DIR)/build.mk
 #dependencies
 include $(MOOSE_DIR)/moose.mk
 include $(ELK_DIR)/elk.mk
