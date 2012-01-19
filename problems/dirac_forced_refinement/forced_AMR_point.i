@@ -8,21 +8,20 @@
 # concentration will naturally increase at that point to create a proper nucleus.
 
 [Mesh]
-  [./Generation]
-    dim = 2
-    nx = 10
-    ny = 10
-    nz = 0
-    xmin = 0
-    xmax = 10
-    ymin = 0
-    ymax = 10
-    zmin = 0
-    zmax = 0
-    elem_type = QUAD4
-  [../]
-   uniform_refine = 2
+  type = GeneratedMesh
+  dim = 2
+  nx = 10
+  ny = 10
+  nz = 0
+  xmin = 0
+  xmax = 10
+  ymin = 0
+  ymax = 10
+  zmin = 0
+  zmax = 0
+  elem_type = QUAD4
 
+  uniform_refine = 2
 []
 [Variables]
   active = 'concentration n1'
