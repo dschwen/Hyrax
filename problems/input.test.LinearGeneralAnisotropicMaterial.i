@@ -14,7 +14,7 @@
 []
 
 [Variables]
-  active = 'concentration n1'
+  active = 'concentration n1 disp_x disp_y'
 
   [./concentration]
     order = THIRD
@@ -41,7 +41,7 @@
     family = LAGRANGE
   [../]
 
-  [disp_y]
+  [./disp_y]
     order = FIRST
     family = LAGRANGE
   [../]
@@ -96,21 +96,21 @@
     kappa_name = kappa_n
   [../]
 
-#  [./stress_div_disp_x]
-#    type = StressDivergence
-#    variable = disp_x
-#    component = 0
-#    #disp_x = disp_x
-#    #disp_y = disp_y
-#  [../]
+  [./stress_div_disp_x]
+    type = StressDivergence
+    variable = disp_x
+    component = 0
+    #disp_x = disp_x
+    #disp_y = disp_y
+  [../]
 
-#  [./stress_div_disp_y]
-#    type = StressDivergence
-#    variable = disp_y
-#    component = 1
-#    #disp_x = disp_x
-#    #disp_y = disp_y
-#  [../]
+  [./stress_div_disp_y]
+    type = StressDivergence
+    variable = disp_y
+    component = 1
+    disp_x = disp_x
+    disp_y = disp_y
+  [../]
 []
 
 [BCs]
