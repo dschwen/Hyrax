@@ -168,7 +168,7 @@ active = 'Periodic'
   nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 2
+  num_steps = 1
   dt = 0.03
 []
 
