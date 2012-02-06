@@ -6,10 +6,6 @@
 *
 *  16 November 2011
 *
-*  
-*  This code handles the materials parameters for a coupled 
-*  conserved order parameter, non-conserved order parameter
-*  system. 
 *************************************************************************/
 
 
@@ -23,6 +19,7 @@
 //Kernels
 #include "ACBulkCoupled.h"
 #include "CHBulkCoupled.h"
+//#include "ACTransformElasticDF.h"
 
 //Auxiliary Kernels
 #include "AuxNucleation.h"
@@ -38,6 +35,8 @@
 
 //Materials
 #include "PFMobilityLandau.h"
+//#include "LinearSingleCrystalPrecipitateMaterial.h"
+#include "LinearGeneralAnisotropicMaterial.h"
 
 //Initial Conditions
 
@@ -59,6 +58,7 @@ namespace Hyrax
     //Kernels
     registerKernel(CHBulkCoupled);
     registerKernel(ACBulkCoupled);
+    //  registerKernel(ACTransformElasticDF);
 
     //Auxiliary Kernels
     registerAux(AuxNucleation);
@@ -73,7 +73,9 @@ namespace Hyrax
     //Boundary Conditions
 
     //Materials
-    registerMaterial(PFMobilityLandau);    
+    registerMaterial(PFMobilityLandau);
+    //registerMaterial(LinearSingleCrystalPrecipitateMaterial);
+    registerMaterial(LinearGeneralAnisotropicMaterial);
 
     //Initial Conditions
 
