@@ -62,9 +62,15 @@ private:
   
   // number of orientation variants for the precipitate in a single matrix crystal
   int _n_variants;
+
+  // Indicate if 21 (true) or 9 (false) values given for input of elastic stiffness
+  bool _all_21;
   
   // Individual material information
   SymmAnisotropicElasticityTensor _Cijkl_matrix;
+  SymmAnisotropicElasticityTensor _Cijkl_precipitate;
+  SymmTensor _eigenstrain;
+  
   std::vector<SymmAnisotropicElasticityTensor > _Cijkl_precipitates_rotated;
   std::vector<SymmTensor > _eigenstrains_rotated;
 
