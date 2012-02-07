@@ -34,39 +34,6 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
   return params;
 }
 
-template <>
-PropertyValue *
-MaterialProperty<std::vector<SymmTensor> >::init(int size)
-{
-  typedef MaterialProperty<std::vector<SymmTensor> > PropType;
-  PropType *copy = new PropType;
-  copy->_value.resize(size);
-
-  // We don't know the size of the underlying vector at each
-  // quadrature point, the user will be responsible for resizing it
-  // and filling in the entries...
-
-  // Return the copy we allocated
-  return copy;
-}
-
-template <>
-PropertyValue *
-MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> >::init(int size)
-{
-  typedef MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> > PropType;
-  PropType *copy = new PropType;
-  copy->_value.resize(size);
-
-  // We don't know the size of the underlying vector at each
-  // quadrature point, the user will be responsible for resizing it
-  // and filling in the entries...
-
-  // Return the copy we allocated
-  return copy;
-}
-
-
 LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(const std::string & name, 
                                                                                InputParameters parameters)
     : SolidMechanicsMaterial(name, parameters),
@@ -82,7 +49,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
       _eigenstrains_rotated_MP(declareProperty<std::vector<SymmTensor> >("eigenstrains_rotated_MP")),
       // something about this being a SymmAnisotropicElasticityTensor instead of a SymmElasticityTensor is not ok.
       // Also it seems like the std::vector of tensors is not ok either.
-      _Cijkl_matrix_MP(declareProperty<SymmAnisotropicElasticityTensor *>("Cijkl_matrix_MP")),
+      _Cijkl_matrix_MP(declareProperty<SymmAnisotropicElasticityTensor>("Cijkl_matrix_MP")),
       _Cijkl_precipitates_rotated_MP(declareProperty<std::vector<SymmAnisotropicElasticityTensor > >("Cijkl_precipitates_rotated_MP"))
  {
    // check to make sure the input file is all set up right
@@ -219,3 +186,47 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
    // This is computed here so we can see the field, not do a calculation with it
    _stress[_qp] = _elasticity_tensor[_qp]*_elastic_strain[_qp];
  }
+
+
+// Template specializations
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmTensor> >::init(int size)
+{
+  typedef MaterialProperty<std::vector<SymmTensor> > PropType;
+  PropType *copy = new PropType;
+  copy->_value.resize(size);
+
+  // We don't know the size of the underlying vector at each
+  // quadrature point, the user will be responsible for resizing it
+  // and filling in the entries...
+
+  // Return the copy we allocated
+  return copy;
+}
+
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> >::init(int size)
+{
+  typedef MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> > PropType;
+  PropType *copy = new PropType;
+  copy->_value.resize(size);
+
+  // We don't know the size of the underlying vector at each
+  // quadrature point, the user will be responsible for resizing it
+  // and filling in the entries...
+
+  // Return the copy we allocated
+  return copy;
+}
+
+template <>
+PropertyValue *
+MaterialProperty<SymmAnisotropicElasticityTensor>::init(int size)
+{
+  MaterialProperty<SymmAnisotropicElasticityTensor> *copy
+    = new MaterialProperty<SymmAnisotropicElasticityTensor>();
+  copy->_value.resize(size);
+  return copy;
+}

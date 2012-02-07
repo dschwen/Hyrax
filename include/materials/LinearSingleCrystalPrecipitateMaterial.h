@@ -36,6 +36,9 @@ MaterialProperty<std::vector<SymmTensor> >::init(int size);
 template <>
 PropertyValue *
 MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> >::init(int size);
+template <>
+PropertyValue *
+MaterialProperty<SymmAnisotropicElasticityTensor>::init(int size);
 ///
 
 class LinearSingleCrystalPrecipitateMaterial : public SolidMechanicsMaterial
@@ -68,7 +71,7 @@ private:
   MaterialProperty<SymmTensor> & _local_strain;
   MaterialProperty<SymmTensor> & _misfit_strain;
   MaterialProperty<std::vector<SymmTensor> > & _eigenstrains_rotated_MP;
-  MaterialProperty<SymmAnisotropicElasticityTensor *> & _Cijkl_matrix_MP;
+  MaterialProperty<SymmAnisotropicElasticityTensor> & _Cijkl_matrix_MP;
   MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> > & _Cijkl_precipitates_rotated_MP;
 
   // Vector of references to the coupled order parameters
