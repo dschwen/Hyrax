@@ -29,6 +29,15 @@ class LinearSingleCrystalPrecipitateMaterial;
 template<>
 InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>();
 
+/// template specialization for MaterialProperty Init
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmTensor> >::init(int size);
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> >::init(int size);
+///
+
 class LinearSingleCrystalPrecipitateMaterial : public SolidMechanicsMaterial
 {
 public:
@@ -58,9 +67,9 @@ private:
 
   MaterialProperty<SymmTensor> & _local_strain;
   MaterialProperty<SymmTensor> & _misfit_strain;
-//  MaterialProperty<std::vector<SymmTensor > > & _eigenstrains_rotated_MP;
-  // MaterialProperty<SymmAnisotropicElasticityTensor > & _Cijkl_matrix_MP;
-  // MaterialProperty<std::vector<SymmAnisotropicElasticityTensor > > & _Cijkl_precipitates_rotated_MP;
+  MaterialProperty<std::vector<SymmTensor> > & _eigenstrains_rotated_MP;
+  MaterialProperty<SymmAnisotropicElasticityTensor *> & _Cijkl_matrix_MP;
+  MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> > & _Cijkl_precipitates_rotated_MP;
 
   // Vector of references to the coupled order parameters
   std::vector<VariableValue *> _coupled_variables;

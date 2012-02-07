@@ -34,6 +34,39 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
   return params;
 }
 
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmTensor> >::init(int size)
+{
+  typedef MaterialProperty<std::vector<SymmTensor> > PropType;
+  PropType *copy = new PropType;
+  copy->_value.resize(size);
+
+  // We don't know the size of the underlying vector at each
+  // quadrature point, the user will be responsible for resizing it
+  // and filling in the entries...
+
+  // Return the copy we allocated
+  return copy;
+}
+
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> >::init(int size)
+{
+  typedef MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> > PropType;
+  PropType *copy = new PropType;
+  copy->_value.resize(size);
+
+  // We don't know the size of the underlying vector at each
+  // quadrature point, the user will be responsible for resizing it
+  // and filling in the entries...
+
+  // Return the copy we allocated
+  return copy;
+}
+
+
 LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(const std::string & name, 
                                                                                InputParameters parameters)
     : SolidMechanicsMaterial(name, parameters),
@@ -45,12 +78,12 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
       _Cijkl_precipitates_rotated(),
       _eigenstrains_rotated(),
       _local_strain(declareProperty<SymmTensor >("local_strain")),
-      _misfit_strain(declareProperty<SymmTensor >("misfit_strain"))//,
-      //_eigenstrains_rotated_MP(declareProperty<std::vector<SymmTensor > >("eigenstrains_rotated_MP")),
+      _misfit_strain(declareProperty<SymmTensor >("misfit_strain")),
+      _eigenstrains_rotated_MP(declareProperty<std::vector<SymmTensor> >("eigenstrains_rotated_MP")),
       // something about this being a SymmAnisotropicElasticityTensor instead of a SymmElasticityTensor is not ok.
       // Also it seems like the std::vector of tensors is not ok either.
-      // _Cijkl_matrix_MP(declareProperty<SymmAnisotropicElasticityTensor >("Cijkl_matrix_MP"))//,
-      //_Cijkl_precipitates_rotated_MP(declareProperty<std::vector<SymmAnisotropicElasticityTensor > >("Cijkl_precipitates_rotated_MP"))
+      _Cijkl_matrix_MP(declareProperty<SymmAnisotropicElasticityTensor *>("Cijkl_matrix_MP")),
+      _Cijkl_precipitates_rotated_MP(declareProperty<std::vector<SymmAnisotropicElasticityTensor > >("Cijkl_precipitates_rotated_MP"))
  {
    // check to make sure the input file is all set up right
    if(_n_variants != coupledComponents("variable_names"))
