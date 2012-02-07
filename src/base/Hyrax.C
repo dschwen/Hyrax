@@ -19,7 +19,7 @@
 //Kernels
 #include "ACBulkCoupled.h"
 #include "CHBulkCoupled.h"
-//#include "ACTransformElasticDF.h"
+#include "ACTransformElasticDF.h"
 
 //Auxiliary Kernels
 #include "AuxNucleation.h"
@@ -35,8 +35,7 @@
 
 //Materials
 #include "PFMobilityLandau.h"
-//#include "LinearSingleCrystalPrecipitateMaterial.h"
-#include "LinearGeneralAnisotropicMaterial.h"
+#include "LinearSingleCrystalPrecipitateMaterial.h"
 
 //Initial Conditions
 
@@ -58,7 +57,7 @@ namespace Hyrax
     //Kernels
     registerKernel(CHBulkCoupled);
     registerKernel(ACBulkCoupled);
-    //  registerKernel(ACTransformElasticDF);
+    registerKernel(ACTransformElasticDF);
 
     //Auxiliary Kernels
     registerAux(AuxNucleation);
@@ -74,8 +73,7 @@ namespace Hyrax
 
     //Materials
     registerMaterial(PFMobilityLandau);
-    //registerMaterial(LinearSingleCrystalPrecipitateMaterial);
-    registerMaterial(LinearGeneralAnisotropicMaterial);
+    registerMaterial(LinearSingleCrystalPrecipitateMaterial);
 
     //Initial Conditions
 
