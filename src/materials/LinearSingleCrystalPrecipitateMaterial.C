@@ -80,15 +80,15 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     Real rotation_angle = 0.0;
 
     // set up temp variables for the precipitate rotations
-    SymmAnisotropicElasticityTensor C_tensor(const SymmAnisotropicElasticityTensor & _Cijkl_precipitate);
+    SymmAnisotropicElasticityTensor C_tensor(_Cijkl_precipitate);
     SymmTensor e_strain(const SymmTensor & _eigenstrain);
     
     // do the rotation
-    // C_tensor.rotate(rotation_angle);
-    // _Cijkl_precipitates_rotated[i] = C_tensor;
+    C_tensor.rotate(rotation_angle);
+    _Cijkl_precipitates_rotated[i] = C_tensor;
 
     //e_strain.rotate(rotation_angle);
-//    _eigenstrains_rotated[i] = e_strain;
+    //_eigenstrains_rotated[i] = e_strain;
   
     //   // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base; 
