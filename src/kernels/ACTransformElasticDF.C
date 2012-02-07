@@ -33,7 +33,7 @@ InputParameters validParams<ACTransformElasticDF>()
 ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParameters parameters)
     : ACBulk(name, parameters),
       _elasticity_tensor(getMaterialProperty<SymmElasticityTensor>("elasticity_tensor")),
-      //_eigenstrains_rotated_MP(getMaterialProperty<std::vector<SymmTensor *> >("eigenstrains_rotated_MP")),
+      _eigenstrains_rotated_MP(getMaterialProperty<std::vector<SymmTensor > >("eigenstrains_rotated_MP")),
       _local_strain(getMaterialProperty<SymmTensor>("local_strain")),
       _n_vars(getParam<int>("n_vars")),
       _OP_number(getParam<int>("OP_number"))
@@ -86,7 +86,7 @@ ACTransformElasticDF::calculateLocalTerm()
   elastic_a = (_elasticity_tensor[_qp]*_local_strain[_qp])*2.0;
 
   SymmTensor elastic_b;
-//  elastic_b = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp];
+  elastic_b = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp];
                       
   // elastic_term = -2.0 * local_strain * elastic_tensor * eigenstrain_OP * eta_OP
   return elastic_a.doubleContraction(elastic_b);
@@ -99,19 +99,18 @@ ACTransformElasticDF::calculateMisfitTerm()
   SymmTensor misfit_a(0.0);
   SymmTensor misfit_b(0.0);
 
-  //misfit_a = 2.0*(*_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp];
+ misfit_a = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp]*2.0;
   
   // This will loop over any arbitrary number of order parameters
   for (int i = 0; i < _n_vars+1; i++)
   {
     if (i == _OP_number)
     {
-      //misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*_u[_qp];
+      misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*_u[_qp];
     }
     else
     {
-      // i believe you reference coupled_vars this way
-      //misfit_b = (_eigenstrains_rotated_MP[_qp])[_i]*(*_coupled_vars[i])[_qp];
+     misfit_b = (_eigenstrains_rotated_MP[_qp])[_i]*(*_coupled_vars[i])[_qp];
     }
                              
     //misfit_term += 2.0*eta_OP*eigenstrain_OP * elastic_tensor * eigenstrain_i * eta_i

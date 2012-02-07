@@ -66,7 +66,7 @@ private:
 
   // system elasticity tensor, varies in space
   MaterialProperty<SymmElasticityTensor> & _elasticity_tensor;
-  // MaterialProperty<std::vector<SymmTensor > > & _eigenstrains_rotated_MP;
+  MaterialProperty<std::vector<SymmTensor > > & _eigenstrains_rotated_MP;
   MaterialProperty<SymmTensor> & _local_strain;
 
   // number of orientation variants - 1  

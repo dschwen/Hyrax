@@ -81,14 +81,14 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
 
     // set up temp variables for the precipitate rotations
     SymmAnisotropicElasticityTensor C_tensor(_Cijkl_precipitate);
-    SymmTensor e_strain(const SymmTensor & _eigenstrain);
+    SymmTensor e_strain(_eigenstrain);
     
     // do the rotation
     C_tensor.rotate(rotation_angle);
     _Cijkl_precipitates_rotated[i] = C_tensor;
 
-    //e_strain.rotate(rotation_angle);
-    //_eigenstrains_rotated[i] = e_strain;
+    e_strain.rotate(rotation_angle);
+    _eigenstrains_rotated[i] = e_strain;
   
     //   // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base; 
@@ -161,9 +161,9 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
    // // sum up the misfit strains for the orientation variants
    SymmTensor sum_precipitate_strains(0.0);
    for(int i=0; i<_n_variants; i++)
-     // sum_precipitate_strains += (*_eigenstrains_rotated_MP[i])[_qp]*(*_coupled_variables[i])[_qp]*(*_coupled_variables[i])[_qp];
+     sum_precipitate_strains += (_eigenstrains_rotated_MP[_qp])[i]*(*_coupled_variables[i])[_qp]*(*_coupled_variables[i])[_qp];
      
-     _misfit_strain[_qp] = sum_precipitate_strains;
+   _misfit_strain[_qp] = sum_precipitate_strains;
    
    _elastic_strain[_qp] = _local_strain[_qp] - _misfit_strain[_qp];
  }
