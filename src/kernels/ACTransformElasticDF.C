@@ -26,7 +26,7 @@ InputParameters validParams<ACTransformElasticDF>()
   params.addRequiredParam<int>("n_vars", "# of orientation variants minus 1 for precips in single crystal");
   params.addRequiredParam<int>("OP_number","number of the order parameter for this kernel");
   // must start from 0 at the moment.
-  
+
   return params;
 }
 
@@ -46,22 +46,31 @@ ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParame
          _coupled_vars.resize(_n_vars+1);
 
          for(int i=0; i< _n_vars+1; i++)
+         {
+           if(i == _OP_number)
+           {
+            _coupled_vars[i] = NULL;
+           }
+           else
+           {
            _coupled_vars[i] = &coupledValue("var_names", i);
+           }
+         }
       }
-                         
+
 
 Real
 ACTransformElasticDF::computeDFDOP(PFFunctionType type)
 {
 // elastic strain = homogeneous strain (BC) + heterogeneous strain - misfit strain
 // Follow mostly what is in ACGrGrElasticDF:
-  
+
   switch (type)
   {
   case Residual:
 
     // hokay, so!
-    
+
     Real elastic_term;
     Real misfit_term;
 
@@ -72,12 +81,12 @@ ACTransformElasticDF::computeDFDOP(PFFunctionType type)
     // return 0.0;
 
   case Jacobian:
-    
+
     return 0.0;
   }
   mooseError("Invalid type passed in");
 }
-                         
+
 Real
 ACTransformElasticDF::calculateLocalTerm()
 {
@@ -87,7 +96,7 @@ ACTransformElasticDF::calculateLocalTerm()
 
   SymmTensor elastic_b;
   elastic_b = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp];
-                      
+
   // elastic_term = -2.0 * local_strain * elastic_tensor * eigenstrain_OP * eta_OP
   return elastic_a.doubleContraction(elastic_b);
 }
@@ -100,7 +109,7 @@ ACTransformElasticDF::calculateMisfitTerm()
   SymmTensor misfit_b(0.0);
 
  misfit_a = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp]*2.0;
-  
+
   // This will loop over any arbitrary number of order parameters
   for (int i = 0; i < _n_vars+1; i++)
   {
@@ -112,11 +121,10 @@ ACTransformElasticDF::calculateMisfitTerm()
     {
      misfit_b = (_eigenstrains_rotated_MP[_qp])[_i]*(*_coupled_vars[i])[_qp];
     }
-                             
+
     //misfit_term += 2.0*eta_OP*eigenstrain_OP * elastic_tensor * eigenstrain_i * eta_i
-    misfit_term += misfit_a.doubleContraction(misfit_b); 
+    misfit_term += misfit_a.doubleContraction(misfit_b);
   }
 
   return misfit_term;
 }
-                         
