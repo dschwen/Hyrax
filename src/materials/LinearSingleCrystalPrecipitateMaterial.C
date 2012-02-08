@@ -107,6 +107,9 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
 void
  LinearSingleCrystalPrecipitateMaterial::computeQpProperties()
  {
+   _Cijkl_precipitates_rotated_MP[_qp].resize(_n_variants);
+   _eigenstrains_rotated_MP[_qp].resize(_n_variants);
+
    computeQpElasticityTensor();
    computeQpElasticStrain();
    computeQpElasticStress();
@@ -135,7 +138,7 @@ void
      // Fill in the precipitates' stiffnesses materials property
       (_Cijkl_precipitates_rotated_MP[_qp])[i] = _Cijkl_precipitates_rotated[i];
       sum_precipitate_tensors += (_Cijkl_precipitates_rotated_MP[_qp])[i]*(*_coupled_variables[i])[_qp];
-      sum_order_parameters += (*_coupled_variables[_qp])[i];
+      sum_order_parameters += (*_coupled_variables[i])[_qp];
     }
 
     // this is bastardly, but for the moment, truncate the sum to = 1 if it's > 1
