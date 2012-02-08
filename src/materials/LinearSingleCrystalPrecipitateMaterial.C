@@ -74,32 +74,35 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   _Cijkl_precipitates_rotated.resize(_n_variants);
   _eigenstrains_rotated.resize(_n_variants);
 
-  // rotate all the things
-  for(int i=0; i<_n_variants; i++)
-  {
-    // in degrees, since SymmAnisotropicElasticityTensor takes degrees
-    Real rotation_angle_base = 360.0/Real(_n_variants);
-    Real rotation_angle = 0.0;
+  // fill in the first variant without rotation
+  _Cijkl_precipitates_rotated[0] = _Cijkl_precipitate;
+  _eigenstrains_rotated[0] = _eigenstrain;
 
-    // set up temp variables for the precipitate rotations
+  // rotate all the things
+  // in degrees, since SymmAnisotropicElasticityTensor takes degrees
+  Real rotation_angle_base = 360.0/Real(_n_variants);
+  Real rotation_angle = rotation_angle_base;
+  for(int i=1; i<_n_variants; i++)
+  {
+   // set up temp variables for the precipitate rotations
     SymmAnisotropicElasticityTensor C_tensor(_Cijkl_precipitate);
     SymmTensor e_strain(_eigenstrain);
-    
+
     // do the rotation
     C_tensor.rotate(rotation_angle);
+    // the tensor rotation is STILL only working for a cubic material.
+    //std::cout << C_tensor, std::cout << std::endl;
+
     _Cijkl_precipitates_rotated[i] = C_tensor;
+    //std::cout <<_Cijkl_precipitates_rotated[i], std::cout << std::endl;
 
     e_strain.rotate(rotation_angle);
     _eigenstrains_rotated[i] = e_strain;
   
     // increment the rotation angle for the next go-round
-    rotation_angle = rotation_angle + rotation_angle_base; 
+    rotation_angle = rotation_angle + rotation_angle_base;
   }
 }
-
-   //debugging
-   //std::cout << _Cijkl_matrix, std::cout << std::endl;
-   //std::cout <<  _Cijkl_matrix_MP[_qp], std::cout << std::endl;
 
 void
  LinearSingleCrystalPrecipitateMaterial::computeQpProperties()
@@ -120,20 +123,17 @@ void
 
    // Fill in the matrix stiffness material property (this WILL work fine)
    _Cijkl_matrix_MP[_qp] = _Cijkl_matrix;
-
-   //debugging
-   std::cout << _Cijkl_matrix, std::cout << std::endl;
+   //std::cout << _Cijkl_matrix, std::cout << std::endl;
    //std::cout <<  _Cijkl_matrix_MP[_qp], std::cout << std::endl;
-
-// Sum the order parameters and stiffnesses for the precipitates
-    SymmElasticityTensor sum_precipitate_tensors(0.0);
-    Real sum_order_parameters = 0.0;
+   
+   // Sum the order parameters and stiffnesses for the precipitates
+   SymmElasticityTensor sum_precipitate_tensors(0.0);
+   Real sum_order_parameters = 0.0;
   
     for(int i=0; i<_n_variants; i++)
     {
      // Fill in the precipitates' stiffnesses materials property
-      // (_Cijkl_precipitates_rotated_MP[_qp])[i] = _eigenstrains_rotated[i];
-
+      (_Cijkl_precipitates_rotated_MP[_qp])[i] = _Cijkl_precipitates_rotated[i];
       sum_precipitate_tensors += (_Cijkl_precipitates_rotated_MP[_qp])[i]*(*_coupled_variables[i])[_qp];
       sum_order_parameters += (*_coupled_variables[_qp])[i];
     }
