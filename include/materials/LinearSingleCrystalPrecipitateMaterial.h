@@ -45,13 +45,23 @@ class LinearSingleCrystalPrecipitateMaterial : public SolidMechanicsMaterial
 {
 public:
   LinearSingleCrystalPrecipitateMaterial(const std:: string & name, InputParameters parameters);
-  virtual ~LinearSingleCrystalPrecipitateMaterial();
 
 protected:
   virtual void computeQpProperties();
   
+  /**
+   * Computes the overall material elasticity tensor for all space.
+   */
   virtual void computeQpElasticityTensor();
+
+  /**
+   * Computes the elastic strain for all space.
+   */
   virtual void computeQpElasticStrain();
+
+  /**
+   * Computes the elastic stress for all space.
+   */
   virtual void computeQpElasticStress();
 
 private:

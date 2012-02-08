@@ -12,6 +12,8 @@
 #include "SymmTensor.h"
 #include "SymmAnisotropicElasticityTensor.h"
 
+#include <ostream>
+
 /**
  * LinearSingleCrystalPrecipitateMaterial handles anisotropic, single-crystal material elastic
  * constants.  It's designed to work with SymmSingleCrystalMaterial.  It handles a single
@@ -90,19 +92,16 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     e_strain.rotate(rotation_angle);
     _eigenstrains_rotated[i] = e_strain;
   
-    //   // increment the rotation angle for the next go-round
+    // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base; 
   }
 }
 
- LinearSingleCrystalPrecipitateMaterial::~LinearSingleCrystalPrecipitateMaterial()
- {
-   // delete new_Cijkl_matrix;
-   // delete new_Cijkl_precipitate;
-   // delete new_eigenstrain;
- }
+   //debugging
+   //std::cout << _Cijkl_matrix, std::cout << std::endl;
+   //std::cout <<  _Cijkl_matrix_MP[_qp], std::cout << std::endl;
 
- void
+void
  LinearSingleCrystalPrecipitateMaterial::computeQpProperties()
  {
    computeQpElasticityTensor();
@@ -122,16 +121,20 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
    // Fill in the matrix stiffness material property (this WILL work fine)
    _Cijkl_matrix_MP[_qp] = _Cijkl_matrix;
 
-   // Sum the order parameters and stiffnesses for the precipitates
+   //debugging
+   std::cout << _Cijkl_matrix, std::cout << std::endl;
+   //std::cout <<  _Cijkl_matrix_MP[_qp], std::cout << std::endl;
+
+// Sum the order parameters and stiffnesses for the precipitates
     SymmElasticityTensor sum_precipitate_tensors(0.0);
     Real sum_order_parameters = 0.0;
   
     for(int i=0; i<_n_variants; i++)
     {
      // Fill in the precipitates' stiffnesses materials property
-     // (_Cijkl_precipitates_rotated_MP[_qp])[i] = _eigenstrains_rotated[i];
+      // (_Cijkl_precipitates_rotated_MP[_qp])[i] = _eigenstrains_rotated[i];
 
-      // sum_precipitate_tensors += (*_coupled_variables[i])[_qp](_Cijkl_precipitates_rotated_MP[_qp])[i];
+      sum_precipitate_tensors += (_Cijkl_precipitates_rotated_MP[_qp])[i]*(*_coupled_variables[i])[_qp];
       sum_order_parameters += (*_coupled_variables[_qp])[i];
     }
 
@@ -139,7 +142,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     if(sum_order_parameters > 1.0)
       sum_order_parameters = 1.0;
  
-    _elasticity_tensor[_qp] = sum_precipitate_tensors /*+ (1.0 - sum_order_parameters)*_Cijkl_matrix_MP[_qp]*/;
+    _elasticity_tensor[_qp] = sum_precipitate_tensors + _Cijkl_matrix_MP[_qp]*(1.0 - sum_order_parameters);
 
    // Jacobian multiplier of stress ... hmm..copying from LinearIsotropicMaterial
     _Jacobian_mult[_qp] = _elasticity_tensor[_qp];
