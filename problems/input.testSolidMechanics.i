@@ -1,20 +1,21 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 10
-  ny = 10
+  nx = 50
+  ny = 50
   nz = 0
   xmin = 0
-  xmax = 10
+  xmax = 50
   ymin = 0
-  ymax = 10
+  ymax = 50
   zmin = 0
   zmax = 0
   elem_type = QUAD4
+  uniform_refine = 2
 []
 
 [Variables]
-  active = 'concentration n1 disp_x disp_y'
+#  active = 'concentration n1 disp_x disp_y'
 
   [./concentration]
     order = THIRD
@@ -22,11 +23,12 @@
     [./InitialCondition]
       type = SmoothCircleIC
       var_name = concentration
+      int_width = 1.5
       invalue = 0.6
       outvalue = 0.1
-      radius = 2.0
-      x1 = 5
-      y1 = 5
+      radius = 1.5
+      x1 = 25
+      y1 = 25
     [../]
   [../]
 
@@ -36,23 +38,24 @@
     [./InitialCondition]
       type = SmoothCircleIC
       var_name = n1
-      invalue = 1.0
+      int_width = 1.5
+      invalue = 1.6
       outvalue = 0.0
-      radius = 2.0
-      x1 = 5
-      y1 = 5
+      radius = 1.5
+      x1 = 25
+      y1 = 25
     [../]
   [../]
 
-  [./disp_x]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+#  [./disp_x]
+#    order = FIRST
+#    family = LAGRANGE
+#  [../]
 
-  [./disp_y]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+#  [./disp_y]
+#    order = FIRST
+#    family = LAGRANGE
+#  [../]
 []
 
 [Kernels]
@@ -104,29 +107,29 @@
     kappa_name = kappa_n
   [../]
 
-  [./ACTransformElasticDF]
-    type = ACTransformElasticDF
-    variable = n1
-    var_names = ''
-    n_vars = 0
-    OP_number = 0
-  [../]
+#  [./ACTransformElasticDF]
+#    type = ACTransformElasticDF
+#    variable = n1
+#    var_names = ''
+#    n_vars = 0
+#    OP_number = 0
+#  [../]
 
-  [./stress_div_disp_x]
-    type = StressDivergence
-    variable = disp_x
-    component = 0
-    #disp_x = disp_x
-    #disp_y = disp_y
-  [../]
+#  [./stress_div_disp_x]
+#    type = StressDivergence
+#    variable = disp_x
+#    component = 0
+#    #disp_x = disp_x
+#    #disp_y = disp_y
+#  [../]
 
-  [./stress_div_disp_y]
-    type = StressDivergence
-    variable = disp_y
-    component = 1
-    disp_x = disp_x
-    disp_y = disp_y
-  [../]
+#  [./stress_div_disp_y]
+#    type = StressDivergence
+#    variable = disp_y
+#    component = 1
+#    disp_x = disp_x
+#    disp_y = disp_y
+#  [../]
 []
 
 [BCs]
@@ -135,13 +138,13 @@ active = 'Periodic'
     [./left_right]
       primary = 0
       secondary = 2
-      translation = '0 10 0'
+      translation = '0 50 0'
     [../]
 
     [./top_bottom]
       primary = 1
       secondary = 3
-      translation = '-10 0 0'
+      translation = '-50 0 0'
     [../]
   [../]
 []
@@ -162,18 +165,19 @@ active = 'Periodic'
     C2 = 0.59
   [../]
 
-  [./test_material]
-    type = LinearSingleCrystalPrecipitateMaterial
-    block = 0
-    disp_x = disp_x
-    disp_y = disp_y
-    C_matrix = '100 200 300 400 500 600 700 800 900'
-    C_precipitate = '110 210 310 410 510 610 710 810 910'
-    e_precipitate = '10 20 30 40 50 60'
-    n_variants = 1
-    variable_names = 'n1'
+# fix the values for C and e
+#  [./test_material]
+#    type = LinearSingleCrystalPrecipitateMaterial
+#    block = 0
+#    disp_x = disp_x
+#    disp_y = disp_y
+#    C_matrix = '100 200 300 400 500 600 700 800 900'
+#    C_precipitate = '110 210 310 410 510 610 710 810 910'
+#    e_precipitate = '10 20 30 40 50 60'
+#    n_variants = 1
+#    variable_names = 'n1'
 #    all_21 = false
-  [../]
+#  [../]
 []
 
 [Executioner]
@@ -188,7 +192,7 @@ active = 'Periodic'
   nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 1
+  num_steps = 100
   dt = 0.03
 []
 
