@@ -26,7 +26,7 @@
       int_width = 1.5
       invalue = 0.6
       outvalue = 0.1
-      radius = 1.5
+      radius = 1.0
       x1 = 25
       y1 = 25
     [../]
@@ -41,21 +41,21 @@
       int_width = 1.5
       invalue = 1.6
       outvalue = 0.0
-      radius = 1.5
+      radius = 1.0
       x1 = 25
       y1 = 25
     [../]
   [../]
 
-#  [./disp_x]
-#    order = FIRST
-#    family = LAGRANGE
-#  [../]
+  [./disp_x]
+    order = FIRST
+    family = LAGRANGE
+  [../]
 
-#  [./disp_y]
-#    order = FIRST
-#    family = LAGRANGE
-#  [../]
+  [./disp_y]
+    order = FIRST
+    family = LAGRANGE
+  [../]
 []
 
 [Kernels]
@@ -107,29 +107,25 @@
     kappa_name = kappa_n
   [../]
 
-#  [./ACTransformElasticDF]
-#    type = ACTransformElasticDF
-#    variable = n1
-#    var_names = ''
-#    n_vars = 0
-#    OP_number = 0
-#  [../]
+  [./ACTransformElasticDF]
+    type = ACTransformElasticDF
+    variable = n1
+    var_names = ''
+    n_vars = 0
+    OP_number = 0
+  [../]
 
-#  [./stress_div_disp_x]
-#    type = StressDivergence
-#    variable = disp_x
-#    component = 0
-#    #disp_x = disp_x
-#    #disp_y = disp_y
-#  [../]
+  [./stress_div_disp_x]
+    type = StressDivergence
+    variable = disp_x
+    component = 0
+  [../]
 
-#  [./stress_div_disp_y]
-#    type = StressDivergence
-#    variable = disp_y
-#    component = 1
-#    disp_x = disp_x
-#    disp_y = disp_y
-#  [../]
+  [./stress_div_disp_y]
+    type = StressDivergence
+    variable = disp_y
+    component = 1
+  [../]
 []
 
 [BCs]
@@ -165,19 +161,18 @@ active = 'Periodic'
     C2 = 0.59
   [../]
 
-# fix the values for C and e
-#  [./test_material]
-#    type = LinearSingleCrystalPrecipitateMaterial
-#    block = 0
-#    disp_x = disp_x
-#    disp_y = disp_y
-#    C_matrix = '100 200 300 400 500 600 700 800 900'
-#    C_precipitate = '110 210 310 410 510 610 710 810 910'
-#    e_precipitate = '10 20 30 40 50 60'
-#    n_variants = 1
-#    variable_names = 'n1'
-#    all_21 = false
-#  [../]
+  [./test_material]
+    type = LinearSingleCrystalPrecipitateMaterial
+    block = 0
+    disp_x = disp_x
+    disp_y = disp_y
+    C_matrix = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
+    C_precipitate = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
+    e_precipitate = '0.00551 0.0564 0.0570 0.0 0.0 0.0'
+    n_variants = 1
+    variable_names = 'n1'
+    all_21 = false
+  [../]
 []
 
 [Executioner]
@@ -197,7 +192,7 @@ active = 'Periodic'
 []
 
 [Output]
-  file_base = out
+  file_base = 2D_test_precip_material_mechanics
   output_initial = true
   interval = 1
   exodus = true

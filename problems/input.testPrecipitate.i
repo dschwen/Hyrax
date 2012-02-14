@@ -1,16 +1,16 @@
 [Mesh]
   type = GeneratedMesh
-  dim = 3
+  dim = 2
   nx = 50
   ny = 50
-  nz = 50
+  nz = 0
   xmin = 0
   xmax = 50
   ymin = 0
   ymax = 50
   zmin = 0
-  zmax = 50
-  elem_type = HEX8
+  zmax = 0
+  elem_type = QUAD4
   uniform_refine = 2
 []
 
