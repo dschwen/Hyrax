@@ -25,7 +25,7 @@ template<>
 InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
 {
   InputParameters params = validParams<SolidMechanicsMaterial>();
-  params.addRequiredParam<std::vector<Real> >("C_matrix", "Stiffness tensor for matrix");  
+  params.addRequiredParam<std::vector<Real> >("C_matrix", "Stiffness tensor for matrix: C11, C12, C13, C22, C23, C33, C44, C55, C66 (for 6 inputs)");  
   params.addRequiredParam<std::vector<Real> >("C_precipitate", "Stiffness tensor for precipitate");
   params.addRequiredParam<std::vector<Real> >("e_precipitate","Eigenstrain tensor for precipitate: e11, e22, e33, e23, e13, e12");
   params.addRequiredParam<int>("n_variants","# of orientation variants for precipitate in single crystal");
@@ -111,6 +111,7 @@ void
    _eigenstrains_rotated_MP[_qp].resize(_n_variants);
 
    computeQpElasticityTensor();
+   computeQpEigenstrain();
    computeQpElasticStrain();
    computeQpElasticStress();
  }
@@ -141,15 +142,32 @@ void
       sum_order_parameters += (*_coupled_variables[i])[_qp];
     }
 
+    // std::cout << sum_precipitate_tensors, std::cout << std::endl;
+
     // this is bastardly, but for the moment, truncate the sum to = 1 if it's > 1
     if(sum_order_parameters > 1.0)
       sum_order_parameters = 1.0;
+    // std::cout << sum_order_parameters, std::cout << std::endl;
  
     _elasticity_tensor[_qp] = sum_precipitate_tensors + _Cijkl_matrix_MP[_qp]*(1.0 - sum_order_parameters);
+    //   std::cout << _elasticity_tensor[_qp], std::cout << std::endl;
+    
 
    // Jacobian multiplier of stress ... hmm..copying from LinearIsotropicMaterial
     _Jacobian_mult[_qp] = _elasticity_tensor[_qp];
  }
+
+void
+LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
+{
+  for(int i=0; i<_n_variants; i++)
+  {
+    // Fill in the precipitates' eigenstrains materials property
+    (_eigenstrains_rotated_MP[_qp])[i] = _eigenstrains_rotated[i];
+   }
+
+}
+
 
  void
  LinearSingleCrystalPrecipitateMaterial::computeQpElasticStrain()
@@ -164,22 +182,26 @@ void
                                      0.5*(_grad_disp_y[_qp](2)+ _grad_disp_z[_qp](1)),
                                      0.5*(_grad_disp_z[_qp](0)+ _grad_disp_x[_qp](2)) );
 
+   //std::cout << _local_strain[_qp], std::cout << std::endl;
+
    // // sum up the misfit strains for the orientation variants
    SymmTensor sum_precipitate_strains(0.0);
    for(int i=0; i<_n_variants; i++)
      sum_precipitate_strains += (_eigenstrains_rotated_MP[_qp])[i]*(*_coupled_variables[i])[_qp]*(*_coupled_variables[i])[_qp];
      
    _misfit_strain[_qp] = sum_precipitate_strains;
+   //  std::cout << _misfit_strain[_qp], std::cout << std::endl;
    
    _elastic_strain[_qp] = _local_strain[_qp] - _misfit_strain[_qp];
+   // std::cout << _elastic_strain[_qp], std::cout << std::endl;
  }
 
  void
  LinearSingleCrystalPrecipitateMaterial::computeQpElasticStress()
  {
    // stress = C * e
-   // This is computed here so we can see the field, not do a calculation with it
    _stress[_qp] = _elasticity_tensor[_qp]*_elastic_strain[_qp];
+   //std::cout << _stress[_qp], std::cout << std::endl;
  }
 
 

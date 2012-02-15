@@ -9,6 +9,7 @@
 *************************************************************************/
 
 #include "ACTransformElasticDF.h"
+#include <ostream>
 
 /**
  * ACTransformElasticDF handles the elastic energy term for a solid-solid transformation
@@ -75,12 +76,14 @@ ACTransformElasticDF::computeDFDOP(PFFunctionType type)
     Real misfit_term;
 
     elastic_term = calculateLocalTerm();
+    // std::cout << "elastic term", std::cout << elastic_term, std::cout << std::endl;
+
     misfit_term = calculateMisfitTerm();
-
+    //std::cout << "misfit term", std::cout << misfit_term, std::cout  << std::endl;
+    
     return elastic_term + misfit_term;
-    // return 0.0;
-
-  case Jacobian:
+    
+case Jacobian:
 
     return 0.0;
   }
@@ -94,8 +97,12 @@ ACTransformElasticDF::calculateLocalTerm()
   // have to be careful on the multiply operator here - put the scalar at the end of the expression
   elastic_a = (_elasticity_tensor[_qp]*_local_strain[_qp])*2.0;
 
+//  std::cout << "elastic_a" << std::cout << elastic_a;
+
   SymmTensor elastic_b;
   elastic_b = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp];
+//   std::cout << "elastic_b" << std::cout << elastic_b;
+  
 
   // elastic_term = -2.0 * local_strain * elastic_tensor * eigenstrain_OP * eta_OP
   return elastic_a.doubleContraction(elastic_b);

@@ -53,6 +53,11 @@ protected:
    * Computes the overall material elasticity tensor for all space.
    */
   virtual void computeQpElasticityTensor();
+  
+/**
+   * Computes the overall material eigenstrain tensor for all space.
+   */
+  virtual void computeQpEigenstrain();
 
   /**
    * Computes the elastic strain for all space.
