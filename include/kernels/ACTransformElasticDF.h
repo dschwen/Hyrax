@@ -51,17 +51,31 @@ protected:
 
   /**
    * calculateLocalTerm()
-   * @return returns the prition of the partial derivative containing the local strain term.
+   * @return returns the portion of the partial derivative containing the local strain term.
    */
   virtual Real calculateLocalTerm();
   
   /**
    * calculateMisfitTerm()
-   * @return returns the prition of the partial derivative containing the misfit strain term.
+   * @return returns the portion of the partial derivative containing the misfit strain term.
    * This can handle an arbitrary number of order parameters.
    */
 virtual Real calculateMisfitTerm();
 
+/**
+   * calculateLocalJacobianTerm()
+   * @return returns the portion of the partial derivative Jacobian containing the local
+   * strain term.
+   */
+  virtual Real calculateLocalJacobianTerm();
+  
+  /**
+   * calculateMisfitJacobianTerm()
+   * @return returns the portion of the partial derivative Jacobian containing the misfit strain term.
+   * This can handle an arbitrary number of order parameters.
+   */
+virtual Real calculateMisfitJacobianTerm();
+  
 private:
 
   // system elasticity tensor, varies in space

@@ -25,7 +25,7 @@
       var_name = concentration
       invalue = 0.6
       outvalue = 0.1
-      radius = 2.0
+      radius = 1.5
       int_width = 1.5
       x1 = 10
       y1 = 10
@@ -40,7 +40,7 @@
       var_name = n1
       invalue = 1.6
       outvalue = 0.0
-      radius = 2.0
+      radius = 1.5
       int_width = 1.5
       x1 = 10
       y1 = 10
@@ -190,12 +190,12 @@ active = 'Periodic'
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'
 
-  l_max_its = 30
-  nl_max_its = 150
+  l_max_its = 10
+  nl_max_its = 25
 
   start_time = 0.0
   num_steps = 1
-  dt = 0.000003
+  dt = 0.0003
 []
 
 [Output]
