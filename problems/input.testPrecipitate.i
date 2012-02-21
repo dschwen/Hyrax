@@ -11,7 +11,7 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 1
+  uniform_refine = 2
 []
 
 [Variables]
@@ -191,7 +191,8 @@ active = 'Periodic'
   petsc_options_value = 'hypre boomeramg 101'
 
   l_max_its = 10
-  nl_max_its = 25
+  nl_max_its = 50
+  nl_abs_tol = 1.0e-5
 
   start_time = 0.0
   num_steps = 1
@@ -199,7 +200,7 @@ active = 'Periodic'
 []
 
 [Output]
-  file_base = test_solid_mech
+  file_base = test_solid_mech4
   output_initial = true
   interval = 1
   exodus = true

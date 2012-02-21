@@ -87,7 +87,9 @@ ACTransformElasticDF::computeDFDOP(PFFunctionType type)
     elastic_term = calculateLocalJacobianTerm();
     misfit_term = calculateMisfitJacobianTerm();
 
-    return (elastic_term + misfit_term)*_phi[_j][_qp];
+    return 0.0;
+    
+    //return (elastic_term + misfit_term)*_phi[_j][_qp];
   }
   mooseError("Invalid type passed in");
 }
@@ -172,7 +174,7 @@ ACTransformElasticDF::calculateMisfitTerm()
      else
      {
        misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*(*_coupled_vars[i])[_qp];
-       misfit_b *= (_coupled_vars[i])[_qp];
+       misfit_b *= (*_coupled_vars[i])[_qp];
      }
 
      misfit_term += misfit_a.doubleContraction(misfit_b);
