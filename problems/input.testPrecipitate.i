@@ -1,13 +1,13 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 20
-  ny = 20
+  nx = 50
+  ny = 50
   nz = 0
   xmin = 0
-  xmax = 20
+  xmax = 50
   ymin = 0
-  ymax = 20
+  ymax = 50
   zmin = 0
   zmax = 0
   elem_type = QUAD4
@@ -27,8 +27,8 @@
       outvalue = 0.1
       radius = 1.5
       int_width = 1.5
-      x1 = 10
-      y1 = 10
+      x1 = 25
+      y1 = 25
     [../]
   [../]
 
@@ -42,8 +42,8 @@
       outvalue = 0.0
       radius = 1.5
       int_width = 1.5
-      x1 = 10
-      y1 = 10
+      x1 = 25
+      y1 = 25
     [../]
   [../]
 
@@ -134,13 +134,13 @@ active = 'Periodic'
     [./left_right]
       primary = 0
       secondary = 2
-      translation = '0 20 0'
+      translation = '0 50 0'
     [../]
 
     [./top_bottom]
       primary = 1
       secondary = 3
-      translation = '-20 0 0'
+      translation = '-50 0 0'
     [../]
 
 #    [./front_back]
@@ -192,11 +192,11 @@ active = 'Periodic'
 
   l_max_its = 10
   nl_max_its = 50
-  nl_abs_tol = 1.0e-5
+  nl_abs_tol = 6.0e-6
 
   start_time = 0.0
   num_steps = 1
-  dt = 0.0003
+  dt = 0.003
 []
 
 [Output]
