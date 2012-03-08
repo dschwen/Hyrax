@@ -38,6 +38,7 @@
 #include "LinearSingleCrystalPrecipitateMaterial.h"
 
 //Initial Conditions
+#include "PolySpecifiedSmoothCircleIC.h"
 
 //Dampers
 
@@ -76,6 +77,7 @@ namespace Hyrax
     registerMaterial(LinearSingleCrystalPrecipitateMaterial);
 
     //Initial Conditions
+    registerInitialCondition(PolySpecifiedSmoothCircleIC);
 
     //Dampers
 
