@@ -54,9 +54,9 @@ all:: hyrax
 
 hyrax: $(hyrax_APP)
 
-$(hyrax_APP): $(moose_LIB) $(elk_LIB) $(hyrax_LIB) $(hyrax_app_objects)
+$(hyrax_APP): $(moose_LIB) $(elk_MODULES) $(hyrax_LIB) $(hyrax_app_objects)
 	@echo "Linking "$@"..."
-	@$(libmesh_CXX) $(libmesh_CXXFLAGS) $(hyrax_app_objects) -o $@ $(hyrax_LIB) $(elk_LIB) $(moose_LIB) $(libmesh_LIBS) $(libmesh_LDFLAGS) $(ADDITIONAL_LIBS)
+	@$(libmesh_CXX) $(libmesh_CXXFLAGS) $(hyrax_app_objects) -o $@ $(hyrax_LIB) $(elk_MODULES) $(moose_LIB) $(libmesh_LIBS) $(libmesh_LDFLAGS) $(ADDITIONAL_LIBS)
 
 -include $(HYRAX_DIR)/src/*.d
 endif
