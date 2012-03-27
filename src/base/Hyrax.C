@@ -14,7 +14,9 @@
 #include "ActionFactory.h"
 
 //Elk Includes
-#include "Elk.h"
+#include "SolidMechanicsModule.h"
+#include "PhaseFieldModule.h"
+#include "HeatConductionModule.h"
 
 //Kernels
 #include "ACBulkCoupled.h"
@@ -54,7 +56,15 @@ namespace Hyrax
   void registerObjects()
   {
     Moose::registerObjects();
-    Elk::registerObjects();
+
+    // Register Elk Modules
+    Elk::PhaseField::registerObjects();
+    Elk::SolidMechanics::registerObjects();
+    Elk::HeatConduction::registerObjects();
+
+    // Associate Syntax from SolidMechanics Module
+    Elk::SolidMechanics::associateSyntax();
+    
     //Kernels
     registerKernel(CHBulkCoupled);
     registerKernel(ACBulkCoupled);

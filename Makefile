@@ -33,7 +33,9 @@ APPLICATION_NAME := hyrax
 DEP_APPS    ?= $(shell $(MOOSE_DIR)/scripts/find_dep_apps.py $(APPLICATION_NAME))
 
 ################################## ELK MODULES ################################
-ALL_ELK_MODULES := yes
+PHASE_FIELD       := yes
+SOLID_MECHANICS   := yes
+HEAT_CONDUCTION   := yes
 ###############################################################################
 
 include $(MOOSE_DIR)/build.mk
