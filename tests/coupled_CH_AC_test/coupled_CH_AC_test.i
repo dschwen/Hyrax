@@ -1,5 +1,5 @@
-# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system to make sure 
-# that none of the backend code is changing results.
+# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system.  This test is 
+# for regression testing.
 
 [Mesh]
   type = GeneratedMesh  
@@ -124,7 +124,7 @@ active = 'Periodic'
 [Executioner]
   type = Transient
   scheme = 'crank-nicolson'
-  petsc_options = '-snes_mf_operator -ksp_monitor'
+  petsc_options = '-snes_mf_operator'
 
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'
@@ -147,5 +147,3 @@ active = 'Periodic'
   exodus = true
   perf_log = true
 []
-
-

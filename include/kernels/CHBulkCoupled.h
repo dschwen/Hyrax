@@ -8,8 +8,8 @@
 *  
 *************************************************************************/
 
-#ifndef CHBulkCoupled_H
-#define CHBulkCoupled_H
+#ifndef CHBULKCOUPLED_H
+#define CHBULKCOUPLED_H
 
 #include "CHBulk.h"
 
@@ -31,10 +31,6 @@ public:
   CHBulkCoupled(const std::string & name, InputParameters parameters);
   
 protected:
-  // this is a little extraneous and could get cleaned up
-  //std::string _a1_name;
-  // std::string _a2_name;
-  // std::string _c1_name;
  
   /**
    * computeGradDFDCons()
@@ -53,4 +49,4 @@ private:
   VariableGradient & _coupled_OP_grad;  ///< gradient of AC variable
 };
 
-#endif //CHBulkCoupled_H
+#endif //CHBULKCOUPLED_H

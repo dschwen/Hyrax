@@ -21,30 +21,18 @@ InputParameters validParams<ACBulkCoupled>()
 {
   InputParameters params = validParams<ACBulk>();
   params.addRequiredCoupledVar("coupled_CH_var","The concentration to be coupled to the AC equation");
-  // these are actually kind of extraneous and should get cleaned up
-  //params.addParam<std::string>("second_landau","A2","Second Landau coefficient"); 
-  //params.addParam<std::string>("third_landau","A3","Third Landau coefficient"); 
-  //params.addParam<std::string>("fourth_landau","A4","Fourth Landau coefficient"); 
-  //params.addParam<std::string>("second_well","C2","Second Landau well position"); 
+
   return params;
 }
 
 ACBulkCoupled::ACBulkCoupled(const std::string & name, InputParameters parameters)
   :ACBulk(name, parameters),
-
-   // Pull in the names from the input file for the coefficients and then declare the materials properties
-   //_a2_name(getParam<std::string>("second_landau")),
-   //_a3_name(getParam<std::string>("third_landau")),
-   //_a4_name(getParam<std::string>("fourth_landau")),
-   //_c2_name(getParam<std::string>("second_well")),
-
    // Get the material properties for the Landau coefficients
    _a2(getMaterialProperty<Real>("A2")),
    _a3(getMaterialProperty<Real>("A3")),
    _a4(getMaterialProperty<Real>("A4")),
    _c2(getMaterialProperty<Real>("C2")),
-
-   // Make the coupled value whatever is directed in the input file
+// Make the coupled value whatever is directed in the input file
    _coupled_CH_var(coupledValue("coupled_CH_var"))
 {
 }

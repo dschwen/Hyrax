@@ -8,8 +8,8 @@
 *
 *************************************************************************/
 
-#ifndef ACBulkCoupled_H
-#define ACBulkCoupled_H
+#ifndef ACBULKCOUPLED_H
+#define ACBULKCOUPLED_H
 
 #include "ACBulk.h"
 
@@ -32,12 +32,6 @@ public:
 
 protected:
 
-  // This is actually a little extraneous and can get cleaned up later.
-//  std::string _a2_name;
-//  std::string _a3_name;
-//  std::string _a4_name;
-//  std::string _c2_name;
-
   /**
    * computeDFDOP()
    * @return returns the partial(bulk free energy/order parameter)
@@ -56,5 +50,5 @@ private:
 
 };
 
-#endif //ACBulkCoupled_H
+#endif //ACBULKCOUPLED_H
 

@@ -20,23 +20,12 @@ InputParameters validParams<CHBulkCoupled>()
 {
   InputParameters params = validParams<CHBulk>();
   params.addRequiredCoupledVar("coupled_OP_var", "The order parameter coupled to the CH eqn");
-//params.addRequiredCoupledVar("coupled_var","The order parameter to be coupled to the CH equation");
-  // this is a little extraneous and can get cleaned up
-//  params.addParam<std::string>("first_landau","A1","First Landau coefficient"); 
-//  params.addParam<std::string>("second_landau","A2","Second Landau coefficient"); 
-//  params.addParam<std::string>("first_well","C1","First Landau well position"); 
 
   return params;
 }
 
 CHBulkCoupled::CHBulkCoupled(const std::string & name, InputParameters parameters)
   :CHBulk(name, parameters),
-
-   // Pull in the names from the input file for the coefficients and then declare the materials properties
-   // _a1_name(getParam<std::string>("first_landau")),
-   //_a2_name(getParam<std::string>("second_landau")),
-   //_c1_name(getParam<std::string>("first_well")),
-   //
    // Get the material properties for the Landau coefficients
    _a1(getMaterialProperty<Real>("A1")),
    _a2(getMaterialProperty<Real>("A2")),
