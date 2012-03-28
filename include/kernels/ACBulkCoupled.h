@@ -20,8 +20,9 @@ template<>
 InputParameters validParams<ACBulkCoupled>();
 
 /**
- * AcBulkCoupled couples the bulk Alan-Cahn equation term with order parameter eta to the conserved field
- * variable term from the Cahn-Hilliard equation (typically concentration)
+ * AcBulkCoupled couples the bulk Alan-Cahn equation term with order parameter eta to the
+ * conserved field variable term from the Cahn-Hilliard equation (typically concentration).
+ * It uses the PFMobilityLandau materials class.
  */
 class ACBulkCoupled : public ACBulk
 {
@@ -32,10 +33,10 @@ public:
 protected:
 
   // This is actually a little extraneous and can get cleaned up later.
-  std::string _a2_name;
-  std::string _a3_name;
-  std::string _a4_name;
-  std::string _c2_name;
+//  std::string _a2_name;
+//  std::string _a3_name;
+//  std::string _a4_name;
+//  std::string _c2_name;
 
   /**
    * computeDFDOP()
@@ -43,14 +44,16 @@ protected:
    */
   virtual Real computeDFDOP(PFFunctionType type);
 
-private:
-
   MaterialProperty<Real> & _a2;  ///< coefficients for the landau polynomial (see Guo, 2008)
   MaterialProperty<Real> & _a3;
   MaterialProperty<Real> & _a4;
   MaterialProperty<Real> & _c2;  ///< energy well position in c-space for the 2nd phase, ish
 
-  VariableValue & _coupled_var;  ///< the Cahn-Hilliard variable (concentration, probably)
+  VariableValue & _coupled_CH_var;  ///< the Cahn-Hilliard variable (concentration, probably)
+
+  
+private:
+
 };
 
 #endif //ACBulkCoupled_H

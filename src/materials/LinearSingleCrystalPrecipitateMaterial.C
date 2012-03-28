@@ -98,6 +98,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
 
     e_strain.rotate(rotation_angle);
     _eigenstrains_rotated[i] = e_strain;
+    //std::cout << e_strain;
   
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;

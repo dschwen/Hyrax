@@ -83,10 +83,10 @@ private:
   MaterialProperty<std::vector<SymmTensor > > & _eigenstrains_rotated_MP;
   MaterialProperty<SymmTensor> & _local_strain;
 
-  // number of orientation variants - 1  
-  int _n_vars;
+  // number of orientation variants
+  int _n_OP_vars;
 
-  // orientation variant number for this kernel (0 to n-1)
+  // orientation variant number for this kernel (1 to n)
   int _OP_number;
 
   // Vector of references to the coupled order parameters

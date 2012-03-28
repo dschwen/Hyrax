@@ -24,10 +24,13 @@ InputParameters validParams<PFMobilityLandau>()
   params.addRequiredParam<Real>("mob_AC", "The mobility value for the Alan-Cahn equation");
   params.addRequiredParam<Real>("kappa_CH", "The gradient energy coefficient for the Cahn-Hilliard equation");
   params.addRequiredParam<Real>("kappa_AC", "The gradient energy coefficient for the Alan-Cahn equation");
-  params.addParam<Real>("A1", 1.0, "First Landau coefficient");
-  params.addParam<Real>("A2", 1.0, "Second Landau coefficient");
-  params.addParam<Real>("A3", 1.0, "Third Landau coefficient");
-  params.addParam<Real>("A4", 1.0, "Fourth Landau coefficient");
+  params.addRequiredParam<Real>("A1", "First Landau coefficient");
+  params.addRequiredParam<Real>("A2", "Second Landau coefficient");
+  params.addRequiredParam<Real>("A3", "Third Landau coefficient");
+  params.addRequiredParam<Real>("A4", "Fourth Landau coefficient");
+  params.addParam<Real>("A5", 1.0, "Fifth Landau coefficient");
+  params.addParam<Real>("A6", 1.0, "Sixth Landau coefficient");
+  params.addParam<Real>("A7", 1.0, "Seventh Landau coefficient");
   params.addParam<Real>("C1", 1.0, "First Landau well");
   params.addParam<Real>("C2", 1.0, "Second Landau well");
 
@@ -47,6 +50,9 @@ PFMobilityLandau::PFMobilityLandau(const std::string & name,
    _a2_i(getParam<Real>("A2")),
    _a3_i(getParam<Real>("A3")),
    _a4_i(getParam<Real>("A4")),
+   _a5_i(getParam<Real>("A5")),
+   _a6_i(getParam<Real>("A6")),
+   _a7_i(getParam<Real>("A7")),
    _c1_i(getParam<Real>("C1")),
    _c2_i(getParam<Real>("C2")),
 
@@ -60,6 +66,9 @@ PFMobilityLandau::PFMobilityLandau(const std::string & name,
    _a2(declareProperty<Real>("A2")),
    _a3(declareProperty<Real>("A3")),
    _a4(declareProperty<Real>("A4")),
+   _a5(declareProperty<Real>("A5")),
+   _a6(declareProperty<Real>("A6")),
+   _a7(declareProperty<Real>("A7")),
    _c1(declareProperty<Real>("C1")),
    _c2(declareProperty<Real>("C2"))
 
@@ -79,6 +88,9 @@ PFMobilityLandau::computeProperties()
     _a2[qp] = _a2_i;
     _a3[qp] = _a3_i;
     _a4[qp] = _a4_i;
+    _a6[qp] = _a5_i;
+    _a6[qp] = _a6_i;
+    _a7[qp] = _a7_i;
     _c1[qp] = _c1_i;
     _c2[qp] = _c2_i;
   }

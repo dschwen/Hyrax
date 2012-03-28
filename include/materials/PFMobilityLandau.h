@@ -47,7 +47,10 @@ private:
   Real _a2_i;
   Real _a3_i;
   Real _a4_i;
-
+  Real _a5_i;
+  Real _a6_i;
+  Real _a7_i;
+  
   Real _c1_i;		
   Real _c2_i;		
 
@@ -65,6 +68,9 @@ private:
   MaterialProperty<Real> & _a2;
   MaterialProperty<Real> & _a3;
   MaterialProperty<Real> & _a4;
+  MaterialProperty<Real> & _a5;
+  MaterialProperty<Real> & _a6;
+  MaterialProperty<Real> & _a7;
 
   // Landau polynomial parameters
   MaterialProperty<Real> & _c1;	 ///< Landau polynomial: 1st well position-ish - terminal solid solubility

@@ -22,6 +22,8 @@
 #include "ACBulkCoupled.h"
 #include "CHBulkCoupled.h"
 #include "ACTransformElasticDF.h"
+#include "CHBulkPolyCoupled.h"
+#include "ACBulkPolyCoupled.h"
 
 //Auxiliary Kernels
 #include "AuxNucleation.h"
@@ -69,6 +71,8 @@ namespace Hyrax
     registerKernel(CHBulkCoupled);
     registerKernel(ACBulkCoupled);
     registerKernel(ACTransformElasticDF);
+    registerKernel(ACBulkPolyCoupled);
+    registerKernel(CHBulkPolyCoupled);
 
     //Auxiliary Kernels
     registerAux(AuxNucleation);

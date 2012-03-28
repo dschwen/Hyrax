@@ -22,11 +22,9 @@ template<>
 InputParameters validParams<ACTransformElasticDF>()
 {
   InputParameters params = validParams<ACBulk>();
-  params.addRequiredCoupledVar("var_names","Array of coupled variable names minus 1");
-  // must go from 0 to n-1 at the moment.
-  params.addRequiredParam<int>("n_vars", "# of orientation variants minus 1 for precips in single crystal");
-  params.addRequiredParam<int>("OP_number","number of the order parameter for this kernel");
-  // must start from 0 at the moment.
+  params.addRequiredCoupledVar("OP_var_names","Array of coupled variable names");
+params.addRequiredParam<int>("n_OP_vars", "# of orientation variants for precips in single crystal");
+  params.addRequiredParam<int>("OP_number","# of the order parameter for this kernel, starting from 1");
 
   return params;
 }
@@ -36,25 +34,25 @@ ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParame
       _elasticity_tensor(getMaterialProperty<SymmElasticityTensor>("elasticity_tensor")),
       _eigenstrains_rotated_MP(getMaterialProperty<std::vector<SymmTensor > >("eigenstrains_rotated_MP")),
       _local_strain(getMaterialProperty<SymmTensor>("local_strain")),
-      _n_vars(getParam<int>("n_vars")),
+      _n_OP_vars(getParam<int>("n_OP_vars")),
       _OP_number(getParam<int>("OP_number"))
       {
         // Create a vector of the coupled variables and set = 0 the one that the kernel
         // is operating on 
-        if(_n_vars != coupledComponents("var_names"))
-          mooseError("Please match the number of orientation variants-1 to coupled OPs -1.");
+        if(_n_OP_vars != coupledComponents("OP_var_names"))
+          mooseError("Please match the number of orientation variants to coupled OPs.");
 
-         _coupled_vars.resize(_n_vars+1);
+         _coupled_vars.resize(_n_OP_vars);
 
-         for(int i=0; i< _n_vars+1; i++)
+         for(int i=0; i< _n_OP_vars; i++)
          {
-           if(i == _OP_number)
+           if(i == _OP_number-1)
            {
             _coupled_vars[i] = NULL;
            }
            else
            {
-           _coupled_vars[i] = &coupledValue("var_names", i);
+           _coupled_vars[i] = &coupledValue("OP_var_names", i);
            }
          }
       }
@@ -124,9 +122,9 @@ ACTransformElasticDF::calculateMisfitTerm()
  
 
   // This will loop over any arbitrary number of order parameters
-  for (int i = 0; i < _n_vars+1; i++)
+  for (int i = 0; i < _n_OP_vars; i++)
   {
-    if (i == _OP_number)
+    if (i == _OP_number-1)
     {
       misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*_u[_qp]*_u[_qp];
     }
@@ -165,9 +163,9 @@ ACTransformElasticDF::calculateMisfitTerm()
    misfit_a = (_eigenstrains_rotated_MP[_qp])[_OP_number]*2.0;
    misfit_a = _elasticity_tensor[_qp]*misfit_a;
 
-   for (int i = 0; i < _n_vars+1; i++)
+   for (int i = 0; i < _n_OP_vars; i++)
    {
-     if (i == _OP_number)
+     if (i == _OP_number-1)
      {
        misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*_u[_qp]*_u[_qp]*3.0;
      }
