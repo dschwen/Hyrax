@@ -80,11 +80,6 @@ private:
 
   // Indicate if 21 (true) or 9 (false) values given for input of elastic stiffness
   bool _all_21;
-
-  // Euler angle information
-//  Real _euler_angle_1;
-//  Real _euler_angle_2;
-//  Real _euler_angle_3;
   
   // Individual material information
   SymmAnisotropicElasticityTensor _Cijkl_matrix;

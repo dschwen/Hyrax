@@ -31,9 +31,6 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
   params.addRequiredParam<int>("n_variants","# of orientation variants for precipitate in single crystal");
   params.addRequiredCoupledVar("variable_names","Array of coupled variable names");
   params.addParam<bool>("all_21", false,"Boolean to indicate if all 21 elastic constants are specified in the input (true) or only nine (false)" );
-//  params.addParam<Real>("euler_angle_1", 0.0, "Euler angle in direction 1");
-//  params.addParam<Real>("euler_angle_2", 0.0, "Euler angle in direction 2");
-//  params.addParam<Real>("euler_angle_3", 0.0, "Euler angle in direction 3");
 
   return params;
 }
@@ -46,9 +43,6 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
       _eigenstrain_vector(getParam<std::vector<Real> >("e_precipitate")),
       _n_variants(getParam<int>("n_variants")),
       _all_21(getParam<bool>("all_21")),
-//      _euler_angle_1(getParam<Real>("euler_angle_1")),
-//      _euler_angle_2(getParam<Real>("euler_angle_2")),
-//      _euler_angle_3(getParam<Real>("euler_angle_3")),
       _Cijkl_matrix(),
       _Cijkl_precipitate(),
       _eigenstrain(),
@@ -95,7 +89,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     SymmTensor e_strain(_eigenstrain);
 
     // do the rotation
-    C_tensor.rotate(rotation_angle, 0.0, 0.0);
+    C_tensor.rotate(rotation_angle);
     // the tensor rotation is STILL only working for a cubic material.
     //std::cout << C_tensor, std::cout << std::endl;
 
