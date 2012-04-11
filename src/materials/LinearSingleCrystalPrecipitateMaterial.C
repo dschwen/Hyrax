@@ -25,7 +25,7 @@ template<>
 InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
 {
   InputParameters params = validParams<SolidMechanicsMaterial>();
-  params.addRequiredParam<std::vector<Real> >("C_matrix", "Stiffness tensor for matrix: C11, C12, C13, C22, C23, C33, C44, C55, C66 (for 6 inputs)");  
+  params.addRequiredParam<std::vector<Real> >("C_matrix", "Stiffness tensor for matrix: C11, C12, C13, C22, C23, C33, C44, C55, C66 (for 6 inputs)");
   params.addRequiredParam<std::vector<Real> >("C_precipitate", "Stiffness tensor for precipitate");
   params.addRequiredParam<std::vector<Real> >("e_precipitate","Eigenstrain tensor for precipitate: e11, e22, e33, e23, e13, e12");
   params.addRequiredParam<int>("n_variants","# of orientation variants for precipitate in single crystal");
@@ -35,7 +35,7 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
   return params;
 }
 
-LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(const std::string & name, 
+LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(const std::string & name,
                                                                                InputParameters parameters)
     : SolidMechanicsMaterial(name, parameters),
       _Cijkl_matrix_vector(getParam<std::vector<Real> >("C_matrix")),
@@ -70,6 +70,17 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   _Cijkl_precipitate.fillFromInputVector(_Cijkl_precipitate_vector, _all_21);
   _eigenstrain.fillFromInputVector(_eigenstrain_vector);
 
+  //DEBUGGING
+  // do the rotation
+  //SymmAnisotropicElasticityTensor C_tensor(_Cijkl_matrix);
+  //C_tensor.rotate(40.0, 0.0, 0.0);
+  //std::cout << "rotated matrix tensor",std::cout <<  C_tensor, std::cout << std::endl;
+  // _Cijkl_matrix = C_tensor;
+  // END DEBUGGING
+
+  //std::cout << "Cijkl matrix tensor", std::cout << _Cijkl_matrix, std::cout << std::endl;
+  //std::cout << "Cijkl precipitate tensor", std::cout << _Cijkl_precipitate, std::cout << std::endl;
+
   //resize the vectors to hold the rotated information
   _Cijkl_precipitates_rotated.resize(_n_variants);
   _eigenstrains_rotated.resize(_n_variants);
@@ -89,8 +100,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     SymmTensor e_strain(_eigenstrain);
 
     // do the rotation
-    C_tensor.rotate(rotation_angle);
-    // the tensor rotation is STILL only working for a cubic material.
+    C_tensor.rotate(rotation_angle, 0.0, 0.0);
     //std::cout << C_tensor, std::cout << std::endl;
 
     _Cijkl_precipitates_rotated[i] = C_tensor;
@@ -99,10 +109,15 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     e_strain.rotate(rotation_angle);
     _eigenstrains_rotated[i] = e_strain;
     //std::cout << e_strain;
-  
+
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;
   }
+  //for(int i(0); i<_n_variants; i++)
+  //{
+  //  std::cout << "Cijkl precipitate tensor vector ", std::cout << i, std::cout << std::endl;
+  //  std::cout << _Cijkl_precipitates_rotated[i], std::cout << std::endl;
+  //}
 }
 
 void
@@ -128,33 +143,45 @@ void
 
    // Fill in the matrix stiffness material property (this WILL work fine)
    _Cijkl_matrix_MP[_qp] = _Cijkl_matrix;
+   //std::cout << "quadrature point ", std::cout << _qp, std::cout << std::endl;
+   //std::cout << "timestep ", std::cout << _t_step, std::cout << std::endl;
    //std::cout << _Cijkl_matrix, std::cout << std::endl;
    //std::cout <<  _Cijkl_matrix_MP[_qp], std::cout << std::endl;
-   
+
    // Sum the order parameters and stiffnesses for the precipitates
    SymmElasticityTensor sum_precipitate_tensors(0.0);
    Real sum_order_parameters = 0.0;
-  
+
     for(int i=0; i<_n_variants; i++)
     {
      // Fill in the precipitates' stiffnesses materials property
       (_Cijkl_precipitates_rotated_MP[_qp])[i] = _Cijkl_precipitates_rotated[i];
-      sum_precipitate_tensors += (_Cijkl_precipitates_rotated_MP[_qp])[i]*(*_coupled_variables[i])[_qp];
+
+      if((*_coupled_variables[i])[_qp] > 1.0)
+      {
+        sum_precipitate_tensors += (_Cijkl_precipitates_rotated_MP[_qp])[i];
+      }
+      else
+      {
+        sum_precipitate_tensors += (_Cijkl_precipitates_rotated_MP[_qp])[i]*(*_coupled_variables[i])[_qp];
+      }
+
       sum_order_parameters += (*_coupled_variables[i])[_qp];
     }
 
-    // std::cout << sum_precipitate_tensors, std::cout << std::endl;
+    //std::cout << "sum precipitate tensors", std::cout << std::endl;
+    //std::cout << sum_precipitate_tensors, std::cout << std::endl;
 
     // this is bastardly, but for the moment, truncate the sum to = 1 if it's > 1
     if(sum_order_parameters > 1.0)
       sum_order_parameters = 1.0;
-    // std::cout << sum_order_parameters, std::cout << std::endl;
- 
-    _elasticity_tensor[_qp] = sum_precipitate_tensors + _Cijkl_matrix_MP[_qp]*(1.0 - sum_order_parameters);
-    //   std::cout << _elasticity_tensor[_qp], std::cout << std::endl;
-    
+    //std::cout << "sum order parameters ", std::cout << sum_order_parameters, std::cout << std::endl;
 
-   // Jacobian multiplier of stress ... hmm..copying from LinearIsotropicMaterial
+    _elasticity_tensor[_qp] = sum_precipitate_tensors + _Cijkl_matrix_MP[_qp]*(1.0 - sum_order_parameters);
+    //std::cout << "elasticity_tensor qp", std::cout << std::endl;
+    //std::cout << _elasticity_tensor[_qp], std::cout << std::endl;
+
+    // Jacobian multiplier of stress ... hmm..copying from LinearIsotropicMaterial
     _Jacobian_mult[_qp] = _elasticity_tensor[_qp];
  }
 
@@ -166,7 +193,6 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
     // Fill in the precipitates' eigenstrains materials property
     (_eigenstrains_rotated_MP[_qp])[i] = _eigenstrains_rotated[i];
    }
-
 }
 
 
@@ -189,10 +215,10 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
    SymmTensor sum_precipitate_strains(0.0);
    for(int i=0; i<_n_variants; i++)
      sum_precipitate_strains += (_eigenstrains_rotated_MP[_qp])[i]*(*_coupled_variables[i])[_qp]*(*_coupled_variables[i])[_qp];
-     
+
    _misfit_strain[_qp] = sum_precipitate_strains;
    //  std::cout << _misfit_strain[_qp], std::cout << std::endl;
-   
+
    _elastic_strain[_qp] = _local_strain[_qp] - _misfit_strain[_qp];
    // std::cout << _elastic_strain[_qp], std::cout << std::endl;
  }
