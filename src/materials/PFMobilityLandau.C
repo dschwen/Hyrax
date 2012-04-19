@@ -11,7 +11,7 @@
 #include "PFMobilityLandau.h"
 
 /**
- * PFMobilityLandau holds the materials information for a phase field model using a Landau polynomial for 
+ * PFMobilityLandau holds the materials information for a phase field model using a Landau polynomial for
  * the bulk (chemical) free energy term.
  */
 
@@ -88,11 +88,10 @@ PFMobilityLandau::computeProperties()
     _a2[qp] = _a2_i;
     _a3[qp] = _a3_i;
     _a4[qp] = _a4_i;
-    _a6[qp] = _a5_i;
+    _a5[qp] = _a5_i;
     _a6[qp] = _a6_i;
     _a7[qp] = _a7_i;
     _c1[qp] = _c1_i;
     _c2[qp] = _c2_i;
   }
 }
-

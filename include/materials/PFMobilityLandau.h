@@ -5,11 +5,11 @@
 *  CASL/MOOSE
 *
 *  16 November 2011
-*  
+*
 *************************************************************************/
 
-#ifndef PFMobilityLandau_H
-#define PFMobilityLandau_H
+#ifndef PFMOBILITYLANDAU_H
+#define PFMOBILITYLANDAU_H
 
 #include "Material.h"
 
@@ -20,7 +20,7 @@ template<>
 InputParameters validParams<PFMobilityLandau>();
 
 /**
- * PFMobilityLandau holds the materials information for a phase field model using a Landau polynomial for 
+ * PFMobilityLandau holds the materials information for a phase field model using a Landau polynomial for
  * the bulk (chemical) free energy term.
  */
 
@@ -29,37 +29,37 @@ class PFMobilityLandau : public Material
 public:
   PFMobilityLandau(const std::string & name,
           InputParameters parameters);
-  
+
 protected:
   virtual void computeProperties();
 
 private:
-  
+
   // Variables for getting values from input file
   // I have to see if this can be cleaned up a bit.
-  Real _mob_CH;		
-  Real _kappa_CH;	
+  Real _mob_CH;
+  Real _kappa_CH;
 
-  Real _mob_AC;		
-  Real _kappa_AC;  	
+  Real _mob_AC;
+  Real _kappa_AC;
 
-  Real _a1_i;		
+  Real _a1_i;
   Real _a2_i;
   Real _a3_i;
   Real _a4_i;
   Real _a5_i;
   Real _a6_i;
   Real _a7_i;
-  
-  Real _c1_i;		
-  Real _c2_i;		
 
-  // Cahn-Hilliard equation 
+  Real _c1_i;
+  Real _c2_i;
+
+  // Cahn-Hilliard equation
   MaterialProperty<Real> & _M;			///< Cahn-Hilliard mobility (isotropic)
   MaterialProperty<RealGradient> & _grad_M;
   MaterialProperty<Real> & _kappa_c;		///< CH gradient energy coefficient (isotropic)
 
-  // Alan-Cahn equation 
+  // Alan-Cahn equation
   MaterialProperty<Real> & _L;			///< Allen-Chan kinetic coefficient (isotropic)
   MaterialProperty<Real> & _kappa_n;		///< AC gradient energy coefficient (isotropic)
 
@@ -78,4 +78,4 @@ private:
 
 };
 
-#endif //PFMobilityLandau_H
+#endif //PFMOBILITYLANDAU_H

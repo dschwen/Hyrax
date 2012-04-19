@@ -38,7 +38,7 @@ ACBulkPolyCoupled::ACBulkPolyCoupled(const std::string & name, InputParameters p
       _a7(getMaterialProperty<Real>("A7"))
 {
   // Create a vector of the coupled OP variables and set = 0 the one that the kernel
-  // is operating on 
+  // is operating on
   if(_n_OP_vars != coupledComponents("OP_var_names"))
     mooseError("Please match the number of orientation variants to coupled OPs.");
 
@@ -67,16 +67,19 @@ ACBulkPolyCoupled::computeDFDOP(PFFunctionType type)
   // compute the coupled OP terms
   for(int i=0; i<_n_OP_vars; i++)
   {
-    if(i == _OP_number-1) continue;
-    square_sum += ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
-    quad_sum += ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
+    if(i != _OP_number-1)
+    {
+      square_sum += ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
+      quad_sum += ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
     quad_mult *= ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
+    }
+
   }
 
   switch(type)
   {
   case Residual:
-   
+
     return _a2[_qp]*(_coupled_CH_var[_qp]- _c2[_qp])*_u[_qp] - _a3[_qp]*_u[_qp]*_u[_qp]*_u[_qp]
       + _a4[_qp]*_u[_qp]*_u[_qp]*_u[_qp]*_u[_qp]*_u[_qp]
       + 2.0*_a5[_qp]*_u[_qp]*square_sum

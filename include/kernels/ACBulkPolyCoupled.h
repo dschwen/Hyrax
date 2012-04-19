@@ -32,9 +32,8 @@ public:
 
 protected:
   virtual Real computeDFDOP(PFFunctionType type);
-  
-private:
-  int  _n_OP_vars;
+
+  int _n_OP_vars;
   int _OP_number;
 
   MaterialProperty<Real> & _a5;
@@ -43,7 +42,9 @@ private:
 
   std::vector<VariableValue *> _coupled_OP_vars;
 
+private:
+
 };
 
 
-#endif //CBULKPOLYCOUPLED_H
+#endif //ACBULKPOLYCOUPLED_H

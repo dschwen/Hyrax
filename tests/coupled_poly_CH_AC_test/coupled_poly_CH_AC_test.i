@@ -1,5 +1,9 @@
-# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system with multiple 
+# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system with multiple
 # non-conserved order parameters and one conserved variable. This test is for regression testing.
+
+[Debug]
+  show_top_residuals=50
+[]
 
 [Mesh]
   type = GeneratedMesh
@@ -23,7 +27,7 @@
     family = HERMITE
     [./InitialCondition]
       type = PolySpecifiedSmoothCircleIC
-      var_name = concentration
+#      var_name = concentration
       invalue = 0.6
       outvalue = 0.1
       radius = 3.0
@@ -40,7 +44,7 @@
     family = LAGRANGE
     [./InitialCondition]
       type = PolySpecifiedSmoothCircleIC
-      var_name = n1
+#      var_name = n1
       invalue = 1.6
       outvalue = 0.0
       radius = 3.0
@@ -57,7 +61,7 @@
     family = LAGRANGE
     [./InitialCondition]
       type = PolySpecifiedSmoothCircleIC
-      var_name = n2
+#      var_name = n2
       invalue = 1.6
       outvalue = 0.0
       radius = 3.0
@@ -74,7 +78,7 @@
     family = LAGRANGE
     [./InitialCondition]
       type = PolySpecifiedSmoothCircleIC
-      var_name = n3
+#      var_name = n3
       invalue = 1.6
       outvalue = 0.0
       radius = 3.0

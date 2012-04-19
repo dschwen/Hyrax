@@ -23,7 +23,7 @@ InputParameters validParams<ACTransformElasticDF>()
 {
   InputParameters params = validParams<ACBulk>();
   params.addRequiredCoupledVar("OP_var_names","Array of coupled variable names");
-params.addRequiredParam<int>("n_OP_vars", "# of orientation variants for precips in single crystal");
+  params.addRequiredParam<int>("n_OP_vars", "# of orientation variants for precips in single crystal");
   params.addRequiredParam<int>("OP_number","# of the order parameter for this kernel, starting from 1");
 
   return params;
@@ -36,27 +36,26 @@ ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParame
       _local_strain(getMaterialProperty<SymmTensor>("local_strain")),
       _n_OP_vars(getParam<int>("n_OP_vars")),
       _OP_number(getParam<int>("OP_number"))
-      {
+{
         // Create a vector of the coupled variables and set = 0 the one that the kernel
-        // is operating on 
+        // is operating on
         if(_n_OP_vars != coupledComponents("OP_var_names"))
           mooseError("Please match the number of orientation variants to coupled OPs.");
 
-         _coupled_vars.resize(_n_OP_vars);
+        _coupled_vars.resize(_n_OP_vars);
 
          for(int i=0; i< _n_OP_vars; i++)
          {
            if(i == _OP_number-1)
            {
-            _coupled_vars[i] = NULL;
+             _coupled_vars[i] = NULL;
            }
            else
            {
-           _coupled_vars[i] = &coupledValue("OP_var_names", i);
+             _coupled_vars[i] = &coupledValue("OP_var_names", i);
            }
          }
-      }
-
+}
 
 Real
 ACTransformElasticDF::computeDFDOP(PFFunctionType type)
@@ -64,30 +63,35 @@ ACTransformElasticDF::computeDFDOP(PFFunctionType type)
 // elastic strain = homogeneous strain (BC) + heterogeneous strain - misfit strain
 // Follow mostly what is in ACGrGrElasticDF:
 
-  
   Real elastic_term;
   Real misfit_term;
-  
+
+  //std::cout << "compute DFDOP", std::cout << std::endl;
+
+
   switch (type)
   {
   case Residual:
-    
+
     // hokay, so!
     elastic_term = calculateLocalTerm();
     // std::cout << "elastic term", std::cout << elastic_term, std::cout << std::endl;
-    
+
     misfit_term = calculateMisfitTerm();
     //std::cout << "misfit term", std::cout << misfit_term, std::cout  << std::endl;
-    
+
+    //  std::cout << "returning residual dfdop", std::cout << std::endl;
     return elastic_term + misfit_term;
-    
+
   case Jacobian:
     elastic_term = calculateLocalJacobianTerm();
     misfit_term = calculateMisfitJacobianTerm();
 
-    return 0.0;
-    
-    //return (elastic_term + misfit_term)*_phi[_j][_qp];
+    //std::cout << "returning jacobian dfdop", std::cout << std::endl;
+
+    //return 0.0;
+
+    return (elastic_term + misfit_term)*_phi[_j][_qp];
   }
   mooseError("Invalid type passed in");
 }
@@ -104,7 +108,7 @@ ACTransformElasticDF::calculateLocalTerm()
   SymmTensor elastic_b;
   elastic_b = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp];
 //   std::cout << "elastic_b" << std::cout << elastic_b;
-  
+
 
   // elastic_term = -2.0 * local_strain * elastic_tensor * eigenstrain_OP * eta_OP
   return elastic_a.doubleContraction(elastic_b);
@@ -119,7 +123,7 @@ ACTransformElasticDF::calculateMisfitTerm()
 
  misfit_a = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp]*2.0;
  misfit_a = _elasticity_tensor[_qp]*misfit_a;
- 
+
 
   // This will loop over any arbitrary number of order parameters
   for (int i = 0; i < _n_OP_vars; i++)

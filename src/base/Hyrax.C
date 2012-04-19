@@ -66,7 +66,7 @@ namespace Hyrax
 
     // Associate Syntax from SolidMechanics Module
     Elk::SolidMechanics::associateSyntax();
-    
+
     //Kernels
     registerKernel(CHBulkCoupled);
     registerKernel(ACBulkCoupled);
@@ -79,7 +79,7 @@ namespace Hyrax
     registerAux(AuxSupersaturation);
     registerAux(AuxNucleationRate);
     registerAux(AuxNucleationProbability);
-
+ 
     //Dirac Kernels
     registerDiracKernel(DiracNucleation);
     registerDiracKernel(DiracForcedAMR);
