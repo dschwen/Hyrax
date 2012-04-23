@@ -1,35 +1,36 @@
+# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system (to make sure
+# the simulation is running properly).
+
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 25
-  ny = 25
+  nx = 50
+  ny = 50
   nz = 0
   xmin = 0
-  xmax = 100
+  xmax = 50
   ymin = 0
-  ymax = 100
+  ymax = 50
   zmin = 0
   zmax = 0
-  elem_type = QUAD9
-
- # uniform_refine = 1
+  elem_type = QUAD4
+  uniform_refine = 1
 []
 
 [Variables]
-#  active = 'concentration n1 dispx dispy'
+  active = 'concentration n1'
 
   [./concentration]
     order = THIRD
     family = HERMITE
     [./InitialCondition]
-      type = SmoothCircleIC
-#      var_name = concentration
+      int_width = 1.5
       invalue = 0.6
       outvalue = 0.1
-      radius = 3.5
-      int_width = 1.5
-      x1 = 50
-      y1 = 50
+      radius = 3
+      type = SmoothCircleIC
+      x1 = 20
+      y1 = 20
     [../]
   [../]
 
@@ -37,30 +38,20 @@
     order = FIRST
     family = LAGRANGE
     [./InitialCondition]
-      type = SmoothCircleIC
- #     var_name = n1
+      int_width = 1.5
       invalue = 1.6
       outvalue = 0.0
-      radius = 3.5
-      int_width = 1.5
-      x1 = 50
-      y1 = 50
+      radius = 3
+      type = SmoothCircleIC
+      x1 = 20
+      y1 = 20
     [../]
   [../]
 
-  [./dispx]
-    order = FIRST
-    family = LAGRANGE
-  [../]
-
-  [./dispy]
-    order = FIRST
-    family = LAGRANGE
-  [../]
 []
 
 [Kernels]
-#  active = 'CHSolid CHInterface ACSolid ACInterface'
+  active = 'dcdt dn1dt CHSolid CHInterface ACSolid ACInterface'
 
   [./dcdt]
     type = TimeDerivative
@@ -77,6 +68,9 @@
     variable = concentration
     mob_name = M
     coupled_OP_var = n1
+#    first_landau = A1
+#    second_landau = A2
+#    first_well = C1
   [../]
 
   [./CHInterface]
@@ -92,6 +86,10 @@
     variable = n1
     mob_name = L
     coupled_CH_var = concentration
+#    second_landau = A2
+#    third_landau = A3
+ #   fourth_landau = A4
+ #   second_well = C2
   [../]
 
   [./ACInterface]
@@ -99,26 +97,6 @@
     variable = n1
     mob_name = L
     kappa_name = kappa_n
-  [../]
-
-  [./ACTransformElasticDF]
-    type = ACTransformElasticDF
-    variable = n1
-    OP_var_names = 'n1'
-    n_OP_vars = 1
-    OP_number = 1
-  [../]
-
-  [./stress_div_disp_x]
-    type = StressDivergence
-    variable = dispx
-    component = 0
-  [../]
-
-  [./stress_div_disp_y]
-    type = StressDivergence
-    variable = dispy
-    component = 1
   [../]
 []
 
@@ -128,21 +106,14 @@ active = 'Periodic'
     [./left_right]
       primary = 0
       secondary = 2
-      translation = '0 100 0'
+      translation = '0 50 0'
     [../]
 
     [./top_bottom]
       primary = 1
       secondary = 3
-      translation = '-100 0 0'
+      translation = '-50 0 0'
     [../]
-
-#    [./front_back]
-#      primary = 1
-#      secondary = 3
-#      translation = '0 50 0'
-#    [../]
-
   [../]
 []
 
@@ -161,24 +132,10 @@ active = 'Periodic'
     C1 = 0.006
     C2 = 0.59
   [../]
-
-  [./test_material]
-    type = LinearSingleCrystalPrecipitateMaterial
-    block = 0
-    disp_x = dispx
-    disp_y = dispy
-    C_matrix = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
-    C_precipitate = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
-    e_precipitate = '0.00551 0.0564 0.0570 0.0 0.0 0.0'
-    n_variants = 1
-    variable_names = 'n1'
-    all_21 = false
-  [../]
 []
 
+
 [Executioner]
- 
-  type = Steady
   type = Transient
   scheme = 'crank-nicolson'
   petsc_options = '-snes_mf_operator -ksp_monitor'
@@ -186,20 +143,27 @@ active = 'Periodic'
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'
 
-  l_max_its = 10
-  nl_max_its = 50
-#  nl_abs_tol = 6.0e-6
-nl_abs_tol = 5e-5
+  l_max_its = 15
+  nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 4
-  dt = 0.003
+  num_steps = 2
+  dt = 0.3
+ 
+#  [./Adaptivity]
+#    error_estimator = LaplacianErrorEstimator
+#    refine_fraction = 0.85
+#    coarsen_fraction = 0.1
+#    max_h_level = 2
+#  [../]
 []
 
 [Output]
-  file_base = testSinglePrecipitate.6
+  file_base = testEquations
   output_initial = true
   interval = 1
   exodus = true
   perf_log = true
 []
+
+

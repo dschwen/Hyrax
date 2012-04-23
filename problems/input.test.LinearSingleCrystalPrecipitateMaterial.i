@@ -21,7 +21,7 @@
     family = HERMITE
     [./InitialCondition]
       type = ConstantIC
-      var_name = concentration
+      #var_name = concentration
       value = 0.1
     [../]
   [../]
@@ -31,7 +31,7 @@
     family = LAGRANGE
     [./InitialCondition]
       type = ConstantIC
-      var_name = n1
+      #var_name = n1
       value = 0.2
     [../]
   [../]
@@ -64,10 +64,10 @@
     type = CHBulkCoupled
     variable = concentration
     mob_name = M
-    coupled_var = n1
-    first_landau = A1
-    second_landau = A2
-    first_well = C1
+    coupled_OP_var = n1
+#    first_landau = A1
+#    second_landau = A2
+#    first_well = C1
   [../]
 
   [./CHInterface]
@@ -82,11 +82,11 @@
     type = ACBulkCoupled
     variable = n1
     mob_name = L
-    coupled_var = concentration
-    second_landau = A2
-    third_landau = A3
-    fourth_landau = A4
-    second_well = C2
+    coupled_CH_var = concentration
+#    second_landau = A2
+#    third_landau = A3
+#    fourth_landau = A4
+#    second_well = C2
   [../]
 
   [./ACInterface]
@@ -151,12 +151,12 @@ active = 'Periodic'
     block = 0
     disp_x = disp_x
     disp_y = disp_y
-    C_matrix = '100 200 300 400 500 600 700 800 900'
-    C_precipitate = '110 210 310 410 510 610 710 810 910'
+    C_matrix = '0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20'
+    C_precipitate = '110 210 310 410 510 610 710 810 910 1010 0 1 2 3 4 5 6 7 8 9 10'
     e_precipitate = '10 20 30 40 50 60'
     n_variants = 1
     variable_names = 'n1'
-#    all_21 = false
+    all_21 = true
   [../]
 []
 
