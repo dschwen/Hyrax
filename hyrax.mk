@@ -65,6 +65,12 @@ endif
 clean::
 	@rm -fr $(hyrax_APP)
 	@rm -fr $(hyrax_LIB)
+	@find . \( -name "*~" -or -name "*.o" -or -name "*.d" -or -name "*.pyc" \) -exec rm '{}' \;
+	@rm -fr *.mod
+
+clobber::
+	@rm -fr $(hyrax_APP)
+	@rm -fr $(hyrax_LIB)
 	@find . \( -name "*~" -or -name "*.o" -or -name "*.d" -or -name "*.pyc" \
                 -or -name "*.gcda" -or -name "*.gcno" -or -name "*.gcov" \) -exec rm '{}' \;
 	@rm -fr *.mod
