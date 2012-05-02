@@ -40,7 +40,7 @@ private:
   MaterialProperty<Real> & _a2;
   MaterialProperty<Real> & _c1;  ///< position-ish of 1st energy well in c-space (terminal solid solubility)
 
-  int _n_OP_variables;
+  unsigned int _n_OP_variables;
 
   std::vector<VariableValue *>  _coupled_OP_variables;  ///< Allen-Cahn equation variable (order parameter, probably)
   std::vector<VariableGradient *>  _coupled_OP_grads;  ///< gradient of AC variable

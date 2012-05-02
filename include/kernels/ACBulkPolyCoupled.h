@@ -33,8 +33,8 @@ public:
 protected:
   virtual Real computeDFDOP(PFFunctionType type);
 
-  int _n_OP_vars;
-  int _OP_number;
+  unsigned int _n_OP_vars;
+  unsigned int _OP_number;
 
   MaterialProperty<Real> & _a5;
   MaterialProperty<Real> & _a6;

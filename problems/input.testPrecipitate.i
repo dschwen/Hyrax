@@ -1,8 +1,15 @@
+# This input file is to test the full Cahn-Hilliard, Alan-Cahn + solid mechanics for a single precipitate 
+# of the first order parameter.
+
+#[Debug]
+#  show_top_residuals=25
+#[]
+
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 25
-  ny = 25
+  nx = 50
+  ny = 50
   nz = 0
   xmin = 0
   xmax = 100
@@ -10,20 +17,17 @@
   ymax = 100
   zmin = 0
   zmax = 0
-  elem_type = QUAD9
+  elem_type = QUAD4
 
- # uniform_refine = 1
+ #uniform_refine = 1
 []
 
 [Variables]
-#  active = 'concentration n1 dispx dispy'
-
   [./concentration]
     order = THIRD
     family = HERMITE
     [./InitialCondition]
       type = SmoothCircleIC
-#      var_name = concentration
       invalue = 0.6
       outvalue = 0.1
       radius = 3.5
@@ -38,7 +42,6 @@
     family = LAGRANGE
     [./InitialCondition]
       type = SmoothCircleIC
- #     var_name = n1
       invalue = 1.6
       outvalue = 0.0
       radius = 3.5
@@ -48,20 +51,25 @@
     [../]
   [../]
 
-  [./dispx]
+  [./disp_x]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./dispy]
+  [./disp_y]
     order = FIRST
     family = LAGRANGE
   [../]
 []
 
-[Kernels]
-#  active = 'CHSolid CHInterface ACSolid ACInterface'
+[SolidMechanics]
+  [./solid]
+    disp_x = disp_x
+    disp_y = disp_y
+  [../]
+[]
 
+[Kernels]
   [./dcdt]
     type = TimeDerivative
     variable = concentration
@@ -108,41 +116,35 @@
     n_OP_vars = 1
     OP_number = 1
   [../]
-
-  [./stress_div_disp_x]
-    type = StressDivergence
-    variable = dispx
-    component = 0
-  [../]
-
-  [./stress_div_disp_y]
-    type = StressDivergence
-    variable = dispy
-    component = 1
-  [../]
 []
 
 [BCs]
-active = 'Periodic'
-  [./Periodic]
-    [./left_right]
-      primary = 0
-      secondary = 2
-      translation = '0 100 0'
-    [../]
+  [./conc_BC]
+    type = NeumannBC
+    variable = concentration
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
 
-    [./top_bottom]
-      primary = 1
-      secondary = 3
-      translation = '-100 0 0'
-    [../]
+  [./n1_BC]
+    type = NeumannBC
+    variable = n1
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
 
-#    [./front_back]
-#      primary = 1
-#      secondary = 3
-#      translation = '0 50 0'
-#    [../]
+  [./disp_x_BC]
+    type = DirichletBC
+    variable = disp_x
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
 
+  [./disp_y_BC]
+    type = DirichletBC
+    variable = disp_y
+    boundary = '0 1 2 3'
+    value = 0.0
   [../]
 []
 
@@ -165,8 +167,8 @@ active = 'Periodic'
   [./test_material]
     type = LinearSingleCrystalPrecipitateMaterial
     block = 0
-    disp_x = dispx
-    disp_y = dispy
+    disp_x = disp_x
+    disp_y = disp_y
     C_matrix = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
     C_precipitate = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
     e_precipitate = '0.00551 0.0564 0.0570 0.0 0.0 0.0'
@@ -177,29 +179,33 @@ active = 'Periodic'
 []
 
 [Executioner]
- 
-  type = Steady
   type = Transient
   scheme = 'crank-nicolson'
-  petsc_options = '-snes_mf_operator -ksp_monitor'
 
+  petsc_options = '-snes_mf_operator -ksp_monitor'
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'
 
-  l_max_its = 10
+  l_max_its = 20
   nl_max_its = 50
-#  nl_abs_tol = 6.0e-6
-nl_abs_tol = 5e-5
 
   start_time = 0.0
-  num_steps = 4
-  dt = 0.003
+  num_steps = 20
+  dt = 0.3
 []
 
 [Output]
-  file_base = testSinglePrecipitate.6
+  file_base = testPrecip.new.full
   output_initial = true
   interval = 1
   exodus = true
   perf_log = true
+
+  [./OverSampling]
+    exodus = true
+    refinements = 3
+    output_initial = true
+    interval = 1
+  [../]
+
 []

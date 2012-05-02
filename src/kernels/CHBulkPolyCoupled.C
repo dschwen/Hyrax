@@ -39,7 +39,7 @@ CHBulkPolyCoupled::CHBulkPolyCoupled(const std::string & name, InputParameters p
   _coupled_OP_variables.resize(_n_OP_variables);
   _coupled_OP_grads.resize(_n_OP_variables);
 
-  for(int i=0; i< _n_OP_variables; i++)
+  for(unsigned int i=0; i< _n_OP_variables; i++)
   {
     _coupled_OP_variables[i] = &coupledValue("OP_variable_names", i);
     _coupled_OP_grads[i] = &coupledGradient("OP_variable_names", i);
@@ -55,7 +55,7 @@ CHBulkPolyCoupled::computeGradDFDCons(PFFunctionType type, Real c, RealGradient 
   switch (type)
   {
   case Residual:
-    for(int i=0; i<_n_OP_variables; i++)
+    for(unsigned int i=0; i<_n_OP_variables; i++)
     {
       op_sum += (*_coupled_OP_variables[i])[_qp]*(*_coupled_OP_grads[i])[_qp];
     }

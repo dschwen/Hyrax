@@ -15,6 +15,7 @@
 #include "SolidMechanicsMaterial.h"
 #include "SymmTensor.h"
 #include "SymmAnisotropicElasticityTensor.h"
+#include "SymmElasticityTensor.h"
 
 /**
  * LinearSingleCrystalPrecipitateMaterial handles anisotropic, single-crystal material elastic
@@ -48,13 +49,13 @@ public:
 
 protected:
   virtual void computeQpProperties();
-  
+
   /**
    * Computes the overall material elasticity tensor for all space.
    */
   virtual void computeQpElasticityTensor();
-  
-/**
+
+  /**
    * Computes the overall material eigenstrain tensor for all space.
    */
   virtual void computeQpEigenstrain();
@@ -74,18 +75,18 @@ private:
   std::vector<Real> _Cijkl_matrix_vector;
   std::vector<Real> _Cijkl_precipitate_vector;
   std::vector<Real> _eigenstrain_vector;
-  
+
   // number of orientation variants for the precipitate in a single matrix crystal
-  int _n_variants;
+  unsigned int _n_variants;
 
   // Indicate if 21 (true) or 9 (false) values given for input of elastic stiffness
   bool _all_21;
-  
+
   // Individual material information
   SymmAnisotropicElasticityTensor _Cijkl_matrix;
   SymmAnisotropicElasticityTensor _Cijkl_precipitate;
   SymmTensor _eigenstrain;
-  
+
   std::vector<SymmAnisotropicElasticityTensor > _Cijkl_precipitates_rotated;
   std::vector<SymmTensor > _eigenstrains_rotated;
 
@@ -94,6 +95,11 @@ private:
   MaterialProperty<std::vector<SymmTensor> > & _eigenstrains_rotated_MP;
   MaterialProperty<SymmAnisotropicElasticityTensor> & _Cijkl_matrix_MP;
   MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> > & _Cijkl_precipitates_rotated_MP;
+
+  // derivatives of the local elasticity tensor and the misfit strain with respect
+  // to order parameter
+  MaterialProperty<std::vector<SymmElasticityTensor> > & _d_elasticity_tensor;
+  MaterialProperty<std::vector<SymmTensor> > & _d_eigenstrains_rotated_MP;
 
   // Vector of references to the coupled order parameters
   std::vector<VariableValue *> _coupled_variables;

@@ -1,9 +1,9 @@
 # This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system with multiple
 # non-conserved order parameters and one conserved variable. This test is for regression testing.
 
-[Debug]
-  show_top_residuals=50
-[]
+#[Debug]
+#  show_top_residuals=50
+#[]
 
 [Mesh]
   type = GeneratedMesh

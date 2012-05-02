@@ -53,29 +53,38 @@ protected:
    * calculateLocalTerm()
    * @return returns the portion of the partial derivative containing the local strain term.
    */
-  virtual Real calculateLocalTerm();
-  
+//  virtual Real calculateLocalTerm();
+
+  virtual Real calculateFirstTerm();
+
+  virtual Real calculateSecondTerm();
+
+  virtual Real calculateFirstJacobianTerm();
+
+  virtual Real calculateSecondJacobianTerm();
+
+
   /**
    * calculateMisfitTerm()
    * @return returns the portion of the partial derivative containing the misfit strain term.
    * This can handle an arbitrary number of order parameters.
    */
-virtual Real calculateMisfitTerm();
+//virtual Real calculateMisfitTerm();
 
 /**
    * calculateLocalJacobianTerm()
    * @return returns the portion of the partial derivative Jacobian containing the local
    * strain term.
    */
-  virtual Real calculateLocalJacobianTerm();
-  
+  //virtual Real calculateLocalJacobianTerm();
+
   /**
    * calculateMisfitJacobianTerm()
    * @return returns the portion of the partial derivative Jacobian containing the misfit strain term.
    * This can handle an arbitrary number of order parameters.
    */
-virtual Real calculateMisfitJacobianTerm();
-  
+//virtual Real calculateMisfitJacobianTerm();
+
 private:
 
   // system elasticity tensor, varies in space
@@ -83,15 +92,19 @@ private:
   MaterialProperty<std::vector<SymmTensor > > & _eigenstrains_rotated_MP;
   MaterialProperty<SymmTensor> & _local_strain;
 
+  MaterialProperty<std::vector<SymmElasticityTensor> > & _d_elasticity_tensor;
+  MaterialProperty<SymmTensor> & _elastic_strain;
+  MaterialProperty<std::vector<SymmTensor> > & _d_eigenstrains_rotated_MP;
+
   // number of orientation variants
-  int _n_OP_vars;
+  unsigned int _n_OP_vars;
 
   // orientation variant number for this kernel (1 to n)
-  int _OP_number;
+  unsigned int _OP_number;
 
   // Vector of references to the coupled order parameters
   std::vector<VariableValue *> _coupled_vars;
-  
+
 };
 
 #endif //ACTRANSFORMELASTICDF_H

@@ -44,7 +44,7 @@ ACBulkPolyCoupled::ACBulkPolyCoupled(const std::string & name, InputParameters p
 
   _coupled_OP_vars.resize(_n_OP_vars);
 
-  for(int i=0; i< _n_OP_vars; i++)
+  for(unsigned int i=0; i< _n_OP_vars; i++)
   {
     if(i == _OP_number-1)
     {
@@ -65,7 +65,7 @@ ACBulkPolyCoupled::computeDFDOP(PFFunctionType type)
   quad_mult = 1.0;
 
   // compute the coupled OP terms
-  for(int i=0; i<_n_OP_vars; i++)
+  for(unsigned int i=0; i<_n_OP_vars; i++)
   {
     if(i != _OP_number-1)
     {
