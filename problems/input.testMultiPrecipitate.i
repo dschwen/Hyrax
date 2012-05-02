@@ -1,3 +1,6 @@
+#This input file is to test the Alan-Cahn, Cahn-Hilliard + solid mechanics 
+# for three precipitates, of order parameter 1, 2, and 3.
+
 [Mesh]
   type = GeneratedMesh
   dim = 2
@@ -24,8 +27,8 @@
       outvalue = 0.1
       radius = 2.0
       int_width = 1.5
-      x_positions = '10 50 80'
-      y_positions = '10 50 80'
+      x_positions = '20 50 80'
+      y_positions = '20 80 20'
       z_positions = '0 0 0'
       n_seeds = 3
     [../]
@@ -40,8 +43,8 @@
       outvalue = 0.0
       radius = 2.0
       int_width = 1.5
-      x_positions = '10'
-      y_positions = '10'
+      x_positions = '20'
+      y_positions = '20'
       z_positions = '0'
       n_seeds = 1
     [../]
@@ -57,7 +60,7 @@
       radius = 2.0
       int_width = 1.5
       x_positions = '50'
-      y_positions = '50'
+      y_positions = '80'
       z_positions = '0'
       n_seeds = 1
     [../]
@@ -73,18 +76,18 @@
       radius = 2.0
       int_width = 1.5
       x_positions = '80'
-      y_positions = '80'
+      y_positions = '20'
       z_positions = '0'
       n_seeds = 1
     [../]
   [../]
 
-  [./dispx]
+  [./disp_x]
     order = FIRST
     family = LAGRANGE
   [../]
 
-  [./dispy]
+  [./disp_y]
     order = FIRST
     family = LAGRANGE
   [../]
@@ -92,8 +95,8 @@
 
 [SolidMechanics]
   [./solid]
-    disp_x = dispx
-    disp_y = dispy
+    disp_x = disp_x
+    disp_y = disp_y
   [../]
 []
 
@@ -208,23 +211,49 @@
     n_OP_vars = 3
     OP_number = 3
   [../]
-
 []
 
-[BCs]
-active = 'Periodic'
-  [./Periodic]
-    [./left_right]
-      primary = 0
-      secondary = 2
-      translation = '0 100 0'
-    [../]
+[BCs] 
+  [./conc_BC]
+    type = NeumannBC
+    variable = concentration
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
 
-    [./top_bottom]
-      primary = 1
-      secondary = 3
-      translation = '-100 0 0'
-    [../]
+  [./n1_BC]
+    type = NeumannBC
+    variable = n1
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
+
+ [./n2_BC]
+    type = NeumannBC
+    variable = n2
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
+
+ [./n3_BC]
+    type = NeumannBC
+    variable = n3
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
+
+  [./disp_x_BC]
+    type = DirichletBC
+    variable = disp_x
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
+
+  [./disp_y_BC]
+    type = DirichletBC
+    variable = disp_y
+    boundary = '0 1 2 3'
+    value = 0.0
   [../]
 []
 
@@ -250,8 +279,8 @@ active = 'Periodic'
   [./test_material]
     type = LinearSingleCrystalPrecipitateMaterial
     block = 0
-    disp_x = dispx
-    disp_y = dispy
+    disp_x = disp_x
+    disp_y = disp_y
     C_matrix = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
 #    C_precipitate = '100.4 40.03 42.60 100.4 42.6 150.51 26.31 26.31 32.09'
     C_precipitate = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
@@ -272,17 +301,23 @@ active = 'Periodic'
 
   l_max_its = 15
   nl_max_its = 50
-  nl_abs_tol = 5.0e-5
-
+  
   start_time = 0.0
-  num_steps = 1
-  dt = 0.003
+  num_steps = 20
+  dt = 0.3
 []
 
 [Output]
-  file_base = testPolyCoupledElasticityFalse
+  file_base = testMultiPrecipitate
   output_initial = true
   interval = 1
   exodus = true
   perf_log = true
+  
+  [./OverSampling]
+    exodus = true
+    refinements = 3
+    output_initial = true
+    interval = 1
+  [../]
 []

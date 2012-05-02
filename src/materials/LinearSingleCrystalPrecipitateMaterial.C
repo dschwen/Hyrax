@@ -97,9 +97,6 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
 
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;
-
-    std::cout<<"finished LSXPM constructor";
-
   }
 }
 
