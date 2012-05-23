@@ -222,9 +222,9 @@ void
    _local_strain[_qp] = SymmTensor ( _grad_disp_x[_qp](0),
                                      _grad_disp_y[_qp](1),
                                      _grad_disp_z[_qp](2),
+                                     0.5*(_grad_disp_x[_qp](1)+ _grad_disp_y[_qp](0)),
                                      0.5*(_grad_disp_y[_qp](2)+ _grad_disp_z[_qp](1)),
-                                     0.5*(_grad_disp_z[_qp](0)+ _grad_disp_x[_qp](2)),
-                                     0.5*(_grad_disp_x[_qp](1)+ _grad_disp_y[_qp](0)) );
+                                     0.5*(_grad_disp_z[_qp](0)+ _grad_disp_x[_qp](2)) );
 
    //std::cout << _local_strain[_qp], std::cout << std::endl;
 
