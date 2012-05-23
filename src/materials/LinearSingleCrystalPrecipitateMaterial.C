@@ -79,9 +79,15 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   _Cijkl_precipitates_rotated[0] = _Cijkl_precipitate;
   _eigenstrains_rotated[0] = _eigenstrain;
 
+  std::cout << "Cijkl precips rotated 0 " << _Cijkl_precipitates_rotated[0] << std::endl;
+  std::cout << "eigenstrains rotated[0] "  << _eigenstrains_rotated[0] << std::endl;
+
   // rotate all the things, in degrees, since SymmAnisotropicElasticityTensor takes degrees
   Real rotation_angle_base = 360.0/Real(_n_variants);
   Real rotation_angle = rotation_angle_base;
+  std::cout << "rotation angle base " << rotation_angle_base << std::endl;
+  std::cout << "rotation angle " << rotation_angle << std::endl;
+
   for(unsigned int i=1; i<_n_variants; i++)
   {
    // set up temp variables for the precipitate rotations
@@ -89,14 +95,20 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     SymmTensor e_strain(_eigenstrain);
 
     // do the rotation
-    C_tensor.rotate(rotation_angle, 0.0, 0.0);
+     C_tensor.rotate(rotation_angle, 0.0, 0.0);
     _Cijkl_precipitates_rotated[i] = C_tensor;
+
+    //  _Cijkl_precipitates_rotated[i] = _Cijkl_precipitate;
+
+    std::cout << "Cijkl precips rotated " << i << " " << _Cijkl_precipitates_rotated[i] << std::endl;
 
     e_strain.rotate(rotation_angle);
     _eigenstrains_rotated[i] = e_strain;
-
+    std::cout << "eigenstrains rotated " << i << "" << _eigenstrains_rotated[i] << std::endl;
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;
+    std::cout << "rotation angle " << rotation_angle << std::endl;
+
   }
 }
 
@@ -206,12 +218,13 @@ void
    // /*local strain.  Not adding in the 2x shear strains because the multiply function
    // does this as needed. */
 
+   // I just swapped the order of the strains here...
    _local_strain[_qp] = SymmTensor ( _grad_disp_x[_qp](0),
                                      _grad_disp_y[_qp](1),
                                      _grad_disp_z[_qp](2),
-                                     0.5*(_grad_disp_x[_qp](1)+ _grad_disp_y[_qp](0)),
                                      0.5*(_grad_disp_y[_qp](2)+ _grad_disp_z[_qp](1)),
-                                     0.5*(_grad_disp_z[_qp](0)+ _grad_disp_x[_qp](2)) );
+                                     0.5*(_grad_disp_z[_qp](0)+ _grad_disp_x[_qp](2)),
+                                     0.5*(_grad_disp_x[_qp](1)+ _grad_disp_y[_qp](0)) );
 
    //std::cout << _local_strain[_qp], std::cout << std::endl;
 

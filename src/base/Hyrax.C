@@ -24,6 +24,7 @@
 #include "ACTransformElasticDF.h"
 #include "CHBulkPolyCoupled.h"
 #include "ACBulkPolyCoupled.h"
+#include "ACNucleus.h"
 
 //Auxiliary Kernels
 #include "AuxNucleation.h"
@@ -73,13 +74,14 @@ namespace Hyrax
     registerKernel(ACTransformElasticDF);
     registerKernel(ACBulkPolyCoupled);
     registerKernel(CHBulkPolyCoupled);
+    registerKernel(ACNucleus);
 
     //Auxiliary Kernels
     registerAux(AuxNucleation);
     registerAux(AuxSupersaturation);
     registerAux(AuxNucleationRate);
     registerAux(AuxNucleationProbability);
- 
+
     //Dirac Kernels
     registerDiracKernel(DiracNucleation);
     registerDiracKernel(DiracForcedAMR);
@@ -96,8 +98,8 @@ namespace Hyrax
     //Dampers
 
     //Executioners
-    registerExecutioner(TransientMultiAMR);  
-  
+    registerExecutioner(TransientMultiAMR);
+
     //Post Processors
 
     // Actions

@@ -72,7 +72,8 @@ PFMobilityLandau::PFMobilityLandau(const std::string & name,
    _c1(declareProperty<Real>("C1")),
    _c2(declareProperty<Real>("C2"))
 
-{}
+{
+}
 
 void
 PFMobilityLandau::computeProperties()

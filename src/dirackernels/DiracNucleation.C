@@ -18,8 +18,8 @@
 /**
  *  DiracNucleation works with the AuxNucleation etc. system to determine where and when Dirac delta "spikes"
  *  are introduced into the order parameter field variable.  This is for the simulation of the explicit
- *  introduction of nuclei as delta functions for the concurrent nucleation and growth algorithm first 
- *  proposed by J.P. Simmons (2000). 
+ *  introduction of nuclei as delta functions for the concurrent nucleation and growth algorithm first
+ *  proposed by J.P. Simmons (2000).
  */
 
 
@@ -44,7 +44,7 @@ void
 DiracNucleation::addPoints()
 {
 
-  MeshBase::const_element_iterator       el     = _mesh.active_local_elements_begin();
+  MeshBase::const_element_iterator el = _mesh.active_local_elements_begin();
   MeshBase::const_element_iterator end_el = _mesh.active_local_elements_end();
 
   // iterate over the elements
@@ -53,7 +53,7 @@ DiracNucleation::addPoints()
     Elem* elem = *el;
     _problem.prepare(elem, 0);
     _problem.reinitElem(elem, 0);
-      /*Test for nucleation event: access one quadrature point for the element. Should give us the 
+      /*Test for nucleation event: access one quadrature point for the element. Should give us the
         same value since it's an element average value*/
     if (_coupled_nucleation[0] > 1.0)  //CJP changed the if to >0.0 for rapid nucleation.  This should be >1.0
     {
