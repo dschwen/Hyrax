@@ -13,7 +13,7 @@
   ymax = 100
   zmin = 0
   zmax = 0
-  elem_type = QUAD9
+  elem_type = QUAD4
   uniform_refine = 2
 []
 
@@ -303,12 +303,12 @@
   nl_max_its = 50
   
   start_time = 0.0
-  num_steps = 20
-  dt = 0.3
+  num_steps = 10
+  dt = 0.003
 []
 
 [Output]
-  file_base = testMultiPrecipitate
+  file_base = testMultiPrecipitates.swappedStrains
   output_initial = true
   interval = 1
   exodus = true
