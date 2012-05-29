@@ -25,6 +25,7 @@
 #include "CHBulkPolyCoupled.h"
 #include "ACBulkPolyCoupled.h"
 #include "ACNucleus.h"
+#include "ACNucleusCNG.h"
 
 //Auxiliary Kernels
 #include "AuxNucleation.h"
@@ -75,6 +76,7 @@ namespace Hyrax
     registerKernel(ACBulkPolyCoupled);
     registerKernel(CHBulkPolyCoupled);
     registerKernel(ACNucleus);
+    registerKernel(ACNucleusCNG);
 
     //Auxiliary Kernels
     registerAux(AuxNucleation);

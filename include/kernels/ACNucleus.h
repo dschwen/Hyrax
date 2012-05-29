@@ -36,6 +36,9 @@ private:
   Real _x_center;
   Real _y_center;
   Real _z_center;
+  Real _start_time;
+  Real _end_time;
+
 };
 
 #endif //ACNUCLEUS_H

@@ -1,7 +1,6 @@
-# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system, with no initial seed and
-#then an OP seed at a later time.
+# This test is designed as part of a suite with input.testCH_AC_coupled, input.testACNucleation_init, and input.testACNucleation.
 
-
+# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system, with no initial seed and then an OP seed at a later time.  The later time is to be specified from the input file and determined internally.
 
 [Mesh]
   type = GeneratedMesh
@@ -16,9 +15,12 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
- []
+  uniform_refine = 1
+[]
 
 [Variables]
+  active = 'concentration n1'
+
   [./concentration]
     order = THIRD
     family = HERMITE
@@ -26,6 +28,7 @@
       type = RandomIC
       min = 0.099
       max = 0.101
+      #value = 0.1
     [../]
   [../]
 
@@ -88,6 +91,7 @@
     radius = 1.8
     x_center = 19.2
     y_center = 19.2
+    #time_periods = 'p2'
     start_time = 0.9
     end_time = 2.9
   [../]
@@ -128,14 +132,25 @@ active = 'Periodic'
   petsc_options_value = 'hypre boomeramg 101'
 
   start_time = 0.0
-  num_steps = 5
+  num_steps = 25
   dt = 0.3
+
+  #time_periods = 'p1 p2 p3'
+  #time_period_starts = '0 0.6 2.6' 
+   #time_period_ends =
 []
 
 [Output]
-  file_base = ACNucleation_out
+  file_base = testACNucTInternal
   output_initial = true
   interval = 1
   exodus = true
   perf_log = true
+
+  [./OverSampling]
+    exodus = true
+    refinements = 4
+    output_initial = true
+    interval = 1
+  [../]
 []

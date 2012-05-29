@@ -36,27 +36,30 @@ AuxNucleation::AuxNucleation(const std::string & name, InputParameters parameter
 Real
 AuxNucleation::computeValue()
 {
-/* AuxNucleation is the final step in the probabilistic nucleation method.  The steps to get here are 
+/* AuxNucleation is the final step in the probabilistic nucleation method.  The steps to get here are
  * shown below:
    1) supersaturation
       supersaturation = C - C1;  // C1 is from Guo (2008) Landau polynomial.
       if supersaturation <= 0, supersaturation = 1x10-10; this prevents division by zero or negative in step 2
-   2) nucleation rate equation - this  can be arbitrary  
-      currently: j_star = Kn1 * exp(-1*Kn2 / supersaturation)  
+   2) nucleation rate equation - this  can be arbitrary
+      currently: j_star = Kn1 * exp(-1*Kn2 / supersaturation)
       Kn1 and Kn2 are going to be supplied from the input file
    3) probability of nucleation in that location for this timestep
-      p_nm = 1 - exp(-1*j_star*dt)  
+      p_nm = 1 - exp(-1*j_star*dt)
    4) stochastic testing of nucleation: nucleation probability vs random number between 0 and 1
 */
-    
+
    // CJP: You might try Moose::seed(unsigned int) and Moose::rand()
-   
+
    // we are controlling the random number seeding this way for reproducibility
    _random_number_seed += 1;
    Moose::seed(_random_number_seed);
+   _random_number = Moose::rand();
 
-  _random_number = Moose::rand();
-  _random_number = _random_number/100000;
+   std::cout << "random number generated = " << _random_number << std::endl;
+   _random_number = _random_number/100000;
+
+   std::cout << "actual random number used = " << _random_number << std::endl;
 
 
   if (_random_number < _coupled_probability[_qp])
