@@ -32,9 +32,9 @@ InputParameters validParams<ACNucleus>()
 
 ACNucleus::ACNucleus(const std::string & name, InputParameters parameters)
     :Kernel(name, parameters),
-     _n_value(getParam<Real>("n_value")),
      _radius(getParam<Real>("radius")),
      _int_width(getParam<Real>("int_width")),
+     _n_value(getParam<Real>("n_value")),
      _x_center(getParam<Real>("x_center")),
      _y_center(getParam<Real>("y_center")),
      _z_center(getParam<Real>("z_center")),

@@ -28,17 +28,17 @@ protected:
 
   virtual Real computeQpResidual();
 
-private:
-
-  Real _n_value;
   Real _radius;
   Real _int_width;
+  Real _n_value;
+
+private:
+
   Real _x_center;
   Real _y_center;
   Real _z_center;
   Real _start_time;
   Real _end_time;
-
 };
 
 #endif //ACNUCLEUS_H

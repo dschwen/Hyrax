@@ -42,6 +42,7 @@
 //Materials
 #include "PFMobilityLandau.h"
 #include "LinearSingleCrystalPrecipitateMaterial.h"
+#include "MaterialCNG.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -93,6 +94,7 @@ namespace Hyrax
     //Materials
     registerMaterial(PFMobilityLandau);
     registerMaterial(LinearSingleCrystalPrecipitateMaterial);
+    registerMaterial(MaterialCNG);
 
     //Initial Conditions
     registerInitialCondition(PolySpecifiedSmoothCircleIC);

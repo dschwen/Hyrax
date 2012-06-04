@@ -4,7 +4,7 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-*  19 May 2012
+*  29 May 2012
 *
 *************************************************************************/
 
@@ -27,10 +27,9 @@ protected:
   virtual Real computeQpResidual();
 
 private:
-  //aux variable for the nucleation true/false field.
-  VariableValue & _nucleation;
-
-
+  MaterialProperty<std::vector<RealVectorValue> > & _nucleation_locations;
+  MaterialProperty<std::vector<Real> > & _start_times;
+  MaterialProperty<std::vector<Real> > & _end_times;
 };
 
 #endif //ACNUCLEUSCNG_H

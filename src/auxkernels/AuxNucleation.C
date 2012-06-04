@@ -25,7 +25,7 @@ InputParameters validParams<AuxNucleation>()
 
 AuxNucleation::AuxNucleation(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
-  _coupled_probability(coupledValue("coupled_aux_var"))
+    _coupled_probability(coupledValue("coupled_aux_var"))
 {
   /**
    * _random_number_seed will start at one and be incremented by one each timestep.
@@ -56,20 +56,20 @@ AuxNucleation::computeValue()
    Moose::seed(_random_number_seed);
    _random_number = Moose::rand();
 
-   std::cout << "random number generated = " << _random_number << std::endl;
-   _random_number = _random_number/100000;
+   //std::cout << "random number generated = " << _random_number << std::endl;
+    _random_number = _random_number/5000;
 
    std::cout << "actual random number used = " << _random_number << std::endl;
+   std::cout << "coupled probability[" << _qp << "] =" << _coupled_probability[_qp] <<std::endl;
 
-
-  if (_random_number < _coupled_probability[_qp])
-  {
-   // return true
-   return 2.0;
-  }
-  else
-  {
-   // return false
-   return 0.0;
-  }
+   if (_random_number < _coupled_probability[_qp])
+   {
+     // return true
+     return 2.0;
+   }
+   else
+   {
+     // return false
+     return -2.0;
+   }
 }
