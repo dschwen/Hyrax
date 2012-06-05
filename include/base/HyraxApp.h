@@ -4,7 +4,7 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-*  16 November 2011
+*  30 May 2012
 *
 *  
 *  This code handles the materials parameters for a coupled 
@@ -12,23 +12,15 @@
 *  system. 
 *************************************************************************/
 
-#include "HyraxApp.h"
-#include "MooseInit.h"
+#ifndef HYRAXAPP_H
+#define HYRAXAPP_H
 
-// libMesh includes
-#include "perf_log.h"
+#include "MooseApp.h"
 
-// Create a performance log
-PerfLog Moose::perf_log("HYRAX");
-
-// Begin the main program.
-int main (int argc, char** argv)
+class HyraxApp : public MooseApp
 {
-  // Create a MooseInit Object
-  MooseInit init (argc, argv);
-  HyraxApp app(argc, argv);
+public:
+  HyraxApp(int argc, char * argv []);
+};
 
-  app.run();
-
-  return 0;
-}
+#endif //HYRAXAPP_H
