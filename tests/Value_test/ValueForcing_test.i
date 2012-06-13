@@ -1,5 +1,6 @@
-# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system.  This test is
-# for regression testing.
+# This input file is designed to test the Value kernel using the
+#UserForcingFunction kernel, which will is designed
+# to be used for performing an L2 projection.
 
 [Mesh]
   type = GeneratedMesh
@@ -14,7 +15,6 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 1
 []
 
 [Variables]
@@ -22,44 +22,45 @@
     order = FIRST
     family = LAGRANGE
     [./InitialCondition]
-      type = PolySpecifiedSmoothCircleIC
+      type = SmoothCircleIC
       int_width = 1.5
       invalue = 0.6
       outvalue = 0.1
       radius = 5.0
-      x_positions = '25 50 75'
-      y_positions = '25 50 75'
-      z_positions = '0 0 0'
-      n_seeds = 3
+      x1 = 50
+      y1 = 50
+      z1 = 0
     [../]
   [../]
 []
 
+[Functions]
+  [./forcing_function]
+    type = ParsedFunction
+    value = 1.0*x
+  [../]
+[]b
+
 [Kernels]
-
-  [./diff]
-    type = Diffusion
+  [./Value_test]
+    type = Value
     variable = diffused
+  [../]
+
+  [./Forcing_test]
+    type = UserForcingFunction
+    variable = diffused
+    function = forcing_function
   [../]
 []
 
-[BCs]
-active = 'bottom top'
-  [./bottom]
-    type = DirichletBC
-    variable = diffused
-    boundary = '1'
-    value = 1
-  [../]
-
-  [./top]
-    type = DirichletBC
-    variable = diffused
-    boundary = '2'
-    value = 0
-  [../]
-[]
-
+#[BCs]
+#  [./Periodic]
+#    [./all]
+#     auto_direction = 'x y'
+#    [../]
+#  [../]
+#[]
 
 [Executioner]
   type = Steady
@@ -67,7 +68,7 @@ active = 'bottom top'
 []
 
 [Output]
-  file_base = smooth_circle_IC_out
+  file_base = testValueForcing
   output_initial = true
   interval = 1
   exodus = true

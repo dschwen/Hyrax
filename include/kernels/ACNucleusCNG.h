@@ -27,7 +27,7 @@ protected:
   virtual Real computeQpResidual();
 
 private:
-  MaterialProperty<std::vector<RealVectorValue> > & _nucleation_locations;
+  MaterialProperty<std::vector<Point> > & _nucleation_locations;
   MaterialProperty<std::vector<Real> > & _start_times;
   MaterialProperty<std::vector<Real> > & _end_times;
 };

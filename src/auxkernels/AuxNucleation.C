@@ -9,7 +9,7 @@
 #include "AuxNucleation.h"
 
 /**
- *  AuxNucleation handles the nucleation/no nucleation portion of the concurrent
+ *  AuxNucleation handles the nucleation/no nucleation b of the concurrent
  *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).
  *  Returns a sort-of boolean: true if nucleation occured; false if it didn't.
  */

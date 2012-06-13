@@ -8,7 +8,6 @@
 *
 *************************************************************************/
 
-
 #include "Moose.h"
 #include "Hyrax.h"
 #include "Factory.h"
@@ -22,6 +21,11 @@
 #include "ACBulkPolyCoupled.h"
 #include "ACNucleus.h"
 #include "ACNucleusCNG.h"
+#include "ACInterfaceNucleation.h"
+#include "ACBulkNucleation.h"
+#include "Value.h"
+#include "ValueNucleation.h"
+#include "ForcingFunctionNucleation.h"
 
 //Auxiliary Kernels
 #include "AuxNucleation.h"
@@ -65,6 +69,11 @@ namespace Hyrax
     registerKernel(CHBulkPolyCoupled);
     registerKernel(ACNucleus);
     registerKernel(ACNucleusCNG);
+    registerKernel(ACInterfaceNucleation);
+    registerKernel(ACBulkNucleation);
+    registerKernel(Value);
+    registerKernel(ValueNucleation);
+    registerKernel(ForcingFunctionNucleation);
 
     //Auxiliary Kernels
     registerAux(AuxNucleation);

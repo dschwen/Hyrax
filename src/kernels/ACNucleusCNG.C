@@ -22,7 +22,7 @@ InputParameters validParams<ACNucleusCNG>()
 
 ACNucleusCNG::ACNucleusCNG(const std::string & name, InputParameters parameters)
     : ACNucleus(name, parameters),
-      _nucleation_locations(getMaterialProperty<std::vector<RealVectorValue> >("nucleation_locations")),
+      _nucleation_locations(getMaterialProperty<std::vector<Point> >("nucleation_locations")),
       _start_times(getMaterialProperty<std::vector<Real> >("start_times")),
       _end_times(getMaterialProperty<std::vector<Real> >("end_times"))
 {
@@ -37,16 +37,26 @@ ACNucleusCNG::computeQpResidual()
     if( _t >= _start_times[_qp][i] && _t <= _end_times[_qp][i] )
     {
       // coordinates of current quadrature point
-      Real x = _q_point[_qp](0);
-      Real y = _q_point[_qp](1);
-      Real z = _q_point[_qp](2);
+      // Real x = _q_point[_qp](0);
+      //Real y = _q_point[_qp](1);
+      //Real z = _q_point[_qp](2);
+
+      Point current_point;
+
+      current_point = _q_point[_qp];
+
 
       // determine if distance of current qp from center of a nucleus
-      Real distance = 0.0;
-      distance = (x - _nucleation_locations[_qp][i](0))*(x - _nucleation_locations[_qp][i](0))
-        + (y - _nucleation_locations[_qp][i](1))*(y - _nucleation_locations[_qp][i](1))
-        + (z - _nucleation_locations[_qp][i](2))*(z - _nucleation_locations[_qp][i](2));
-      distance = sqrt(distance);
+      // Real distance = 0.0;
+      //distance = (x - _nucleation_locations[_qp][i](0))*(x - _nucleation_locations[_qp][i](0))
+      // + (y - _nucleation_locations[_qp][i](1))*(y - _nucleation_locations[_qp][i](1))
+      //  + (z - _nucleation_locations[_qp][i](2))*(z - _nucleation_locations[_qp][i](2));
+      //distance = sqrt(distance);
+
+      Real distance;
+
+      distance = (current_point - _nucleation_locations[_qp][i]).size();
+
 
       // determine if current qp is in bulk or interface or not at all of nucleus
       if(distance <= _radius - _int_width/2.0)
