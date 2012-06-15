@@ -26,6 +26,7 @@
 #include "Value.h"
 #include "ValueNucleation.h"
 #include "ForcingFunctionNucleation.h"
+#include "TimeDerivativeNucleation.h"
 
 //Auxiliary Kernels
 #include "AuxNucleation.h"
@@ -74,6 +75,7 @@ namespace Hyrax
     registerKernel(Value);
     registerKernel(ValueNucleation);
     registerKernel(ForcingFunctionNucleation);
+    registerKernel(TimeDerivativeNucleation);
 
     //Auxiliary Kernels
     registerAux(AuxNucleation);
