@@ -35,6 +35,7 @@ DEP_APPS    ?= $(shell $(MOOSE_DIR)/scripts/find_dep_apps.py $(APPLICATION_NAME)
 ################################## ELK MODULES ################################
 PHASE_FIELD       := yes
 SOLID_MECHANICS   := yes
+TENSOR_MECHANICS  := yes
 HEAT_CONDUCTION   := yes
 ###############################################################################
 
