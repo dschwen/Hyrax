@@ -30,6 +30,18 @@ class LinearSingleCrystalPrecipitateMaterial;
 template<>
 InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>();
 
+/// template specialization for MaterialProperty Init
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmTensor> >::init(int size);
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> >::init(int size);
+template <>
+PropertyValue *
+MaterialProperty<SymmAnisotropicElasticityTensor>::init(int size);
+///
+
 class LinearSingleCrystalPrecipitateMaterial : public SolidMechanicsMaterial
 {
 public:

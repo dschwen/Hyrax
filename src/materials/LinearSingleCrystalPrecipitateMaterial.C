@@ -247,3 +247,59 @@ void
    _stress[_qp] = _elasticity_tensor[_qp]*_elastic_strain[_qp];
    //std::cout << _stress[_qp], std::cout << std::endl;
  }
+
+
+// Template specializations
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmTensor> >::init(int size)
+{
+  typedef MaterialProperty<std::vector<SymmTensor> > PropType;
+  PropType *copy = new PropType;
+  copy->_value.resize(size);
+
+  // We don't know the size of the underlying vector at each
+  // quadrature point, the user will be responsible for resizing it
+  // and filling in the entries...
+
+  // Return the copy we allocated
+  return copy;
+}
+
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> >::init(int size)
+{
+  typedef MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> > PropType;
+  PropType *copy = new PropType;
+  copy->_value.resize(size);
+
+  // We don't know the size of the underlying vector at each
+  // quadrature point, the user will be responsible for resizing it
+  // and filling in the entries...
+
+  // Return the copy we allocated
+  return copy;
+}
+
+template <>
+PropertyValue *
+MaterialProperty<std::vector<SymmElasticityTensor> >::init(int size)
+{
+  typedef MaterialProperty<std::vector<SymmElasticityTensor> > PropType;
+  PropType *copy = new PropType;
+  copy->_value.resize(size);
+
+  return copy;
+}
+
+
+template <>
+PropertyValue *
+MaterialProperty<SymmAnisotropicElasticityTensor>::init(int size)
+{
+  MaterialProperty<SymmAnisotropicElasticityTensor> *copy
+    = new MaterialProperty<SymmAnisotropicElasticityTensor>();
+  copy->_value.resize(size);
+  return copy;
+}

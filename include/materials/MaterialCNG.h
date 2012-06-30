@@ -18,6 +18,12 @@ class MaterialCNG;
 template<>
 InputParameters validParams<MaterialCNG>();
 
+/// template specialization for MaterialProperty Init
+template <>
+PropertyValue *
+MaterialProperty<std::vector<Point> >::init(int size);
+///
+
 class MaterialCNG : public Material
 {
 public:
