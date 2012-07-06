@@ -54,6 +54,7 @@
 #include "TransientMultiAMR.h"
 
 //Post Processors
+#include "ChangeVariableData.h"
 
 //Actions
 
@@ -103,6 +104,7 @@ namespace Hyrax
     registerExecutioner(TransientMultiAMR);
 
     //Post Processors
+    registerPostprocessor(ChangeVariableData);
 
     // Actions
   }

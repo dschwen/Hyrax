@@ -5,6 +5,7 @@
 
 //Forward Declarations
 class ChangeVariableData;
+class MooseMesh;
 class MooseVariable;
 
 template<>
@@ -22,11 +23,14 @@ public:
   virtual void threadJoin(const Postprocessor & y);
 
 private:
+  /// A reference to the mesh
+  MooseMesh & _mesh;
   /// The reference to the variable we want to retrieve in the solution vector
   MooseVariable & _moose_variable;
-
   /// The number of the variable in the Nonlinear System
   unsigned int _variable_number;
+
+  unsigned int _foo;
 };
 
 #endif // CHANGEVARIABLEDATA_H
