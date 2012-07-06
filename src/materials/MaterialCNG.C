@@ -174,21 +174,3 @@ MaterialCNG::appendNucleationList(unsigned int qp)
   _start[s-1] = _t;
   _end[s-1] = _t + _dwell_time;
 }
-
-
-template <>
-PropertyValue *
-MaterialProperty<std::vector<Point> >::init(int size)
-{
-  typedef MaterialProperty<std::vector<Point> > PropType;
-  PropType *copy = new PropType;
-  copy->_value.resize(size);
-
-  // We don't know the size of the underlying vector at each
-  // quadrature point, the user will be responsible for resizing it
-  // and filling in the entries...
-
-  // Return the copy we allocated
-  return copy;
-}
-
