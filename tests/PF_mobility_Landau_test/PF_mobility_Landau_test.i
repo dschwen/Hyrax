@@ -102,79 +102,79 @@
 [AuxKernels]
   [./matl_a1]
     type = MaterialRealAux
-    matpro = A1
+    property = A1
     variable = a1_aux
   [../]
 
  [./matl_a2]
    type = MaterialRealAux
-   matpro = A2
+   property = A2
    variable = a2_aux
  [../]
 
   [./matl_a3]
     type = MaterialRealAux
-    matpro = A3
+    property = A3
     variable = a3_aux
   [../]
 
   [./matl_a4]
     type = MaterialRealAux
-    matpro = A4
+    property = A4
     variable = a4_aux
   [../]
 
   [./matl_a5]
     type = MaterialRealAux
-    matpro = A5
+    property = A5
     variable = a5_aux
   [../]
 
   [./matl_a6]
     type = MaterialRealAux
-    matpro = A6
+    property = A6
     variable = a6_aux
   [../]
 
   [./matl_a7]
     type = MaterialRealAux
-    matpro = A7
+    property = A7
     variable = a7_aux
   [../]
 
   [./matl_c1]
     type = MaterialRealAux
-    matpro = C1
+    property = C1
     variable = c1_aux
   [../]
 
   [./matl_c2]
     type = MaterialRealAux
-    matpro = C2
+    property = C2
     variable = c2_aux
   [../]
 
   [./matl_M]
     type = MaterialRealAux
-    matpro = M
+    property = M
     variable = M_aux
   [../]
 
   [./matl_L]
     type = MaterialRealAux
-    matpro = L
+    property = L
     variable = L_aux
   [../]
 
   [./matl_kappa_c]
     type = MaterialRealAux
-    matpro = kappa_c
+    property = kappa_c
     variable = kappa_c_aux
   [../]
 
   [./matl_kappa_n]
     type = MaterialRealAux
-    matpro = kappa_n
+    property = kappa_n
     variable = kappa_n_aux
   [../]
 []
