@@ -7,6 +7,7 @@
 class ChangeVariableData;
 class MooseMesh;
 class MooseVariable;
+class NonlinearSystem;
 
 template<>
 InputParameters validParams<ChangeVariableData>();
@@ -27,10 +28,14 @@ private:
   MooseMesh & _mesh;
   /// The reference to the variable we want to retrieve in the solution vector
   MooseVariable & _moose_variable;
+  /// A reference to the nonlinear system
+  NonlinearSystem & _nl;
   /// The number of the variable in the Nonlinear System
   unsigned int _variable_number;
-
-  unsigned int _foo;
+  /// This is the storage location for the value we will return in this postprocessor
+  Real _foo;
+  /// A reference to the coupled variable
+  MooseVariable & _coupled;
 };
 
 #endif // CHANGEVARIABLEDATA_H

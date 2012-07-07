@@ -10,38 +10,56 @@
 []
 
 [Variables]
-  active = 'u'
-
   [./u]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  [./v]
     order = FIRST
     family = LAGRANGE
   [../]
 []
 
 [Kernels]
-  active = 'diff'
-
   [./diff]
     type = Diffusion
     variable = u
   [../]
+
+  [./diff2]
+    type = Diffusion
+    variable = v
+  [../]
 []
 
 [BCs]
-  active = 'left right'
-
-  [./left]
+  [./left_u]
     type = DirichletBC
     variable = u
-    boundary = 'left'
+    boundary = 'left bottom'
     value = 0
   [../]
 
-  [./right]
+  [./right_u]
     type = DirichletBC
     variable = u
-    boundary = 'right'
+    boundary = 'right top'
     value = 1
+  [../]
+
+  [./left_v]
+    type = DirichletBC
+    variable = v
+    boundary = 'left'
+    value = 1
+  [../]
+
+  [./right_r]
+    type = DirichletBC
+    variable = v
+    boundary = 'right'
+    value = 0
   [../]
 []
 
@@ -49,6 +67,7 @@
   [./change_variable]
     type = ChangeVariableData
     variable = u
+    coupled = v
   [../]
 []
 
