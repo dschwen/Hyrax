@@ -58,7 +58,7 @@ active = 'bottom top'
     boundary = '2'
     value = 0
   [../]
-
+[]
 
 [Executioner]
   type = Steady

@@ -9,51 +9,51 @@
 *************************************************************************/
 
 #include "LinearSingleCrystalPrecipitateMaterial.h"
-#include "SymmTensor.h"
-#include "SymmAnisotropicElasticityTensor.h"
+//#include "SymmTensor.h"
+//#include "SymmAnisotropicElasticityTensor.h"
 
 #include <ostream>
 
 /**
- * LinearSingleCrystalPrecipitateMaterial handles anisotropic, single-crystal material elastic
- * constants.  It's designed to work with SymmSingleCrystalMaterial.  It handles a single
- * crystal of matrix with an arbitrary number of orientation variants of a coherent precipitate.
- * The rotation of orientation variants is currently set up around the C-axis (2D rotation).
+ * LinearSingleCrystalPrecipitateMaterial handles anisotropic,
+ * single-crystal material elastic constants.  It handles a single
+ * crystal of matrix with an arbitrary number of orientation variants of
+ * a coherent precipitate.
  */
 
 template<>
 InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
 {
-  InputParameters params = validParams<SolidMechanicsMaterial>();
-  params.addRequiredParam<std::vector<Real> >("C_matrix", "Stiffness tensor for matrix: C11, C12, C13, C22, C23, C33, C44, C55, C66 (for 9 inputs)");
+  InputParameters params = validParams<LinearElasticMaterial>();
+//  params.addRequiredParam<std::vector<Real> >("C_matrix", "Stiffness tensor for matrix: C11, C12, C13, C22, C23, C33, C44, C55, C66 (for 9 inputs)");
   params.addRequiredParam<std::vector<Real> >("C_precipitate", "Stiffness tensor for precipitate");
   params.addRequiredParam<std::vector<Real> >("e_precipitate","Eigenstrain tensor for precipitate: e11, e22, e33, e23, e13, e12");
   params.addRequiredParam<int>("n_variants","# of orientation variants for precipitate in single crystal");
   params.addRequiredCoupledVar("variable_names","Array of coupled variable names");
-  params.addParam<bool>("all_21", false,"Boolean to indicate if all 21 elastic constants are specified in the input (true) or only nine (false)" );
+  // params.addParam<bool>("all_21", false,"Boolean to indicate if all 21 elastic constants are specified in the input (true) or only nine (false)" );
 
   return params;
 }
 
 LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(const std::string & name, InputParameters parameters)
-    : SolidMechanicsMaterial(name, parameters),
-      _Cijkl_matrix_vector(getParam<std::vector<Real> >("C_matrix")),
+    : LinearElasticMaterial(name, parameters),
+      //  _Cijkl_matrix_vector(getParam<std::vector<Real> >("C_matrix")),
       _Cijkl_precipitate_vector(getParam<std::vector<Real> >("C_precipitate")),
       _eigenstrain_vector(getParam<std::vector<Real> >("e_precipitate")),
       _n_variants(getParam<int>("n_variants")),
-      _all_21(getParam<bool>("all_21")),
-      _Cijkl_matrix(),
+      //_all_21(getParam<bool>("all_21")),
+      // _Cijkl_matrix(),
       _Cijkl_precipitate(),
       _eigenstrain(),
       _Cijkl_precipitates_rotated(),
       _eigenstrains_rotated(),
-      _local_strain(declareProperty<SymmTensor >("local_strain")),
-      _misfit_strain(declareProperty<SymmTensor >("misfit_strain")),
-      _eigenstrains_rotated_MP(declareProperty<std::vector<SymmTensor> >("eigenstrains_rotated_MP")),
-      _Cijkl_matrix_MP(declareProperty<SymmAnisotropicElasticityTensor>("Cijkl_matrix_MP")),
-      _Cijkl_precipitates_rotated_MP(declareProperty<std::vector<SymmAnisotropicElasticityTensor > >("Cijkl_precipitates_rotated_MP")),
-      _d_elasticity_tensor(declareProperty<std::vector<SymmElasticityTensor> >("d_elasticity_tensor")),
-      _d_eigenstrains_rotated_MP(declareProperty<std::vector<SymmTensor> >("d_eigenstrains_rotated_MP"))
+      _local_strain(declareProperty<RankTwoTensor >("local_strain")),
+      _misfit_strain(declareProperty<RankTwoTensor >("misfit_strain")),
+      _eigenstrains_rotated_MP(declareProperty<std::vector<RankTwoTensor> >("eigenstrains_rotated_MP")),
+      _Cijkl_matrix_MP(declareProperty<RankFourTensor>("Cijkl_matrix_MP")),
+      _Cijkl_precipitates_rotated_MP(declareProperty<std::vector<RankFourTensor > >("Cijkl_precipitates_rotated_MP")),
+      _d_elasticity_tensor(declareProperty<std::vector<RankFourTensor> >("d_elasticity_tensor")),
+      _d_eigenstrains_rotated_MP(declareProperty<std::vector<RankTwoTensor> >("d_eigenstrains_rotated_MP"))
 {
   // check to make sure the input file is all set up right
   if(_n_variants != coupledComponents("variable_names"))
@@ -67,7 +67,9 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     _coupled_variables[i] = &coupledValue("variable_names", i);
 
   // fill in the local tensors from the input vector information
-  _Cijkl_matrix.fillFromInputVector(_Cijkl_matrix_vector, _all_21);
+//  _Cijkl_matrix.fillFromInputVector(_Cijkl_matrix_vector, _all_21);
+
+  // using _Cijkl as the matrix material
   _Cijkl_precipitate.fillFromInputVector(_Cijkl_precipitate_vector, _all_21);
   _eigenstrain.fillFromInputVector(_eigenstrain_vector);
 
@@ -79,35 +81,25 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   _Cijkl_precipitates_rotated[0] = _Cijkl_precipitate;
   _eigenstrains_rotated[0] = _eigenstrain;
 
-  std::cout << "Cijkl precips rotated 0 " << _Cijkl_precipitates_rotated[0] << std::endl;
-  std::cout << "eigenstrains rotated[0] "  << _eigenstrains_rotated[0] << std::endl;
-
-  // rotate all the things, in degrees, since SymmAnisotropicElasticityTensor takes degrees
-  Real rotation_angle_base = 360.0/Real(_n_variants);
+ // rotate all the things, in radians
+  Real rotation_angle_base = 2.0*libMesh::pi/Real(_n_variants);
   Real rotation_angle = rotation_angle_base;
-  std::cout << "rotation angle base " << rotation_angle_base << std::endl;
-  std::cout << "rotation angle " << rotation_angle << std::endl;
+//std::cout << "rotation angle base " << rotation_angle_base << std::endl;
+//  std::cout << "rotation angle " << rotation_angle << std::endl;
 
   for(unsigned int i=1; i<_n_variants; i++)
   {
-   // set up temp variables for the precipitate rotations
-    SymmAnisotropicElasticityTensor C_tensor(_Cijkl_precipitate);
-    SymmTensor e_strain(_eigenstrain);
-
     // do the rotation
-     C_tensor.rotate(rotation_angle, 0.0, 0.0);
-    _Cijkl_precipitates_rotated[i] = C_tensor;
+    // C_tensor.rotate(rotation_angle, 0.0, 0.0);
+     _Cijkl_precipitates_rotated[i] = _Cijkl_precipitate.rotate(rotation_angle, 0.0, 0.0);
 
     //  _Cijkl_precipitates_rotated[i] = _Cijkl_precipitate;
 
-    std::cout << "Cijkl precips rotated " << i << " " << _Cijkl_precipitates_rotated[i] << std::endl;
-
-    e_strain.rotate(rotation_angle);
-    _eigenstrains_rotated[i] = e_strain;
-    std::cout << "eigenstrains rotated " << i << "" << _eigenstrains_rotated[i] << std::endl;
+     // e_strain.rotate(rotation_angle);
+    _eigenstrains_rotated[i] = _eigenstrain.rotate(rotation_angle, 0.0, 0.0);
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;
-    std::cout << "rotation angle " << rotation_angle << std::endl;
+    // std::cout << "rotation angle " << rotation_angle << std::endl;
 
   }
 }
@@ -136,8 +128,8 @@ void
   **/
 
    // Sum the order parameters and stiffnesses for the precipitates
-   SymmAnisotropicElasticityTensor sum_precipitate_tensors;
-   SymmAnisotropicElasticityTensor d_sum_precip_tensors;
+   RankFourTensor sum_precipitate_tensors;
+   RankFourTensor d_sum_precip_tensors;
 
    sum_precipitate_tensors.zero();
    d_sum_precip_tensors.zero();
@@ -148,7 +140,7 @@ void
    Real d_interp_value(0.0), d_sum_interp_values(0.0);
 
    // Fill in the matrix stiffness material property
-   _Cijkl_matrix_MP[_qp] = _Cijkl_matrix;
+   _Cijkl_matrix_MP[_qp] = _Cijkl;
 
    for(unsigned int i=0; i<_n_variants; i++)
     {
@@ -158,8 +150,8 @@ void
       if (temp > 1.0)
         temp = 1.0;
 
-      interpolation_value = temp*temp*(3.0 - 2.0*temp);
-      d_interp_value = 6.0*temp*(1.0 - temp);
+      interpolation_value = temp*temp;
+      d_interp_value = 2.0*temp;
 
       // Fill in the precipitates' stiffnesses materials property
       (_Cijkl_precipitates_rotated_MP[_qp])[i] = _Cijkl_precipitates_rotated[i];
@@ -202,8 +194,8 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
     if (temp > 1.0)
       temp = 1.0;
 
-    interpolation_value = temp*temp*(3.0 - 2.0*temp);
-    d_interp_value = 6.0*temp*(1 - temp);
+    interpolation_value = temp*temp;
+    d_interp_value = 2.0*temp;
 
     // Fill in the precipitates' eigenstrains materials property
     (_eigenstrains_rotated_MP[_qp])[i] = _eigenstrains_rotated[i]*interpolation_value;
@@ -215,21 +207,32 @@ void
  LinearSingleCrystalPrecipitateMaterial::computeQpElasticStrain()
  {
    // // compute the elastic strain: e_el = e_local - e_misfit
-   // /*local strain.  Not adding in the 2x shear strains because the multiply function
-   // does this as needed. */
 
-   // I just swapped the order of the strains here...
-   _local_strain[_qp] = SymmTensor ( _grad_disp_x[_qp](0),
-                                     _grad_disp_y[_qp](1),
-                                     _grad_disp_z[_qp](2),
-                                     0.5*(_grad_disp_x[_qp](1)+ _grad_disp_y[_qp](0)),
-                                     0.5*(_grad_disp_y[_qp](2)+ _grad_disp_z[_qp](1)),
-                                     0.5*(_grad_disp_z[_qp](0)+ _grad_disp_x[_qp](2)) );
-
+   //local strain:
+   _local_strain[_qp].setValue(0.5*(_grad_disp_x[_qp](0) +
+                                    _grad_disp_x[_qp](0)), 1, 1);
+   _local_strain[_qp].setValue(0.5*(_grad_disp_y[_qp](1) +
+                                    _grad_disp_y[_qp](1)), 2, 2);
+   _local_strain[_qp].setValue(0.5*(_grad_disp_z[_qp](2) +
+                                    _grad_disp_z[_qp](2)), 3, 3);
+   _local_strain[_qp].setValue(0.5*(_grad_disp_x[_qp](1) +
+                                    _grad_disp_y[_qp](0)), 1, 2);
+   _local_strain[_qp].setValue(0.5*(_grad_disp_x[_qp](1) +
+                                    _grad_disp_y[_qp](0)), 2, 1);
+   _local_strain[_qp].setValue(0.5*(_grad_disp_x[_qp](2) +
+                                    _grad_disp_z[_qp](0)), 1, 3);
+   _local_strain[_qp].setValue(0.5*(_grad_disp_x[_qp](2) +
+                                    _grad_disp_z[_qp](0)), 3, 1);
+   _local_strain[_qp].setValue(0.5*(_grad_disp_y[_qp](2) +
+                                    _grad_disp_z[_qp](1)), 2, 3);
+   _local_strain[_qp].setValue(0.5*(_grad_disp_y[_qp](2) +
+                                    _grad_disp_z[_qp](1)), 3, 2);
    //std::cout << _local_strain[_qp], std::cout << std::endl;
 
    // // sum up the misfit strains for the orientation variants
-   SymmTensor sum_precipitate_strains(0.0);
+   RankTwoTensor sum_precipitate_strains;
+   sum_precipitate_strains.zero();
+
    for(unsigned int i=0; i<_n_variants; i++)
      sum_precipitate_strains += (_eigenstrains_rotated_MP[_qp])[i];
 

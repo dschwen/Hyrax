@@ -12,16 +12,14 @@
 #ifndef LINEARSINGLECRYSTALPRECIPITATEMATERIAL_H
 #define LINEARSINGLECRYSTALPRECIPITATEMATERIAL_H
 
-#include "SolidMechanicsMaterial.h"
-#include "SymmTensor.h"
-#include "SymmAnisotropicElasticityTensor.h"
-#include "SymmElasticityTensor.h"
+#include "LinearElasticMaterial.h"
+#include "RankFourTensor.h"
+#include "RankTwoTensor.h"
 
 /**
  * LinearSingleCrystalPrecipitateMaterial handles anisotropic, single-crystal material elastic
- * constants.  It's designed to work with SymmSingleCrystalMaterial.  It handles a single
+ * constants. It handles a single
  * crystal of matrix with an arbitrary number of orientation variants of a coherent precipitate.
- * The rotation of orientation variants is currently set up around the C-axis (2D rotation).
  */
 
 //Forward declaration
@@ -30,7 +28,7 @@ class LinearSingleCrystalPrecipitateMaterial;
 template<>
 InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>();
 
-class LinearSingleCrystalPrecipitateMaterial : public SolidMechanicsMaterial
+class LinearSingleCrystalPrecipitateMaterial : public LinearElasticMaterial
 {
 public:
   LinearSingleCrystalPrecipitateMaterial(const std:: string & name, InputParameters parameters);
@@ -60,7 +58,7 @@ protected:
 
 private:
   // vectors to get the input values
-  std::vector<Real> _Cijkl_matrix_vector;
+  //std::vector<Real> _Cijkl_matrix_vector;
   std::vector<Real> _Cijkl_precipitate_vector;
   std::vector<Real> _eigenstrain_vector;
 
@@ -68,26 +66,26 @@ private:
   unsigned int _n_variants;
 
   // Indicate if 21 (true) or 9 (false) values given for input of elastic stiffness
-  bool _all_21;
+  //bool _all_21;
 
   // Individual material information
-  SymmAnisotropicElasticityTensor _Cijkl_matrix;
-  SymmAnisotropicElasticityTensor _Cijkl_precipitate;
-  SymmTensor _eigenstrain;
+  //SymmAnisotropicElasticityTensor _Cijkl_matrix;
+  RankFourTensor _Cijkl_precipitate;
+  RankTwoTensor _eigenstrain;
 
-  std::vector<SymmAnisotropicElasticityTensor > _Cijkl_precipitates_rotated;
-  std::vector<SymmTensor > _eigenstrains_rotated;
+  std::vector<RankFourTensor> _Cijkl_precipitates_rotated;
+  std::vector<RankTwoTensor> _eigenstrains_rotated;
 
-  MaterialProperty<SymmTensor> & _local_strain;
-  MaterialProperty<SymmTensor> & _misfit_strain;
-  MaterialProperty<std::vector<SymmTensor> > & _eigenstrains_rotated_MP;
-  MaterialProperty<SymmAnisotropicElasticityTensor> & _Cijkl_matrix_MP;
-  MaterialProperty<std::vector<SymmAnisotropicElasticityTensor> > & _Cijkl_precipitates_rotated_MP;
+  MaterialProperty<RankTwoTensor> & _local_strain;
+  MaterialProperty<RankTwoTensor> & _misfit_strain;
+  MaterialProperty<std::vector<RankTwoTensor> > & _eigenstrains_rotated_MP;
+  MaterialProperty<RankFourTensor> & _Cijkl_matrix_MP;
+  MaterialProperty<std::vector<RankFourTensor> > & _Cijkl_precipitates_rotated_MP;
 
   // derivatives of the local elasticity tensor and the misfit strain with respect
   // to order parameter
-  MaterialProperty<std::vector<SymmElasticityTensor> > & _d_elasticity_tensor;
-  MaterialProperty<std::vector<SymmTensor> > & _d_eigenstrains_rotated_MP;
+  MaterialProperty<std::vector<RankFourTensor> > & _d_elasticity_tensor;
+  MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
 
   // Vector of references to the coupled order parameters
   std::vector<VariableValue *> _coupled_variables;
