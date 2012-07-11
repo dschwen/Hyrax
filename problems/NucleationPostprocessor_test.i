@@ -119,8 +119,8 @@
     type = AuxNucleationRate
     variable = nodal_NucleationRate
     coupled_aux_var = nodal_Supersaturation
-    Kn1 = 0.001
-    Kn2 = 0.33
+    Kn1 = 0.9
+    Kn2 = 0.0003
     execute_on = timestep
   [../]
 
@@ -184,7 +184,7 @@ active = 'Periodic'
   nl_rel_tol = 5.0e-14
 
   start_time = 0.0
-  num_steps = 10
+  num_steps = 1
   dt = 0.03
 []
 

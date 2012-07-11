@@ -54,6 +54,7 @@ NucleationPostprocessor::NucleationPostprocessor(const std::string & name, Input
 void
 NucleationPostprocessor::initialize()
 {
+  Moose::seed(8675309);
 }
 
 void
@@ -96,30 +97,37 @@ NucleationPostprocessor::searchForNucleationEvents()
 
      // Generate a random number
       Real random_number(0.0);
-      Moose::seed(_t);
+
       random_number = Moose::rand();
+
+      std::cout <<"rand# = "<<random_number <<std::endl;
+      std::cout<<"prob# = "<<probability <<std::endl<<std::endl;
 
       if(random_number < probability)
       {
         /* The trick here is to resize the vector that holds the
          * nucleation events locations each time there is a new event and
          * tack it on to the end. */
-
+        std::cout<<"in if"<<std::endl;
         int s(_nucleation_locations.size());
-
+        std::cout<<"s="<<s<<std::endl;
         // resize the nucleation locations vector
         _nucleation_locations.resize(s+1);
-
+        std::cout<<"resized nuc loc, size ="<<_nucleation_locations.size()<<std::endl;
         // fill in with the point location of the current node
         _nucleation_locations[s] = *node;
-
+        std::cout<<"filled nuc loc "<<_nucleation_locations[s]<<std::endl;
         // resize the time vectors
         _start_times.resize(s+1);
+          std::cout<<"resized start"<<std::endl;
         _end_times.resize(s+1);
 
+          std::cout<<"resized end"<<std::endl;
         // fill in the time vectors with the start and end times for the new point
         _start_times[s] = _t;
+          std::cout<<"filled start"<<std::endl;
         _end_times[s] = _t + _dwell_time;
+          std::cout<<"filled end"<<std::endl;
       }
     }
   }
@@ -146,7 +154,7 @@ NucleationPostprocessor::changeValues()
       // check the node against each nucleation point and see if it lives
       // within distance of a nucleus
       Real distance;
-      for(int j(0); j<_nucleation_locations.size(); j++)
+      for(unsigned int j(0); j<_nucleation_locations.size(); j++)
       {
         distance = (_nucleation_locations[j] - *node).size();
         if(distance <=_radius &&
