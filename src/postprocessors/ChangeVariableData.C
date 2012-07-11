@@ -1,3 +1,13 @@
+/*************************************************************************
+*
+*  Welcome to HYRAX!
+*  Andrea M. Jokisaari
+*  CASL/MOOSE
+*
+*  7 July 2012
+*
+*************************************************************************/
+
 #include "ChangeVariableData.h"
 #include "MooseVariable.h"
 #include "SubProblem.h"

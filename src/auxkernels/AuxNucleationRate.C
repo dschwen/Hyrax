@@ -19,12 +19,12 @@ InputParameters validParams<AuxNucleationRate>()
   InputParameters params = validParams<AuxKernel>();
   params.addRequiredParam<Real>("Kn1", "First nucleation rate coefficient");
   params.addRequiredParam<Real>("Kn2", "Second nucleation rate coefficient");
-  params.addRequiredCoupledVar("coupled_aux_var","coupled auxiliary variable: supersaturation"); 
+  params.addRequiredCoupledVar("coupled_aux_var","coupled auxiliary variable: supersaturation");
   // I'd have line in input file, coupled_aux_var = supersaturation
   return params;
 }
 
-AuxNucleationRate::AuxNucleationRate(const std::string & name, InputParameters parameters) 
+AuxNucleationRate::AuxNucleationRate(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
   _coupled_supersaturation(coupledValue("coupled_aux_var")),
   _Kn1(getParam<Real>("Kn1")),
@@ -34,9 +34,9 @@ AuxNucleationRate::AuxNucleationRate(const std::string & name, InputParameters p
 
 Real
 AuxNucleationRate::computeValue()
-{ 
- // j_star = Kn1 * exp(-1*Kn2 / supersaturation) 
- // this should just be for each element
+{
+ // j_star = Kn1 * exp(-1*Kn2 / supersaturation)
+
  return _Kn1*exp(-1.0*_Kn2/_coupled_supersaturation[_qp]);
 }
 

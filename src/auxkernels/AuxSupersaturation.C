@@ -17,26 +17,27 @@ template<>
 InputParameters validParams<AuxSupersaturation>()
 {
   InputParameters params = validParams<AuxKernel>();
-  params.addRequiredCoupledVar("coupled_var","coupled variable: concentration"); 
+  params.addRequiredCoupledVar("coupled_var","coupled variable: concentration");
   // I'd have line in input file, coupled_var = concentration
+  params.addRequiredParam<Real>("functional_c1", "C1 for the free energy functional, related to terminal solid solubility");
   return params;
 }
 
-AuxSupersaturation::AuxSupersaturation(const std::string & name, InputParameters parameters) 
+AuxSupersaturation::AuxSupersaturation(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
   _coupled_conc(coupledValue("coupled_var")),
-  _c1(getMaterialProperty<Real>("C1"))
+  _c1(getParam<Real>("functional_c1"))
 {
 }
 
 Real
 AuxSupersaturation::computeValue()
-{ 
-  _supersaturation = _coupled_conc[_qp] - _c1[_qp];  
+{
+  _supersaturation = _coupled_conc[_qp] - _c1;
   if (_supersaturation <= 0.0)
   {
     // fixed to some arbitrary small value but preventing division by zero in j_star calculation
-    _supersaturation = 1.0e-10;  
+    _supersaturation = 1.0e-10;
   }
  return _supersaturation;
 }

@@ -56,6 +56,7 @@
 
 //Post Processors
 #include "ChangeVariableData.h"
+#include "NucleationPostprocessor.h"
 
 //Actions
 
@@ -107,6 +108,7 @@ namespace Hyrax
 
     //Post Processors
     registerPostprocessor(ChangeVariableData);
+    registerPostprocessor(NucleationPostprocessor);
 
     // Actions
   }

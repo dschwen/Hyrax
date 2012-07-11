@@ -32,16 +32,16 @@ public:
 protected:
 
   /**
-   * computeValue() 
+   * computeValue()
    * @return returns the supersaturation (C-C1), element average value
    */
 
   virtual Real computeValue();
-  
+
 private:
 
   VariableValue & _coupled_conc;  ///< PDE variable (concentration)
-  MaterialProperty<Real> & _c1;   ///< parameter from landau polynomial (first energy well position in c-space)
+  Real _c1;   ///< parameter from landau polynomial (first energy well position in c-space)
   Real _supersaturation;	  ///< C-C1
 };
 
