@@ -36,7 +36,7 @@ AuxNucleationProbability::computeValue()
 {
  //  p_nm = 1 - exp(-1*j_star*dt)
  //  this maybe should just be for each element
-  std::cout<<"probability = "<<1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt)<<std::endl;
+//  std::cout<<"probability = "<<1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt)<<std::endl;
  return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt);
 }
 

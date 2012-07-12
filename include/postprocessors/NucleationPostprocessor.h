@@ -41,10 +41,12 @@ private:
   Real _dwell_time;
   Real _seed_value;
 
+  int _counter;
+
   std::vector<Real> _start_times;
   std::vector<Real> _end_times;
 
-  std::vector<Node> _nucleation_locations;
+  std::vector<Node *> _nucleation_locations;
 
 };
 

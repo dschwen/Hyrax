@@ -34,6 +34,7 @@
 #include "AuxNucleationRate.h"
 #include "AuxSupersaturation.h"
 #include "AuxTestFlip.h"
+#include "ReporterAux.h"
 
 //Dirac Kernels
 #include "DiracNucleation.h"
@@ -86,6 +87,7 @@ namespace Hyrax
     registerAux(AuxNucleationRate);
     registerAux(AuxNucleationProbability);
     registerAux(AuxTestFlip);
+    registerAux(ReporterAux);
 
     //Dirac Kernels
     registerDiracKernel(DiracNucleation);

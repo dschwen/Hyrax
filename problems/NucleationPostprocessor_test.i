@@ -15,7 +15,7 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 2
+  uniform_refine = 1
 []
 
 [Variables]
@@ -60,6 +60,11 @@
   [../]
 
 [./nodal_NucleationRate]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  [./n1_untouched]
     order = FIRST
     family = LAGRANGE
   [../]
@@ -119,8 +124,8 @@
     type = AuxNucleationRate
     variable = nodal_NucleationRate
     coupled_aux_var = nodal_Supersaturation
-    Kn1 = 0.9
-    Kn2 = 0.0003
+    Kn1 = 0.01
+    Kn2 = 0.03
     execute_on = timestep
   [../]
 
@@ -130,6 +135,13 @@
     coupled_aux_var = nodal_NucleationRate
     execute_on = timestep
   [../]
+
+  [./Report_n1]
+   type = ReporterAux
+  variable = n1_untouched
+   coupled = n1
+    execute_on  = timestep
+   [../]
 []
 
 [BCs]
@@ -158,8 +170,8 @@ active = 'Periodic'
   [../]
 []
 
-[Postprocessors]
-  [./Nucleation]
+  [Postprocessors]
+[./Nucleation]
     type = NucleationPostprocessor
     variable = n1
     coupled_aux = nodal_NucleationProbability
@@ -184,12 +196,12 @@ active = 'Periodic'
   nl_rel_tol = 5.0e-14
 
   start_time = 0.0
-  num_steps = 1
+  num_steps = 3
   dt = 0.03
 []
 
 [Output]
-  file_base = NucleationPostprocessor1
+  file_base = NucleationPostprocessorReporter1
   output_initial = true
   interval = 1
   exodus = true
