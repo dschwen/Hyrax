@@ -39,6 +39,7 @@
     type = ReporterAux
     variable = diff_untouched
     coupled = diff_messed_with
+    execute_on = timestep_begin
   [../]
 []
 
