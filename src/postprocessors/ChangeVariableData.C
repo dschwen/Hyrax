@@ -69,26 +69,27 @@ ChangeVariableData::execute()
       _subproblem.reinitNode(node, 0);
 
       // This is how you retrieve a value from the current solution
-//      Real coupled_value = _coupled.getNodalValue(*node);
+      Real coupled_value = _coupled.getNodalValue(*node);
 
-      Real value = _moose_variable.getNodalValue(*node);
+//      Real value = _moose_variable.getNodalValue(*node);
 
-//      if(coupled_value > 1.0)
-//      {
-//        _moose_variable.setNodalValue(0.0);
-//        _foo += 1.0;
-//      }
+      if(coupled_value > 1.0)
+      {
+        _moose_variable.setNodalValue(0.0);
+        _foo += 1.0;
+      }
 
-      _moose_variable.setNodalValue(1-value);
+//      _moose_variable.setNodalValue(1-value);
 
       // This is how you set a value in the current solution
-      //_moose_variable.setNodalValue(coupled_value+1);
+      _moose_variable.setNodalValue(coupled_value+1);
 
       // Not sure if we need this, but probably :)
       _moose_variable.insert(_nl.solution());
     }
   }
   _nl.solution().close();
+  _nl.sys().update();
 }
 
 Real

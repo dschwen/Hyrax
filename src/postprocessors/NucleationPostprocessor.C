@@ -168,4 +168,5 @@ NucleationPostprocessor::changeValues()
     }
   }
   _nl.solution().close();
+  _nl.sys().update();
 }
