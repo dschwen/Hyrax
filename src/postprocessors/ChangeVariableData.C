@@ -13,12 +13,13 @@
 #include "SubProblem.h"
 #include "MooseMesh.h"
 #include "NonlinearSystem.h"
+#include "FEProblem.h"
 
 template<>
 InputParameters validParams<ChangeVariableData>()
 {
   InputParameters params = validParams<GeneralPostprocessor>();
-  params.addRequiredParam<std::string>("variable", "The variable we want to query (we can always add more or make a vector, etc)");
+  params.addRequiredParam<std::vector<NonlinearVariableName> >("variables", "The variable we want to query (we can always add more or make a vector, etc)");
   params.addRequiredParam<std::string>("coupled_aux", "The aux variable that we want to couple in");
   // We really want to only run this at the end of each timestep, so we'll force that here
   params.set<std::string>("execute_on") = "timestep";
@@ -28,15 +29,16 @@ InputParameters validParams<ChangeVariableData>()
 ChangeVariableData::ChangeVariableData(const std::string & name, InputParameters parameters) :
     GeneralPostprocessor(name, parameters),
     _mesh(_subproblem.mesh()),
-    // Get this variable out of the subproblem, 0th thread (Postprocessors
-    // not threaded)
-    _moose_variable(_subproblem.getVariable(0, getParam<std::string>("variable"))),
-    //be careful with this cast, it'll break if you change the line above
-    _nl(*static_cast<NonlinearSystem *>(&_moose_variable.sys())),
-    _variable_number(_moose_variable.number()),
-    // Get the coupled variable reference
-     _coupled(_subproblem.getVariable(0, getParam<std::string>("coupled_aux")))
-{}
+    _nl(static_cast<FEProblem &>(_subproblem).getNonlinearSystem()),
+    _coupled(_subproblem.getVariable(0, getParam<std::string>("coupled_aux")))
+{
+  std::vector<NonlinearVariableName> vars = getParam<std::vector<NonlinearVariableName> >("variables");
+  _moose_variable.resize(vars.size());
+
+  // initialze our vector of variable pointers
+  for (unsigned int i=0; i<vars.size(); ++i)
+    _moose_variable[i] = &_subproblem.getVariable(0, vars[i]);
+}
 
 void
 ChangeVariableData::initialize()
@@ -75,17 +77,17 @@ ChangeVariableData::execute()
 
       if(coupled_value > 1.0)
       {
-        _moose_variable.setNodalValue(0.0);
+        _moose_variable[0]->setNodalValue(0.0);
         _foo += 1.0;
       }
 
 //      _moose_variable.setNodalValue(1-value);
 
       // This is how you set a value in the current solution
-      _moose_variable.setNodalValue(coupled_value+1);
+      _moose_variable[0]->setNodalValue(coupled_value+1);
 
       // Not sure if we need this, but probably :)
-      _moose_variable.insert(_nl.solution());
+      _moose_variable[0]->insert(_nl.solution());
     }
   }
   _nl.solution().close();

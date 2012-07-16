@@ -159,10 +159,10 @@ NucleationPostprocessor::changeValues()
            _t >= _start_times[j] &&
            _t < _end_times[j])
         {
-          _moose_variable.setNodalValue(_seed_value);
+          _moose_variable[0]->setNodalValue(_seed_value);
 
           // Not sure if we need this, but probably :)
-          _moose_variable.insert(_nl.solution());
+          _moose_variable[0]->insert(_nl.solution());
         }
       }
     }

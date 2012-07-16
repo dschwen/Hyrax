@@ -63,7 +63,7 @@
 [Postprocessors]
   [./FlipValues]
     type = ChangeVariableData
-    variable = diff_messed_with
+    variables = diff_messed_with
     coupled_aux = diff_untouched
   [../]
 []

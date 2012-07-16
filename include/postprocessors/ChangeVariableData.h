@@ -37,11 +37,9 @@ protected:
     /// A reference to the mesh
   MooseMesh & _mesh;
   /// The reference to the variable we want to retrieve in the solution vector
-  MooseVariable & _moose_variable;
+  std::vector<MooseVariable *> _moose_variable;
   /// A reference to the nonlinear system
   NonlinearSystem & _nl;
-  /// The number of the variable in the Nonlinear System
-  unsigned int _variable_number;
 
   /// A reference to the coupled variable
   MooseVariable & _coupled;

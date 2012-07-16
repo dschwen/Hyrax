@@ -137,7 +137,7 @@ active = 'Periodic'
 [Postprocessors]
   [./FlipValues]
     type = ChangeVariableData
-    variable = n1
+    variables = n1
     coupled_aux = nodal_testSwitch
   [../]
 []
