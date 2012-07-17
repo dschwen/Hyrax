@@ -40,7 +40,7 @@ ACBulkPolyCoupled::ACBulkPolyCoupled(const std::string & name, InputParameters p
   // Create a vector of the coupled OP variables and set = 0 the one that the kernel
   // is operating on
   if(_n_OP_vars != coupledComponents("OP_var_names"))
-    mooseError("Please match the number of orientation variants to coupled OPs.");
+    mooseError("Please match the number of orientation variants to coupled OPs (ACBulkPolyCoupled).");
 
   _coupled_OP_vars.resize(_n_OP_vars);
 

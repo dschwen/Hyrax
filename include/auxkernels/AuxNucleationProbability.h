@@ -5,7 +5,7 @@
 *  CASL/MOOSE
 *
 *  14 December 2011
-*  
+*
 *************************************************************************/
 
 #ifndef AUXNUCLEATIONPROBABILITY_H
@@ -20,7 +20,7 @@ InputParameters validParams<AuxNucleationProbability>();
 
 /**
  *  AuxNucleationProbability handles the nucleation probability (P_nm) calculation in the concurrent
- *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).  
+ *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).
  *  Returns the nucleation probability over the domain.
  */
 
@@ -32,13 +32,16 @@ public:
 protected:
   /**
    * computeValue()
-   * @return returns the nucleation probability for each element, p_nm = 1 - exp(-1*j_star*dt) 
-   */ 
- 
+   * @return returns the nucleation probability for each element, p_nm = 1 - exp(-1*j_star*dt)
+   */
+
   virtual Real computeValue();
 
 private:
   VariableValue & _coupled_nuc_rate;  ///< nucleation rate for the nucleation probability calculation
+  std::vector<VariableValue *> _coupled_OP;  ///< PDE variable (concentration
+  int _n_OP_vars;
+
 };
 
 #endif //AUXNUCLEATIONPROBABILITY_H

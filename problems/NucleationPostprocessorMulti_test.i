@@ -1,4 +1,4 @@
-# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard
+# This input file is designed to test the multi coupled Allen-Cahn, Cahn-Hilliard
 # equation system with nucleus introduction by way of the Nucleation
 # postprocessor.
 
@@ -46,6 +46,16 @@
       y1 = 25.0
     [../]
   [../]
+
+  [./n2]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  [./n3]
+    order = FIRST
+    family = LAGRANGE
+  [../]
 []
 
 [AuxVariables]
@@ -68,6 +78,16 @@
     order = FIRST
     family = LAGRANGE
   [../]
+
+  [./n2_untouched]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  [./n3_untouched]
+    order = FIRST
+    family = LAGRANGE
+  [../]
 []
 
 [Kernels]
@@ -80,12 +100,23 @@
     type = TimeDerivative
     variable = n1
   [../]
+ 
+  [./dn2dt]
+    type = TimeDerivative
+    variable = n2
+  [../]
+
+  [./dn3dt]
+    type = TimeDerivative
+    variable = n3
+  [../]
 
   [./CHSolid]
-    type = CHBulkCoupled
+    type = CHBulkPolyCoupled
     variable = concentration
     mob_name = M
-    coupled_OP_var = n1
+    OP_variable_names = 'n1 n2 n3'
+    n_OP_variables = 3
   [../]
 
   [./CHInterface]
@@ -96,19 +127,57 @@
     grad_mob_name = grad_M
   [../]
 
-  [./ACSolid]
-    type = ACBulkCoupled
+  [./ACSolidn1]
+    type = ACBulkPolyCoupled
     variable = n1
     coupled_CH_var = concentration
     mob_name = L
+    n_OP_vars = 3
+    OP_var_names = 'n1 n2 n3'
+    OP_number = 1
   [../]
 
-  [./ACInterface]
+  [./ACInterfacen1]
     type = ACInterface
     variable = n1
     mob_name = L
     kappa_name = kappa_n
   [../]
+
+  [./ACSolidn2]
+    type = ACBulkPolyCoupled
+    variable = n2
+    coupled_CH_var = concentration
+    mob_name = L
+    n_OP_vars = 3
+    OP_var_names = 'n1 n2 n3'
+    OP_number = 2
+  [../]
+n
+  [./ACInterfacen2]
+    type = ACInterface
+    variable = n2
+    mob_name = L
+    kappa_name = kappa_n
+  [../]
+
+  [./ACSolidn3]
+    type = ACBulkPolyCoupled
+    variable = n3
+    coupled_CH_var = concentration
+    mob_name = L
+    n_OP_vars = 3
+    OP_var_names = 'n1 n2 n3'
+    OP_number = 3
+  [../]
+
+  [./ACInterfacen3]
+    type = ACInterface
+    variable = n3
+    mob_name = L
+    kappa_name = kappa_n
+  [../]
+
 []
 
 [AuxKernels]
@@ -133,7 +202,8 @@
     type = AuxNucleationProbability
     variable = nodal_NucleationProbability
     coupled_aux_var = nodal_NucleationRate
-    coupled_variable = n1
+    coupled_variables = 'n1 n2 n3'
+    n_OP_vars = 3
     execute_on = timestep
   [../]
 
@@ -141,6 +211,20 @@
     type = ReporterAux
     variable = n1_untouched
     coupled = n1
+    execute_on  = timestep
+   [../]
+
+  [./Report_n2]
+    type = ReporterAux
+    variable = n2_untouched
+    coupled = n2
+    execute_on  = timestep
+   [../]
+
+  [./Report_n3]
+    type = ReporterAux
+    variable = n3_untouched
+    coupled = n3
     execute_on  = timestep
    [../]
 []
@@ -174,7 +258,7 @@ active = 'Periodic'
   [Postprocessors]
 [./Nucleation]
     type = NucleationPostprocessor
-    variables = 'n1'
+    variables = 'n1 n2 n3'
     coupled_aux = nodal_NucleationProbability
     radius = 2.0
     seed_value = 1.6
@@ -212,7 +296,7 @@ active = 'Periodic'
 []
 
 [Output]
-  file_base = NucleationPostprocessorMulti
+  file_base = NucleationPostprocessorMulti1
   output_initial = true
   interval = 1
   exodus = true

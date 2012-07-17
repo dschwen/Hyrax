@@ -45,6 +45,7 @@ private:
 
   std::vector<Real> _start_times;
   std::vector<Real> _end_times;
+  std::vector<int> _orientation_type;
 
   std::vector<Node *> _nucleation_locations;
 

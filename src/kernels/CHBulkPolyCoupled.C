@@ -9,6 +9,7 @@
 *************************************************************************/
 
 #include "CHBulkPolyCoupled.h"
+#include <ostream>
 
 /** CHBulkPolyCoupled handles the conserved order parameter(probably concentration),
  * evolved using the Cahn-Hilliard equation.  It couples to multiple order
@@ -34,7 +35,7 @@ CHBulkPolyCoupled::CHBulkPolyCoupled(const std::string & name, InputParameters p
 {
   // Create a vector of the coupled OP variables and gradients
   if(_n_OP_variables != coupledComponents("OP_variable_names"))
-    mooseError("Please match the number of orientation variants to coupled OPs.");
+    mooseError("Please match the number of orientation variants to coupled OPs (CHBulkPolyCoupled).");
 
   _coupled_OP_variables.resize(_n_OP_variables);
   _coupled_OP_grads.resize(_n_OP_variables);

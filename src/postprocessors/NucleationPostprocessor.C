@@ -14,6 +14,8 @@
 #include "MooseMesh.h"
 #include "NonlinearSystem.h"
 
+#include <ostream>
+
 /**
  * This postprocessor is designed to take the nodal aux variable for
  * nucleation probability, calculate whether nucleation occurs or not at
@@ -66,9 +68,6 @@ NucleationPostprocessor::execute()
   searchForNucleationEvents();
 
   changeValues();
-
-
-
 }
 
 Real
@@ -81,9 +80,10 @@ void
 NucleationPostprocessor::searchForNucleationEvents()
 {
 
- MeshBase::const_element_iterator it_end = _mesh.active_local_elements_end();
+  MeshBase::const_element_iterator it_end = _mesh.active_local_elements_end();
   MeshBase::const_element_iterator it = _mesh.active_local_elements_begin();
-//element/node loop to pick up nucleation locations
+
+  // element/node loop to pick up nucleation locations
   for ( ; it != it_end ; ++it)
   {
     Elem *elem = *it;
@@ -102,11 +102,11 @@ NucleationPostprocessor::searchForNucleationEvents()
 
       random_number = Moose::rand();
 
-      if(random_number < probability)
+      // make sure we're not trying to nucleate 2nd phase in a pre-existing 2nd phase
+      if(probability > 0 && random_number < probability)
       {
-        /* The trick here is to resize the vector that holds the
-         * nucleation events locations each time there is a new event and
-         * tack it on to the end. */
+        /* The trick here is to resize the vector that holds the nucleation events
+         * locations each time there is a new event and tack it on to the end. */
 
         int s(_nucleation_locations.size());
 
@@ -116,16 +116,34 @@ NucleationPostprocessor::searchForNucleationEvents()
         // fill in with the point location of the current node
         _nucleation_locations[s] = node;
 
-        // resize the time vectors
+        // resize the time vectors and type vector
         _start_times.resize(s+1);
-
         _end_times.resize(s+1);
+        _orientation_type.resize(s+1);
 
         // fill in the time vectors with the start and end times for the new point
         _start_times[s] = _t;
-
         _end_times[s] = _t + _dwell_time;
 
+        // test to see which orientation type the new phase is; assuming equal
+        // probability for each type
+        bool set(false);
+        Real r_num = Moose::rand();
+        for(int j=0; j< _moose_variable.size(); j++)
+        {
+          Real bin = (Real(j)+1.0)/Real(_moose_variable.size());
+
+          if(set != true && r_num <= bin)
+          {
+            std::cout<<"r_num="<<r_num<<std::endl;
+            std::cout<<"bin="<<bin<<std::endl;
+
+            _orientation_type[s] = j;
+            set = true;
+
+            std::cout<<"orientationtype="<<_orientation_type[s]<<std::endl;
+          }
+        }
       }
     }
   }
@@ -137,7 +155,7 @@ NucleationPostprocessor::changeValues()
  MeshBase::const_element_iterator it_end = _mesh.active_local_elements_end();
   MeshBase::const_element_iterator it = _mesh.active_local_elements_begin();
 
-//element/node loop to introduce nuclei into order parameter field
+  //element/node loop to introduce nuclei into order parameter field
   //iterate over elements
   for ( ; it != it_end ; ++it)
   {
@@ -159,10 +177,12 @@ NucleationPostprocessor::changeValues()
            _t >= _start_times[j] &&
            _t < _end_times[j])
         {
-          _moose_variable[0]->setNodalValue(_seed_value);
+          int orientation = _orientation_type[j];
+
+          _moose_variable[_orientation_type[j]]->setNodalValue(_seed_value);
 
           // Not sure if we need this, but probably :)
-          _moose_variable[0]->insert(_nl.solution());
+          _moose_variable[orientation]->insert(_nl.solution());
         }
       }
     }

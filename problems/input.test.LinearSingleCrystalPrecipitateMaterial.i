@@ -1,27 +1,25 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 2
-  ny = 2
+  nx = 10
+  ny = 10
   nz = 0
   xmin = 0
-  xmax = 2
+  xmax = 50
   ymin = 0
-  ymax = 2
+  ymax = 50
   zmin = 0
   zmax = 0
   elem_type = QUAD4
+  uniform_refine = 2
 []
 
 [Variables]
-  active = 'concentration n1 disp_x disp_y'
-
   [./concentration]
     order = THIRD
     family = HERMITE
     [./InitialCondition]
       type = ConstantIC
-      #var_name = concentration
       value = 0.1
     [../]
   [../]
@@ -30,9 +28,13 @@
     order = FIRST
     family = LAGRANGE
     [./InitialCondition]
-      type = ConstantIC
-      #var_name = n1
-      value = 0.2
+      type = SmoothCircleIC
+      int_width = 1.5
+      invalue = 1.6
+      outvalue = 0.0
+      radius = 2.0
+      x1 = 25.0
+      y1 = 25.0
     [../]
   [../]
 
@@ -47,9 +49,14 @@
   [../]
 []
 
-[Kernels]
-  active = 'dcdt dn1dt CHSolid CHInterface ACSolid ACInterface'
+[TensorMechanics]
+  [./solid]
+    disp_x = disp_x
+    disp_y = disp_y
+  [../]
+[]
 
+[Kernels]
   [./dcdt]
     type = TimeDerivative
     variable = concentration
@@ -65,9 +72,6 @@
     variable = concentration
     mob_name = M
     coupled_OP_var = n1
-#    first_landau = A1
-#    second_landau = A2
-#    first_well = C1
   [../]
 
   [./CHInterface]
@@ -83,10 +87,6 @@
     variable = n1
     mob_name = L
     coupled_CH_var = concentration
-#    second_landau = A2
-#    third_landau = A3
-#    fourth_landau = A4
-#    second_well = C2
   [../]
 
   [./ACInterface]
@@ -95,38 +95,35 @@
     mob_name = L
     kappa_name = kappa_n
   [../]
-
-  [./stress_div_disp_x]
-    type = StressDivergence
-    variable = disp_x
-    component = 0
-    #disp_x = disp_x
-    #disp_y = disp_y
-  [../]
-
-  [./stress_div_disp_y]
-    type = StressDivergence
-    variable = disp_y
-    component = 1
-    disp_x = disp_x
-    disp_y = disp_y
-  [../]
 []
 
 [BCs]
-active = 'Periodic'
-  [./Periodic]
-    [./left_right]
-      primary = 0
-      secondary = 2
-      translation = '0 2 0'
-    [../]
+  [./disp_x_BC]
+    type = DirichletBC
+    variable = disp_x
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
 
-    [./top_bottom]
-      primary = 1
-      secondary = 3
-      translation = '-2 0 0'
-    [../]
+  [./disp_y_BC]
+    type = DirichletBC
+    variable = disp_y
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
+
+  [./c_BC]
+    type = NeumannBC
+    variable = concentration
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
+
+  [./n1_BC]
+    type = NeumannBC
+    variable = n1
+    boundary = '0 1 2 3'
+    value = 0.0
   [../]
 []
 
@@ -151,12 +148,14 @@ active = 'Periodic'
     block = 0
     disp_x = disp_x
     disp_y = disp_y
-    C_matrix = '0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20'
-    C_precipitate = '110 210 310 410 510 610 710 810 910 1010 0 1 2 3 4 5 6 7 8 9 10'
-    e_precipitate = '10 20 30 40 50 60'
+    #reading C_11  C_12  C_13  C_22  C_23  C_33  C_44  C_55  C_66
+    C_ijkl ='1.0e6  0.0   0.0 1.0e6  0.0  1.0e6 0.5e6 0.5e6 0.5e6'
+    C_precipitate ='1.0e6  0.0   0.0 1.0e6  0.0  1.0e6 0.5e6 0.5e6 0.5e6'		   
+    #reading        S_11   S_22  S_33 S_23 S_13 S_12
+    e_precipitate = '0.05  0.01  0.0  0.0  0.0  0.0'
     n_variants = 1
     variable_names = 'n1'
-    all_21 = true
+    all_21 = false
   [../]
 []
 
@@ -172,8 +171,8 @@ active = 'Periodic'
   nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 1
-  dt = 0.03
+  num_steps = 10
+  dt = 0.3
 []
 
 [Output]
