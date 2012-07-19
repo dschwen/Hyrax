@@ -194,7 +194,7 @@ n
     variable = nodal_NucleationRate
     coupled_aux_var = nodal_Supersaturation
     Kn1 = 0.08
-    Kn2 = 0.25
+    Kn2 = 0.1
     execute_on = timestep
   [../]
 
