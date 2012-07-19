@@ -50,21 +50,40 @@ NucleationPostprocessor::NucleationPostprocessor(const std::string & name, Input
       _radius(getParam<Real>("radius")),
       _dwell_time(getParam<Real>("radius")),
       _seed_value(getParam<Real>("seed_value")),
-      _counter(0)
+      _counter(0),
+      _phase_gen_index(std::numeric_limits<unsigned int>::max())
 {
 }
 
 void
 NucleationPostprocessor::initialize()
 {
-//  Moose::seed(8675309 + _counter);
   _counter++;
+  _local_start_times.clear();
+  _local_end_times.clear();
+  _local_orientation_type.clear();
+  _local_node_ids.clear();
 }
 
 void
 NucleationPostprocessor::execute()
 {
   searchForNucleationEvents();
+
+  // Gather all the shared data onto each processor
+  Parallel::allgather(_local_start_times, false);
+  Parallel::allgather(_local_end_times, false);
+  Parallel::allgather(_local_orientation_type, false);
+  Parallel::allgather(_local_node_ids, false);
+
+  std::copy(_local_start_times.begin(), _local_start_times.end(), std::back_inserter(_start_times));
+  std::copy(_local_end_times.begin(), _local_end_times.end(), std::back_inserter(_end_times));
+  std::copy(_local_orientation_type.begin(), _local_orientation_type.end(), std::back_inserter(_orientation_type));
+
+  // retrieve the nodes out of the mesh for use in the changeValues function
+  _nucleation_locations.reserve(_nucleation_locations.size() + _local_node_ids.size());
+  for (unsigned int i=0; i<_local_node_ids.size(); ++i)
+    _nucleation_locations.push_back(&_mesh.node(_local_node_ids[i]));
 
   changeValues();
 }
@@ -94,7 +113,8 @@ NucleationPostprocessor::searchForNucleationEvents()
     // Generate a random number based on the node id and timestep
     unsigned int node_id = node->id();
 
-    // Our seed is complicated, it needs to be different for each node each timestep so we have to take strides of n_nodes
+    // Our seed is complicated, it needs to be different for each node, each timestep so we have to take strides of n_nodes
+    // This could potentially overflow but we'll deal with that later
     _mrand.seed(node_id, node_id + (_counter * _mesh.n_nodes()));
     Real random_number = _mrand.rand(node_id);
 
@@ -104,27 +124,30 @@ NucleationPostprocessor::searchForNucleationEvents()
       /* The trick here is to resize the vector that holds the nucleation events
        * locations each time there is a new event and tack it on to the end. */
 
-      int s(_nucleation_locations.size());
+      int s(_local_node_ids.size());
 
       // resize the nucleation locations vector
-      _nucleation_locations.resize(s+1);
+      _local_node_ids.resize(s+1);
 
       // fill in with the point location of the current node
-      _nucleation_locations[s] = node;
+      _local_node_ids[s] = node_id;
 
       // resize the time vectors and type vector
-      _start_times.resize(s+1);
-      _end_times.resize(s+1);
-      _orientation_type.resize(s+1);
+      _local_start_times.resize(s+1);
+      _local_end_times.resize(s+1);
+      _local_orientation_type.resize(s+1);
 
       // fill in the time vectors with the start and end times for the new point
-      _start_times[s] = _t;
-      _end_times[s] = _t + _dwell_time;
+      _local_start_times[s] = _t;
+      _local_end_times[s] = _t + _dwell_time;
 
       // test to see which orientation type the new phase is; assuming equal
-      // probability for each type
+      // probability for each type.  To generate a consistent number across
+      // processors we will simply seed another generator with the node id.
+      _mrand.seed(_phase_gen_index, node_id);
+
       bool set(false);
-      Real r_num = Moose::rand();
+      Real r_num = _mrand.rand(_phase_gen_index);
       for(int j=0; j< _moose_variable.size(); j++)
       {
         Real bin = (Real(j)+1.0)/Real(_moose_variable.size());
@@ -134,10 +157,10 @@ NucleationPostprocessor::searchForNucleationEvents()
           std::cout<<"r_num="<<r_num<<std::endl;
           std::cout<<"bin="<<bin<<std::endl;
 
-          _orientation_type[s] = j;
+          _local_orientation_type[s] = j;
           set = true;
 
-          std::cout<<"orientationtype="<<_orientation_type[s]<<std::endl;
+          std::cout<<"orientationtype="<<_local_orientation_type[s]<<std::endl;
         }
       }
     }
