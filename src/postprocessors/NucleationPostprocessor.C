@@ -57,7 +57,7 @@ NucleationPostprocessor::NucleationPostprocessor(const std::string & name, Input
 void
 NucleationPostprocessor::initialize()
 {
-  Moose::seed(8675309 + _counter);
+//  Moose::seed(8675309 + _counter);
   _counter++;
 }
 
@@ -92,7 +92,11 @@ NucleationPostprocessor::searchForNucleationEvents()
     Real probability = _coupled.getNodalValue(*node);
 
     // Generate a random number based on the node id and timestep
-    Real random_number = Moose::rand();
+    unsigned int node_id = node->id();
+
+    // Our seed is complicated, it needs to be different for each node each timestep so we have to take strides of n_nodes
+    _mrand.seed(node_id, node_id + (_counter * _mesh.n_nodes()));
+    Real random_number = _mrand.rand(node_id);
 
     // make sure we're not trying to nucleate 2nd phase in a pre-existing 2nd phase
     if(probability > 0 && random_number < probability)

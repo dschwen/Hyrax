@@ -12,6 +12,7 @@
 #define NUCLEATIONPOSTPROCESSOR_H
 
 #include "ChangeVariableData.h"
+#include "MooseStatefulRandom.h"
 
 //forward declarations
 class NucleationPostprocessor;
@@ -49,6 +50,7 @@ private:
 
   std::vector<Node *> _nucleation_locations;
 
+  MooseStatefulRandom _mrand;
 };
 
 #endif //NUCLEATIONPOSTPROCESSOR_H
