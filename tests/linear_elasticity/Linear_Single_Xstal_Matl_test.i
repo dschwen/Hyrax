@@ -17,7 +17,7 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 1
+ # uniform_refine = 1
 []
 
 [Variables]
@@ -68,8 +68,8 @@
     block = 0
     disp_x = disp_x
     disp_y = disp_y
-    C_ijkl = '155.4 68.03 64.60 155.4 64.6 172.51 36.31 36.31 44.09'
-    C_precipitate = '100 200 300 400 500 600  700 800 900'
+    C_ijkl = '1.0e6 0.2e6 0.2e6 1.0e6 0.2e6 1.0e6 0.5e6 0.5e6 0.5e6'
+    C_precipitate ='1.0e6 0.2e6 0.2e6 1.0e6 0.2e6 1.0e6 0.5e6 0.5e6 0.5e6'
     e_precipitate = '0.00551 0.0564 0.0570 0.0 0.0 0.0'
     n_variants = 1
     variable_names = 'diffused'
@@ -78,7 +78,6 @@
 []
 
 [BCs]
-
   [./bottom]
     type = DirichletBC
     variable = diffused
@@ -96,17 +95,30 @@
   [./disp_x_BC]
     type = DirichletBC
     variable = disp_x
-    boundary = '0 1 2 3'
-    value = 0.0
+    boundary = '0 2'
+    value = 0.5
+  [../]
+
+  [./disp_x_BC2]
+    type = DirichletBC
+    variable = disp_x
+    boundary = '1 3'
+    value = 0.01
   [../]
 
   [./disp_y_BC]
     type = DirichletBC
     variable = disp_y
-    boundary = '0 1 2 3'
-    value = 0.0
+    boundary = '0 2'
+    value = 0.8
   [../]
 
+  [./disp_y_BC2]
+    type = DirichletBC
+    variable = disp_y
+    boundary = '1 3'
+    value = 0.02
+  [../]
 []
 
 [Executioner]
