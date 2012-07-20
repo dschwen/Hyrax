@@ -12,7 +12,7 @@
 #define NUCLEATIONPOSTPROCESSOR_H
 
 #include "ChangeVariableData.h"
-#include "MooseStatefulRandom.h"
+#include "MooseRandom.h"
 
 //forward declarations
 class NucleationPostprocessor;
@@ -63,7 +63,7 @@ private:
   std::vector<unsigned int> _local_node_ids;
 
   /// The Moose stateful random number generator
-  MooseStatefulRandom _mrand;
+  MooseRandom _mrand;
 
   /// The index of the phase orientation generator (we will use a high index that isn't used by the node generators)
   const unsigned int _phase_gen_index;
