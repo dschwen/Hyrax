@@ -7,6 +7,7 @@
 *************************************************************************/
 
 #include "AuxNucleation.h"
+#include "MooseRandom.h"
 
 /**
  *  AuxNucleation handles the nucleation/no nucleation b of the concurrent
@@ -49,12 +50,10 @@ AuxNucleation::computeValue()
    4) stochastic testing of nucleation: nucleation probability vs random number between 0 and 1
 */
 
-   // CJP: You might try Moose::seed(unsigned int) and Moose::rand()
-
    // we are controlling the random number seeding this way for reproducibility
    _random_number_seed += 1;
-   Moose::seed(_random_number_seed);
-   _random_number = Moose::rand();
+   MooseRandom::seed(_random_number_seed);
+   _random_number = MooseRandom::rand();
 
    //std::cout << "random number generated = " << _random_number << std::endl;
     _random_number = _random_number/5000;

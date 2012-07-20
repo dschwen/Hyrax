@@ -9,6 +9,8 @@
 *************************************************************************/
 
 #include "MaterialCNG.h"
+#include "MooseRandom.h"
+
 #include <ostream>
 
 template<>
@@ -135,9 +137,9 @@ MaterialCNG::testForNucleation(unsigned int qp)
   // only be calculated once.  this gonna be ok?
 
   _random_number_seed = _t;
-  Moose::seed(_random_number_seed);
+  MooseRandom::seed(_random_number_seed);
 
-  random_number = Moose::rand();
+  random_number = MooseRandom::rand();
 
   if(random_number < _p_nm[qp])
   {
