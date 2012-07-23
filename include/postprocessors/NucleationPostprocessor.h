@@ -36,6 +36,8 @@ protected:
 
   void changeValues();
 
+  //Real distance();
+
 private:
 
   Real _radius;

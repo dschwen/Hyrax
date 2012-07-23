@@ -202,3 +202,62 @@ NucleationPostprocessor::changeValues()
   _nl.solution().close();
   _nl.sys().update();
 }
+
+/*Real
+NucleationPostprocessor::distance()
+{
+  Real xmin, xmax, ymin, ymax, zmin, zmax;
+  // get the xmin, xmax, ymin, ymax, zmin, and zmax of the domain
+
+  // define the actual distances in x, y, z the domain takes up
+  Point range;
+  range(0) = xmax - xmin;
+  range(1) = ymax - ymin;
+  range(2) = zmax - zmin;
+
+  // define the half-distances in x, y, and z of the domain
+  Point half_range;
+  half_range(0) = range(0)/2.0;
+  half_range(1) = range(1)/2.0;
+  half_range(2) = range(2)/2.0;
+
+  //// test to see if the two points are closer than one-half the domain distance
+  Point p, q;
+  // retrieve point information
+
+  bool x_periodic, y_periodic, z_periodic;
+  //set these to be equal to true if periodic boundaries in x, y, or z
+
+  if(x_periodic)
+  {
+    // check to see if we're closer in real or periodic space in x
+    if( (std::pow(p(0) - q(0)), 2) > std::pow(half_range(0), 2))
+    {
+      p(0) = p(0) - half_range(0);
+      q(0) = q(0) + half_range(0);
+    }
+  }
+
+  if(y_periodic)
+  {
+    // check to see if we're closer in real or periodic space in y
+    if( (std::pow(p(1) - q(1)), 2) > std::pow(half_range(1), 2))
+    {
+      p(1) = p(1) + half_range(1);
+      q(1) = q(1) - half_range(1);
+    }
+  }
+
+  if(z_periodic)
+  {
+    // check to see if we're closer in real or periodic space in z
+    if( (std::pow(p(2) - q(2)), 2) > std::pow(half_range(2), 2))
+    {
+      p(2) = p(2) - half_range(2);
+      q(2) = q(2) + half_range(2);
+    }
+  }
+
+  return (p-q).size();
+}
+*/
