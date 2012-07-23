@@ -33,13 +33,11 @@ InputParameters validParams<NucleationPostprocessor>()
 {
   InputParameters params = validParams <ChangeVariableData>();
 
-  //something here
-
   // This postprocessor will couple to the AuxVariable for nucleation
   // probability.  No other aux variabled need to be coupled.
 
-  // This postprocessor will also couple to the Kernel Variable order
-  // parameter, which is manipulated in the postprocessor.  No other
+  // This postprocessor will also couple to one ore more Kernel Variable order
+  // parameters, which is manipulated in the postprocessor.  No other
   // variables are needed.
 
   params.addRequiredParam<Real>("radius", "nucleus radius");
@@ -49,8 +47,8 @@ InputParameters validParams<NucleationPostprocessor>()
   return params;
 }
 
-NucleationPostprocessor::NucleationPostprocessor(const std::string & name, InputParameters parameters)
-    : ChangeVariableData(name, parameters),
+NucleationPostprocessor::NucleationPostprocessor(const std::string & name, InputParameters parameters) :
+    ChangeVariableData(name, parameters),
       _radius(getParam<Real>("radius")),
       _dwell_time(getParam<Real>("radius")),
       _seed_value(getParam<Real>("seed_value")),
@@ -103,7 +101,7 @@ NucleationPostprocessor::initialize()
 }
 
 void
-NucleationPostprocessor::execute()
+NucleationPostprocessor::modifySolutionVector()
 {
   searchForNucleationEvents();
 
@@ -161,22 +159,12 @@ NucleationPostprocessor::searchForNucleationEvents()
       /* The trick here is to resize the vector that holds the nucleation events
        * locations each time there is a new event and tack it on to the end. */
 
-      int s(_local_node_ids.size());
+      // resize the nucleation locations vector and fill with point location of current node
+      _local_node_ids.push_back(node_id);
 
-      // resize the nucleation locations vector
-      _local_node_ids.resize(s+1);
-
-      // fill in with the point location of the current node
-      _local_node_ids[s] = node_id;
-
-      // resize the time vectors and type vector
-      _local_start_times.resize(s+1);
-      _local_end_times.resize(s+1);
-      _local_orientation_type.resize(s+1);
-
-      // fill in the time vectors with the start and end times for the new point
-      _local_start_times[s] = _t;
-      _local_end_times[s] = _t + _dwell_time;
+      // resize the time vectors and type vectors and fill with current information
+      _local_start_times.push_back(_t);
+      _local_end_times.push_back(_t + _dwell_time);
 
       // test to see which orientation type the new phase is; assuming equal
       // probability for each type.  To generate a consistent number across
@@ -184,20 +172,23 @@ NucleationPostprocessor::searchForNucleationEvents()
       _mrand.seed(_phase_gen_index, node_id);
 
       bool set(false);
-      Real r_num = _mrand.rand(_phase_gen_index);
+      int r_num = _mrand.randl(_phase_gen_index);
+      r_num = r_num%_moose_variable.size();
+
       for(int j=0; j< _moose_variable.size(); j++)
       {
-        Real bin = (Real(j)+1.0)/Real(_moose_variable.size());
+        int bin =j;
 
         if(set != true && r_num <= bin)
         {
           std::cout<<"r_num="<<r_num<<std::endl;
           std::cout<<"bin="<<bin<<std::endl;
 
-          _local_orientation_type[s] = j;
+          _local_orientation_type.push_back(bin);
           set = true;
 
-          std::cout<<"orientationtype="<<_local_orientation_type[s]<<std::endl;
+          int s = _local_orientation_type.size();
+          std::cout<<"orientationtype="<<_local_orientation_type[s-1]<<std::endl;
         }
       }
     }
@@ -236,8 +227,6 @@ NucleationPostprocessor::changeValues()
       }
     }
   }
-  _nl.solution().close();
-  _nl.sys().update();
 }
 
 Real

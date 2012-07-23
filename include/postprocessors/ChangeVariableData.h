@@ -33,11 +33,20 @@ public:
   virtual Real getValue();
   virtual void threadJoin(const Postprocessor & y);
 
+  /**
+   * Modifies the solution vector of the system; be careful. If you want
+   * to change the values to some specific value, this only works with
+   * linear Lagrange elements.
+   */
+  virtual void modifySolutionVector();
+
 protected:
-    /// A reference to the mesh
+  /// A reference to the mesh
   MooseMesh & _mesh;
+
   /// The reference to the variable we want to retrieve in the solution vector
   std::vector<MooseVariable *> _moose_variable;
+
   /// A reference to the nonlinear system
   NonlinearSystem & _nl;
 
@@ -45,8 +54,6 @@ protected:
   MooseVariable & _coupled;
 
 private:
-  /// This is the storage location for the value we will return in this postprocessor
-  Real _foo;
 
 };
 

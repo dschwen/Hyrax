@@ -29,7 +29,7 @@ public:
 
   virtual void initialize();
 
-  virtual void execute();
+  virtual void modifySolutionVector();
 
   virtual Real getValue();
 

@@ -19,7 +19,7 @@ template<>
 InputParameters validParams<ChangeVariableData>()
 {
   InputParameters params = validParams<GeneralPostprocessor>();
-  params.addRequiredParam<std::vector<NonlinearVariableName> >("variables", "The variable (one or more) we want to change");
+  params.addRequiredParam<std::vector<NonlinearVariableName> >("variables", "The variable(s) we want to change");
   params.addRequiredParam<std::string>("coupled_aux", "The aux variable that we want to couple in");
   // We really want to only run this at the end of each timestep, so we'll force that here
   params.set<std::string>("execute_on") = "timestep";
@@ -36,7 +36,7 @@ ChangeVariableData::ChangeVariableData(const std::string & name, InputParameters
   std::vector<NonlinearVariableName> vars = getParam<std::vector<NonlinearVariableName> >("variables");
   _moose_variable.resize(vars.size());
 
-  // initialze our vector of variable pointers
+  // initialize our vector of variable pointers
   for (unsigned int i=0; i<vars.size(); ++i)
     _moose_variable[i] = &_subproblem.getVariable(0, vars[i]);
 }
@@ -44,53 +44,13 @@ ChangeVariableData::ChangeVariableData(const std::string & name, InputParameters
 void
 ChangeVariableData::initialize()
 {
-  _foo = 0.0;
 }
 
 void
 ChangeVariableData::execute()
 {
-  /**
-   * This loop is currently overriding the solution for our primary variable with the values from our
-   * secondary variable used in the control structure.  We should be able to couple
-   * in additional variables as needed and adjust our primary variable value as needed. :)
-   */
-  MeshBase::const_element_iterator it_end = _mesh.active_local_elements_end();
-  MeshBase::const_element_iterator it = _mesh.active_local_elements_begin();
-  for ( ; it != it_end ; ++it)
-  {
-    Elem *elem = *it;
+  modifySolutionVector();
 
-    for (unsigned int i=0; i<elem->n_nodes(); ++i)
-    {
-      Node *node = elem->get_node(i);
-      // DOF from the zeoreth system, we will retrieve the zeoreth component
-      // unsigned int dof_number = node->dof_number(0, _variable_number, 0);
-
-      // This call populates the datastructures in MooseVariable with the correct information
-      // so that we can get/set Nodal information
-      _subproblem.reinitNode(node, 0);
-
-      // This is how you retrieve a value from the current solution
-      Real coupled_value = _coupled.getNodalValue(*node);
-
-//      Real value = _moose_variable.getNodalValue(*node);
-
-      if(coupled_value > 1.0)
-      {
-        _moose_variable[0]->setNodalValue(0.0);
-        _foo += 1.0;
-      }
-
-//      _moose_variable.setNodalValue(1-value);
-
-      // This is how you set a value in the current solution
-      _moose_variable[0]->setNodalValue(coupled_value+1);
-
-      // Not sure if we need this, but probably :)
-      _moose_variable[0]->insert(_nl.solution());
-    }
-  }
   _nl.solution().close();
   _nl.sys().update();
 }
@@ -98,7 +58,7 @@ ChangeVariableData::execute()
 Real
 ChangeVariableData::getValue()
 {
-  return _foo;
+  return 0.0;
 }
 
 void
@@ -106,3 +66,8 @@ ChangeVariableData::threadJoin(const Postprocessor & y)
 {
 }
 
+void
+ChangeVariableData::modifySolutionVector()
+{
+  mooseError("Please define your postprocessor modifySolutionVector() method");
+}
