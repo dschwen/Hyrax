@@ -15,7 +15,9 @@
 #include "MooseRandom.h"
 
 //forward declarations
+namespace libMesh { class PeriodicBoundaries; }
 class NucleationPostprocessor;
+class GeneratedMesh;
 
 template<>
 InputParameters validParams<NucleationPostprocessor>();
@@ -36,7 +38,7 @@ protected:
 
   void changeValues();
 
-  //Real distance();
+  Real minPeriodicDistance(Point p, Point q);
 
 private:
 
@@ -69,6 +71,11 @@ private:
 
   /// The index of the phase orientation generator (we will use a high index that isn't used by the node generators)
   const unsigned int _phase_gen_index;
+
+  PeriodicBoundaries *_pbs;
+  std::vector<bool> _periodic_dim;
+  GeneratedMesh *_gen_mesh;
+  Point _half_range;
 };
 
 #endif //NUCLEATIONPOSTPROCESSOR_H

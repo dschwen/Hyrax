@@ -13,6 +13,10 @@
 #include "SubProblem.h"
 #include "MooseMesh.h"
 #include "NonlinearSystem.h"
+#include "GeneratedMesh.h"
+#include "FEProblem.h"
+
+#include "periodic_boundaries.h"
 
 #include <ostream>
 
@@ -51,13 +55,46 @@ NucleationPostprocessor::NucleationPostprocessor(const std::string & name, Input
       _dwell_time(getParam<Real>("radius")),
       _seed_value(getParam<Real>("seed_value")),
       _counter(0),
-      _phase_gen_index(std::numeric_limits<unsigned int>::max())
+      _phase_gen_index(std::numeric_limits<unsigned int>::max()),
+      _gen_mesh(dynamic_cast<GeneratedMesh *>(&_mesh))
 {
 }
 
 void
 NucleationPostprocessor::initialize()
 {
+  // Initialize the periodic variable for each of our dimensions to false
+  _periodic_dim.resize(LIBMESH_DIM, false);
+
+  if (_gen_mesh)
+  {
+    _pbs = dynamic_cast<FEProblem *>(&_subproblem)->getNonlinearSystem().dofMap().get_periodic_boundaries();
+
+    _half_range = Point(_gen_mesh->dimensionWidth(0)/2.0, _gen_mesh->dimensionWidth(1)/2.0, _gen_mesh->dimensionWidth(2)/2.0);
+
+    // 2D
+    if (_gen_mesh->dimension() == 2)
+    {
+      if (_pbs->boundary(3) != NULL) // x
+        _periodic_dim[0] = true;
+      if (_pbs->boundary(0) != NULL) // y
+        _periodic_dim[1] = true;
+    }
+    // 3D
+    if (_gen_mesh->dimension() == 3)
+    {
+      if (_pbs->boundary(4) != NULL) // x
+        _periodic_dim[0] = true;
+      if (_pbs->boundary(1) != NULL) // y
+        _periodic_dim[1] = true;
+      if (_pbs->boundary(5) != NULL) // z
+        _periodic_dim[2] = true;
+    }
+  }
+
+  for (unsigned int i=0; i<LIBMESH_DIM; ++i)
+    std::cout << "Periodic in " << i << ": " << _periodic_dim[i] << "\n";
+
   _counter++;
   _local_start_times.clear();
   _local_end_times.clear();
@@ -185,7 +222,7 @@ NucleationPostprocessor::changeValues()
     Real distance;
     for(unsigned int j(0); j<_nucleation_locations.size(); j++)
     {
-      distance = (*_nucleation_locations[j] - *node).size();
+      distance = minPeriodicDistance(*_nucleation_locations[j], *node); //  (*_nucleation_locations[j] - *node).size();
       if(distance <=_radius &&
          _t >= _start_times[j] &&
          _t < _end_times[j])
@@ -203,61 +240,21 @@ NucleationPostprocessor::changeValues()
   _nl.sys().update();
 }
 
-/*Real
-NucleationPostprocessor::distance()
+Real
+NucleationPostprocessor::minPeriodicDistance(Point p, Point q)
 {
-  Real xmin, xmax, ymin, ymax, zmin, zmax;
-  // get the xmin, xmax, ymin, ymax, zmin, and zmax of the domain
-
-  // define the actual distances in x, y, z the domain takes up
-  Point range;
-  range(0) = xmax - xmin;
-  range(1) = ymax - ymin;
-  range(2) = zmax - zmin;
-
-  // define the half-distances in x, y, and z of the domain
-  Point half_range;
-  half_range(0) = range(0)/2.0;
-  half_range(1) = range(1)/2.0;
-  half_range(2) = range(2)/2.0;
-
-  //// test to see if the two points are closer than one-half the domain distance
-  Point p, q;
-  // retrieve point information
-
-  bool x_periodic, y_periodic, z_periodic;
-  //set these to be equal to true if periodic boundaries in x, y, or z
-
-  if(x_periodic)
+  for (unsigned int i=0; i<LIBMESH_DIM; ++i)
   {
-    // check to see if we're closer in real or periodic space in x
-    if( (std::pow(p(0) - q(0)), 2) > std::pow(half_range(0), 2))
+    // check to see if we're closer in real or periodic space in x, y, and z
+    if (_periodic_dim[i])
     {
-      p(0) = p(0) - half_range(0);
-      q(0) = q(0) + half_range(0);
-    }
-  }
-
-  if(y_periodic)
-  {
-    // check to see if we're closer in real or periodic space in y
-    if( (std::pow(p(1) - q(1)), 2) > std::pow(half_range(1), 2))
-    {
-      p(1) = p(1) + half_range(1);
-      q(1) = q(1) - half_range(1);
-    }
-  }
-
-  if(z_periodic)
-  {
-    // check to see if we're closer in real or periodic space in z
-    if( (std::pow(p(2) - q(2)), 2) > std::pow(half_range(2), 2))
-    {
-      p(2) = p(2) - half_range(2);
-      q(2) = q(2) + half_range(2);
+      if (std::pow(p(i) - q(i), 2) > std::pow(_half_range(i), 2))
+      {
+        p(i) = p(i) - _half_range(i);
+        q(i) = q(i) + _half_range(i);
+      }
     }
   }
 
   return (p-q).size();
 }
-*/
