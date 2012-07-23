@@ -66,28 +66,11 @@ NucleationPostprocessor::initialize()
 
   if (_gen_mesh)
   {
-    _pbs = dynamic_cast<FEProblem *>(&_subproblem)->getNonlinearSystem().dofMap().get_periodic_boundaries();
+    for (unsigned int i=0; i<_gen_mesh->dimension(); ++i)
+      // Assumption: We are going to assume that all variables are periodic together
+      _periodic_dim[i] = _gen_mesh->isPeriodic(_nl, _moose_variable[0]->number(), i);
 
     _half_range = Point(_gen_mesh->dimensionWidth(0)/2.0, _gen_mesh->dimensionWidth(1)/2.0, _gen_mesh->dimensionWidth(2)/2.0);
-
-    // 2D
-    if (_gen_mesh->dimension() == 2)
-    {
-      if (_pbs->boundary(3) != NULL) // x
-        _periodic_dim[0] = true;
-      if (_pbs->boundary(0) != NULL) // y
-        _periodic_dim[1] = true;
-    }
-    // 3D
-    if (_gen_mesh->dimension() == 3)
-    {
-      if (_pbs->boundary(4) != NULL) // x
-        _periodic_dim[0] = true;
-      if (_pbs->boundary(1) != NULL) // y
-        _periodic_dim[1] = true;
-      if (_pbs->boundary(5) != NULL) // z
-        _periodic_dim[2] = true;
-    }
   }
 
   for (unsigned int i=0; i<LIBMESH_DIM; ++i)
