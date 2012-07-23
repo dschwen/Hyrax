@@ -45,6 +45,7 @@ private:
   Real _radius;
   Real _dwell_time;
   Real _seed_value;
+  Real _int_width;
 
   int _counter;
 

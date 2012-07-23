@@ -43,18 +43,20 @@ InputParameters validParams<NucleationPostprocessor>()
   params.addRequiredParam<Real>("radius", "nucleus radius");
   params.addRequiredParam<Real>("dwell_time", "How long nucleation event is");
   params.addRequiredParam<Real>("seed_value", "The nucleus seed order parameter value,");
+  params.addParam<Real>("int_width", 0.0, "nucleus interface width");
 
   return params;
 }
 
 NucleationPostprocessor::NucleationPostprocessor(const std::string & name, InputParameters parameters) :
     ChangeVariableData(name, parameters),
-      _radius(getParam<Real>("radius")),
-      _dwell_time(getParam<Real>("radius")),
-      _seed_value(getParam<Real>("seed_value")),
-      _counter(0),
-      _phase_gen_index(std::numeric_limits<unsigned int>::max()),
-      _gen_mesh(dynamic_cast<GeneratedMesh *>(&_mesh))
+    _radius(getParam<Real>("radius")),
+    _dwell_time(getParam<Real>("radius")),
+    _seed_value(getParam<Real>("seed_value")),
+    _int_width(getParam<Real>("int_width")),
+    _counter(0),
+    _phase_gen_index(std::numeric_limits<unsigned int>::max()),
+    _gen_mesh(dynamic_cast<GeneratedMesh *>(&_mesh))
 {
 }
 
@@ -156,6 +158,9 @@ NucleationPostprocessor::searchForNucleationEvents()
 
       bool set(false);
       int r_num = _mrand.randl(_phase_gen_index);
+
+      // randl supplies some integer random number, we want to be between 1 and n coupled vars,
+      // so modulo size()
       r_num = r_num%_moose_variable.size();
 
       for(int j=0; j< _moose_variable.size(); j++)
@@ -164,14 +169,14 @@ NucleationPostprocessor::searchForNucleationEvents()
 
         if(set != true && r_num <= bin)
         {
-          std::cout<<"r_num="<<r_num<<std::endl;
-          std::cout<<"bin="<<bin<<std::endl;
+          //std::cout<<"r_num="<<r_num<<std::endl;
+          //std::cout<<"bin="<<bin<<std::endl;
 
           _local_orientation_type.push_back(bin);
           set = true;
 
-          int s = _local_orientation_type.size();
-          std::cout<<"orientationtype="<<_local_orientation_type[s-1]<<std::endl;
+          //int s = _local_orientation_type.size();
+          //std::cout<<"orientationtype="<<_local_orientation_type[s-1]<<std::endl;
         }
       }
     }
@@ -196,14 +201,22 @@ NucleationPostprocessor::changeValues()
     Real distance;
     for(unsigned int j(0); j<_nucleation_locations.size(); j++)
     {
-      distance = minPeriodicDistance(*_nucleation_locations[j], *node); //  (*_nucleation_locations[j] - *node).size();
-      if(distance <=_radius &&
-         _t >= _start_times[j] &&
-         _t < _end_times[j])
+      distance = minPeriodicDistance(*_nucleation_locations[j], *node);
+
+      if( _t >= _start_times[j] &&
+          _t < _end_times[j] )
       {
         int orientation = _orientation_type[j];
-
-        _moose_variable[_orientation_type[j]]->setNodalValue(_seed_value);
+        if(distance <=_radius - _int_width/2.0)
+        {
+          _moose_variable[_orientation_type[j]]->setNodalValue(_seed_value);
+        }
+        else if(distance < _radius + _int_width/2.0)
+        {
+          Real interface_position = (distance - _radius + _int_width/2.0)/_int_width;
+          Real int_value = _seed_value*(1.0 - std::cos(-interface_position + libMesh::pi/2.0));
+          _moose_variable[_orientation_type[j]]->setNodalValue(int_value);
+        }
 
         // Not sure if we need this, but probably :)
         _moose_variable[orientation]->insert(_nl.solution());
