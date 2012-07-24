@@ -38,7 +38,7 @@ public:
    * to change the values to some specific value, this only works with
    * linear Lagrange elements.
    */
-  virtual void modifySolutionVector();
+  virtual void modifySolutionVector() = 0;
 
 protected:
   /// A reference to the mesh

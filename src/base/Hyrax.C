@@ -56,7 +56,6 @@
 #include "TransientMultiAMR.h"
 
 //Post Processors
-#include "ChangeVariableData.h"
 #include "NucleationPostprocessor.h"
 #include "ValuePlusOne.h"
 
@@ -110,7 +109,6 @@ namespace Hyrax
     registerExecutioner(TransientMultiAMR);
 
     //Post Processors
-    registerPostprocessor(ChangeVariableData);
     registerPostprocessor(NucleationPostprocessor);
     registerPostprocessor(ValuePlusOne);
 

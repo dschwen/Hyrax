@@ -5,8 +5,8 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 25
-  ny = 25
+  nx = 10
+  ny = 10
   nz = 0
   xmin = 0
   xmax = 50
@@ -193,8 +193,8 @@ n
     type = AuxNucleationRate
     variable = nodal_NucleationRate
     coupled_aux_var = nodal_Supersaturation
-    Kn1 = 0.08
-    Kn2 = 0.1
+    Kn1 = 0.8
+    Kn2 = 0.001
     execute_on = timestep
   [../]
 

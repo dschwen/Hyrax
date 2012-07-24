@@ -65,9 +65,3 @@ void
 ChangeVariableData::threadJoin(const Postprocessor & y)
 {
 }
-
-void
-ChangeVariableData::modifySolutionVector()
-{
-  mooseError("Please define your postprocessor modifySolutionVector() method");
-}

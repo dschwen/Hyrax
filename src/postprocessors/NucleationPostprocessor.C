@@ -14,11 +14,6 @@
 #include "MooseMesh.h"
 #include "NonlinearSystem.h"
 #include "GeneratedMesh.h"
-#include "FEProblem.h"
-
-#include "periodic_boundaries.h"
-
-#include <ostream>
 
 /**
  * This postprocessor is designed to take the nodal aux variable for
@@ -133,7 +128,8 @@ NucleationPostprocessor::searchForNucleationEvents()
     // Generate a random number based on the node id and timestep
     unsigned int node_id = node->id();
 
-    // Our seed is complicated, it needs to be different for each node, each timestep so we have to take strides of n_nodes
+    // Our seed is complicated, it needs to be different for each node, each timestep
+    // so we have to take strides of n_nodes
     // This could potentially overflow but we'll deal with that later
     _mrand.seed(node_id, node_id + (_counter * _mesh.n_nodes()));
     Real random_number = _mrand.rand(node_id);
@@ -156,29 +152,13 @@ NucleationPostprocessor::searchForNucleationEvents()
       // processors we will simply seed another generator with the node id.
       _mrand.seed(_phase_gen_index, node_id);
 
-      bool set(false);
       int r_num = _mrand.randl(_phase_gen_index);
 
-      // randl supplies some integer random number, we want to be between 1 and n coupled vars,
-      // so modulo size()
+      // randl supplies some integer random number, we want to be between 1 and n coupled
+      // vars, so modulo size()
       r_num = r_num%_moose_variable.size();
 
-      for(int j=0; j< _moose_variable.size(); j++)
-      {
-        int bin =j;
-
-        if(set != true && r_num <= bin)
-        {
-          //std::cout<<"r_num="<<r_num<<std::endl;
-          //std::cout<<"bin="<<bin<<std::endl;
-
-          _local_orientation_type.push_back(bin);
-          set = true;
-
-          //int s = _local_orientation_type.size();
-          //std::cout<<"orientationtype="<<_local_orientation_type[s-1]<<std::endl;
-        }
-      }
+      _local_orientation_type.push_back(r_num);
     }
   }
 }
