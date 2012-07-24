@@ -6,7 +6,7 @@ Postprocessor_changeValue_test = { INPUT : 'Postprocessor_changeValue_test.i',
 NucleationPostprocessor_test = { INPUT : 'NucleationPostprocessor_multi_test.i',
          EXODIFF : ['NucleationPostprocessor_multi_out.e']}
 
-NucleationPostprocessor_parallel = { INPUT : 'NucleationPostprocessor_multi_test.i',
+NucleationPostprocessor_parallel_test = { INPUT : 'NucleationPostprocessor_multi_test.i',
          EXODIFF : ['NucleationPostprocessor_multi_out.e'],
-         PREREQ : ['NucleationPostprocessor_test'],
+         PREREQ : 'NucleationPostprocessor_test',
          MIN_PARALLEL : 2}
