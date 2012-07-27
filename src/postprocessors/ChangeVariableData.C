@@ -22,7 +22,7 @@ InputParameters validParams<ChangeVariableData>()
   params.addRequiredParam<std::vector<NonlinearVariableName> >("variables", "The variable(s) we want to change");
   params.addRequiredParam<std::string>("coupled_aux", "The aux variable that we want to couple in");
   // We really want to only run this at the end of each timestep, so we'll force that here
-  params.set<std::string>("execute_on") = "timestep";
+  params.set<MooseEnum>("execute_on") = "timestep";
 
   return params;
 }
