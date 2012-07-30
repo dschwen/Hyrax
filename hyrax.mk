@@ -66,5 +66,8 @@ endif
 #
 delete_list := $(hyrax_APP) $(hyrax_LIB)
 
+cleanall:: 
+	make -C $(HYRAX_DIR) clean 
+
 ###############################################################################
 # Additional special case targets should be added here
