@@ -61,23 +61,10 @@ $(hyrax_APP): $(moose_LIB) $(elk_MODULES) $(hyrax_LIB) $(hyrax_app_objects)
 -include $(HYRAX_DIR)/src/*.d
 endif
 
-
-clean::
-	@rm -fr $(hyrax_APP)
-	@rm -fr $(hyrax_LIB)
-	@find . \( -name "*~" -or -name "*.o" -or -name "*.d" -or -name "*.pyc" \) -exec rm '{}' \;
-	@rm -fr *.mod
-
-clobber::
-	@rm -fr $(hyrax_APP)
-	@rm -fr $(hyrax_LIB)
-	@find . \( -name "*~" -or -name "*.o" -or -name "*.d" -or -name "*.pyc" \
-                -or -name "*.gcda" -or -name "*.gcno" -or -name "*.gcov" \) -exec rm '{}' \;
-	@rm -fr *.mod
-
-cleanall::
-	make -C $(HYRAX_DIR) clean
-
+#
+# Maintenance
+#
+delete_list := $(hyrax_APP) $(hyrax_LIB)
 
 ###############################################################################
 # Additional special case targets should be added here
