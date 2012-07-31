@@ -43,9 +43,13 @@ ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParame
   // Create a vector of the coupled variables and set = 0 the one that the kernel
   // is operating on
   if(_n_OP_vars != coupledComponents("OP_var_names"))
-    mooseError("Please match the number of orientation variants to coupled OPs.");
+    mooseError("Please match the number of orientation variants to coupled OPs (ACTransform).");
+
+//  std::cout<<"in ACTransform constructor 1"<<std::endl;
 
   _coupled_vars.resize(_n_OP_vars);
+
+  // std::cout<<"in ACTransform constructor 2"<<std::endl;
 
   for(unsigned int i=0; i< _n_OP_vars; i++)
   {
@@ -58,6 +62,7 @@ ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParame
       _coupled_vars[i] = &coupledValue("OP_var_names", i);
     }
   }
+  //std::cout<<"in ACTransform constructor 3"<<std::endl;
 }
 
 Real

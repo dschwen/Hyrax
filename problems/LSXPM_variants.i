@@ -159,7 +159,7 @@
     kappa_name = kappa_n
   [../]
 
-  [./ACTransformn2]
+  [./ACTransformn1]
     type = ACTransformElasticDF
     variable = n1
     OP_number = 1
@@ -255,8 +255,8 @@
     C_precipitate ='155.4 68.03 64.6 155.4  64.6 172.51 36.31 36.31 44.09'		   
     #reading        S_11   S_22  S_33 S_23 S_13 S_12
     e_precipitate = '0.00551  0.0564  0.0570  0.0  0.0  0.0'
-    n_variants = 1
-    variable_names = 'n1'
+    n_variants = 3
+    variable_names = 'n1 n2 n3'
     all_21 = false
   [../]
 []

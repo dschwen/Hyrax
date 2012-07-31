@@ -49,7 +49,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
 {
   // check to make sure the input file is all set up right
   if(_n_variants != coupledComponents("variable_names"))
-    mooseError("Please match the number of orientation variants with coupled order parameters.");
+    mooseError("Please match the number of orientation variants with coupled order parameters (LSXPM).");
 
   //size the array to the number of coupled order parameters
   _coupled_variables.resize(_n_variants);
