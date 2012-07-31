@@ -23,12 +23,24 @@ hyrax_objects += $(patsubst %.f90, %.$(obj-suffix), $(hyrax_f90srcfiles))
 
 hyrax_app_objects := $(patsubst %.C, %.$(obj-suffix), $(HYRAX_DIR)/src/main.C)
 
+# plugin files
+hyrax_plugfiles   := $(shell find $(HYRAX_DIR)/plugins/ -name *.C 2>/dev/null)
+hyrax_cplugfiles  := $(shell find $(HYRAX_DIR)/plugins/ -name *.c 2>/dev/null)
+hyrax_fplugfiles  := $(shell find $(HYRAX_DIR)/plugins/ -name *.f 2>/dev/null)
+hyrax_f90plugfiles:= $(shell find $(HYRAX_DIR)/plugins/ -name *.f90 2>/dev/null)
+
+# plugins
+hyrax_plugins     := $(patsubst %.C, %-$(METHOD).plugin, $(hyrax_plugfiles))
+hyrax_plugins     += $(patsubst %.c, %-$(METHOD).plugin, $(hyrax_cplugfiles))
+hyrax_plugins     += $(patsubst %.f, %-$(METHOD).plugin, $(hyrax_fplugfiles))
+hyrax_plugins     += $(patsubst %.f90, %-$(METHOD).plugin, $(hyrax_f90plugfiles))
+
 all:: $(hyrax_LIB)
 
 # build rule for lib HYRAX
 ifeq ($(enable-shared),yes)
 # Build dynamic library
-$(hyrax_LIB): $(hyrax_objects)
+$(hyrax_LIB): $(hyrax_objects) $(hyrax_plugins)
 	@echo "Linking "$@"..."
 	@$(libmesh_CC) $(libmesh_CXXSHAREDFLAG) -o $@ $(hyrax_objects) $(libmesh_LDFLAGS)
 else
