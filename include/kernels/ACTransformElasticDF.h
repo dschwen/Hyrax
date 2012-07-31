@@ -13,8 +13,8 @@
 
 #include "ACBulk.h"
 
-#include "SymmElasticityTensor.h"
-#include "SymmTensor.h"
+#include "RankFourTensor.h"
+#include "RankTwoTensor.h"
 
 #include <string>
 
@@ -49,12 +49,6 @@ protected:
    */
   virtual Real computeDFDOP(PFFunctionType type);
 
-  /**
-   * calculateLocalTerm()
-   * @return returns the portion of the partial derivative containing the local strain term.
-   */
-//  virtual Real calculateLocalTerm();
-
   virtual Real calculateFirstTerm();
 
   virtual Real calculateSecondTerm();
@@ -63,38 +57,16 @@ protected:
 
   virtual Real calculateSecondJacobianTerm();
 
-
-  /**
-   * calculateMisfitTerm()
-   * @return returns the portion of the partial derivative containing the misfit strain term.
-   * This can handle an arbitrary number of order parameters.
-   */
-//virtual Real calculateMisfitTerm();
-
-/**
-   * calculateLocalJacobianTerm()
-   * @return returns the portion of the partial derivative Jacobian containing the local
-   * strain term.
-   */
-  //virtual Real calculateLocalJacobianTerm();
-
-  /**
-   * calculateMisfitJacobianTerm()
-   * @return returns the portion of the partial derivative Jacobian containing the misfit strain term.
-   * This can handle an arbitrary number of order parameters.
-   */
-//virtual Real calculateMisfitJacobianTerm();
-
 private:
 
   // system elasticity tensor, varies in space
-  MaterialProperty<SymmElasticityTensor> & _elasticity_tensor;
-  MaterialProperty<std::vector<SymmTensor > > & _eigenstrains_rotated_MP;
-  MaterialProperty<SymmTensor> & _local_strain;
+  MaterialProperty<RankFourTensor> & _elasticity_tensor;
+  MaterialProperty<std::vector<RankTwoTensor > > & _eigenstrains_rotated_MP;
+  MaterialProperty<RankTwoTensor> & _local_strain;
 
-  MaterialProperty<std::vector<SymmElasticityTensor> > & _d_elasticity_tensor;
-  MaterialProperty<SymmTensor> & _elastic_strain;
-  MaterialProperty<std::vector<SymmTensor> > & _d_eigenstrains_rotated_MP;
+  //MaterialProperty<std::vector<SymmElasticityTensor> > & _d_elasticity_tensor;
+  MaterialProperty<RankTwoTensor> & _elastic_strain;
+  MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
 
   // number of orientation variants
   unsigned int _n_OP_vars;

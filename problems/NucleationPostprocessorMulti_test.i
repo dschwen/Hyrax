@@ -263,6 +263,7 @@ active = 'Periodic'
     radius = 2.0
     seed_value = 1.6
     dwell_time = 0.35
+    int_width = 2.0
   [../]
 []
 
@@ -296,7 +297,7 @@ active = 'Periodic'
 []
 
 [Output]
-  file_base = NucleationPostprocessorMulti1
+  file_base = Nucleation2
   output_initial = true
   interval = 1
   exodus = true

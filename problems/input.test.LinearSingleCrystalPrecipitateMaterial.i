@@ -18,10 +18,16 @@
   [./concentration]
     order = THIRD
     family = HERMITE
-    [./InitialCondition]
-      type = ConstantIC
-      value = 0.1
+      [./InitialCondition]
+      type = SmoothCircleIC
+      int_width = 1.5
+      invalue = 0.6
+      outvalue = 0.1
+      radius = 2.0
+      x1 = 25.0
+      y1 = 25.0
     [../]
+
   [../]
 
   [./n1]
@@ -95,6 +101,11 @@
     mob_name = L
     kappa_name = kappa_n
   [../]
+
+  [ACTransform]
+    type = ACTransformElasticDF
+    variable = n1
+  [../]
 []
 
 [BCs]
@@ -149,10 +160,10 @@
     disp_x = disp_x
     disp_y = disp_y
     #reading C_11  C_12  C_13  C_22  C_23  C_33  C_44  C_55  C_66
-    C_ijkl ='1.0e6  0.0   0.0 1.0e6  0.0  1.0e6 0.5e6 0.5e6 0.5e6'
-    C_precipitate ='1.0e6  0.0   0.0 1.0e6  0.0  1.0e6 0.5e6 0.5e6 0.5e6'		   
+    C_ijkl ='155.4 68.03 64.6 155.4  64.6 172.51 36.31 36.31 44.09'
+    C_precipitate ='155.4 68.03 64.6 155.4  64.6 172.51 36.31 36.31 44.09'		   
     #reading        S_11   S_22  S_33 S_23 S_13 S_12
-    e_precipitate = '0.05  0.01  0.0  0.0  0.0  0.0'
+    e_precipitate = '0.00551  0.0564  0.0570  0.0  0.0  0.0'
     n_variants = 1
     variable_names = 'n1'
     all_21 = false
@@ -176,7 +187,7 @@
 []
 
 [Output]
-  file_base = out
+  file_base = TM_LSXPM
   output_initial = true
   interval = 1
   exodus = true

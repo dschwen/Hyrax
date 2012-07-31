@@ -31,81 +31,56 @@ InputParameters validParams<ACTransformElasticDF>()
 
 ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParameters parameters)
     : ACBulk(name, parameters),
-      _elasticity_tensor(getMaterialProperty<SymmElasticityTensor>("elasticity_tensor")),
-      _eigenstrains_rotated_MP(getMaterialProperty<std::vector<SymmTensor > >("eigenstrains_rotated_MP")),
-      _local_strain(getMaterialProperty<SymmTensor>("local_strain")),
-      _d_elasticity_tensor(getMaterialProperty<std::vector<SymmElasticityTensor> >("d_elasticity_tensor")),
-      _elastic_strain(getMaterialProperty<SymmTensor>("elastic_strain")),
-      _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<SymmTensor > >("eigenstrains_rotated_MP")),
+      _elasticity_tensor(getMaterialProperty<RankFourTensor>("elasticity_tensor")),
+      _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_rotated_MP")),
+      _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
+      //_d_elasticity_tensor(getMaterialProperty<std::vector<RankFourTensor> >("d_elasticity_tensor")),
+      _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
+      _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor > >("eigenstrains_rotated_MP")),
       _n_OP_vars(getParam<int>("n_OP_vars")),
       _OP_number(getParam<int>("OP_number"))
 {
-        // Create a vector of the coupled variables and set = 0 the one that the kernel
-        // is operating on
-        if(_n_OP_vars != coupledComponents("OP_var_names"))
-          mooseError("Please match the number of orientation variants to coupled OPs.");
+  // Create a vector of the coupled variables and set = 0 the one that the kernel
+  // is operating on
+  if(_n_OP_vars != coupledComponents("OP_var_names"))
+    mooseError("Please match the number of orientation variants to coupled OPs.");
 
-        _coupled_vars.resize(_n_OP_vars);
+  _coupled_vars.resize(_n_OP_vars);
 
-         for(unsigned int i=0; i< _n_OP_vars; i++)
-         {
-           if(i == _OP_number-1)
-           {
-             _coupled_vars[i] = NULL;
-           }
-           else
-           {
-             _coupled_vars[i] = &coupledValue("OP_var_names", i);
-           }
-         }
-
-
+  for(unsigned int i=0; i< _n_OP_vars; i++)
+  {
+    if(i == _OP_number-1)
+    {
+      _coupled_vars[i] = NULL;
+    }
+    else
+    {
+      _coupled_vars[i] = &coupledValue("OP_var_names", i);
+    }
+  }
 }
 
 Real
 ACTransformElasticDF::computeDFDOP(PFFunctionType type)
 {
-// elastic strain = homogeneous strain (BC) + heterogeneous strain - misfit strain
 // Follow mostly what is in ACGrGrElasticDF:
 
   Real first_term(0.0), second_term(0.0);
-
-  //Real elastic_term;
   //Real misfit_term;
 
   switch (type)
   {
   case Residual:
-
-    // hokay, so!
-    //elastic_term = calculateLocalTerm();
-
-    // misfit_term = calculateMisfitTerm();
-
-    //return elastic_term + misfit_term;
-
-    // third term contains the e_kl derivative, but these are the same
-//    third_term = calculateThirdTerm();
-
     // first term contains the local stiffness derivative
     first_term = calculateFirstTerm();
 
     // second term contains the e_ij derivative = e_kl derivative
     second_term = calculateSecondTerm();
 
-    return 0.5*(first_term + 2.0*second_term);
+   return first_term + 2.0*second_term;
 
   case Jacobian:
-    //elastic_term = calculateLocalJacobianTerm();
-    //misfit_term = calculateMisfitJacobianTerm();
-
-    //first_term = calculateFirstJacobianTerm();
-    //second_term = calculateSecondJacobianTerm();
-    //third_term = calculateThirdJacobianTerm();
-
     return 0.0;
-
-    //return (elastic_term + misfit_term)*_phi[_j][_qp];
   }
   mooseError("Invalid type passed in");
 }
@@ -113,23 +88,18 @@ ACTransformElasticDF::computeDFDOP(PFFunctionType type)
 Real
 ACTransformElasticDF::calculateFirstTerm()
 {
-  SymmTensor a(0.0);
-
-  a = (_d_elasticity_tensor[_qp])[_OP_number-1]*_elastic_strain[_qp];
-
-  // (d_elasticity_tensor[OP_number]*elastic_strain*elastic_strain
-  return a.doubleContraction(_elastic_strain[_qp]);
+  return 0.0;
 }
 
 Real
 ACTransformElasticDF::calculateSecondTerm()
 {
-  SymmTensor a(0.0);
+  RankTwoTensor a;
 
-  a = _elasticity_tensor[_qp]*(_d_eigenstrains_rotated_MP[_qp])[_OP_number-1];
+  a = _elasticity_tensor[_qp]*(_d_eigenstrains_rotated_MP[_qp])[_OP_number-1]*(-1.0);
 
   // elasticity_tensor*d_eigenstrains_rotated[OP_number]*elastic_strain
-  return a.doubleContraction(_elastic_strain[_qp]);
+  return 0.5*a.doubleContraction(_elastic_strain[_qp]);
 }
 
 Real
@@ -144,92 +114,3 @@ ACTransformElasticDF::calculateSecondJacobianTerm()
   return 0.0;
 }
 
-//Real
-//ACTransformElasticDF::calculateLocalTerm()
-//{
-// SymmTensor elastic_a;
-// have to be careful on the multiply operator here - put the scalar at the end of the expression
-//elastic_a = (_elasticity_tensor[_qp]*_local_strain[_qp])*(-2.0);
-
-//  std::cout << "elastic_a" << std::cout << elastic_a;
-
-//SymmTensor elastic_b;
-//elastic_b = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp];
-//   std::cout << "elastic_b" << std::cout << elastic_b;
-
-
-// elastic_term = -2.0 * local_strain * elastic_tensor * eigenstrain_OP * eta_OP
-//  return elastic_a.doubleContraction(elastic_b);
-//}
-
-//Real
-//ACTransformElasticDF::calculateMisfitTerm()
-//{
-// Real misfit_term = 0.0;
-// SymmTensor misfit_a(0.0);
-// SymmTensor misfit_b(0.0);
-
-//misfit_a = (_eigenstrains_rotated_MP[_qp])[_OP_number]*_u[_qp]*2.0;
-//misfit_a = _elasticity_tensor[_qp]*misfit_a;
-
-
-// This will loop over any arbitrary number of order parameters
-//for (int i = 0; i < _n_OP_vars; i++)
-//{
-//if (i == _OP_number-1)
-// {
-//  //  misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*_u[_qp]*_u[_qp];
-// }
-//else
-//  {
-// misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*(*_coupled_vars[i])[_qp];
-//misfit_b *= (*_coupled_vars[i])[_qp];
-//  }
-
-//misfit_term += 2.0*eta_OP*eigenstrain_OP * elastic_tensor * eigenstrain_i * eta_i
-// misfit_term += misfit_a.doubleContraction(misfit_b);
-// }
-
-//return misfit_term;
-//}
-
-/* Real
-   ACTransformElasticDF::calculateLocalJacobianTerm()
-   {
-   SymmTensor elastic_a;
-   //elastic_a = (_elasticity_tensor[_qp]*_local_strain[_qp])*(-2.0);
-
-   SymmTensor elastic_b;
-   // elastic_b = (_eigenstrains_rotated_MP[_qp])[_OP_number];
-
-   return elastic_a.doubleContraction(elastic_b);
- }
-
- Real
- ACTransformElasticDF::calculateMisfitJacobianTerm()
- {
-   Real misfit_term = 0.0;
-   SymmTensor misfit_a(0.0);
-   SymmTensor misfit_b(0.0);
-
-   //misfit_a = (_eigenstrains_rotated_MP[_qp])[_OP_number]*2.0;
-   //misfit_a = _elasticity_tensor[_qp]*misfit_a;
-
-   for (int i = 0; i < _n_OP_vars; i++)
-   {
-   if (i == _OP_number-1)
-   {
-   //  misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*_u[_qp]*_u[_qp]*3.0;
-   }
-   else
-   {
-   // misfit_b = (_eigenstrains_rotated_MP[_qp])[i]*(*_coupled_vars[i])[_qp];
-   //misfit_b *= (*_coupled_vars[i])[_qp];
-   }
-
-   //misfit_term += misfit_a.doubleContraction(misfit_b);
-   }
-
-   return misfit_term;
-   }
-*/

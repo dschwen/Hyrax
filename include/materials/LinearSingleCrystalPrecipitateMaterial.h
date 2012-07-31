@@ -59,7 +59,7 @@ protected:
 private:
   // vectors to get the input values
   //std::vector<Real> _Cijkl_matrix_vector;
-  std::vector<Real> _Cijkl_precipitate_vector;
+  // std::vector<Real> _Cijkl_precipitate_vector;
   std::vector<Real> _eigenstrain_vector;
 
   // number of orientation variants for the precipitate in a single matrix crystal
@@ -70,21 +70,21 @@ private:
 
   // Individual material information
   //SymmAnisotropicElasticityTensor _Cijkl_matrix;
-  RankFourTensor _Cijkl_precipitate;
+  //RankFourTensor _Cijkl_precipitate;
   RankTwoTensor _eigenstrain;
 
-  std::vector<RankFourTensor> _Cijkl_precipitates_rotated;
+  //std::vector<RankFourTensor> _Cijkl_precipitates_rotated;
   std::vector<RankTwoTensor> _eigenstrains_rotated;
 
   MaterialProperty<RankTwoTensor> & _local_strain;
   MaterialProperty<RankTwoTensor> & _misfit_strain;
   MaterialProperty<std::vector<RankTwoTensor> > & _eigenstrains_rotated_MP;
   MaterialProperty<RankFourTensor> & _Cijkl_matrix_MP;
-  MaterialProperty<std::vector<RankFourTensor> > & _Cijkl_precipitates_rotated_MP;
+  //MaterialProperty<std::vector<RankFourTensor> > & _Cijkl_precipitates_rotated_MP;
 
   // derivatives of the local elasticity tensor and the misfit strain with respect
   // to order parameter
-  MaterialProperty<std::vector<RankFourTensor> > & _d_elasticity_tensor;
+  //MaterialProperty<std::vector<RankFourTensor> > & _d_elasticity_tensor;
   MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
 
   // Vector of references to the coupled order parameters
