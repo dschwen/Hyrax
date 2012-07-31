@@ -32,6 +32,11 @@
   [./n1]
     order = FIRST
     family = LAGRANGE
+  [../]
+
+  [./n2]
+    order = FIRST
+    family = LAGRANGE
     [./InitialCondition]
       type = SmoothCircleIC
       int_width = 1.5
@@ -41,6 +46,11 @@
       x1 = 25.0
       y1 = 25.0
     [../]
+  [../]
+
+  [./n3]
+    order = FIRST
+    family = LAGRANGE
   [../]
 
   [./disp_x]
@@ -72,11 +82,22 @@
     variable = n1
   [../]
 
+  [./dn2dt]
+    type = TimeDerivative
+    variable = n2
+  [../]
+
+  [./dn3dt]
+    type = TimeDerivative
+    variable = n3
+  [../]
+
   [./CHSolid]
-    type = CHBulkCoupled
+    type = CHBulkPolyCoupled
     variable = concentration
     mob_name = M
-    coupled_OP_var = n1
+    n_OP_variables = 3
+    OP_variable_names = 'n1 n2 n3'
   [../]
 
   [./CHInterface]
@@ -87,27 +108,81 @@
     grad_mob_name = grad_M
   [../]
 
-  [./ACSolid]
-    type = ACBulkCoupled
+  [./ACSolidn1]
+    type = ACBulkPolyCoupled
     variable = n1
     mob_name = L
     coupled_CH_var = concentration
+    n_OP_vars = 3
+    OP_var_names = 'n1 n2 n3'
+    OP_number = 1
   [../]
 
-  [./ACInterface]
+  [./ACSolidn2]
+    type = ACBulkPolyCoupled
+    variable = n2
+    mob_name = L
+    coupled_CH_var = concentration
+    n_OP_vars = 3
+    OP_var_names = 'n1 n2 n3'
+    OP_number = 2
+  [../]
+
+  [./ACSolidn3]
+    type = ACBulkPolyCoupled
+    variable = n3
+    mob_name = L
+    coupled_CH_var = concentration
+    n_OP_vars = 3
+    OP_var_names = 'n1 n2 n3'
+    OP_number = 3
+  [../]
+
+  [./ACInterfacen1]
     type = ACInterface
     variable = n1
     mob_name = L
     kappa_name = kappa_n
   [../]
 
-  [./ACTransform]
+  [./ACInterfacen2]
+    type = ACInterface
+    variable = n2
+    mob_name = L
+    kappa_name = kappa_n
+  [../]
+
+  [./ACInterfacen3]
+    type = ACInterface
+    variable = n3
+    mob_name = L
+    kappa_name = kappa_n
+  [../]
+
+  [./ACTransformn2]
     type = ACTransformElasticDF
     variable = n1
     OP_number = 1
-    OP_var_names = 'n1'
-    n_OP_vars = 1
+    OP_var_names = 'n1 n2 n3'
+    n_OP_vars = 3
   [../]
+ 
+  [./ACTransformn2]
+    type = ACTransformElasticDF
+    variable = n2
+    OP_number = 2
+    OP_var_names = 'n1 n2 n3'
+    n_OP_vars = 3
+  [../]
+
+  [./ACTransformn3]
+    type = ACTransformElasticDF
+    variable = n3
+    OP_number = 3
+    OP_var_names = 'n1 n2 n3'
+    n_OP_vars = 3
+  [../]
+
 []
 
 [BCs]
@@ -135,6 +210,20 @@
   [./n1_BC]
     type = NeumannBC
     variable = n1
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
+
+  [./n2_BC]
+    type = NeumannBC
+    variable = n2
+    boundary = '0 1 2 3'
+    value = 0.0
+  [../]
+
+  [./n3_BC]
+    type = NeumannBC
+    variable = n3
     boundary = '0 1 2 3'
     value = 0.0
   [../]
@@ -189,7 +278,7 @@
 []
 
 [Output]
-  file_base = TM_LSXPM
+  file_base = TM_LSXPM_n2
   output_initial = true
   interval = 1
   exodus = true
