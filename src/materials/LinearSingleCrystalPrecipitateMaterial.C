@@ -70,8 +70,14 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   //_Cijkl_precipitates_rotated[0] = _Cijkl_precipitate;
   _eigenstrains_rotated[0] = _eigenstrain;
 
+  /*std::cout<<"eigenstraines rotated 0"<<std::endl;
+  for(int i=1; i<4; i++)
+    for (int j=1; j<4; j++)
+    std::cout<<"i="<<i<<" j="<<j<<"val="<<_eigenstrains_rotated[0].getValue(i,j)<<std::endl; */
+
   // rotate all the things, in radians
-  Real rotation_angle_base = 2.0*libMesh::pi/Real(_n_variants);
+   Real rotation_angle_base = 2.0*libMesh::pi/Real(_n_variants);
+  // Real rotation_angle_base = 360.0/Real(_n_variants);
   Real rotation_angle = rotation_angle_base;
 
   for(unsigned int i=1; i<_n_variants; i++)
@@ -81,7 +87,15 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
  // // _Cijkl_precipitates_rotated[i] = _Cijkl_precipitate;
 
      // e_strain.rotate(rotation_angle);
-    _eigenstrains_rotated[i] = _eigenstrain.rotate(rotation_angle, 0.0, 0.0);
+//    _eigenstrains_rotated[i] = _eigenstrain.rotate(rotation_angle, 0.0, 0.0);
+    _eigenstrains_rotated[i] = _eigenstrain.rotateXyPlane(rotation_angle);
+
+    /*  std::cout<<"rotation angle="<<rotation_angle<<std::endl;
+    std::cout<<"eigenstraines rotated "<<i<<std::endl;
+  for(int k=1; k<4; k++)
+    for (int j=1; j<4; j++)
+    std::cout<<"i="<<k<<" j="<<j<<"val="<<_eigenstrains_rotated[i].getValue(k,j)<<std::endl; */
+
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;
   }
