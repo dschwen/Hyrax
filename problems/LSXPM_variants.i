@@ -34,7 +34,7 @@
     family = LAGRANGE
   [../]
 
-  [./n2]
+  [./n3]
     order = FIRST
     family = LAGRANGE
     [./InitialCondition]
@@ -48,7 +48,7 @@
     [../]
   [../]
 
-  [./n3]
+  [./n2]
     order = FIRST
     family = LAGRANGE
   [../]
@@ -278,7 +278,7 @@
 []
 
 [Output]
-  file_base = TM_LSXPM_n2
+  file_base = TM_LSXPM_n3
   output_initial = true
   interval = 1
   exodus = true
