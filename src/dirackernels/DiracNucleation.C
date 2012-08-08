@@ -51,8 +51,8 @@ DiracNucleation::addPoints()
   for ( ; el != end_el ; ++el)
   {
     Elem* elem = *el;
-    _problem.prepare(elem, 0);
-    _problem.reinitElem(elem, 0);
+    _subproblem.prepare(elem, 0);
+    _subproblem.reinitElem(elem, 0);
       /*Test for nucleation event: access one quadrature point for the element. Should give us the
         same value since it's an element average value*/
     if (_coupled_nucleation[0] > 1.0)  //CJP changed the if to >0.0 for rapid nucleation.  This should be >1.0
