@@ -31,7 +31,7 @@ public:
   virtual void execute();
 
   virtual Real getValue();
-  virtual void threadJoin(const Postprocessor & y);
+  virtual void threadJoin(const UserObject & y);
 
   /**
    * Modifies the solution vector of the system; be careful. If you want

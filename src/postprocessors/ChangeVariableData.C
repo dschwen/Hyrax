@@ -62,6 +62,6 @@ ChangeVariableData::getValue()
 }
 
 void
-ChangeVariableData::threadJoin(const Postprocessor & y)
+ChangeVariableData::threadJoin(const UserObject & y)
 {
 }
