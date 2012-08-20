@@ -14,6 +14,7 @@
 
 #include "HyraxApp.h"
 #include "MooseInit.h"
+#include "Moose.h"
 
 // libMesh includes
 #include "perf_log.h"
