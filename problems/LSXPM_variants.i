@@ -23,7 +23,7 @@
       int_width = 1.5
       invalue = 0.6
       outvalue = 0.1
-      radius = 2.0
+      radius = 3.0
       x1 = 25.0
       y1 = 25.0
     [../]
@@ -42,7 +42,7 @@
       int_width = 1.5
       invalue = 1.6
       outvalue = 0.0
-      radius = 2.0
+      radius = 3.0
       x1 = 25.0
       y1 = 25.0
     [../]
@@ -269,16 +269,16 @@
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'
 
-  l_max_its = 15
+  l_max_its = 30
   nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 200
-  dt = 0.03
+  num_steps = 5
+  dt = 0.3
 []
 
 [Output]
-  file_base = TM_LSXPM_n3
+  file_base = TM_LSXPM_new1
   output_initial = true
   interval = 1
   exodus = true
