@@ -5,13 +5,13 @@
   ny = 10
   nz = 0
   xmin = 0
-  xmax = 50
+  xmax = 76.8 #0.3*256
   ymin = 0
-  ymax = 50
+  ymax = 76.8
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 3
+  uniform_refine = 3 #80 elements, dx=0.96...
 []
 
 [Variables]
@@ -23,7 +23,7 @@
       int_width = 1.5
       invalue = 0.6
       outvalue = 0.1
-      radius = 3.0
+      radius = 4.0
       x1 = 25.0
       y1 = 25.0
     [../]
@@ -42,7 +42,7 @@
       int_width = 1.5
       invalue = 1.6
       outvalue = 0.0
-      radius = 3.0
+      radius = 4.0
       x1 = 25.0
       y1 = 25.0
     [../]
@@ -63,6 +63,71 @@
     family = LAGRANGE
   [../]
 []
+
+[AuxVariables]
+#stresses
+  [./s11_aux]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
+  [./s12_aux]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
+#  [./s13_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+
+  [./s22_aux]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
+#  [./s23_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+
+#  [./s33_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+
+#strains
+  [./e11_aux]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
+  [./e12_aux]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
+#  [./e13_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+
+  [./e22_aux]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
+#  [./e23_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+
+#  [./e33_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+[]
+
 
 [TensorMechanics]
   [./solid]
@@ -182,8 +247,106 @@
     OP_var_names = 'n1 n2 n3'
     n_OP_vars = 3
   [../]
-
 []
+
+[AuxKernels]
+  [./matl_s11]
+    type = RankTwoAux
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 1
+    variable = s11_aux
+  [../]
+ 
+ [./matl_s12]
+    type = RankTwoAux
+    rank_two_tensor = stress
+    index_i = 1
+    index_j = 2
+    variable = s12_aux
+  [../]
+
+#  [./matl_s13]
+#    type = RankTwoAux
+#    rank_two_tensor = stress
+#    index_i = 1
+#    index_j = 3
+#    variable = s13_aux
+#  [../]
+
+  [./matl_s22]
+    type = RankTwoAux
+    rank_two_tensor = stress
+    index_i = 2
+    index_j = 2
+    variable = s22_aux
+  [../]
+
+#  [./matl_s23]
+#    type = RankTwoAux
+#    rank_two_tensor = stress
+#    index_i = 2
+#    index_j = 3
+#    variable = s23_aux
+#  [../]
+
+#  [./matl_s33]
+#    type = RankTwoAux
+#    rank_two_tensor = stress
+#    index_i = 3
+#    index_j = 3
+#    variable = s33_aux
+#  [../]
+
+  [./matl_e11]
+    type = RankTwoAux
+    rank_two_tensor = elastic_strain
+    index_i = 1
+    index_j = 1
+    variable = e11_aux
+  [../]
+ 
+ [./matl_e12]
+    type = RankTwoAux
+    rank_two_tensor = elastic_strain
+    index_i = 1
+    index_j = 2
+    variable = e12_aux
+  [../]
+
+#  [./matl_e13]
+#    type = RankTwoAux
+#    rank_two_tensor = elastic_strain
+#    index_i = 1
+#    index_j = 3
+#    variable = e13_aux
+#  [../]
+
+  [./matl_e22]
+    type = RankTwoAux
+    rank_two_tensor = elastic_strain
+    index_i = 2
+    index_j = 2
+    variable = e22_aux
+  [../]
+
+#  [./matl_e23]
+#    type = RankTwoAux
+#    rank_two_tensor = elastic_strain
+#    index_i = 2
+#    index_j = 3
+#    variable = e23_aux
+#  [../]
+
+#  [./matl_e33]
+#    type = RankTwoAux
+#    rank_two_tensor = elastic_strain
+#    index_i = 3
+#    index_j = 3
+#    variable = e33_aux
+#  [../]
+[]
+
 
 [BCs]
   [./disp_x_BC]
@@ -273,12 +436,12 @@
   nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 5
-  dt = 0.3
+  num_steps = 20
+  dt = 0.0007
 []
 
 [Output]
-  file_base = TM_LSXPM_new1
+  file_base = TM_LSXPM_dt0007
   output_initial = true
   interval = 1
   exodus = true
