@@ -13,8 +13,8 @@
 
 #include "ACBulk.h"
 
-#include "RankFourTensor.h"
-#include "RankTwoTensor.h"
+#include "ElasticityTensorR4.h"
+#include "RankTwoTensorTonks.h"
 
 #include <string>
 
@@ -60,13 +60,13 @@ protected:
 private:
 
   // system elasticity tensor, varies in space
-  MaterialProperty<RankFourTensor> & _elasticity_tensor;
-  MaterialProperty<std::vector<RankTwoTensor > > & _eigenstrains_rotated_MP;
-  MaterialProperty<RankTwoTensor> & _local_strain;
+  MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
+  MaterialProperty<std::vector<RankTwoTensorTonks > > & _eigenstrains_rotated_MP;
+  MaterialProperty<RankTwoTensorTonks> & _local_strain;
 
   //MaterialProperty<std::vector<SymmElasticityTensor> > & _d_elasticity_tensor;
-  MaterialProperty<RankTwoTensor> & _elastic_strain;
-  MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
+  MaterialProperty<RankTwoTensorTonks> & _elastic_strain;
+  MaterialProperty<std::vector<RankTwoTensorTonks> > & _d_eigenstrains_rotated_MP;
 
   // number of orientation variants
   unsigned int _n_OP_vars;
