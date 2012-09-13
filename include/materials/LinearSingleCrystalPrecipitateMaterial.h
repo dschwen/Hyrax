@@ -12,9 +12,9 @@
 #ifndef LINEARSINGLECRYSTALPRECIPITATEMATERIAL_H
 #define LINEARSINGLECRYSTALPRECIPITATEMATERIAL_H
 
-#include "TensorElasticMaterial.h"
+#include "LinearElasticMaterial.h"
 #include "ElasticityTensorR4.h"
-#include "RankTwoTensorTonks.h"
+#include "RankTwoTensor.h"
 
 /**
  * LinearSingleCrystalPrecipitateMaterial handles anisotropic, single-crystal material elastic
@@ -28,7 +28,7 @@ class LinearSingleCrystalPrecipitateMaterial;
 template<>
 InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>();
 
-class LinearSingleCrystalPrecipitateMaterial : public TensorElasticMaterial
+class LinearSingleCrystalPrecipitateMaterial : public LinearElasticMaterial
 {
 public:
   LinearSingleCrystalPrecipitateMaterial(const std:: string & name, InputParameters parameters);
@@ -71,21 +71,21 @@ private:
   // Individual material information
   //SymmAnisotropicElasticityTensor _Cijkl_matrix;
   //ElasticityTensorR4 _Cijkl_precipitate;
-  RankTwoTensorTonks _eigenstrain;
+  RankTwoTensor _eigenstrain;
 
   //std::vector<ElasticityTensorR4> _Cijkl_precipitates_rotated;
-  std::vector<RankTwoTensorTonks> _eigenstrains_rotated;
+  std::vector<RankTwoTensor> _eigenstrains_rotated;
 
-  MaterialProperty<RankTwoTensorTonks> & _local_strain;
-  MaterialProperty<RankTwoTensorTonks> & _misfit_strain;
-  MaterialProperty<std::vector<RankTwoTensorTonks> > & _eigenstrains_rotated_MP;
+  MaterialProperty<RankTwoTensor> & _local_strain;
+  MaterialProperty<RankTwoTensor> & _misfit_strain;
+  MaterialProperty<std::vector<RankTwoTensor> > & _eigenstrains_rotated_MP;
   MaterialProperty<ElasticityTensorR4> & _Cijkl_matrix_MP;
   //MaterialProperty<std::vector<ElasticityTensorR4> > & _Cijkl_precipitates_rotated_MP;
 
   // derivatives of the local elasticity tensor and the misfit strain with respect
   // to order parameter
   //MaterialProperty<std::vector<ElasticityTensorR4> > & _d_elasticity_tensor;
-  MaterialProperty<std::vector<RankTwoTensorTonks> > & _d_eigenstrains_rotated_MP;
+  MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
 
   // Vector of references to the coupled order parameters
   std::vector<VariableValue *> _coupled_variables;

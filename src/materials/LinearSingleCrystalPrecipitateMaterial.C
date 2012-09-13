@@ -20,7 +20,7 @@
 template<>
 InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
 {
-  InputParameters params = validParams<TensorElasticMaterial>();
+  InputParameters params = validParams<LinearElasticMaterial>();
   // matrix material into C_ijkl
   params.addRequiredParam<std::vector<Real> >("C_precipitate", "Stiffness tensor for precipitate");
   params.addRequiredParam<std::vector<Real> >("e_precipitate","Eigenstrain tensor for precipitate: e11, e22, e33, e23, e13, e12");
@@ -31,7 +31,7 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
 }
 
 LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(const std::string & name, InputParameters parameters)
-    : TensorElasticMaterial(name, parameters),
+    : LinearElasticMaterial(name, parameters),
       //_Cijkl_precipitate_vector(getParam<std::vector<Real> >("C_precipitate")),
       _eigenstrain_vector(getParam<std::vector<Real> >("e_precipitate")),
       _n_variants(getParam<int>("n_variants")),
@@ -39,13 +39,13 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
       _eigenstrain(),
       //_Cijkl_precipitates_rotated(),
       _eigenstrains_rotated(),
-      _local_strain(declareProperty<RankTwoTensorTonks >("local_strain")),
-      _misfit_strain(declareProperty<RankTwoTensorTonks >("misfit_strain")),
-      _eigenstrains_rotated_MP(declareProperty<std::vector<RankTwoTensorTonks> >("eigenstrains_rotated_MP")),
+      _local_strain(declareProperty<RankTwoTensor >("local_strain")),
+      _misfit_strain(declareProperty<RankTwoTensor >("misfit_strain")),
+      _eigenstrains_rotated_MP(declareProperty<std::vector<RankTwoTensor> >("eigenstrains_rotated_MP")),
       _Cijkl_matrix_MP(declareProperty<ElasticityTensorR4>("Cijkl_matrix_MP")),
       //_Cijkl_precipitates_rotated_MP(declareProperty<std::vector<ElasticityTensorR4 > >("Cijkl_precipitates_rotated_MP")),
       //_d_elasticity_tensor(declareProperty<std::vector<ElasticityTensorR4> >("d_elasticity_tensor")),
-      _d_eigenstrains_rotated_MP(declareProperty<std::vector<RankTwoTensorTonks> >("d_eigenstrains_rotated_MP"))
+      _d_eigenstrains_rotated_MP(declareProperty<std::vector<RankTwoTensor> >("d_eigenstrains_rotated_MP"))
 {
   // check to make sure the input file is all set up right
   if(_n_variants != coupledComponents("variable_names"))
@@ -120,7 +120,7 @@ void
  LinearSingleCrystalPrecipitateMaterial::computeQpElasticityTensor()
  {
    //assuming homogeneous modulus between precipitate and matrix
-   TensorElasticMaterial::computeQpElasticityTensor();
+   LinearElasticMaterial::computeQpElasticityTensor();
 
 // ignore all this below for the moment
    /**
@@ -200,11 +200,11 @@ void
    // compute the elastic strain: e_el = e_local - e_misfit
 
    //local strain:
-   RankTwoTensorTonks grad_tensor(_grad_disp_x[_qp],_grad_disp_y[_qp],_grad_disp_z[_qp]);
+   RankTwoTensor grad_tensor(_grad_disp_x[_qp],_grad_disp_y[_qp],_grad_disp_z[_qp]);
    _local_strain[_qp] = (grad_tensor + grad_tensor.transpose())/2.0;
 
    // // sum up the misfit strains for the orientation variants
-   RankTwoTensorTonks sum_precipitate_strains;
+   RankTwoTensor sum_precipitate_strains;
    sum_precipitate_strains.zero();
 
    for(unsigned int i=0; i<_n_variants; i++)
@@ -218,5 +218,5 @@ void
 void
 LinearSingleCrystalPrecipitateMaterial::computeQpElasticStress()
 {
-  TensorElasticMaterial::computeQpStress();
+  LinearElasticMaterial::computeQpStress();
 }

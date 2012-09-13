@@ -50,7 +50,6 @@
   [./solid]
     disp_x = disp_x
     disp_y = disp_y
-    Tonks_form = true
   [../]
 []
 
