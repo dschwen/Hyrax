@@ -1,17 +1,17 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 10
-  ny = 10
+  nx = 20
+  ny = 20
   nz = 0
   xmin = 0
-  xmax = 76.8 #0.3*256
+  xmax = 153.6 #0.3*512
   ymin = 0
-  ymax = 76.8
+  ymax = 153.6
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 3 #80 elements, dx=0.96...
+  uniform_refine = 3 # 160 elements, dx=0.96...
 []
 
 [Variables]
@@ -20,35 +20,35 @@
     family = HERMITE
       [./InitialCondition]
       type = SmoothCircleIC
-      int_width = 1.5
+      int_width = 0.9
       invalue = 0.6
       outvalue = 0.1
-      radius = 4.0
-      x1 = 25.0
-      y1 = 25.0
+      radius = 1.8
+      x1 = 76.8
+      y1 = 76.8
     [../]
+  [../]
+
+  [./n2]
+    order = FIRST
+    family = LAGRANGE
   [../]
 
   [./n1]
     order = FIRST
     family = LAGRANGE
-  [../]
-
-  [./n3]
-    order = FIRST
-    family = LAGRANGE
     [./InitialCondition]
       type = SmoothCircleIC
-      int_width = 1.5
+      int_width = 0.9
       invalue = 1.6
       outvalue = 0.0
-      radius = 4.0
-      x1 = 25.0
-      y1 = 25.0
+      radius = 1.8
+      x1 = 76.8
+      y1 = 76.8
     [../]
   [../]
 
-  [./n2]
+  [./n3]
     order = FIRST
     family = LAGRANGE
   [../]
@@ -77,8 +77,8 @@
   [../]
 
 #  [./s13_aux]
-#    order = CONSTANT
-#    family = MONOMIAL
+#    order = FIRST
+#    family = LAGRANGE
 #  [../]
 
   [./s22_aux]
@@ -347,7 +347,6 @@
 #  [../]
 []
 
-
 [BCs]
   [./disp_x_BC]
     type = DirichletBC
@@ -426,24 +425,34 @@
 
 [Executioner]
   type = Transient
-  scheme = 'crank-nicolson'
-  petsc_options = '-snes_mf_operator -ksp_monitor'
+  scheme = 'bdf2'
+#  petsc_options = '-snes_mf_operator -ksp_monitor'
+  petsc_options = '-snes_mf_operator'
 
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'
 
   l_max_its = 30
-  nl_max_its = 10
+  nl_max_its = 100
+  #nl_abs_tol = 1.1e-5
 
   start_time = 0.0
-  num_steps = 20
-  dt = 0.0007
+  num_steps = 1000
+  dt = 0.01
+  abort_on_solve_fail = true
+
+  [./Adaptivity]
+   coarsen_fraction = 0.1
+   refine_fraction = 0.1
+   max_h_level = 4
+  []
 []
 
 [Output]
-  file_base = TM_LSXPM_dt0007
+  file_base = LSXPM_n1_dt01_Dirichlet
   output_initial = true
-  interval = 1
+  interval = 100
   exodus = true
   perf_log = true
 []
+
