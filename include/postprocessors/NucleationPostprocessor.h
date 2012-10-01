@@ -37,7 +37,10 @@ protected:
 
   void changeValues();
 
-  Real minPeriodicDistance(Point p, Point q);
+  // Real minPeriodicDistance(Point p, Point q);
+
+  /// A reference to the coupled variable
+  MooseVariable & _coupled;
 
 private:
 
@@ -72,9 +75,8 @@ private:
   /// The index of the phase orientation generator (we will use a high index that isn't used by the node generators)
   const unsigned int _phase_gen_index;
 
-  std::vector<bool> _periodic_dim;
+  /// A pointer to the upcasted _mesh.  This is necessary for some of the more advanced PBC features.
   GeneratedMesh *_gen_mesh;
-  Point _half_range;
 };
 
 #endif //NUCLEATIONPOSTPROCESSOR_H

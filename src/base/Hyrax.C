@@ -58,6 +58,7 @@
 //Post Processors
 #include "NucleationPostprocessor.h"
 #include "ValuePlusOne.h"
+#include "MaxElementValue.h"
 
 //Actions
 
@@ -108,9 +109,11 @@ namespace Hyrax
     //Executioners
     registerExecutioner(TransientMultiAMR);
 
-    //Post Processors
+    //Postprocessors
     registerPostprocessor(NucleationPostprocessor);
     registerPostprocessor(ValuePlusOne);
+    registerPostprocessor(MaxElementValue);
+
 
     // Actions
   }

@@ -20,7 +20,7 @@ InputParameters validParams<ChangeVariableData>()
 {
   InputParameters params = validParams<GeneralPostprocessor>();
   params.addRequiredParam<std::vector<NonlinearVariableName> >("variables", "The variable(s) we want to change");
-  params.addRequiredParam<std::string>("coupled_aux", "The aux variable that we want to couple in");
+  // params.addRequiredParam<std::string>("coupled_aux", "The aux variable that we want to couple in");
   // We really want to only run this at the end of each timestep, so we'll force that here
   params.set<MooseEnum>("execute_on") = "timestep";
 
@@ -30,8 +30,8 @@ InputParameters validParams<ChangeVariableData>()
 ChangeVariableData::ChangeVariableData(const std::string & name, InputParameters parameters) :
     GeneralPostprocessor(name, parameters),
     _mesh(_subproblem.mesh()),
-    _nl(static_cast<FEProblem &>(_subproblem).getNonlinearSystem()),
-    _coupled(_subproblem.getVariable(0, getParam<std::string>("coupled_aux")))
+    _nl(static_cast<FEProblem &>(_subproblem).getNonlinearSystem())//,
+//    _coupled(_subproblem.getVariable(0, getParam<std::string>("coupled_aux")))
 {
   std::vector<NonlinearVariableName> vars = getParam<std::vector<NonlinearVariableName> >("variables");
   _moose_variable.resize(vars.size());

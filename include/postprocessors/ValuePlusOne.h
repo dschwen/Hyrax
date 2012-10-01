@@ -18,6 +18,9 @@ public:
   virtual Real getValue();
 
 protected:
+  /// A reference to the coupled variable
+  MooseVariable & _coupled;
+
 private:
   Real _foo;
 

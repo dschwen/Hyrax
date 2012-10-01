@@ -9,11 +9,13 @@ template<>
 InputParameters validParams<ValuePlusOne>()
 {
   InputParameters params = validParams<ChangeVariableData>();
+    params.addRequiredParam<std::string>("coupled_aux", "The aux variable that we want to couple in");
   return params;
 }
 
 ValuePlusOne::ValuePlusOne(const std::string & name, InputParameters parameters) :
-    ChangeVariableData(name, parameters)
+    ChangeVariableData(name, parameters),
+    _coupled(_subproblem.getVariable(0, getParam<std::string>("coupled_aux")))
 {
 }
 

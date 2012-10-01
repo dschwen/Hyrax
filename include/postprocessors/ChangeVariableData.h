@@ -51,7 +51,7 @@ protected:
   NonlinearSystem & _nl;
 
   /// A reference to the coupled variable
-  MooseVariable & _coupled;
+  //MooseVariable & _coupled;
 
 private:
 

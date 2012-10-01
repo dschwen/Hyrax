@@ -39,12 +39,14 @@ InputParameters validParams<NucleationPostprocessor>()
   params.addRequiredParam<Real>("dwell_time", "How long nucleation event is");
   params.addRequiredParam<Real>("seed_value", "The nucleus seed order parameter value,");
   params.addParam<Real>("int_width", 0.0, "nucleus interface width");
+  params.addRequiredParam<std::string>("coupled_aux", "The aux variable that we want to couple in");
 
   return params;
 }
 
 NucleationPostprocessor::NucleationPostprocessor(const std::string & name, InputParameters parameters) :
     ChangeVariableData(name, parameters),
+    _coupled(_subproblem.getVariable(0, getParam<std::string>("coupled_aux"))),
     _radius(getParam<Real>("radius")),
     _dwell_time(getParam<Real>("radius")),
     _seed_value(getParam<Real>("seed_value")),
@@ -58,20 +60,8 @@ NucleationPostprocessor::NucleationPostprocessor(const std::string & name, Input
 void
 NucleationPostprocessor::initialize()
 {
-  // Initialize the periodic variable for each of our dimensions to false
-  _periodic_dim.resize(LIBMESH_DIM, false);
-
-  if (_gen_mesh)
-  {
-    for (unsigned int i=0; i<_gen_mesh->dimension(); ++i)
-      // Assumption: We are going to assume that all variables are periodic together
-      _periodic_dim[i] = _gen_mesh->isPeriodic(_nl, _moose_variable[0]->number(), i);
-
-    _half_range = Point(_gen_mesh->dimensionWidth(0)/2.0, _gen_mesh->dimensionWidth(1)/2.0, _gen_mesh->dimensionWidth(2)/2.0);
-  }
-
-  for (unsigned int i=0; i<LIBMESH_DIM; ++i)
-    std::cout << "Periodic in " << i << ": " << _periodic_dim[i] << "\n";
+  // Assumption: We are going to assume that all variables are periodic together
+  _gen_mesh->initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
 
   _counter++;
   _local_start_times.clear();
@@ -181,7 +171,7 @@ NucleationPostprocessor::changeValues()
     Real distance;
     for(unsigned int j(0); j<_nucleation_locations.size(); j++)
     {
-      distance = minPeriodicDistance(*_nucleation_locations[j], *node);
+      distance = _gen_mesh->minPeriodicDistance(*_nucleation_locations[j], *node);
 
       if( _t >= _start_times[j] &&
           _t < _end_times[j] )
@@ -203,23 +193,4 @@ NucleationPostprocessor::changeValues()
       }
     }
   }
-}
-
-Real
-NucleationPostprocessor::minPeriodicDistance(Point p, Point q)
-{
-  for (unsigned int i=0; i<LIBMESH_DIM; ++i)
-  {
-    // check to see if we're closer in real or periodic space in x, y, and z
-    if (_periodic_dim[i])
-    {
-      if (std::pow(p(i) - q(i), 2) > std::pow(_half_range(i), 2))
-      {
-        p(i) = p(i) - _half_range(i);
-        q(i) = q(i) + _half_range(i);
-      }
-    }
-  }
-
-  return (p-q).size();
 }
