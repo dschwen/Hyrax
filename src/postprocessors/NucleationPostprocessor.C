@@ -48,7 +48,7 @@ NucleationPostprocessor::NucleationPostprocessor(const std::string & name, Input
     ChangeVariableData(name, parameters),
     _coupled(_subproblem.getVariable(0, getParam<std::string>("coupled_aux"))),
     _radius(getParam<Real>("radius")),
-    _dwell_time(getParam<Real>("radius")),
+    _dwell_time(getParam<Real>("dwell_time")),
     _seed_value(getParam<Real>("seed_value")),
     _int_width(getParam<Real>("int_width")),
     _counter(0),

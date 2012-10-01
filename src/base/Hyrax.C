@@ -59,6 +59,7 @@
 #include "NucleationPostprocessor.h"
 #include "ValuePlusOne.h"
 #include "MaxElementValue.h"
+#include "OneSeed.h"
 
 //Actions
 
@@ -113,6 +114,7 @@ namespace Hyrax
     registerPostprocessor(NucleationPostprocessor);
     registerPostprocessor(ValuePlusOne);
     registerPostprocessor(MaxElementValue);
+    registerPostprocessor(OneSeed);
 
 
     // Actions
