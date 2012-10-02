@@ -37,7 +37,7 @@ InputParameters validParams<OneSeed>()
 OneSeed::OneSeed(const std::string & name, InputParameters parameters) :
     ChangeVariableData(name, parameters),
     _radius(getParam<Real>("radius")),
-    _dwell_time(getParam<Real>("radius")),
+    _dwell_time(getParam<Real>("dwell_time")),
     _seed_value(getParam<Real>("seed_value")),
     _int_width(getParam<Real>("int_width")),
     _x_position(getParam<Real>("x_position")),

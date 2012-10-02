@@ -1,17 +1,17 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 20
-  ny = 20
+  nx = 10
+  ny = 10
   nz = 0
   xmin = 0
-  xmax = 153.6 #0.3*512
+  xmax = 76.8 #0.3*256
   ymin = 0
-  ymax = 153.6
+  ymax = 76.8
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 3 # 160 elements, dx=0.96...
+  uniform_refine = 3 # 80 elements, dx=0.96...
 []
 
 [Variables]
@@ -40,14 +40,17 @@
     order = FIRST
     family = LAGRANGE
     [./InitialCondition]
-      type = SmoothCircleIC
-      int_width = 0.9
-      invalue = 1.6
-      outvalue = 0.0
-      radius = 1.8
-      x1 = 76.8
-      y1 = 76.8
-    [../]
+#      type = SmoothCircleIC
+#      int_width = 0.9
+#      invalue = 1.6
+#      outvalue = 0.0
+#      radius = 1.8
+#      x1 = 38.4
+#      y1 = 38.4
+      type = RandomIC
+      max_val = 0.1
+      min_val = 0.001
+   [../]
   [../]
 
   [./n3]
@@ -240,6 +243,42 @@
     type = NodalMaxValue
     variable = concentration
   [../]
+
+  [./ElemMaxVal_n1]
+    output = file
+    type = MaxElementValue
+    variable = n1
+  [../]
+
+  [./ElemMaxVal_n2]
+    output = file
+    type = MaxElementValue
+    variable = n2
+  [../]
+
+  [./ElemMaxVal_n3]
+    output = file
+    type = MaxElementValue
+    variable = n3
+  [../]
+
+  [./ElemMaxVal_c]
+    output = file
+    type = MaxElementValue
+    variable = concentration
+  [../]
+
+  [./OneSeedn1]
+    output = file
+    type = OneSeed
+    variables = 'n1'
+    radius = 1.8
+    int_width = 0.9
+    dwell_time = 1.0
+    seed_value = 1.6
+    x_position = 76.8
+    y_position = 76.8
+  [../]
 []
 
 [Executioner]
@@ -247,7 +286,6 @@
   scheme = 'bdf2'
 #  petsc_options = '-snes_mf_operator -ksp_monitor'
   petsc_options = '-snes_mf_operator'
-
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'
 
@@ -260,18 +298,18 @@
   dt = 1.0e-3
   abort_on_solve_fail = true
 
-  [./Adaptivity]
-   coarsen_fraction = 0.05
-   refine_fraction = 0.1
-   max_h_level = 3
-  []
+#  [./Adaptivity]
+#   coarsen_fraction = 0.05
+#   refine_fraction = 0.1
+#   max_h_level = 3
+#  []
 []
 
 [Output]
-  file_base = LSXPM_n1_OPnuc_dt7em4
+  file_base = LSXPM_n1_OPnuc_dt7em4_OneSeedPP
   output_initial = true
   interval = 100
   exodus = true
   perf_log = true
+  postprocessor_csv = true
 []
-
