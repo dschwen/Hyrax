@@ -24,8 +24,8 @@
 #      invalue = 0.6
 #      outvalue = 0.1
 #      radius = 1.8
-#      x1 = 76.8
-#      y1 = 76.8
+#      x1 = 38.4
+#      y1 = 38.4
       type = ConstantIC
       value = 0.05
     [../]
@@ -48,8 +48,8 @@
 #      x1 = 38.4
 #      y1 = 38.4
       type = RandomIC
-      max_val = 0.1
-      min_val = 0.001
+      max = 0.1
+      min = 0.001
    [../]
   [../]
 
@@ -276,8 +276,8 @@
     int_width = 0.9
     dwell_time = 1.0
     seed_value = 1.6
-    x_position = 76.8
-    y_position = 76.8
+    x_position = 38.4
+    y_position = 38.4
   [../]
 []
 
@@ -294,7 +294,7 @@
   #nl_abs_tol = 1.1e-5
 
   start_time = 0.0
-  num_steps = 5000 
+  num_steps = 10 
   dt = 1.0e-3
   abort_on_solve_fail = true
 
@@ -306,9 +306,9 @@
 []
 
 [Output]
-  file_base = LSXPM_n1_OPnuc_dt7em4_OneSeedPP
+  file_base = LSXPM_n1_OPnuc_dt1em3_OneSeedPP
   output_initial = true
-  interval = 100
+  interval = 1
   exodus = true
   perf_log = true
   postprocessor_csv = true

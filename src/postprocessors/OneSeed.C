@@ -18,6 +18,8 @@
 
 #include <cmath>
 
+#include <ostream>
+
 
 template<>
 InputParameters validParams<OneSeed>()
@@ -47,6 +49,7 @@ OneSeed::OneSeed(const std::string & name, InputParameters parameters) :
     _counter(0),
     _gen_mesh(dynamic_cast<GeneratedMesh *>(&_mesh))
 {
+  std::cout<<"in constructor"<<std::endl;
 }
 
 void
@@ -88,7 +91,7 @@ OneSeed::modifySolutionVector()
         _moose_variable[0]->setNodalValue(int_value);
         _counter++;
       }
-
+      _moose_variable[0]->insert(_nl.solution());
     }
   }
 }
