@@ -22,7 +22,7 @@ template<>
 InputParameters validParams<PolySpecifiedSmoothCircleIC>()
 {
   InputParameters params = validParams<InitialCondition>();
-  
+
   params.addRequiredParam<int>("n_seeds","number of initial seeds to set up for variable");
   params.addRequiredParam<std::vector<Real> >("x_positions","The x-coordinate for each circle center");
   params.addRequiredParam<std::vector<Real> >("y_positions","The y-coordinate for each circle center");
@@ -53,14 +53,14 @@ PolySpecifiedSmoothCircleIC::PolySpecifiedSmoothCircleIC(const std::string & nam
   x_size = _x_positions.size();
   y_size = _y_positions.size();
   z_size = _z_positions.size();
-  
+
   // check to make sure the input file is set up correctly
   if((_n_seeds != x_size)||(_n_seeds != y_size)||(_n_seeds != z_size))
     mooseError("Please match the number of seeds to the size of the position vectors.");
 
   //resize the vector of Points
   _centers.resize(_n_seeds);
-  
+
   // fill in the vector of center points
   for(int i=0; i<_n_seeds; i++)
   {
@@ -75,7 +75,7 @@ PolySpecifiedSmoothCircleIC::value(const Point & p)
 {
   Real return_val = _outvalue;
   Real test_val = 0.0;
-  
+
   for (int j=0; j<_n_seeds; j++)
   {
     test_val = shapeValue(p, j);
@@ -84,7 +84,7 @@ PolySpecifiedSmoothCircleIC::value(const Point & p)
     if (test_val > return_val)
       return_val = test_val;
   }
-  
+
   return return_val;
 }
 
@@ -94,13 +94,13 @@ PolySpecifiedSmoothCircleIC::shapeValue(const Point &p, const int j)
 {
   Real value = 0.0;
   Real rad = 0.0;
-  
+
   // calculate if within the radius of the specified circle at this point
-  for(unsigned int i=0; i<LIBMESH_DIM; i++) 
+  for(unsigned int i=0; i<LIBMESH_DIM; i++)
     rad += (p(i)-_centers[j](i)) * (p(i)-_centers[j](i));
-  
+
   rad = sqrt(rad);
-  
+
   // set the value depending on if in seed, in interface, or outside of seed
   if (rad <= _radius - _int_width/2.0)
     value = _invalue;
@@ -108,7 +108,8 @@ PolySpecifiedSmoothCircleIC::shapeValue(const Point &p, const int j)
   {
     // no division by zero because we are in the finite interface width case
     Real int_pos = (rad - _radius + _int_width/2.0)/_int_width;
-    value = _outvalue + (_invalue-_outvalue)*(1+cos(int_pos*libMesh::pi))/2.0;
+    value = _outvalue + (_invalue-_outvalue)*(1.0 - std::cos(-int_pos+libMesh::pi/2.0));
+//    _seed_value*(1.0 - std::cos(-interface_position + libMesh::pi/2.0));
   }
   else
     value = _outvalue;
@@ -118,19 +119,19 @@ PolySpecifiedSmoothCircleIC::shapeValue(const Point &p, const int j)
 
 
 // from SmoothCircleIC - don't know if I need this or not.
-// 
+//
 // RealGradient
 // SmoothCircleIC::gradient(const Point & p)
 // {
 //   Real DvalueDr = 0.0;
-  
+
 //   Real rad = 0.0;
-  
-//   for(unsigned int i=0; i<LIBMESH_DIM; i++) 
+
+//   for(unsigned int i=0; i<LIBMESH_DIM; i++)
 //     rad += (p(i)-_center(i)) * (p(i)-_center(i));
 
 //   rad = sqrt(rad);
-  
+
 //   if (rad < _radius + _int_width/2.0 && rad > _radius - _int_width/2.0)
 //   {
 //     Real int_pos = (rad - _radius + _int_width/2.0)/_int_width;
@@ -144,5 +145,5 @@ PolySpecifiedSmoothCircleIC::shapeValue(const Point &p, const int j)
 //                     (p(2) - _center(2))*DvalueDr/rad);
 //   else
 //     return Gradient(0.0,0.0,0.0);
-  
+
 // }

@@ -26,6 +26,10 @@ MaxElementValue::MaxElementValue(const std::string & name, InputParameters param
 Real
 MaxElementValue::getValue()
 {
-  gatherMax(_integral_value);
-  return _integral_value;
+  // was returning same value as ElementIntegral.  Going to scrap this
+  // PP for the moment.
+
+  //gatherMax(_integral_value);
+  //return _integral_value;
+  return 0.0;
 }

@@ -46,8 +46,11 @@ private:
   Real _y_position;
   Real _z_position;
 
+  bool _restart;
+  Real _restart_time;
+
   Node _location;
-  int _counter;
+  //int _counter;
 
   GeneratedMesh *_gen_mesh;
 
