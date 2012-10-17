@@ -31,17 +31,22 @@ public:
 protected:
   /**
    * computeValue()
-   * @return returns the nucleation rate (element average value), j_star.  
-   * j_star = Kn1 * exp(-1*Kn2 / supersaturation) 
+   * @return returns the nucleation rate (element average value), j_star.
+   * Handles adaptivity and different mesh dimensions.
+   * j_star = Kn1 * exp(-1*Kn2 / supersaturation)
    */
 
   virtual Real computeValue();
-  
+
 private:
 
   VariableValue & _coupled_supersaturation; ///< concentration supersaturation
-  Real _Kn1;  				    ///< First nucleation rate value
+  //Real _Kn1;  				    ///< First nucleation rate value
   Real _Kn2;				    ///< Second nucleation rate value
+  Real _Z;                                  // Zeldovich non-equilibrium factor
+  //Real _N;                                  // # of atoms in phase field cell
+  Real _beta_star;                          // 1/characteristic nucleation time
+  Real _linear_density;                     // linear atomic density of material
 
 };
 

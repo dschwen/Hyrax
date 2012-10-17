@@ -193,8 +193,11 @@ n
     type = AuxNucleationRate
     variable = nodal_NucleationRate
     coupled_aux_var = nodal_Supersaturation
-    Kn1 = 0.8
+    #Kn1 = 0.8
     Kn2 = 0.001
+    Z = 0.1
+    Beta_star = 100
+    linear_density = 0.113137085
     execute_on = timestep
   [../]
 

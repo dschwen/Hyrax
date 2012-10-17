@@ -51,7 +51,7 @@ AuxNucleationProbability::computeValue()
  // this negative probability will be ignored in the postprocessor
   for(int i=0; i<_n_OP_vars; i++)
   {
-    if((*_coupled_OP[i])[_qp] > 0.5)
+    if((*_coupled_OP[i])[_qp] > 0.1)
       return -1.0;
   }
 
