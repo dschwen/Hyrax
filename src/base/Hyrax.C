@@ -27,6 +27,8 @@
 #include "ValueNucleation.h"
 #include "ForcingFunctionNucleation.h"
 #include "TimeDerivativeNucleation.h"
+#include "CHBulkSimmons.h"
+#include "ACBulkSimmons.h"
 
 //Auxiliary Kernels
 #include "AuxNucleation.h"
@@ -37,11 +39,11 @@
 #include "ReporterAux.h"
 
 //Dirac Kernels
-#include "DiracNucleation.h"
-#include "DiracForcedAMR.h"
+//#include "DiracNucleation.h"
+//#include "DiracForcedAMR.h"
 
 //Boundary Conditions
-#include "StressBC.h"
+//#include "StressBC.h"
 
 //Materials
 #include "PFMobilityLandau.h"
@@ -83,6 +85,8 @@ namespace Hyrax
     registerKernel(ValueNucleation);
     registerKernel(ForcingFunctionNucleation);
     registerKernel(TimeDerivativeNucleation);
+    registerKernel(ACBulkSimmons);
+    registerKernel(CHBulkSimmons);
 
     //Auxiliary Kernels
     registerAux(AuxNucleation);
@@ -93,11 +97,11 @@ namespace Hyrax
     registerAux(ReporterAux);
 
     //Dirac Kernels
-    registerDiracKernel(DiracNucleation);
-    registerDiracKernel(DiracForcedAMR);
+    // registerDiracKernel(DiracNucleation);
+    //registerDiracKernel(DiracForcedAMR);
 
     //Boundary Conditions
-    registerBoundaryCondition(StressBC);
+    //registerBoundaryCondition(StressBC);
 
     //Materials
     registerMaterial(PFMobilityLandau);

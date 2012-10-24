@@ -9,6 +9,7 @@
 #include "AuxNucleationRate.h"
 
 #include <cmath>
+#include <ostream>
 
 template<>
 InputParameters validParams<AuxNucleationRate>()
@@ -47,12 +48,8 @@ AuxNucleationRate::computeValue()
   Real kn1;
 
   // handling the dimension of the problem here and making sure we get the correct
-  // (linear, areal, or volume) density
-  if(_dim == 1)
-  {
-    kn1 = _Z*_beta_star*_linear_density;
-  }
-  else if (_dim == 2)
+  // (areal or volume) density
+  if (_dim == 2)
   {
     kn1 = _Z*_beta_star*pow(_linear_density, 2);
   }
@@ -61,7 +58,10 @@ AuxNucleationRate::computeValue()
     kn1 = _Z*_beta_star*pow(_linear_density, 3);
   }
   else
-    mooseError("honky, your problem dimesion is not right (AuxNucleationRate");
+    mooseError("honky, your problem dimesion must be 2 or 3 (AuxNucleationRate");
+
+  // std::cout<<"current elem volume = "<<_current_elem_volume<<std::endl;
+  //std::cout<<"current elem pointer = "<<_current_elem<<std::endl;
 
   // correct the density to the actual element volume to get # of atoms
   kn1 *= _current_elem_volume;
@@ -69,3 +69,4 @@ AuxNucleationRate::computeValue()
   //return _Kn1*exp(-1.0*_Kn2/_coupled_supersaturation[_qp]);
   return kn1*exp(-1.0*_Kn2/_coupled_supersaturation[_qp]);
 }
+

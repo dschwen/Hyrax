@@ -15,6 +15,8 @@
 #include "NonlinearSystem.h"
 #include "GeneratedMesh.h"
 
+#include <ostream>
+
 /**
  * This postprocessor is designed to take the nodal aux variable for
  * nucleation probability, calculate whether nucleation occurs or not at
@@ -114,6 +116,8 @@ NucleationPostprocessor::searchForNucleationEvents()
 
     // Pull out the value of the nucleation probability at this node
     Real probability = _coupled.getNodalValue(*node);
+
+    std::cout<<"Probability = "<<probability<<std::endl;
 
     // Generate a random number based on the node id and timestep
     unsigned int node_id = node->id();

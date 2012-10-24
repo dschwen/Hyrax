@@ -1,3 +1,8 @@
+// THIS AUX KERNEL IS DEFUNCT AND ITS FUNCTIONALITY IS NOW IN THE
+// NUCLEATIONPOSTPROCESSOR POSTPROCESSOR.
+
+
+
 /*************************************************************************
 *
 *  Welcome to HYRAX!
