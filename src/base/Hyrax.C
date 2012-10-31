@@ -19,23 +19,23 @@
 #include "ACTransformElasticDF.h"
 #include "CHBulkPolyCoupled.h"
 #include "ACBulkPolyCoupled.h"
-#include "ACNucleus.h"
-#include "ACNucleusCNG.h"
-#include "ACInterfaceNucleation.h"
-#include "ACBulkNucleation.h"
+//#include "ACNucleus.h"
+//#include "ACNucleusCNG.h"
+//#include "ACInterfaceNucleation.h"
+//#include "ACBulkNucleation.h"
 #include "Value.h"
-#include "ValueNucleation.h"
-#include "ForcingFunctionNucleation.h"
-#include "TimeDerivativeNucleation.h"
+//#include "ValueNucleation.h"
+//#include "ForcingFunctionNucleation.h"
+//#include "TimeDerivativeNucleation.h"
 #include "CHBulkSimmons.h"
 #include "ACBulkSimmons.h"
 
 //Auxiliary Kernels
-#include "AuxNucleation.h"
+//#include "AuxNucleation.h"
 #include "AuxNucleationProbability.h"
 #include "AuxNucleationRate.h"
 #include "AuxSupersaturation.h"
-#include "AuxTestFlip.h"
+//#include "AuxTestFlip.h"
 #include "ReporterAux.h"
 
 //Dirac Kernels
@@ -48,7 +48,7 @@
 //Materials
 #include "PFMobilityLandau.h"
 #include "LinearSingleCrystalPrecipitateMaterial.h"
-#include "MaterialCNG.h"
+//#include "MaterialCNG.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -56,12 +56,12 @@
 //Dampers
 
 //Executioners
-#include "TransientMultiAMR.h"
+//#include "TransientMultiAMR.h"
 
 //Post Processors
 #include "NucleationPostprocessor.h"
-#include "ValuePlusOne.h"
-#include "MaxElementValue.h"
+//#include "ValuePlusOne.h"
+//#include "MaxElementValue.h"
 #include "OneSeed.h"
 
 //Actions
@@ -77,23 +77,23 @@ namespace Hyrax
     registerKernel(ACTransformElasticDF);
     registerKernel(ACBulkPolyCoupled);
     registerKernel(CHBulkPolyCoupled);
-    registerKernel(ACNucleus);
-    registerKernel(ACNucleusCNG);
-    registerKernel(ACInterfaceNucleation);
-    registerKernel(ACBulkNucleation);
+    //registerKernel(ACNucleus);
+    //registerKernel(ACNucleusCNG);
+    //registerKernel(ACInterfaceNucleation);
+    //registerKernel(ACBulkNucleation);
     registerKernel(Value);
-    registerKernel(ValueNucleation);
-    registerKernel(ForcingFunctionNucleation);
-    registerKernel(TimeDerivativeNucleation);
+    //registerKernel(ValueNucleation);
+    //registerKernel(ForcingFunctionNucleation);
+    //registerKernel(TimeDerivativeNucleation);
     registerKernel(ACBulkSimmons);
     registerKernel(CHBulkSimmons);
 
     //Auxiliary Kernels
-    registerAux(AuxNucleation);
+    //registerAux(AuxNucleation);
     registerAux(AuxSupersaturation);
     registerAux(AuxNucleationRate);
     registerAux(AuxNucleationProbability);
-    registerAux(AuxTestFlip);
+    //registerAux(AuxTestFlip);
     registerAux(ReporterAux);
 
     //Dirac Kernels
@@ -106,7 +106,7 @@ namespace Hyrax
     //Materials
     registerMaterial(PFMobilityLandau);
     registerMaterial(LinearSingleCrystalPrecipitateMaterial);
-    registerMaterial(MaterialCNG);
+    //registerMaterial(MaterialCNG);
 
     //Initial Conditions
     registerInitialCondition(PolySpecifiedSmoothCircleIC);
@@ -114,12 +114,12 @@ namespace Hyrax
     //Dampers
 
     //Executioners
-    registerExecutioner(TransientMultiAMR);
+    //registerExecutioner(TransientMultiAMR);
 
     //Postprocessors
     registerPostprocessor(NucleationPostprocessor);
-    registerPostprocessor(ValuePlusOne);
-    registerPostprocessor(MaxElementValue);
+    //registerPostprocessor(ValuePlusOne);
+    //registerPostprocessor(MaxElementValue);
     registerPostprocessor(OneSeed);
 
 
