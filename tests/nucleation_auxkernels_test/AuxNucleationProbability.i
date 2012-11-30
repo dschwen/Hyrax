@@ -97,6 +97,8 @@
     Z = 0.1
     Beta_star = 100
     linear_density = 5
+    OP_var_names = 'n1'
+    n_OP_vars = 1
     execute_on = timestep
   [../]
 

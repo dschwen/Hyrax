@@ -24,6 +24,9 @@ InputParameters validParams<AuxNucleationRate>()
   params.addRequiredParam<Real>("Beta_star", "1/characteristic nucleation time");
   params.addRequiredParam<Real>("linear_density", "linear atomic density of matrix");
 
+  params.addRequiredParam<int>("n_OP_vars", "# of coupled OP variables");
+  params.addRequiredCoupledVar("OP_var_names", "Array of coupled OP variable names");
+
   return params;
 }
 
@@ -35,8 +38,16 @@ AuxNucleationRate::AuxNucleationRate(const std::string & name, InputParameters p
     _Z(getParam<Real>("Z")),
     //_N(getParam<Real>("N")),
     _beta_star(getParam<Real>("Beta_star")),
-    _linear_density(getParam<Real>("linear_density"))
+    _linear_density(getParam<Real>("linear_density")),
+    _n_OP_vars(getParam<int>("n_OP_vars"))
 {
+  if(_n_OP_vars != coupledComponents("OP_var_names"))
+    mooseError("Please match the number of orientation variants to coupled OPs (AverageNucleationRate).");
+
+  _coupled_OP_vars.resize(_n_OP_vars);
+
+  for(unsigned int i=0; i< _n_OP_vars; i++)
+    _coupled_OP_vars[i] = &coupledValue("OP_var_names", i);
 }
 
 Real
@@ -65,6 +76,13 @@ AuxNucleationRate::computeValue()
 
   // correct the density to the actual element volume to get # of atoms
   kn1 *= _current_elem_volume;
+
+  // check to see if we're in a particle; if so, return 0 for J*
+  for(int i=0; i<_n_OP_vars; i++)
+  {
+    if((*_coupled_OP_vars[i])[_qp] > 0.1)
+      return 0.0;
+  }
 
   //return _Kn1*exp(-1.0*_Kn2/_coupled_supersaturation[_qp]);
   return kn1*exp(-1.0*_Kn2/_coupled_supersaturation[_qp]);

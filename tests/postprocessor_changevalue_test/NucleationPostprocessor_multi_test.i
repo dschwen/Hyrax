@@ -198,6 +198,8 @@ n
     Z = 0.1
     Beta_star = 100
     linear_density = 0.113137085
+    OP_var_names = 'n1 n2 n3'
+    n_OP_vars = 3
     execute_on = timestep
   [../]
 

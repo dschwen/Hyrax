@@ -48,6 +48,9 @@ private:
   Real _beta_star;                          // 1/characteristic nucleation time
   Real _linear_density;                     // linear atomic density of material
 
+  unsigned int _n_OP_vars;
+  std::vector<VariableValue *> _coupled_OP_vars;
+
 };
 
 #endif //AUXNUCLEATIONRATE_H

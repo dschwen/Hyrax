@@ -27,6 +27,11 @@
       value = 1.0
     [../]
   [../]
+
+  [./n1]
+    order = FIRST
+    family = LAGRANGE
+  [../]
  []
 
 [AuxVariables]
@@ -44,6 +49,11 @@
   [./diffusion]
     type = Diffusion
     variable = concentration
+  [../]
+
+  [./diff2]
+    type = Diffusion
+    variable = n1
   [../]
 []
 
@@ -65,6 +75,8 @@
     Z = 0.1
     Beta_star = 100
     linear_density = 5
+    n_OP_vars = 1
+    OP_var_names = 'n1'
     execute_on = timestep
   [../]
 []
