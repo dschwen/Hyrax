@@ -74,9 +74,6 @@ private:
 
   /// The index of the phase orientation generator (we will use a high index that isn't used by the node generators)
   const unsigned int _phase_gen_index;
-
-  /// A pointer to the upcasted _mesh.  This is necessary for some of the more advanced PBC features.
-  GeneratedMesh *_gen_mesh;
 };
 
 #endif //NUCLEATIONPOSTPROCESSOR_H

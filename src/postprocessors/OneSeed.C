@@ -49,9 +49,7 @@ OneSeed::OneSeed(const std::string & name, InputParameters parameters) :
     _z_position(getParam<Real>("z_position")),
     _restart(getParam<bool>("restart")),
     _restart_time(getParam<Real>("restart_time")),
-    _location(_x_position, _y_position, _z_position),
-    //_counter(0),
-    _gen_mesh(dynamic_cast<GeneratedMesh *>(&_mesh))
+    _location(_x_position, _y_position, _z_position)
 {
   if(_dwell_time >= _restart_time && _restart)
     mooseError("please set dwell_time < restart_time (OneSeed Postprocessor)");
@@ -60,9 +58,8 @@ OneSeed::OneSeed(const std::string & name, InputParameters parameters) :
 void
 OneSeed::initialize()
 {
-  //_counter = 0;
-   // Assumption: We are going to assume that all variables are periodic together
-  _gen_mesh->initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
+  // Assumption: We are going to assume that all variables are periodic together
+  _mesh.initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
 }
 
 void
@@ -85,7 +82,7 @@ OneSeed::modifySolutionVector()
       // check the node against the nucleation point and see if it lives within distance the nucleus
       Real distance;
 
-      distance = _gen_mesh->minPeriodicDistance(_location, *node);
+      distance = _mesh.minPeriodicDistance(_location, *node);
       //if( _t < _dwell_time)
       //{
       if(_t >= _restart_time && _restart)

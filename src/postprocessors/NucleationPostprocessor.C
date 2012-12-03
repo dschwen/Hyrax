@@ -54,8 +54,7 @@ NucleationPostprocessor::NucleationPostprocessor(const std::string & name, Input
     _seed_value(getParam<Real>("seed_value")),
     _int_width(getParam<Real>("int_width")),
     _counter(0),
-    _phase_gen_index(std::numeric_limits<unsigned int>::max()),
-    _gen_mesh(dynamic_cast<GeneratedMesh *>(&_mesh))
+    _phase_gen_index(std::numeric_limits<unsigned int>::max())
 {
 }
 
@@ -63,7 +62,7 @@ void
 NucleationPostprocessor::initialize()
 {
   // Assumption: We are going to assume that all variables are periodic together
-  _gen_mesh->initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
+  _mesh.initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
 
   _counter++;
   _local_start_times.clear();
@@ -175,7 +174,7 @@ NucleationPostprocessor::changeValues()
     Real distance;
     for(unsigned int j(0); j<_nucleation_locations.size(); j++)
     {
-      distance = _gen_mesh->minPeriodicDistance(*_nucleation_locations[j], *node);
+      distance = _mesh.minPeriodicDistance(*_nucleation_locations[j], *node);
 
       if( _t >= _start_times[j] &&
           _t < _end_times[j] )

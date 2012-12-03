@@ -50,10 +50,6 @@ private:
   Real _restart_time;
 
   Node _location;
-  //int _counter;
-
-  GeneratedMesh *_gen_mesh;
-
 
 };
 
