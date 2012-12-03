@@ -61,6 +61,8 @@ void
 OneSeed::initialize()
 {
   //_counter = 0;
+   // Assumption: We are going to assume that all variables are periodic together
+  _gen_mesh->initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
 }
 
 void
