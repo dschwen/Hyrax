@@ -39,7 +39,7 @@ AuxNucleationProbability::AuxNucleationProbability(const std::string & name, Inp
 
   _coupled_OP.resize(_n_OP_vars);
 
-  for(int i=0; i<_n_OP_vars; i++)
+  for(unsigned int i=0; i<_n_OP_vars; i++)
     _coupled_OP[i] = &coupledValue("coupled_variables", i);
 }
 
@@ -49,7 +49,7 @@ AuxNucleationProbability::computeValue()
  //  p_nm = 1 - exp(-1*j_star*dt)
  // if we're already sitting on a particle, make probability = -1.0
  // this negative probability will be ignored in the postprocessor
-  for(int i=0; i<_n_OP_vars; i++)
+  for(unsigned int i=0; i<_n_OP_vars; i++)
   {
     if((*_coupled_OP[i])[_qp] > 0.1)
       return -1.0;

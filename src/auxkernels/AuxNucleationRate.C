@@ -65,9 +65,7 @@ AuxNucleationRate::computeValue()
     kn1 = _Z*_beta_star*pow(_linear_density, 2);
   }
   else if (_dim == 3)
-  {
     kn1 = _Z*_beta_star*pow(_linear_density, 3);
-  }
   else
     mooseError("honky, your problem dimesion must be 2 or 3 (AuxNucleationRate");
 
@@ -78,7 +76,7 @@ AuxNucleationRate::computeValue()
   kn1 *= _current_elem_volume;
 
   // check to see if we're in a particle; if so, return 0 for J*
-  for(int i=0; i<_n_OP_vars; i++)
+  for(unsigned int i=0; i<_n_OP_vars; i++)
   {
     if((*_coupled_OP_vars[i])[_qp] > 0.1)
       return 0.0;

@@ -57,6 +57,7 @@
 
 //Executioners
 //#include "TransientMultiAMR.h"
+#include "MeshSolutionModify.h"
 
 //Post Processors
 #include "NucleationPostprocessor.h"
@@ -65,6 +66,13 @@
 #include "OneSeed.h"
 
 //Actions
+
+//UserObjects
+#include "NucleationLocationUserObject.h"
+#include "NucleusIntroductionSolutionModifier.h"
+
+//Markers
+#include "NucleationMarker.h"
 
 
 namespace Hyrax
@@ -115,6 +123,7 @@ namespace Hyrax
 
     //Executioners
     //registerExecutioner(TransientMultiAMR);
+    registerExecutioner(MeshSolutionModify);
 
     //Postprocessors
     registerPostprocessor(NucleationPostprocessor);
@@ -124,5 +133,12 @@ namespace Hyrax
 
 
     // Actions
+
+    // UserObjects
+    registerUserObject(NucleationLocationUserObject);
+    registerUserObject(NucleusIntroductionSolutionModifier);
+
+    // Markers
+    registerMarker(NucleationMarker);
   }
 }
