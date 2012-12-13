@@ -102,18 +102,22 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
 }
 
 void
- LinearSingleCrystalPrecipitateMaterial::computeQpProperties()
+ LinearSingleCrystalPrecipitateMaterial::computeProperties()
  {
-   // resize all the material properties vectors.  Don't forget this.
-   //_Cijkl_precipitates_rotated_MP[_qp].resize(_n_variants);
-   _eigenstrains_rotated_MP[_qp].resize(_n_variants);
-   //_d_elasticity_tensor[_qp].resize(_n_variants);
-   _d_eigenstrains_rotated_MP[_qp].resize(_n_variants);
-
-   computeQpElasticityTensor();
-   computeQpEigenstrain();
-   computeQpElasticStrain();
-   computeQpElasticStress();
+  for (_qp = 0; _qp < _qrule->n_points(); ++_qp)
+  {
+    // resize all the material properties vectors.  Don't forget this.
+    //_Cijkl_precipitates_rotated_MP[_qp].resize(_n_variants);
+    _eigenstrains_rotated_MP[_qp].resize(_n_variants);
+    //_d_elasticity_tensor[_qp].resize(_n_variants);
+    _d_eigenstrains_rotated_MP[_qp].resize(_n_variants);
+    
+    computeQpElasticityTensor();
+    computeQpEigenstrain();
+    computeQpElasticStrain();
+    computeQpElasticStress();
+  }
+  
  }
 
  void

@@ -34,7 +34,7 @@ public:
   LinearSingleCrystalPrecipitateMaterial(const std:: string & name, InputParameters parameters);
 
 protected:
-  virtual void computeQpProperties();
+  virtual void computeProperties();
 
   /**
    * Computes the overall material elasticity tensor for all space.
