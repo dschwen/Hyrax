@@ -41,10 +41,10 @@ ChangeVariableData::ChangeVariableData(const std::string & name, InputParameters
     _moose_variable[i] = &_subproblem.getVariable(0, vars[i]);
 }
 
-//void
-//ChangeVariableData::initialize()
-//{
-//}
+void
+ChangeVariableData::initialize()
+{
+}
 
 void
 ChangeVariableData::execute()
@@ -61,8 +61,8 @@ ChangeVariableData::getValue()
   return 0.0;
 }
 
-//void
-//ChangeVariableData::threadJoin(const UserObject & y)
-//{
-//}
+void
+ChangeVariableData::threadJoin(const UserObject & y)
+{
+}
 

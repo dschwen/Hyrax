@@ -27,11 +27,11 @@ class ChangeVariableData : public GeneralPostprocessor
 public:
   ChangeVariableData(const std::string & name, InputParameters parameters);
 
-  //virtual void initialize();
+  virtual void initialize();
   virtual void execute();
 
   virtual Real getValue();
-  //virtual void threadJoin(const UserObject & y);
+  virtual void threadJoin(const UserObject & y);
 
   /**
    * Modifies the solution vector of the system; be careful. If you want
