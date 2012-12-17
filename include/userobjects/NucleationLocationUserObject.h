@@ -31,13 +31,16 @@ public:
   virtual void execute();
   virtual void destroy() {}
   virtual void finalize();
-  virtual void threadJoin(const UserObject &a) {}
+  virtual void threadJoin(const UserObject &a);
 
   bool elementWasHit(const Elem * elem) const;
 
   const std::vector<Nucleus> & getNuclei() const { return _nuclei; }
 
 protected:
+  void pack(std::vector<Real> &) const;
+  void unpack(const std::vector<Real> &);
+
 private:
 
   MooseMesh & _mesh;
@@ -59,6 +62,9 @@ private:
 
   // The Moose stateful random number generator
   MooseRandom _mrand;
+
+  const unsigned int _stride;  //this is the stride length for packing and unpacking nucleus data
+  std::vector<Real> _packed_data;
 
 };
 

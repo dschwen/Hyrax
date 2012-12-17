@@ -26,6 +26,13 @@ public:
    */
   Nucleus();
 
+  /**
+   * Copy constructor
+   */
+  Nucleus(const Nucleus &a);
+
+  Nucleus & operator= (const Nucleus &a);
+
   ~Nucleus() {}
 
   Point getLocation() const;
@@ -44,9 +51,9 @@ public:
 
   void setOrientation(int a);
 
-  protected:
+protected:
 
-  private:
+private:
 
   Point _location; //holds the central location of the nucleus
   Real _start_time; //when this nucleus came into existence

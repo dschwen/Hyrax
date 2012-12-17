@@ -18,7 +18,7 @@ InputParameters validParams<NucleusIntroductionSolutionModifier>()
   InputParameters params = validParams<GeneralUserObject>();
   params.addRequiredParam<UserObjectName>("nucleation_userobject", "The name of the UserObject to use for nucleation event locations");
   params.addRequiredParam<std::vector<VariableName> >("variables", "The name of the variable(s) to be modified");
-  params.addRequiredCoupledVar("OP_var_names", "array of coupled OP variable names");
+  //arams.addRequiredCoupledVar("OP_var_names", "array of coupled OP variable names");
   params.addRequiredParam<int>("num_vars", "The # of variables to modify");
   params.addRequiredParam<Real>("seed_value", "The nucleus order parameter value");
   params.addRequiredParam<Real>("radius", "nucleus radius");

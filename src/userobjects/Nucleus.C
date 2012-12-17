@@ -21,6 +21,22 @@ Nucleus::Nucleus()
   _orientation = 0;
 }
 
+Nucleus::Nucleus(const Nucleus &a)
+{
+  *this = a;
+}
+
+Nucleus &
+Nucleus::operator= (const Nucleus &a)
+{
+  _location = a._location;
+  _start_time = a._start_time;
+  _end_time = a._end_time;
+  _orientation = a._orientation;
+
+  return *this;
+}
+
 Point
 Nucleus::getLocation() const
 {
@@ -68,7 +84,6 @@ Nucleus::setOrientation(int a)
 {
   _orientation = a;
 }
-
 
 
 
