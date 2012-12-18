@@ -52,8 +52,8 @@ AuxNucleationProbability::computeValue()
   for(unsigned int i=0; i<_n_OP_vars; i++)
   {
     if((*_coupled_OP[i])[_qp] > 0.1)
-      return -1.0;
-      // return 0.0;
+      //  return -1.0;
+       return 0.0;
   }
 
   return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt);

@@ -38,8 +38,8 @@ public:
   const std::vector<Nucleus> & getNuclei() const { return _nuclei; }
 
 protected:
-  void pack(std::vector<Real> &) const;
-  void unpack(const std::vector<Real> &);
+//  void pack(std::vector<Real> &) const;
+//  void unpack(const std::vector<Real> &);
 
 private:
 
@@ -63,9 +63,9 @@ private:
   // The Moose stateful random number generator
   MooseRandom _mrand;
 
-  const unsigned int _stride;  //this is the stride length for packing and unpacking nucleus data
-  std::vector<Real> _packed_data;
+  //  const unsigned int _stride;  //this is the stride length for packing and unpacking nucleus data
+   std::vector<Real> _packed_data;
 
-};
+ };
 
 #endif //NUCLEATIONLOCATIONUSEROBJECT_H

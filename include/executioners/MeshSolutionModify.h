@@ -32,6 +32,7 @@ public:
 
 protected:
   unsigned int _adapt_cycles;
+  unsigned int _max_h_level;
 };
 
 #endif //MESHSOLUTIONMODIFY_H

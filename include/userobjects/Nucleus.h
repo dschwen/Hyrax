@@ -51,6 +51,16 @@ public:
 
   void setOrientation(int a);
 
+  static void pack(const std::vector<Nucleus> &, std::vector<Real> &);
+  static void unpack(const std::vector<Real> &, std::vector<Nucleus> &);
+
+/**
+ * the size of the Nucleus object for packing and unpacking (3 for location, 1 each for
+ * start time, end time, orientation
+ */
+static const unsigned int stride() { return _stride; }
+
+
 protected:
 
 private:
@@ -59,6 +69,7 @@ private:
   Real _start_time; //when this nucleus came into existence
   Real _end_time; // when the nucleation event ends - NOT necessarily the lifetime of the nucleus
   int _orientation; // the orientation of the particle
+ static const unsigned int _stride = 6;
 };
 
 #endif //NUCLEUS_H

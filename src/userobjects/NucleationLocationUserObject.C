@@ -40,8 +40,8 @@ NucleationLocationUserObject::NucleationLocationUserObject(const std::string & n
     _num_orientations(getParam<int>("num_orientations")),
     _counter(0),
     _phase_gen_index(std::numeric_limits<unsigned int>::max()),
-    _nuclei(0),
-    _stride(6)
+    _nuclei(0)//,
+    // _stride(6)
 {
 }
 
@@ -97,13 +97,14 @@ void
 NucleationLocationUserObject::finalize()
 {
   //pack up the data so it can be communicated using allgather
-  pack(_packed_data);
+  //pack(_packed_data);
+  Nucleus::pack(_local_nucleus, _packed_data);
 
   // Gather all the shared data onto each processor
   Parallel::allgather(_packed_data, false);
 
   //unpack all the data into the "global" variable
-  unpack(_packed_data);
+  Nucleus::unpack(_packed_data, _nuclei);
 }
 
 void
@@ -112,30 +113,36 @@ NucleationLocationUserObject::threadJoin(const UserObject &a)
   const NucleationLocationUserObject & nluo = dynamic_cast<const NucleationLocationUserObject &>(a);
 
   //Pack up the data on both threads
-  pack(_packed_data);
+  // Nucleus::pack(_local_nucleus, _packed_data);
 
-  std::vector<Real> nluo_packed_data;
-  nluo.pack(nluo_packed_data);
+  //std::vector<Real> nluo_packed_data;
+  std::vector<Nucleus> nluo_local_nucleus = nluo._local_nucleus;
+  //nluo.pack(nluo_packed_data);
 
   //stick the two pieces of data together like peanut butter and jelly
-  std::copy(nluo_packed_data.begin(), nluo_packed_data.end(), std::back_inserter(_packed_data));
+  std::copy(nluo_local_nucleus.begin(), nluo_local_nucleus.end(), std::back_inserter(_local_nucleus));
 }
 
 bool
 NucleationLocationUserObject::elementWasHit(const Elem * elem) const
 {
   bool was_hit = false;
+  Real start_time;
 
   for(unsigned int i(0); i<_nuclei.size(); i++)
   {
     was_hit = elem->contains_point(_nuclei[i].getLocation());
-    if(was_hit)
-      break;
-  }
+    start_time = _nuclei[i].getStartTime();
+
+    if((start_time < _t) && was_hit)
+     break;
+    else
+      was_hit = false;
+   }
   return was_hit;
 }
 
-void
+/*void
 NucleationLocationUserObject::pack(std::vector<Real> & packed_data) const
 {
   // Don't repack data if it's already packed - could cause data loss, and that would make me sad.
@@ -143,11 +150,12 @@ NucleationLocationUserObject::pack(std::vector<Real> & packed_data) const
     return;
 
   //get the size of the _local_nucleus and multiply by 6, the # of individual pieces of data for each nucleus
-  unsigned int packed_size = _local_nucleus.size()*_stride;
+  const unsigned int stride = Nucleus::stride();
+  unsigned int packed_size = _local_nucleus.size()*stride;
   packed_data.resize(packed_size);
 
   unsigned int j=0;
-  for(unsigned int i=0; i<packed_data.size(); i+=_stride)
+  for(unsigned int i=0; i<packed_data.size(); i+=stride)
   {
     Point this_location = _local_nucleus[j].getLocation();
     int this_orientation = _local_nucleus[j].getOrientation();
@@ -161,17 +169,18 @@ NucleationLocationUserObject::pack(std::vector<Real> & packed_data) const
 
     j++;
   }
-}
+  } */
 
-void
+ /*void
 NucleationLocationUserObject::unpack(const std::vector<Real> & packed_data)
 {
-  unsigned int number_nuclei = packed_data.size()/_stride;
+  const unsigned int stride = Nucleus::stride();
+  unsigned int number_nuclei = packed_data.size()/stride;
   std::vector<Nucleus> new_nuclei(number_nuclei);
 
   Real tol = 1e-5;
   unsigned int j(0);
-  for(unsigned int i=0; i<packed_data.size(); i+=_stride)
+  for(unsigned int i=0; i<packed_data.size(); i+=stride)
   {
     Point current_point(packed_data[i], packed_data[i+1], packed_data[i+2]);
 
@@ -193,5 +202,5 @@ NucleationLocationUserObject::unpack(const std::vector<Real> & packed_data)
   std::copy(new_nuclei.begin(), new_nuclei.end(), std::back_inserter(_nuclei));
   //might want to include some error message in here in case unpacking screws up
 }
-
+ */
 
