@@ -60,7 +60,6 @@ public:
  */
 static const unsigned int stride() { return _stride; }
 
-
 protected:
 
 private:
@@ -70,6 +69,7 @@ private:
   Real _end_time; // when the nucleation event ends - NOT necessarily the lifetime of the nucleus
   int _orientation; // the orientation of the particle
  static const unsigned int _stride = 6;
+
 };
 
 #endif //NUCLEUS_H

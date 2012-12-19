@@ -20,20 +20,26 @@ InputParameters validParams<NucleationMarker>()
 {
   InputParameters params = validParams<Marker>();
     params.addRequiredParam<UserObjectName>("nucleation_userobject", "The name of the UserObject that calculates nucleation event positions");
+    params.addRequiredParam<unsigned int>("max_h_level", "Maximum h-adapt level for the mesh");
+
   return params;
 }
 
 NucleationMarker::NucleationMarker(const std::string & name, InputParameters parameters) :
     Marker(name, parameters),
-    _nucleation_userobject(getUserObject<NucleationLocationUserObject>("nucleation_userobject"))
+    _nucleation_userobject(getUserObject<NucleationLocationUserObject>("nucleation_userobject")),
+    _max_h_level(getParam<unsigned int>("max_h_level"))
 {
 }
 
 Marker::MarkerValue
 NucleationMarker::computeElementMarker()
 {
-  if(_nucleation_userobject.elementWasHit(_current_elem))
-    return REFINE;
+  if(_current_elem->level() < _max_h_level)
+  {
+    if(_nucleation_userobject.elementWasHit(_current_elem))
+      return REFINE;
+  }
 
   return DONT_MARK;
 }

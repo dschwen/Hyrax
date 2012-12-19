@@ -33,6 +33,7 @@ protected:
   virtual MarkerValue computeElementMarker();
 
   const NucleationLocationUserObject & _nucleation_userobject;
+  unsigned int _max_h_level;
 
   private:
 

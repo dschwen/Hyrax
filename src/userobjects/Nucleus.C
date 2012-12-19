@@ -14,16 +14,11 @@
 #include "point.h"
 
 Nucleus::Nucleus():
-    //  _location.zero(),
     _start_time(0),
     _end_time(0),
-    _orientation(0)//,
-    //_stride(6)
+    _orientation(0)
 {
   _location.zero();
-  //_start_time = 0.0;
-  //_end_time = 0.0;
-  //_orientation = 0;
 }
 
 Nucleus::Nucleus(const Nucleus &a)

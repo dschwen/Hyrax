@@ -127,18 +127,13 @@ bool
 NucleationLocationUserObject::elementWasHit(const Elem * elem) const
 {
   bool was_hit = false;
-  Real start_time;
 
   for(unsigned int i(0); i<_nuclei.size(); i++)
   {
     was_hit = elem->contains_point(_nuclei[i].getLocation());
-    start_time = _nuclei[i].getStartTime();
-
-    if((start_time < _t) && was_hit)
-     break;
-    else
-      was_hit = false;
-   }
+      if(was_hit)
+        break;
+  }
   return was_hit;
 }
 

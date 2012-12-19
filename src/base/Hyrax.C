@@ -73,6 +73,7 @@
 
 //Markers
 #include "NucleationMarker.h"
+#include "ErrorFractionMaxHMarker.h"
 
 
 namespace Hyrax
@@ -140,5 +141,6 @@ namespace Hyrax
 
     // Markers
     registerMarker(NucleationMarker);
+    registerMarker(ErrorFractionMaxHMarker);
   }
 }
