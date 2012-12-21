@@ -28,6 +28,9 @@ InputParameters validParams<NucleationLocationUserObject>()
   params.addRequiredParam<Real>("dwell_time", "How long nucleation event is");
   params.set<MooseEnum>("execute_on") = "timestep_begin";
   params.addRequiredParam<int>("num_orientations", "# of orientation variants");
+  // params.addRequiredCoupledVar("coupled_variables", "coupled order parameter variables");
+  //params.addRequiredParam<unsigned int>("n_OP_vars", "# of coupled OP variables");
+  //params.addParam<Real>("nucleus_radius", 0.0, "the radius of the nucleus");
 
   return params;
 }
@@ -41,8 +44,16 @@ NucleationLocationUserObject::NucleationLocationUserObject(const std::string & n
     _counter(0),
     _phase_gen_index(std::numeric_limits<unsigned int>::max()),
     _nuclei(0)//,
-    // _stride(6)
+//    _n_OP_vars(getParam<unsigned int>("n_OP_vars")),
+//    _nucleus_radius(getParam<Real>("nucleus_radius"))
 {
+/*    if(_n_OP_vars != coupledComponents("coupled_variables"))
+    mooseError("Please match the number of orientation variants to coupled OPs (NucleationLocationUserObject).");
+
+  _coupled_OP.resize(_n_OP_vars);
+
+  for(unsigned int i=0; i<_n_OP_vars; i++)
+  _coupled_OP[i] = &coupledValue("coupled_variables", i); */
 }
 
 void
@@ -68,8 +79,10 @@ NucleationLocationUserObject::execute()
   _mrand.seed(elem_id, elem_id + (_counter * _mesh.n_elem()));
   Real random_number = _mrand.rand(elem_id);
 
+
+
   //test for nucleation
-  if (_coupled_probability[_qp] > 0 && random_number < _coupled_probability[_qp])
+  if ((_coupled_probability[_qp] > 0) && (random_number < _coupled_probability[_qp]))
   {
     // get the centroid of the element as the center of the nucleus
     Point nucleus_center = _current_elem->centroid();
@@ -105,6 +118,9 @@ NucleationLocationUserObject::finalize()
 
   //unpack all the data into the "global" variable
   Nucleus::unpack(_packed_data, _nuclei);
+
+  //clean out instances of nuclei being too close to each other (overlapping)
+  //cleanUp();
 }
 
 void
@@ -137,65 +153,17 @@ NucleationLocationUserObject::elementWasHit(const Elem * elem) const
   return was_hit;
 }
 
+
 /*void
-NucleationLocationUserObject::pack(std::vector<Real> & packed_data) const
+NucleationLocationUserObject::cleanUp()
 {
-  // Don't repack data if it's already packed - could cause data loss, and that would make me sad.
-  if (!packed_data.empty())
-    return;
-
-  //get the size of the _local_nucleus and multiply by 6, the # of individual pieces of data for each nucleus
-  const unsigned int stride = Nucleus::stride();
-  unsigned int packed_size = _local_nucleus.size()*stride;
-  packed_data.resize(packed_size);
-
-  unsigned int j=0;
-  for(unsigned int i=0; i<packed_data.size(); i+=stride)
+  // find the nuclei that overlap
+  for(unsigned int i=0; i<_nuclei.size(); i++)
   {
-    Point this_location = _local_nucleus[j].getLocation();
-    int this_orientation = _local_nucleus[j].getOrientation();
-
-    packed_data[i] = this_location(0); //x-coord of point
-    packed_data[i+1] = this_location(1); //y-coord
-    packed_data[i+2] = this_location(2); //z-coord
-    packed_data[i+3] = _local_nucleus[j].getStartTime();
-    packed_data[i+4] = _local_nucleus[j].getEndTime();
-    packed_data[i+5] = Real(this_orientation); //need to make sure we won't get any type conversion errors...
-
-    j++;
-  }
-  } */
-
- /*void
-NucleationLocationUserObject::unpack(const std::vector<Real> & packed_data)
-{
-  const unsigned int stride = Nucleus::stride();
-  unsigned int number_nuclei = packed_data.size()/stride;
-  std::vector<Nucleus> new_nuclei(number_nuclei);
-
-  Real tol = 1e-5;
-  unsigned int j(0);
-  for(unsigned int i=0; i<packed_data.size(); i+=stride)
-  {
-    Point current_point(packed_data[i], packed_data[i+1], packed_data[i+2]);
-
-    new_nuclei[j].setLocation(current_point);
-    new_nuclei[j].setStartTime(packed_data[i+3]);
-    new_nuclei[j].setEndTime(packed_data[i+4]);
-
-    Real local_orientation = packed_data[i+5];
-
-    //make sure there's no type conversion errors for the orientation
-    if(int(local_orientation + tol) == int(local_orientation))
-      new_nuclei[j].setOrientation(int(local_orientation));
-    else
-      new_nuclei[j].setOrientation(int(local_orientation)+1);
-
-    j++;
+  // must do for only this timestep
+  // save their index, then in another loop, delete them out
+  // however
   }
 
-  std::copy(new_nuclei.begin(), new_nuclei.end(), std::back_inserter(_nuclei));
-  //might want to include some error message in here in case unpacking screws up
-}
- */
+  }*/
 

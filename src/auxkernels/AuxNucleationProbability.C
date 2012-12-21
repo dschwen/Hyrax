@@ -46,14 +46,10 @@ AuxNucleationProbability::AuxNucleationProbability(const std::string & name, Inp
 Real
 AuxNucleationProbability::computeValue()
 {
- //  p_nm = 1 - exp(-1*j_star*dt)
- // if we're already sitting on a particle, make probability = -1.0
- // this negative probability will be ignored in the postprocessor
   for(unsigned int i=0; i<_n_OP_vars; i++)
   {
     if((*_coupled_OP[i])[_qp] > 0.1)
-      //  return -1.0;
-       return 0.0;
+      return 0.0;
   }
 
   return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt);

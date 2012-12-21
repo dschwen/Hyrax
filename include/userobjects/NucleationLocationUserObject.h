@@ -6,6 +6,9 @@
 *
 *  7 December 2012
 *
+*  NucleationLocationUserObject really needs to be computed as a post-aux,
+*  timestep begin user object.  Currently not sure how to ensure this.
+*
 *************************************************************************/
 
 #ifndef NUCLEATIONLOCATIONUSEROBJECT_H
@@ -38,8 +41,7 @@ public:
   const std::vector<Nucleus> & getNuclei() const { return _nuclei; }
 
 protected:
-//  void pack(std::vector<Real> &) const;
-//  void unpack(const std::vector<Real> &);
+  // void cleanUp();
 
 private:
 
@@ -59,6 +61,11 @@ private:
 
   //global data
   std::vector<Nucleus> _nuclei;
+
+  // unsigned int _n_OP_vars;
+  //std::vector<VariableValue *> _coupled_OP;
+  //Real _nucleus_radius;
+
 
   // The Moose stateful random number generator
   MooseRandom _mrand;

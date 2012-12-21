@@ -27,19 +27,9 @@ public:
   ErrorFractionMaxHMarker(const std::string & name, InputParameters parameters);
   virtual ~ErrorFractionMaxHMarker(){};
 
-  // virtual void markerSetup();
-
 protected:
   virtual MarkerValue computeElementMarker();
 
-  // Real _coarsen;
-  //Real _refine;
-
-  //Real _max;
-  //Real _min;
-  //Real _delta;
-  //Real _refine_cutoff;
-  //Real _coarsen_cutoff;
   unsigned int _max_h_level;
 };
 
