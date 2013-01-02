@@ -1,0 +1,53 @@
+[Tests]
+  [./AuxSupersaturation_test]
+    type = 'Exodiff'
+    input = 'AuxSupersaturation.i'
+    exodiff = 'AuxSupersaturation.e'
+  [../]
+
+  [./AuxNucleationRate_refine1Elemental_test]
+    type = 'Exodiff'
+    input = 'AuxNucleationRate_refine1Elemental.i'
+    exodiff = 'AuxNucleationRateElemental_refine1.e'
+    petsc_version = '>=3.1.0'
+  [../]
+
+  [./AuxSuperSaturationElemental_test]
+    type = 'Exodiff'
+    input = 'AuxSupersaturationElemental.i'
+    exodiff = 'AuxSupersaturationElemental.e'
+  [../]
+
+  [./AuxNucleationRate_refine1_test]
+    type = 'Exodiff'
+    input = 'AuxNucleationRate_refine1.i'
+    exodiff = 'AuxNucleationRate_refine1.e'
+    petsc_version = '>=3.1.0'
+  [../]
+
+  [./AuxNucleationRate_refine0_test]
+    type = 'Exodiff'
+    input = 'AuxNucleationRate_refine0.i'
+    exodiff = 'AuxNucleationRate_refine0.e'
+    petsc_version = '>=3.1.0'
+  [../]
+
+  [./AuxNucleationRate_refine0Elemental_test]
+    type = 'Exodiff'
+    input = 'AuxNucleationRate_refine0Elemental.i'
+    exodiff = 'AuxNucleationRateElemental_refine0.e'
+    petsc_version = '>=3.1.0'
+  [../]
+
+  [./AuxNucleationProbabilityElemental_test]
+    type = 'Exodiff'
+    input = 'AuxNucleationProbabilityElemental.i'
+    exodiff = 'AuxNucleationProbabilityElemental.e'
+  [../]
+
+  [./AuxNucleationProbability_test]
+    type = 'Exodiff'
+    input = 'AuxNucleationProbability.i'
+    exodiff = 'AuxNucleationProbability.e'
+  [../]
+[]

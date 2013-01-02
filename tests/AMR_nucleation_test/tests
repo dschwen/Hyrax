@@ -1,0 +1,7 @@
+[Tests]
+  [./AMR_nucleation_test]
+    type = 'Exodiff'
+    input = 'AMR_nucleation_test.i'
+    exodiff = 'AMR_nucleation_test.e'
+  [../]
+[]

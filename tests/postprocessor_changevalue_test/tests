@@ -1,0 +1,29 @@
+[Tests]
+  [./NucleationPostprocessor_parallel_test]
+    type = 'Exodiff'
+    input = 'NucleationPostprocessor_multi_test.i'
+    exodiff = 'NucleationPostprocessor_multi_out.e'
+    min_parallel = 2
+    prereq = 'NucleationPostprocessor_test'
+  [../]
+
+  [./OneSeed_test]
+    type = 'Exodiff'
+    input = 'OneSeed_test.i'
+    exodiff = 'OneSeed_out.e'
+  [../]
+
+  [./OneSeed_restart_test]
+    type = 'Exodiff'
+    input = 'OneSeed_restart_test.i'
+    exodiff = 'OneSeed_restart_out.e'
+    method = 'OPT'
+  [../]
+
+  [./NucleationPostprocessor_test]
+    type = 'Exodiff'
+    input = 'NucleationPostprocessor_multi_test.i'
+    exodiff = 'NucleationPostprocessor_multi_out.e'
+    method = 'OPT'
+  [../]
+[]

@@ -1,0 +1,7 @@
+[Tests]
+  [./ErrorFracMaxH_test]
+    type = 'Exodiff'
+    input = 'ErrorFracMaxH_test.i'
+    exodiff = 'ErrorFracMaxH_test.e'
+  [../]
+[]
