@@ -43,7 +43,7 @@
 //#include "DiracForcedAMR.h"
 
 //Boundary Conditions
-//#include "StressBC.h"
+#include "StressBC.h"
 
 //Materials
 #include "PFMobilityLandau.h"
@@ -110,7 +110,7 @@ namespace Hyrax
     //registerDiracKernel(DiracForcedAMR);
 
     //Boundary Conditions
-    //registerBoundaryCondition(StressBC);
+    registerBoundaryCondition(StressBC);
 
     //Materials
     registerMaterial(PFMobilityLandau);

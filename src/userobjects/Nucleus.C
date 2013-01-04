@@ -97,9 +97,11 @@ Nucleus::pack(const std::vector<Nucleus> & to_pack, std::vector<Real> & packed_d
   unsigned int packed_size = to_pack.size()*stride;
   packed_data.resize(packed_size);
 
-  unsigned int j=0;
-  for(unsigned int i=0; i<packed_data.size(); i+=stride)
+  unsigned int i=0;
+  for (unsigned int j=0; j<to_pack.size(); ++j)
   {
+    //for(unsigned int i=0; i<packed_data.size(); i+=stride)
+    //{
     Point this_location = to_pack[j].getLocation();
     int this_orientation = to_pack[j].getOrientation();
 
@@ -110,7 +112,7 @@ Nucleus::pack(const std::vector<Nucleus> & to_pack, std::vector<Real> & packed_d
     packed_data[i+4] = to_pack[j].getEndTime();
     packed_data[i+5] = Real(this_orientation); //need to make sure we won't get any type conversion errors...
 
-    j++;
+   i+=6;
   }
 }
 
@@ -122,9 +124,12 @@ Nucleus::unpack(const std::vector<Real> & packed_data, std::vector<Nucleus> & un
   std::vector<Nucleus> new_nuclei(number_nuclei);
 
   Real tol = 1e-5;
-  unsigned int j(0);
-  for(unsigned int i=0; i<packed_data.size(); i+=stride)
+  unsigned int i=0;
+
+  for(unsigned int j(0); j<new_nuclei.size(); ++j)
   {
+    //  for(unsigned int i=0; i<packed_data.size(); i+=stride)
+    // {
     Point current_point(packed_data[i], packed_data[i+1], packed_data[i+2]);
 
     new_nuclei[j].setLocation(current_point);
@@ -139,7 +144,7 @@ Nucleus::unpack(const std::vector<Real> & packed_data, std::vector<Nucleus> & un
     else
       new_nuclei[j].setOrientation(int(local_orientation)+1);
 
-    j++;
+    i+=6;
   }
 
   std::copy(new_nuclei.begin(), new_nuclei.end(), std::back_inserter(unpacked_data));
