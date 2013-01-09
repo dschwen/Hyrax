@@ -18,6 +18,7 @@
 
 // Forward Declarations
 class MeshSolutionModify;
+class NucleationLocationUserObject;
 
 template<>
 InputParameters validParams<MeshSolutionModify>();
@@ -29,10 +30,13 @@ public:
   MeshSolutionModify(const std::string & name, InputParameters parameters);
 
   virtual void endStep();
+  //virtual void preExecute();
 
 protected:
   unsigned int _adapt_cycles;
-  unsigned int _max_h_level;
+  unsigned int _adapt_nucleus;
+
+  //const NucleationLocationUserObject*  _nucleation_userobject;
 };
 
 #endif //MESHSOLUTIONMODIFY_H

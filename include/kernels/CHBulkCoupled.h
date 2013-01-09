@@ -37,7 +37,7 @@ protected:
    * @return returns the GRADIENT of the partial(bulk free energy)/partial(c).  Don't screw that up.
    */
 
-  virtual RealGradient computeGradDFDCons(PFFunctionType type, Real c, RealGradient grad_c);
+  virtual RealGradient computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradient grad_c);
 
 
 

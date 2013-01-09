@@ -8,7 +8,7 @@
 *
 *  StressBC is pulled from Ferret, thanks to O. Heinonen et al.
 *
-/****************************************************************/
+****************************************************************/
 
 #include "StressBC.h"
 
@@ -65,5 +65,4 @@ StressBC::computeQpResidual()
   }
 
   return -_test[_i][_qp]*traction[_component]; //be careful with the sign
-  //  return 0.0;
 }

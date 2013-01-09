@@ -58,7 +58,7 @@ public:
  * the size of the Nucleus object for packing and unpacking (3 for location, 1 each for
  * start time, end time, orientation
  */
-static const unsigned int stride() { return _stride; }
+static unsigned int stride() { return _stride; }
 
 protected:
 

@@ -10,8 +10,8 @@
 
 #include "CHBulkCoupled.h"
 
-/** CHBulkCoupled handles the conserved order parameter(probably concentration), 
- * evolved using the Cahn-Hilliard equation.  It couples to an order 
+/** CHBulkCoupled handles the conserved order parameter(probably concentration),
+ * evolved using the Cahn-Hilliard equation.  It couples to an order
  * parameter from the Alan-Cahn equation.
  */
 
@@ -37,16 +37,16 @@ CHBulkCoupled::CHBulkCoupled(const std::string & name, InputParameters parameter
 }
 
 RealGradient
-CHBulkCoupled::computeGradDFDCons(PFFunctionType type, Real c, RealGradient grad_c)
+CHBulkCoupled::computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradient grad_c)
 {
   switch (type)
   {
   case Residual:
     return _a1[_qp]*(grad_c) + _a2[_qp]*(_coupled_OP_var[_qp]*_coupled_OP_grad[_qp]) ;
- 
-  case Jacobian: 
+
+  case Jacobian:
     return _a1[_qp]*_grad_phi[_j][_qp] ;
   }
-  
+
   mooseError("Invalid type passed in");
 }

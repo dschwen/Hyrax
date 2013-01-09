@@ -37,11 +37,11 @@ public:
   virtual void threadJoin(const UserObject &a);
 
   bool elementWasHit(const Elem * elem) const;
+  bool hasNewNucleus() const { return _has_new_nucleus; }
 
   const std::vector<Nucleus> & getNuclei() const { return _nuclei; }
 
 protected:
-  // void cleanUp();
 
 private:
 
@@ -62,17 +62,15 @@ private:
   //global data
   std::vector<Nucleus> _nuclei;
 
-  // unsigned int _n_OP_vars;
-  //std::vector<VariableValue *> _coupled_OP;
-  //Real _nucleus_radius;
-
-
   // The Moose stateful random number generator
   MooseRandom _mrand;
 
   //  const unsigned int _stride;  //this is the stride length for packing and unpacking nucleus data
    std::vector<Real> _packed_data;
 
- };
+  //check to see if new nucleus has been found
+  unsigned int _old_nucleus_list_size;
+  bool _has_new_nucleus;
+};
 
 #endif //NUCLEATIONLOCATIONUSEROBJECT_H

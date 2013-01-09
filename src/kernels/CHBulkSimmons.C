@@ -24,7 +24,7 @@ CHBulkSimmons::CHBulkSimmons(const std::string & name, InputParameters parameter
 }
 
 RealGradient
-CHBulkSimmons::computeGradDFDCons(PFFunctionType type, Real c, RealGradient grad_c)
+CHBulkSimmons::computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradient grad_c)
 {
   switch (type)
   {

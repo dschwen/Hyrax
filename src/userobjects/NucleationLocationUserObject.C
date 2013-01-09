@@ -28,9 +28,6 @@ InputParameters validParams<NucleationLocationUserObject>()
   params.addRequiredParam<Real>("dwell_time", "How long nucleation event is");
   params.set<MooseEnum>("execute_on") = "timestep_begin";
   params.addRequiredParam<int>("num_orientations", "# of orientation variants");
-  // params.addRequiredCoupledVar("coupled_variables", "coupled order parameter variables");
-  //params.addRequiredParam<unsigned int>("n_OP_vars", "# of coupled OP variables");
-  //params.addParam<Real>("nucleus_radius", 0.0, "the radius of the nucleus");
 
   return params;
 }
@@ -43,23 +40,18 @@ NucleationLocationUserObject::NucleationLocationUserObject(const std::string & n
     _num_orientations(getParam<int>("num_orientations")),
     _counter(0),
     _phase_gen_index(std::numeric_limits<unsigned int>::max()),
-    _nuclei(0)//,
-//    _n_OP_vars(getParam<unsigned int>("n_OP_vars")),
-//    _nucleus_radius(getParam<Real>("nucleus_radius"))
+    _nuclei(0),
+    _old_nucleus_list_size(0),
+    _has_new_nucleus(false)
 {
-/*    if(_n_OP_vars != coupledComponents("coupled_variables"))
-    mooseError("Please match the number of orientation variants to coupled OPs (NucleationLocationUserObject).");
-
-  _coupled_OP.resize(_n_OP_vars);
-
-  for(unsigned int i=0; i<_n_OP_vars; i++)
-  _coupled_OP[i] = &coupledValue("coupled_variables", i); */
 }
 
 void
 NucleationLocationUserObject::initialize()
 {
    _counter++;
+   _old_nucleus_list_size = _nuclei.size();
+   _has_new_nucleus = false;
 
    //reinitialize the local vectors to size 0 with no data
    _local_nucleus.clear();
@@ -79,10 +71,8 @@ NucleationLocationUserObject::execute()
   _mrand.seed(elem_id, elem_id + (_counter * _mesh.n_elem()));
   Real random_number = _mrand.rand(elem_id);
 
-
-
   //test for nucleation
-  if ((_coupled_probability[_qp] > 0) && (random_number < _coupled_probability[_qp]))
+  if ((_coupled_probability[0] > 0) && (random_number < _coupled_probability[0]))
   {
     // get the centroid of the element as the center of the nucleus
     Point nucleus_center = _current_elem->centroid();
@@ -110,7 +100,7 @@ void
 NucleationLocationUserObject::finalize()
 {
   //pack up the data so it can be communicated using allgather
-  //pack(_packed_data);
+
   Nucleus::pack(_local_nucleus, _packed_data);
 
   // Gather all the shared data onto each processor
@@ -119,8 +109,9 @@ NucleationLocationUserObject::finalize()
   //unpack all the data into the "global" variable
   Nucleus::unpack(_packed_data, _nuclei);
 
-  //clean out instances of nuclei being too close to each other (overlapping)
-  //cleanUp();
+  //see if a new nucleus has been found
+  if(_nuclei.size() > _old_nucleus_list_size)
+    _has_new_nucleus = true;
 }
 
 void
@@ -128,12 +119,7 @@ NucleationLocationUserObject::threadJoin(const UserObject &a)
 {
   const NucleationLocationUserObject & nluo = dynamic_cast<const NucleationLocationUserObject &>(a);
 
-  //Pack up the data on both threads
-  // Nucleus::pack(_local_nucleus, _packed_data);
-
-  //std::vector<Real> nluo_packed_data;
   std::vector<Nucleus> nluo_local_nucleus = nluo._local_nucleus;
-  //nluo.pack(nluo_packed_data);
 
   //stick the two pieces of data together like peanut butter and jelly
   std::copy(nluo_local_nucleus.begin(), nluo_local_nucleus.end(), std::back_inserter(_local_nucleus));
@@ -152,18 +138,3 @@ NucleationLocationUserObject::elementWasHit(const Elem * elem) const
   }
   return was_hit;
 }
-
-
-/*void
-NucleationLocationUserObject::cleanUp()
-{
-  // find the nuclei that overlap
-  for(unsigned int i=0; i<_nuclei.size(); i++)
-  {
-  // must do for only this timestep
-  // save their index, then in another loop, delete them out
-  // however
-  }
-
-  }*/
-
