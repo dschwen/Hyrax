@@ -48,7 +48,7 @@ CHBulkPolyCoupled::CHBulkPolyCoupled(const std::string & name, InputParameters p
 }
 
 RealGradient
-CHBulkPolyCoupled::computeGradDFDCons(PFFunctionType type, Real c, RealGradient grad_c)
+CHBulkPolyCoupled::computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradient grad_c)
 {
   RealGradient op_sum;
   op_sum.zero();

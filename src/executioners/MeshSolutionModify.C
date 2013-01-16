@@ -38,7 +38,9 @@ MeshSolutionModify::MeshSolutionModify(const std::string & name, InputParameters
 void
 MeshSolutionModify::endStep()
 {
-  //bool new_nucleus = _nucleation_userobject->hasNewNucleus();
+  std::cout<<"in MeshSolutionModify::endStep()"<<std::endl;
+
+//bool new_nucleus = _nucleation_userobject->hasNewNucleus();
   unsigned int num_cycles;
 
   //if(new_nucleus)
@@ -46,35 +48,46 @@ MeshSolutionModify::endStep()
   //else
     num_cycles = _adapt_cycles;
 
+    std::cout<<"lastSolveConverged()"<<std::endl;
   if (lastSolveConverged())
   {
     for(unsigned int i=0; i<num_cycles; i++)
     {
       //std::cout<<"adapting mesh"<<std::endl;
       // Compute the Error Indicators and Markers
+      std::cout<<"_problem.computeIndicatorsAndMarkers()"<<std::endl;
       _problem.computeIndicatorsAndMarkers();
 
 #ifdef LIBMESH_ENABLE_AMR
       if (_problem.adaptivity().isOn())
       {
+        std::cout<<"_problem.adaptMesh()"<<std::endl;
         _problem.adaptMesh();
+        std::cout<<" _problem.out().meshChanged()"<<std::endl;
         _problem.out().meshChanged();
       }
 #endif
     }
+    std::cout<<"_problem.computeUserObjects(EXEC_CUSTOM)"<<std::endl;
     _problem.computeUserObjects(EXEC_CUSTOM);
 
     // if _reset_dt is true, force the output no matter what
+    std::cout<<"_problem.output(_reset_dt)"<<std::endl;
     _problem.output(_reset_dt);
+    std::cout<<"_problem.outputPostprocessors(_reset_dt)"<<std::endl;
     _problem.outputPostprocessors(_reset_dt);
 
     _time_old = _time;
     _t_step++;
 
+    std::cout<<"_problem.copyOldSolutions()"<<std::endl;
     _problem.copyOldSolutions();
   }
   else
+    std::cout<<"_problem.restoreSolutions()"<<std::endl;
     _problem.restoreSolutions();
+
+    std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
 }
 
 //void
