@@ -34,4 +34,6 @@ HyraxApp::HyraxApp(int argc, char * argv []) :
   // Associate Syntax from SolidMechanics Module
   Elk::SolidMechanics::associateSyntax(_syntax);
   Elk::TensorMechanics::associateSyntax(_syntax);
+  Elk::HeatConduction::associateSyntax(_syntax);
+  Elk::Misc::associateSyntax(_syntax);
 }
