@@ -18,6 +18,7 @@
 #include "TensorMechanicsModule.h"
 #include "PhaseFieldModule.h"
 #include "HeatConductionModule.h"
+#include "MiscModule.h"
 
 
 HyraxApp::HyraxApp(int argc, char * argv []) :
