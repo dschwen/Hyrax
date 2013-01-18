@@ -37,6 +37,7 @@ PHASE_FIELD       := yes
 SOLID_MECHANICS   := yes
 TENSOR_MECHANICS  := yes
 HEAT_CONDUCTION   := yes
+MISC              := yes
 ###############################################################################
 
 include $(MOOSE_DIR)/build.mk
