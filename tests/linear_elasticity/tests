@@ -9,5 +9,9 @@
     type = 'Exodiff'
     input = 'ACTransformElasticDF_test.i'
     exodiff = 'ACTransformElasticDF_out.e'
+
+    # Note: use absolute (rather than relative) error tolerances
+    # for this test, since the displacements are very small.
+    exodiff_opts = '-absolute'
   [../]
 []
