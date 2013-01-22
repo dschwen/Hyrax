@@ -1,28 +1,28 @@
-# this input file is to test the concurrent nucleation and growth with mesh adaptivity
+-# this input file is to test the concurrent nucleation and growth with mesh adaptivity
 
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 10
-  ny = 10
+  nx = 20
+  ny = 20
   nz = 0
   xmin = 0
-  xmax = 76.8 #0.3*256
+  xmax = 153.6 #0.3*512
   ymin = 0
-  ymax = 76.8
+  ymax = 153.6
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  #uniform_refine = 3 # 80 elements, dx=0.96...
+  uniform_refine = 5 
 []
 
 [Variables]
   [./concentration]
     order = THIRD
     family = HERMITE
-      [./InitialCondition]
+    [./InitialCondition]
       type = ConstantIC
-      value = 0.1
+      value = 0.0562
     [../]
   [../]
 
@@ -30,9 +30,12 @@
     order = FIRST
     family = LAGRANGE
     [./InitialCondition]
-      type = RandomIC
-      min = 0.0
-      max = 0.2
+      type = SmoothCircleIC
+      invalue = 1.6
+      outvalue = 0.0
+      radius = 1.8
+      x1 = 20
+      y1 = 20
     [../]
   [../]
 []
@@ -41,22 +44,16 @@
   [./elemental_Supersaturation]
     order = CONSTANT
     family = MONOMIAL
-    #order = FIRST
-    #family = LAGRANGE
   [../]
 
- [./elemental_NucleationProbability]
+  [./elemental_NucleationProbability]
     order = CONSTANT
     family = MONOMIAL
-    #order = FIRST
-    #family = LAGRANGE
   [../]
 
- [./elemental_NucleationRate]
+  [./elemental_NucleationRate]
     order = CONSTANT
     family = MONOMIAL
-    #order = FIRST
-    #family = LAGRANGE
   [../]
 []
 
@@ -114,7 +111,7 @@
     variable = elemental_Supersaturation
     coupled_var = concentration
     functional_c1 = 0.006
-    execute_on = timestep
+    execute_on = timestep_begin
   [../]
 
   [./NucleationRate]
@@ -123,11 +120,11 @@
     OP_var_names = 'n1'
     n_OP_vars = 1
     coupled_aux_var = elemental_Supersaturation
-    Beta_star = 0.1
+    Beta_star = 0.00005
     linear_density = 50
-    Z = 0.1
-    Kn2 = 0.3
-    execute_on = timestep
+    Z = 0.001
+    Kn2 = 0.033
+    execute_on = timestep_begin
   [../]
 
   [./NucleationProbability]
@@ -136,25 +133,25 @@
     coupled_aux_var = elemental_NucleationRate
     coupled_variables = 'n1'
     n_OP_vars = 1
-    execute_on = timestep
+    execute_on = timestep_begin
   [../]
 []
 
-[BCs]
-  [./c_BC]
-    type = NeumannBC
-    variable = concentration
-    boundary = '0 1 2 3'
-    value = 0.0
-  [../]
+#[BCs]
+#  [./c_BC]
+#    type = NeumannBC
+#    variable = concentration
+#    boundary = '0 1 2 3'
+#    value = 0.0
+#  [../]
 
-  [./n1_BC]
-    type = NeumannBC
-    variable = n1
-    boundary = '0 1 2 3'
-    value = 0.0
-  [../]
-[]
+#  [./n1_BC]
+#    type = NeumannBC
+#    variable = n1
+#    boundary = '0 1 2 3'
+#    value = 0.0
+#  [../]
+#[]
 
 [Materials]
   [./constant]
@@ -180,6 +177,7 @@
     coupled_aux = elemental_NucleationProbability
     dwell_time = 0.1
     num_orientations = 1
+#   execute_on = timestep_begin
   [../]
 
   [./NISM]
@@ -194,18 +192,54 @@
   [../]
 []
 
+[Postprocessors]
+  [./ElementIntegral_n1]
+    output = file
+    type = ElementIntegralVariablePostprocessor
+    variable = n1
+  [../]
+
+  [./ElementIntegral_c]
+    output = file
+    type = ElementIntegralVariablePostprocessor
+    variable = concentration
+  [../]
+
+  [./NodalMaxValue_n1]
+    output = file
+    type = NodalMaxValue
+    variable = n1
+  [../]
+
+  [./NodalMaxValue_c]
+    output = file
+    type = NodalMaxValue
+    variable = concentration
+  [../]
+
+  [./ndofs]
+    type = PrintDOFs
+  [../]
+[]
+
+
 [Executioner]
   type = MeshSolutionModify
   scheme = 'crank-nicolson'
-  num_steps = 10
+
+ # num_steps = 10
   dt = 0.01
-  adapt_cycles = 2
-#  max_h_level = 2
+  start_time = 0.0  
+  end_time = 100
+
+  abort_on_solve_fail = true
+  adapt_cycles = 5
+
+  nucleation_userobject = NLUO
 
   petsc_options = -snes_mf_operator
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
-
 []
 
 [Adaptivity]
@@ -214,13 +248,13 @@
     [./NM]
       type = NucleationMarker
       nucleation_userobject = NLUO
-      max_h_level = 2
+      max_h_level = 5
     [../]
     [./EFMHM]
       type = ErrorFractionMaxHMarker
-      coarsen = 0.01
-      refine = 0.8
-      max_h_level = 2	     
+      coarsen = 0.05
+      refine = 0.75
+      max_h_level = 5	     
       indicator = GJI
     [../]
     [./combo]
@@ -232,15 +266,23 @@
  [./Indicators]
    [./GJI]
     type = GradientJumpIndicator
-    variable = concentration
+    variable = n1
    [../]
  [../]
 []
 
 [Output]
-  file_base = testadapt1
+  file_base = testCNG_h-adapt_forreal
   output_initial = true
-  interval = 1
+  interval = 100
   exodus = true
   perf_log = true
-[../]
+  postprocessor_csv = true
+
+ [./OverSampling]
+   exodus = true
+   refinements = 5
+   output_initial = true
+#   interval = 5
+ [../]
+[]

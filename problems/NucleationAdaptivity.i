@@ -262,27 +262,27 @@
 # postprocessors process the field variables and return a scalar value each timestep.  The Nucleation 
 # Postprocessor is used to introduce order parameter nuclei into the system.
 
-  [./ElementIntegral_n1]
+  [./ElementIntegralVariablePostprocessor_n1]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = n1
   [../]
 
-  [./ElementIntegral_n2]
+  [./ElementIntegralVariablePostprocessor_n2]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = n2
   [../]
 
-  [./ElementIntegral_n3]
+  [./ElementIntegralVariablePostprocessor_n3]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = n3
   [../]
 
-  [./ElementIntegral_c]
+  [./ElementIntegralVariablePostprocessor_c]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = concentration
   [../]
 

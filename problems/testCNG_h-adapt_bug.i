@@ -186,15 +186,15 @@
 []
 
 [Postprocessors]
-  [./ElementIntegral_n1]
+  [./ElementIntegralVariablePostprocessor_n1]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = n1
   [../]
 
-  [./ElementIntegral_c]
+  [./ElementIntegralVariablePostprocessor_c]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = concentration
   [../]
 

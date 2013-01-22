@@ -196,27 +196,27 @@
 []
 
 [Postprocessors]
-  [./ElementIntegral_n1]
+  [./ElementIntegralVariablePostprocessor_n1]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = n1
   [../]
 
-  [./ElementIntegral_n2]
+  [./ElementIntegralVariablePostprocessor_n2]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = n2
   [../]
 
-  [./ElementIntegral_n3]
+  [./ElementIntegralVariablePostprocessor_n3]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = n3
   [../]
 
-  [./ElementIntegral_c]
+  [./ElementIntegralVariablePostprocessor_c]
     output = file
-    type = ElementIntegral
+    type = ElementIntegralVariablePostprocessor
     variable = concentration
   [../]
 
@@ -294,7 +294,7 @@
   #nl_abs_tol = 1.1e-5
 
   start_time = 0.0
-  num_steps = 10 
+  num_steps = 5000 
   dt = 1.0e-3
   abort_on_solve_fail = true
 
@@ -308,7 +308,7 @@
 [Output]
   file_base = LSXPM_n1_OPnuc_dt1em3_OneSeedPP
   output_initial = true
-  interval = 1
+  interval = 100
   exodus = true
   perf_log = true
   postprocessor_csv = true
