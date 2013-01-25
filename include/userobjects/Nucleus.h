@@ -15,6 +15,7 @@
 #define NUCLEUS_H
 
 #include "libmesh.h"
+#include "elem.h"
 #include "point.h"
 
 class Nucleus
@@ -43,6 +44,8 @@ public:
 
   int getOrientation() const;
 
+  //Elem* getOriginalElem() const;
+
   void setLocation(Point a);
 
   void setStartTime(Real a);
@@ -50,6 +53,8 @@ public:
   void setEndTime(Real a);
 
   void setOrientation(int a);
+
+  //void setOriginalElem(const Elem*);
 
   static void pack(const std::vector<Nucleus> &, std::vector<Real> &);
   static void unpack(const std::vector<Real> &, std::vector<Nucleus> &);
@@ -68,7 +73,10 @@ private:
   Real _start_time; //when this nucleus came into existence
   Real _end_time; // when the nucleation event ends - NOT necessarily the lifetime of the nucleus
   int _orientation; // the orientation of the particle
- static const unsigned int _stride = 6;
+  //Elem* _original_element;
+
+  //stride length: x, y, z, start, end, orientation, pointer
+  static const unsigned int _stride = 6;  //7;
 
 };
 

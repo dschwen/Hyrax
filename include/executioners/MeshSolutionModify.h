@@ -14,7 +14,8 @@
 #ifndef MESHSOLUTIONMODIFY_H
 #define MESHSOLUTIONMODIFY_H
 
-#include "Transient.h"
+//#include "Transient.h"
+#include "SolutionTimeAdaptive.h"
 
 // Forward Declarations
 class MeshSolutionModify;
@@ -23,20 +24,24 @@ class NucleationLocationUserObject;
 template<>
 InputParameters validParams<MeshSolutionModify>();
 
-class MeshSolutionModify: public Transient
+class MeshSolutionModify: public SolutionTimeAdaptive //Transient
 {
 public:
 
   MeshSolutionModify(const std::string & name, InputParameters parameters);
 
+  virtual void takeStep(Real input_dt = -1.0);
   virtual void endStep();
-  //virtual void preExecute();
+  virtual void preExecute();
+  Real computeDT();
 
 protected:
   unsigned int _adapt_cycles;
   unsigned int _adapt_nucleus;
 
-  //const NucleationLocationUserObject*  _nucleation_userobject;
+  bool _use_nucleation_userobject;
+
+  const NucleationLocationUserObject*  _nucleation_userobject;
 };
 
 #endif //MESHSOLUTIONMODIFY_H

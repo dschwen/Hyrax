@@ -76,11 +76,13 @@ NucleationLocationUserObject::execute()
   {
     // get the centroid of the element as the center of the nucleus
     Point nucleus_center = _current_elem->centroid();
+    //  Elem* original_elem = _current_elem;
 
     Nucleus current_nucleus;
     current_nucleus.setLocation(nucleus_center);
     current_nucleus.setStartTime(_t);
     current_nucleus.setEndTime(_t+_dwell_time);
+    // current_nucleus.setOriginalElement(_current_elem);
 
     _mrand.seed(_phase_gen_index, elem_id);
     int r_num = _mrand.randl(_phase_gen_index);
@@ -112,6 +114,8 @@ NucleationLocationUserObject::finalize()
   //see if a new nucleus has been found
   if(_nuclei.size() > _old_nucleus_list_size)
     _has_new_nucleus = true;
+  else
+    _has_new_nucleus = false;
 }
 
 void
@@ -129,12 +133,16 @@ bool
 NucleationLocationUserObject::elementWasHit(const Elem * elem) const
 {
   bool was_hit = false;
+  //Elem * parent_elem(NULL);
 
   for(unsigned int i(0); i<_nuclei.size(); i++)
   {
+    // parent_elem = _nuclei[i].getOriginalElement();
+    //if( parent_elem->is_ancestor_of(elem)
     was_hit = elem->contains_point(_nuclei[i].getLocation());
-      if(was_hit)
-        break;
+    if(was_hit)
+      break;
+    //   }
   }
   return was_hit;
 }

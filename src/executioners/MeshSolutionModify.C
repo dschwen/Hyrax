@@ -19,20 +19,103 @@
 template<>
 InputParameters validParams<MeshSolutionModify>()
 {
-  InputParameters params = validParams<Transient>();
+  InputParameters params = validParams<SolutionTimeAdaptive>();
   params.addParam<unsigned int>("adapt_cycles", 1, "# of adaptivity cycles to do normally.");
   params.addParam<unsigned int>("adapt_nucleus", 1, "# of adaptivity cycles to do with nucleus introduction.");
-  params.addRequiredParam<UserObjectName>("nucleation_userobject", "The name of the UserObject to use for nucleation event locations");
+  params.addParam<bool>("use_nucleation_userobject", false, "Whether to pull in the nucleation user object or not");
+  params.addParam<UserObjectName>("nucleation_userobject","", "The name of the UserObject to use for nucleation event locations");
 
   return params;
 }
 
 MeshSolutionModify::MeshSolutionModify(const std::string & name, InputParameters parameters) :
-    Transient(name, parameters),
+    SolutionTimeAdaptive(name, parameters),
     _adapt_cycles(getParam<unsigned int>("adapt_cycles")),
-    _adapt_nucleus(getParam<unsigned int>("adapt_nucleus"))//,
-//   _nucleation_userobject(getUserObject<NucleationLocationUserObject>("nucleation_userobject"))
+    _adapt_nucleus(getParam<unsigned int>("adapt_nucleus")),
+    _use_nucleation_userobject(getParam<bool>("use_nucleation_userobject"))
 {
+}
+
+void
+MeshSolutionModify::takeStep(Real input_dt)
+{
+// this is almost identical to Transient::takeStep() except that I've moved around the order of the
+// computation of auxkernels and time step size.
+
+   // Compute Pre-Aux User Objects (Timestep begin)
+  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::PRE_AUX);
+
+  // Compute TimestepBegin AuxKernels
+  _problem.computeAuxiliaryKernels(EXEC_TIMESTEP_BEGIN);
+
+  // Compute Post-Aux User Objects (Timestep begin)
+  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::POST_AUX);
+
+
+  _dt_old = _dt;
+  if (input_dt == -1.0)
+    _dt = computeConstrainedDT();
+  else
+    _dt = input_dt;
+
+  _problem.onTimestepBegin();
+  if (_converged)
+  {
+    // Update backward material data structures
+    _problem.updateMaterials();
+  }
+
+  // Increment time
+  _time = _time_old + _dt;
+
+  std::cout<<"DT: "<<_dt<<std::endl;
+
+  std::cout << " Solving time step ";
+  {
+    OStringStream out;
+
+    OSSInt(out,2,_t_step);
+    out << ", time=";
+    OSSRealzeroleft(out, 9, 6, _time);
+    out <<  "...";
+    std::cout << out.str() << std::endl;
+  }
+
+  preSolve();
+
+  _problem.timestepSetup();
+
+  /* // Compute Pre-Aux User Objects (Timestep begin)
+  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::PRE_AUX);
+
+  // Compute TimestepBegin AuxKernels
+  _problem.computeAuxiliaryKernels(EXEC_TIMESTEP_BEGIN);
+
+  // Compute Post-Aux User Objects (Timestep begin)
+  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::POST_AUX); */
+
+  _problem.solve();
+
+  _converged = _problem.converged();
+
+  // We know whether or not the nonlinear solver thinks it converged, but we need to see if the executioner concurs
+  bool last_solve_converged = lastSolveConverged();
+
+  std::cout << "Converged:" << last_solve_converged << "\n";
+
+  if (last_solve_converged)
+    _problem.computeUserObjects(EXEC_TIMESTEP, UserObjectWarehouse::PRE_AUX);
+
+  // User definable callback
+  postSolve();
+
+  _problem.onTimestepEnd();
+
+  if (last_solve_converged)
+  {
+    _problem.computeAuxiliaryKernels(EXEC_TIMESTEP);
+    _problem.computeUserObjects(EXEC_TIMESTEP, UserObjectWarehouse::POST_AUX);
+  }
 }
 
 void
@@ -40,22 +123,22 @@ MeshSolutionModify::endStep()
 {
   std::cout<<"in MeshSolutionModify::endStep()"<<std::endl;
 
-//bool new_nucleus = _nucleation_userobject->hasNewNucleus();
+  bool new_nucleus = false;;
   unsigned int num_cycles;
 
-  //if(new_nucleus)
-  //  num_cycles = _adapt_nucleus;
-  //else
+ if(_use_nucleation_userobject)
+   new_nucleus = _nucleation_userobject->hasNewNucleus();
+
+  if(new_nucleus)
+    num_cycles = _adapt_nucleus;
+  else
     num_cycles = _adapt_cycles;
 
-    std::cout<<"lastSolveConverged()"<<std::endl;
   if (lastSolveConverged())
   {
     for(unsigned int i=0; i<num_cycles; i++)
     {
-      //std::cout<<"adapting mesh"<<std::endl;
       // Compute the Error Indicators and Markers
-      std::cout<<"_problem.computeIndicatorsAndMarkers()"<<std::endl;
       _problem.computeIndicatorsAndMarkers();
 
 #ifdef LIBMESH_ENABLE_AMR
@@ -63,38 +146,60 @@ MeshSolutionModify::endStep()
       {
         std::cout<<"_problem.adaptMesh()"<<std::endl;
         _problem.adaptMesh();
-        std::cout<<" _problem.out().meshChanged()"<<std::endl;
         _problem.out().meshChanged();
       }
 #endif
     }
-    std::cout<<"_problem.computeUserObjects(EXEC_CUSTOM)"<<std::endl;
     _problem.computeUserObjects(EXEC_CUSTOM);
 
     // if _reset_dt is true, force the output no matter what
-    std::cout<<"_problem.output(_reset_dt)"<<std::endl;
     _problem.output(_reset_dt);
-    std::cout<<"_problem.outputPostprocessors(_reset_dt)"<<std::endl;
     _problem.outputPostprocessors(_reset_dt);
 
     _time_old = _time;
     _t_step++;
 
-    std::cout<<"_problem.copyOldSolutions()"<<std::endl;
     _problem.copyOldSolutions();
   }
   else
-    std::cout<<"_problem.restoreSolutions()"<<std::endl;
     _problem.restoreSolutions();
 
     std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
 }
 
-//void
-//MeshSolutionModify::preExecute()
-//{
-//  Transient::preExecute();
+void
+MeshSolutionModify::preExecute()
+{
+  Transient::preExecute();
 
   // extra add-on here for nasty hacking of the user object system
-//  _nucleation_userobject = &getUserObject<NucleationLocationUserObject>("nucleation_userobject");
-//}
+  if (_use_nucleation_userobject)
+    _nucleation_userobject = &getUserObject<NucleationLocationUserObject>("nucleation_userobject");
+}
+
+Real
+MeshSolutionModify::computeDT()
+{
+  bool new_nucleus = false;
+
+  Real new_dt = _dt;
+
+  if(_use_nucleation_userobject)
+    new_nucleus = _nucleation_userobject->hasNewNucleus();
+
+  //If there's a nucleation event, cut the timestep back down to the input timestep so the quickly varying
+  //solution is captured properly
+  if (!new_nucleus) //no event
+  {
+    new_dt = SolutionTimeAdaptive::computeDT();
+  }
+  else
+    new_dt = _input_dt;
+
+  // I also had the idea of chopping the timestep way down when a nucleation event occurs and only doing
+  // one adaptivity step per timestep, and doing a few tiny timesteps to get in the adaptivity, then
+  // going back to a larger (and growing) timestep.  This is kind of messy though, so I'm going to go with
+  // this method first.
+
+  return new_dt;
+}

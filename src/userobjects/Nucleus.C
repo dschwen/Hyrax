@@ -61,6 +61,12 @@ Nucleus::getOrientation() const
   return _orientation;
 }
 
+//Elem*
+//Nucleus::getOriginalElement() const
+//{
+//  return _original_element;
+//}
+
 void
 Nucleus::setLocation(Point a)
 {
@@ -92,7 +98,7 @@ Nucleus::pack(const std::vector<Nucleus> & to_pack, std::vector<Real> & packed_d
   if (!packed_data.empty())
     return;
 
-  //get the size of the _local_nucleus and multiply by 6, the # of individual pieces of data for each nucleus
+  //get the size of the _local_nucleus and multiply by stride, the # of individual pieces of data for each nucleus
   const unsigned int stride = Nucleus::stride();
   unsigned int packed_size = to_pack.size()*stride;
   packed_data.resize(packed_size);
@@ -112,7 +118,8 @@ Nucleus::pack(const std::vector<Nucleus> & to_pack, std::vector<Real> & packed_d
     packed_data[i+4] = to_pack[j].getEndTime();
     packed_data[i+5] = Real(this_orientation); //need to make sure we won't get any type conversion errors...
 
-   i+=6;
+    //going to need to figure out how to transmit the Elem*
+   i+=stride;
   }
 }
 
@@ -144,9 +151,10 @@ Nucleus::unpack(const std::vector<Real> & packed_data, std::vector<Nucleus> & un
     else
       new_nuclei[j].setOrientation(int(local_orientation)+1);
 
-    i+=6;
+    i+=stride;
   }
 
+  // going to have to figure out how to get the Elem* transmitted around too...
   std::copy(new_nuclei.begin(), new_nuclei.end(), std::back_inserter(unpacked_data));
   //might want to include some error message in here in case unpacking screws up
 }
