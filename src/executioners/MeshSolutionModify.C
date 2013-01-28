@@ -35,26 +35,14 @@ MeshSolutionModify::MeshSolutionModify(const std::string & name, InputParameters
     SolutionTimeAdaptive(name, parameters),
     _adapt_cycles(getParam<unsigned int>("adapt_cycles")),
     _adapt_nucleus(getParam<unsigned int>("adapt_nucleus")),
-    _use_nucleation_userobject(getParam<bool>("use_nucleation_userobject"))
+    _use_nucleation_userobject(getParam<bool>("use_nucleation_userobject")),
+    _new_nucleus(false)
 {
 }
 
-void
+/*void
 MeshSolutionModify::takeStep(Real input_dt)
 {
-// this is almost identical to Transient::takeStep() except that I've moved around the order of the
-// computation of auxkernels and time step size.
-
-   // Compute Pre-Aux User Objects (Timestep begin)
-  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::PRE_AUX);
-
-  // Compute TimestepBegin AuxKernels
-  _problem.computeAuxiliaryKernels(EXEC_TIMESTEP_BEGIN);
-
-  // Compute Post-Aux User Objects (Timestep begin)
-  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::POST_AUX);
-
-
   _dt_old = _dt;
   if (input_dt == -1.0)
     _dt = computeConstrainedDT();
@@ -88,14 +76,14 @@ MeshSolutionModify::takeStep(Real input_dt)
 
   _problem.timestepSetup();
 
-  /* // Compute Pre-Aux User Objects (Timestep begin)
+  // Compute Pre-Aux User Objects (Timestep begin)
   _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::PRE_AUX);
 
   // Compute TimestepBegin AuxKernels
   _problem.computeAuxiliaryKernels(EXEC_TIMESTEP_BEGIN);
 
   // Compute Post-Aux User Objects (Timestep begin)
-  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::POST_AUX); */
+  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::POST_AUX);
 
   _problem.solve();
 
@@ -119,20 +107,20 @@ MeshSolutionModify::takeStep(Real input_dt)
     _problem.computeAuxiliaryKernels(EXEC_TIMESTEP);
     _problem.computeUserObjects(EXEC_TIMESTEP, UserObjectWarehouse::POST_AUX);
   }
-}
+  } */
 
 void
 MeshSolutionModify::endStep()
 {
   std::cout<<"in MeshSolutionModify::endStep()"<<std::endl;
 
-  bool new_nucleus = false;;
+  // bool new_nucleus = false;
   unsigned int num_cycles;
 
  if(_use_nucleation_userobject)
-   new_nucleus = _nucleation_userobject->hasNewNucleus();
+  _new_nucleus = _nucleation_userobject->hasNewNucleus();
 
-  if(new_nucleus)
+  if(_new_nucleus)
     num_cycles = _adapt_nucleus;
   else
     num_cycles = _adapt_cycles;
@@ -183,16 +171,15 @@ MeshSolutionModify::preExecute()
 Real
 MeshSolutionModify::computeDT()
 {
-  bool new_nucleus = false;
 
   Real new_dt = _dt;
 
-  if(_use_nucleation_userobject)
-    new_nucleus = _nucleation_userobject->hasNewNucleus();
+  // if(_use_nucleation_userobject)
+//  _new_nucleus = _nucleation_userobject->hasNewNucleus();
 
   //If there's a nucleation event, cut the timestep back down to the input timestep so the quickly varying
   //solution is captured properly
-  if (!new_nucleus) //no event
+  if (!_new_nucleus) //no event
   {
     new_dt = SolutionTimeAdaptive::computeDT();
   }

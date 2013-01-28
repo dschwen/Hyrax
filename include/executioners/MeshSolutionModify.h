@@ -30,7 +30,7 @@ public:
 
   MeshSolutionModify(const std::string & name, InputParameters parameters);
 
-  virtual void takeStep(Real input_dt = -1.0);
+//  virtual void takeStep(Real input_dt = -1.0);
   virtual void endStep();
   virtual void preExecute();
   Real computeDT();
@@ -40,6 +40,7 @@ protected:
   unsigned int _adapt_nucleus;
 
   bool _use_nucleation_userobject;
+  bool _new_nucleus;
 
   const NucleationLocationUserObject*  _nucleation_userobject;
 };
