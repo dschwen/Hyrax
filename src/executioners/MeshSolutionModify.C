@@ -14,6 +14,9 @@
 #include "MeshSolutionModify.h"
 #include "NucleationLocationUserObject.h"
 
+//libMesh includes
+#include "o_string_stream.h"
+
 #include <ostream>
 
 template<>
