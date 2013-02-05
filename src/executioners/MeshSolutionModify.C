@@ -14,10 +14,10 @@
 #include "MeshSolutionModify.h"
 #include "NucleationLocationUserObject.h"
 
-//libMesh includes
-#include "o_string_stream.h"
-
+// C++
 #include <ostream>
+#include <sstream>
+#include <iomanip>
 
 template<>
 InputParameters validParams<MeshSolutionModify>()
@@ -63,12 +63,19 @@ MeshSolutionModify::takeStep(Real input_dt)
 
   std::cout << " Solving time step ";
   {
-    OStringStream out;
+    std::ostringstream out;
 
-    OSSInt(out,2,_t_step);
-    out << ", time=";
-    OSSRealzeroleft(out, 9, 6, _time);
-    out <<  "...";
+    out << std::setw(2)
+    << _t_step
+    << ", time="
+    << std::setw(9)
+    << std::setprecision(6)
+    << std::setfill('0')
+    << std::showpoint
+    << std::left
+    << _time
+    <<  "...";
+
     std::cout << out.str() << std::endl;
   }
 
