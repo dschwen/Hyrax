@@ -10,7 +10,6 @@
     input = 'AuxNucleationRate_refine1Elemental.i'
     exodiff = 'AuxNucleationRateElemental_refine1.e'
     petsc_version = '>=3.1.0'
-    skip = 'Need to regold'
   [../]
 
   [./AuxSuperSaturationElemental_test]
@@ -38,14 +37,12 @@
     input = 'AuxNucleationRate_refine0Elemental.i'
     exodiff = 'AuxNucleationRateElemental_refine0.e'
     petsc_version = '>=3.1.0'
-    skip = 'Need to regold'
   [../]
 
   [./AuxNucleationProbabilityElemental_test]
     type = 'Exodiff'
     input = 'AuxNucleationProbabilityElemental.i'
     exodiff = 'AuxNucleationProbabilityElemental.e'
-    skip = 'Need to regold'
   [../]
 
   [./AuxNucleationProbability_test]
