@@ -78,7 +78,7 @@
 
 namespace Hyrax
 {
-  void registerObjects()
+  void registerObjects(Factory & factory)
   {
     //Kernels
     registerKernel(CHBulkCoupled);

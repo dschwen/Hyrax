@@ -6,10 +6,10 @@
 *
 *  16 November 2011
 *
-*  
-*  This code handles the materials parameters for a coupled 
+*
+*  This code handles the materials parameters for a coupled
 *  conserved order parameter, non-conserved order parameter
-*  system. 
+*  system.
 *************************************************************************/
 
 #ifndef HYRAX_H
@@ -20,7 +20,7 @@ namespace Hyrax
   /**
    * Registers all Kernels and BCs
    */
-  void registerObjects();
+  void registerObjects(Factory & factory);
 }
 
 #endif //HYRAX_H
