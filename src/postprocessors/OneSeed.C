@@ -59,7 +59,7 @@ void
 OneSeed::initialize()
 {
   // Assumption: We are going to assume that all variables are periodic together
-  _mesh.initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
+//  _mesh.initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
 }
 
 void
@@ -82,7 +82,7 @@ OneSeed::modifySolutionVector()
       // check the node against the nucleation point and see if it lives within distance the nucleus
       Real distance;
 
-      distance = _mesh.minPeriodicDistance(_location, *node);
+      distance = _mesh.minPeriodicDistance(_moose_variable[0]->number(), _location, *node);
       //if( _t < _dwell_time)
       //{
       if(_t >= _restart_time && _restart)

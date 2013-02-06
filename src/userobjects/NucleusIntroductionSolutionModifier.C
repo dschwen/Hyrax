@@ -55,7 +55,7 @@ void
 NucleusIntroductionSolutionModifier::initialize()
 {
   // Assumption: We are going to assume that all variables are periodic together
-  _mesh.initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
+//  _mesh.initPeriodicDistanceForVariable(_nl, _moose_variable[0]->number());
 }
 
 void
@@ -78,7 +78,7 @@ NucleusIntroductionSolutionModifier::execute()
     Real distance;
     for(unsigned int j(0); j<nuclei.size(); j++)
     {
-      distance = _mesh.minPeriodicDistance(nuclei[j].getLocation(), *node);
+      distance = _mesh.minPeriodicDistance(_moose_variable[0]->number(), nuclei[j].getLocation(), *node);
 
       if( _t >= nuclei[j].getStartTime() &&
           _t < nuclei[j].getEndTime() )
