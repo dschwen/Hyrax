@@ -45,7 +45,9 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
       _Cijkl_matrix_MP(declareProperty<ElasticityTensorR4>("Cijkl_matrix_MP")),
       //_Cijkl_precipitates_rotated_MP(declareProperty<std::vector<ElasticityTensorR4 > >("Cijkl_precipitates_rotated_MP")),
       //_d_elasticity_tensor(declareProperty<std::vector<ElasticityTensorR4> >("d_elasticity_tensor")),
-      _d_eigenstrains_rotated_MP(declareProperty<std::vector<RankTwoTensor> >("d_eigenstrains_rotated_MP"))
+      _d_eigenstrains_rotated_MP(declareProperty<std::vector<RankTwoTensor> >("d_eigenstrains_rotated_MP")),
+      _precipitate_eigenstrain_rotated(declareProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain_rotated")),
+      _precipitate_elasticity(declareProperty<std::vector<ElasticityTensorR4> >("precipitate_elasticity"))
 {
   // check to make sure the input file is all set up right
   if(_n_variants != coupledComponents("variable_names"))
@@ -111,13 +113,15 @@ void
     _eigenstrains_rotated_MP[_qp].resize(_n_variants);
     //_d_elasticity_tensor[_qp].resize(_n_variants);
     _d_eigenstrains_rotated_MP[_qp].resize(_n_variants);
-    
+    _precipitate_eigenstrain_rotated[_qp].resize(_n_variants);
+    _precipitate_elasticity[_qp].resize(_n_variants);
+
     computeQpElasticityTensor();
     computeQpEigenstrain();
     computeQpElasticStrain();
     computeQpElasticStress();
   }
-  
+
  }
 
  void
@@ -125,6 +129,9 @@ void
  {
    //assuming homogeneous modulus between precipitate and matrix
    LinearElasticMaterial::computeQpElasticityTensor();
+
+   for(int i(0); i < _n_variants; ++i)
+     (_precipitate_elasticity[_qp])[i] = _Cijkl;
 
 // ignore all this below for the moment
    /**
@@ -195,6 +202,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
     // Fill in the precipitates' eigenstrains materials property
     (_eigenstrains_rotated_MP[_qp])[i] = _eigenstrains_rotated[i]*interpolation_value;
     (_d_eigenstrains_rotated_MP[_qp])[i] = _eigenstrains_rotated[i]*d_interp_value;
+    (_precipitate_eigenstrain_rotated[_qp])[i] = _eigenstrains_rotated[i];
   }
 }
 

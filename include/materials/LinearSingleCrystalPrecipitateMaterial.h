@@ -87,6 +87,10 @@ private:
   //MaterialProperty<std::vector<ElasticityTensorR4> > & _d_elasticity_tensor;
   MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
 
+  // These have been added to allow the auxkernel to access the elasticity tensor and rotated eigenstrain values for precipitates
+  MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain_rotated;
+  MaterialProperty<std::vector<ElasticityTensorR4> > & _precipitate_elasticity;
+
   // Vector of references to the coupled order parameters
   std::vector<VariableValue *> _coupled_variables;
 };

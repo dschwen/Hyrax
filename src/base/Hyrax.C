@@ -35,6 +35,7 @@
 #include "AuxNucleationProbability.h"
 #include "AuxNucleationRate.h"
 #include "AuxSupersaturation.h"
+#include "AuxChemElastic.h"
 //#include "AuxTestFlip.h"
 #include "ReporterAux.h"
 
@@ -102,6 +103,7 @@ namespace Hyrax
     registerAux(AuxSupersaturation);
     registerAux(AuxNucleationRate);
     registerAux(AuxNucleationProbability);
+    registerAux(AuxChemElastic);
     //registerAux(AuxTestFlip);
     registerAux(ReporterAux);
 
