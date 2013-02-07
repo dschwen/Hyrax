@@ -24,8 +24,9 @@
 HyraxApp::HyraxApp(int argc, char * argv []) :
     MooseApp(argc, argv)
 {
-  init();
+  Moose::registerObjects(_factory);
   Hyrax::registerObjects(_factory);
+
   // Register Elk Modules
   Elk::PhaseField::registerObjects(_factory);
   Elk::SolidMechanics::registerObjects(_factory);
@@ -33,6 +34,7 @@ HyraxApp::HyraxApp(int argc, char * argv []) :
   Elk::HeatConduction::registerObjects(_factory);
 
   // Associate Syntax from SolidMechanics Module
+  Moose::associateSyntax(_syntax, _action_factory);
   Elk::SolidMechanics::associateSyntax(_syntax, _action_factory);
   Elk::TensorMechanics::associateSyntax(_syntax, _action_factory);
   Elk::HeatConduction::associateSyntax(_syntax, _action_factory);
