@@ -9,9 +9,9 @@
   ny = 100
   nz = 0
   xmin = 0
-  xmax = 500
+  xmax = 200
   ymin = 0
-  ymax = 500
+  ymax = 200
   zmin = 0
   zmax = 0
   elem_type = QUAD4
@@ -72,20 +72,20 @@
     family = LAGRANGE
   [../]
 
-  [./n1_untouched]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+#  [./n1_untouched]
+#    order = FIRST
+#    family = LAGRANGE
+#  [../]
 
-  [./n2_untouched]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+#  [./n2_untouched]
+#    order = FIRST
+#    family = LAGRANGE
+#  [../]
 
-  [./n3_untouched]
-    order = FIRST
-    family = LAGRANGE
-  [../]
+#  [./n3_untouched]
+#    order = FIRST
+#    family = LAGRANGE
+#  [../]
 
   #stresses
   [./s11_aux]
@@ -98,25 +98,25 @@
     family = MONOMIAL
   [../]
 
-  [./s13_aux]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+#  [./s13_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
 
   [./s22_aux]
     order = CONSTANT
     family = MONOMIAL
   [../]
 
-  [./s23_aux]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+#  [./s23_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
 
-  [./s33_aux]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+#  [./s33_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
 
   #strains
   [./e11_aux]
@@ -129,25 +129,25 @@
     family = MONOMIAL
   [../]
 
-  [./e13_aux]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+#  [./e13_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
 
   [./e22_aux]
     order = CONSTANT
     family = MONOMIAL
   [../]
 
-  [./e23_aux]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+#  [./e23_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
 
-  [./e33_aux]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
+#  [./e33_aux]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
 []
 
 [TensorMechanics]
@@ -297,26 +297,26 @@
     execute_on = timestep
   [../]
 
-  [./Report_n1]
-    type = ReporterAux
-    variable = n1_untouched
-    coupled = n1
-    execute_on  = timestep
-   [../]
+#  [./Report_n1]
+#    type = ReporterAux
+#    variable = n1_untouched
+#    coupled = n1
+#    execute_on  = timestep
+#   [../]
 
-  [./Report_n2]
-    type = ReporterAux
-    variable = n2_untouched
-    coupled = n2
-    execute_on  = timestep
-   [../]
+#  [./Report_n2]
+#    type = ReporterAux
+#    variable = n2_untouched
+#    coupled = n2
+#    execute_on  = timestep
+#   [../]
 
-  [./Report_n3]
-    type = ReporterAux
-    variable = n3_untouched
-    coupled = n3
-    execute_on  = timestep
-   [../]
+#  [./Report_n3]
+#    type = ReporterAux
+#    variable = n3_untouched
+#    coupled = n3
+#    execute_on  = timestep
+#   [../]
 
   [./matl_s11]
     type = RankTwoAux
@@ -334,13 +334,13 @@
     variable = s12_aux
   [../]
 
-  [./matl_s13]
-    type = RankTwoAux
-    rank_two_tensor = stress
-    index_i = 1
-    index_j = 3
-    variable = s13_aux
-  [../]
+#  [./matl_s13]
+#    type = RankTwoAux
+#    rank_two_tensor = stress
+#    index_i = 1
+#    index_j = 3
+#    variable = s13_aux
+#  [../]
 
   [./matl_s22]
     type = RankTwoAux
@@ -350,21 +350,21 @@
     variable = s22_aux
   [../]
 
-  [./matl_s23]
-    type = RankTwoAux
-    rank_two_tensor = stress
-    index_i = 2
-    index_j = 3
-    variable = s23_aux
-  [../]
+#  [./matl_s23]
+#    type = RankTwoAux
+#    rank_two_tensor = stress
+#    index_i = 2
+#    index_j = 3
+#    variable = s23_aux
+#  [../]
 
-  [./matl_s33]
-    type = RankTwoAux
-    rank_two_tensor = stress
-    index_i = 3
-    index_j = 3
-    variable = s33_aux
-  [../]
+#  [./matl_s33]
+#    type = RankTwoAux
+#    rank_two_tensor = stress
+#    index_i = 3
+#    index_j = 3
+#    variable = s33_aux
+#  [../]
 
   [./matl_e11]
     type = RankTwoAux
@@ -382,13 +382,13 @@
     variable = e12_aux
   [../]
 
-  [./matl_e13]
-    type = RankTwoAux
-    rank_two_tensor = elastic_strain
-    index_i = 1
-    index_j = 3
-    variable = e13_aux
-  [../]
+#  [./matl_e13]
+#    type = RankTwoAux
+#    rank_two_tensor = elastic_strain
+#    index_i = 1
+#    index_j = 3
+#    variable = e13_aux
+#  [../]
 
   [./matl_e22]
     type = RankTwoAux
@@ -398,21 +398,21 @@
     variable = e22_aux
   [../]
 
-  [./matl_e23]
-    type = RankTwoAux
-    rank_two_tensor = elastic_strain
-    index_i = 2
-    index_j = 3
-    variable = e23_aux
-  [../]
+#  [./matl_e23]
+#    type = RankTwoAux
+#    rank_two_tensor = elastic_strain
+#    index_i = 2
+#    index_j = 3
+#    variable = e23_aux
+#  [../]
 
-  [./matl_e33]
-    type = RankTwoAux
-    rank_two_tensor = elastic_strain
-    index_i = 3
-    index_j = 3
-    variable = e33_aux
-  [../]
+#  [./matl_e33]
+#    type = RankTwoAux
+#    rank_two_tensor = elastic_strain
+#    index_i = 3
+#    index_j = 3
+#    variable = e33_aux
+#  [../]
 []
 
 [BCs]
@@ -515,12 +515,12 @@
   nl_max_its = 10
 
   start_time = 0.0
-  num_steps = 200
-  dt = 0.03
+  num_steps = 100
+  dt = 0.3
 []
 
 [Output]
-  file_base = CNG
+  file_base = CNG_1
   output_initial = true
   interval = 5
   exodus = true
