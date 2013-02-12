@@ -10,7 +10,7 @@
 
 #include "PolySpecifiedSmoothCircleIC.h"
 
-#include "libmesh.h"
+#include "libmesh/libmesh.h"
 
 /**
  * PolySpecifiedSmoothCircleIC creates n number of circles of a given radius centered over n specified

@@ -12,7 +12,7 @@
 #define POLYSPECIFIEDSMOOTHCIRCLEIC_H
 
 #include "InitialCondition.h"
-#include "point.h"
+#include "libmesh/point.h"
 
 /**
  * PolySpecifiedSmoothCircleIC creates n number of circles of a given radius centered over n specified points

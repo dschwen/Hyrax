@@ -10,8 +10,8 @@
 
 #include "Nucleus.h"
 
-#include "libmesh.h"
-#include "point.h"
+#include "libmesh/libmesh.h"
+#include "libmesh/point.h"
 
 Nucleus::Nucleus():
     _start_time(0),

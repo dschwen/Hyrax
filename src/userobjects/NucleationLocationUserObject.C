@@ -15,7 +15,7 @@
 #include "MooseMesh.h"
 #include "NonlinearSystem.h"
 #include "GeneratedMesh.h"
-#include "parallel.h"
+#include "libmesh/parallel.h"
 
 #include <ostream>
 
