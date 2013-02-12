@@ -6,18 +6,15 @@
 *
 *  16 November 2011
 *
-*  
-*  This code handles the materials parameters for a coupled 
+*
+*  This code handles the materials parameters for a coupled
 *  conserved order parameter, non-conserved order parameter
-*  system. 
+*  system.
 *************************************************************************/
 
 #include "HyraxApp.h"
 #include "MooseInit.h"
 #include "Moose.h"
-
-// libMesh includes
-#include "perf_log.h"
 
 // Create a performance log
 PerfLog Moose::perf_log("HYRAX");
