@@ -24,7 +24,8 @@ InputParameters validParams<NucleationLocationUserObject>()
 {
   InputParameters params = validParams<ElementUserObject>();
 
-  params.addRequiredCoupledVar("coupled_aux", "coupled elemental auxiliary variable");
+  params.addRequiredCoupledVar("coupled_aux_vars", "coupled elemental auxiliary variables");
+  params.addRequiredParam<int>("n_coupled_aux", "# of coupled aux variables");
   params.addRequiredParam<Real>("dwell_time", "How long nucleation event is");
   params.set<MooseEnum>("execute_on") = "timestep_begin";
   params.addRequiredParam<int>("num_orientations", "# of orientation variants");
@@ -35,7 +36,8 @@ InputParameters validParams<NucleationLocationUserObject>()
 NucleationLocationUserObject::NucleationLocationUserObject(const std::string & name, InputParameters parameters) :
     ElementUserObject(name, parameters),
     _mesh(_subproblem.mesh()),
-    _coupled_probability(coupledValue("coupled_aux")),
+    //_coupled_probability(coupledValue("coupled_aux")),
+    _n_coupled_aux(getParam<int>("n_coupled_aux")),
     _dwell_time(getParam<Real>("dwell_time")),
     _num_orientations(getParam<int>("num_orientations")),
     _counter(0),
@@ -44,6 +46,13 @@ NucleationLocationUserObject::NucleationLocationUserObject(const std::string & n
     _old_nucleus_list_size(0),
     _has_new_nucleus(false)
 {
+    if(_n_coupled_aux != coupledComponents("coupled_aux_vars"))
+    mooseError("Please specify the correct # of coupled probabilities (NucleationLocationUserObject).");
+
+  _coupled_probability.resize(_n_coupled_aux);
+
+  for(unsigned int i=0; i<_n_coupled_aux; i++)
+    _coupled_probability[i] = &coupledValue("coupled_aux_vars", i);
 }
 
 void
@@ -71,30 +80,34 @@ NucleationLocationUserObject::execute()
   _mrand.seed(elem_id, elem_id + (_counter * _mesh.n_elem()));
   Real random_number = _mrand.rand(elem_id);
 
-  //test for nucleation
-  if ((_coupled_probability[0] > 0) && (random_number < _coupled_probability[0]))
+  for(unsigned int i(0); i<_n_coupled_aux; ++i)
   {
-    // get the centroid of the element as the center of the nucleus
-    Point nucleus_center = _current_elem->centroid();
-    //  Elem* original_elem = _current_elem;
+    //test for nucleation
+    if (((*_coupled_probability[i])[0] > 0) && (random_number < (*_coupled_probability[i])[0]))
+    {
+      // get the centroid of the element as the center of the nucleus
+      Point nucleus_center = _current_elem->centroid();
+      //  Elem* original_elem = _current_elem;
 
-    Nucleus current_nucleus;
-    current_nucleus.setLocation(nucleus_center);
-    current_nucleus.setStartTime(_t);
-    current_nucleus.setEndTime(_t+_dwell_time);
-    // current_nucleus.setOriginalElement(_current_elem);
+      Nucleus current_nucleus;
+      current_nucleus.setLocation(nucleus_center);
+      current_nucleus.setStartTime(_t);
+      current_nucleus.setEndTime(_t+_dwell_time);
+      // current_nucleus.setOriginalElement(_current_elem);
 
-    _mrand.seed(_phase_gen_index, elem_id);
-    int r_num = _mrand.randl(_phase_gen_index);
+      // _mrand.seed(_phase_gen_index, elem_id);
+      //int r_num = _mrand.randl(_phase_gen_index);
 
-    /**
-     * randl supplies some integer random number, we want to be between 1 and n coupled
-     * vars, so modulo size()
-     */
-    r_num = r_num%_num_orientations;
+      /**
+       * randl supplies some integer random number, we want to be between 1 and n coupled
+       * vars, so modulo size()
+       */
+      //r_num = r_num%_num_orientations;
 
-    current_nucleus.setOrientation(r_num);
-    _local_nucleus.push_back(current_nucleus);
+      //current_nucleus.setOrientation(r_num);
+      current_nucleus.setOrientation(i);
+      _local_nucleus.push_back(current_nucleus);
+    }
   }
 }
 

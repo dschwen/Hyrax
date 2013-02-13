@@ -113,10 +113,14 @@
     OP_var_names = 'concentration'
     n_OP_vars = 1
     coupled_aux_var = elemental_Supersaturation
-    Beta_star = 0.1
-    linear_density = 50
+    Beta_star = 10
+    linear_density = 80
     Z = 0.1
-    Kn2 = 0.3
+    #Kn2 = 0.3
+
+    gamma = 0.18
+    scale_factor = 900e-22
+
     execute_on = timestep
   [../]
 
@@ -166,8 +170,9 @@
 [UserObjects]
   [./NLUO]
     type = NucleationLocationUserObject
-    variable = concentration
-    coupled_aux = elemental_NucleationProbability
+    #variable = concentration
+    coupled_aux_vars = 'elemental_NucleationProbability'
+    n_coupled_aux = 1
     dwell_time = 0.1
     num_orientations = 1
   [../]

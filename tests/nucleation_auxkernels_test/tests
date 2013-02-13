@@ -50,4 +50,10 @@
     input = 'AuxNucleationProbability.i'
     exodiff = 'AuxNucleationProbability.e'
   [../]
+
+  [./AuxChemElastic_test]
+    type = 'Exodiff'
+    input = 'AuxChemElastic.i'
+    exodiff = 'AuxChemElastic.e'
+  [../]
 []

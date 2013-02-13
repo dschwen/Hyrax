@@ -46,7 +46,10 @@ protected:
 private:
 
   MooseMesh & _mesh;
-  VariableValue & _coupled_probability;
+  // VariableValue & _coupled_probability;
+  std::vector<VariableValue *> _coupled_probability;
+
+  unsigned int _n_coupled_aux;
 
   Real _dwell_time;
   int _num_orientations;

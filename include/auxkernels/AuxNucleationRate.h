@@ -40,9 +40,11 @@ protected:
 
 private:
 
-  VariableValue & _coupled_supersaturation; ///< concentration supersaturation
+  VariableValue & _coupled_energy; ///< area/volume free energy change of transformation
   //Real _Kn1;  				    ///< First nucleation rate value
-  Real _Kn2;				    ///< Second nucleation rate value
+  //Real _Kn2;				    ///< Second nucleation rate value
+
+
   Real _Z;                                  // Zeldovich non-equilibrium factor
   //Real _N;                                  // # of atoms in phase field cell
   Real _beta_star;                          // 1/characteristic nucleation time
@@ -50,6 +52,11 @@ private:
 
   unsigned int _n_OP_vars;
   std::vector<VariableValue *> _coupled_OP_vars;
+
+  Real _gamma;
+  Real _Kb;
+  Real _temperature;
+  Real _scale_factor;
 
 };
 

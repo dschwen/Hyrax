@@ -194,9 +194,12 @@ n
     variable = nodal_NucleationRate
     coupled_aux_var = nodal_Supersaturation
     #Kn1 = 0.8
-    Kn2 = 0.001
+    #Kn2 = 0.001
+    gamma = 0.18
+    scale_factor = 900e-22
+
     Z = 0.1
-    Beta_star = 100
+    Beta_star = 100e6
     linear_density = 0.113137085
     OP_var_names = 'n1 n2 n3'
     n_OP_vars = 3

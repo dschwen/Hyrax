@@ -9,6 +9,7 @@
 *************************************************************************/
 
 #include "AuxChemElastic.h"
+#include <ostream>
 
 template<>
 InputParameters validParams<AuxChemElastic>()
@@ -27,8 +28,8 @@ InputParameters validParams<AuxChemElastic>()
 
 AuxChemElastic::AuxChemElastic(const std::string & name, InputParameters parameters) :
     AuxKernel(name, parameters),
-    _coupled_cons(coupledValue("coupled_conserved")),
-    _coupled_noncons(coupledValue("coupled_nonconserved")),
+    _coupled_cons(coupledValue("coupled_conserved_var")),
+    _coupled_noncons(coupledValue("coupled_nonconserved_var")),
     _precip_conserved(getParam<Real>("precip_conserved")),
     _precip_nonconserved(getParam<Real>("precip_nonconserved")),
     _a1(getMaterialProperty<Real>("A1")),
@@ -38,7 +39,7 @@ AuxChemElastic::AuxChemElastic(const std::string & name, InputParameters paramet
     _c1(getMaterialProperty<Real>("C1")),
     _c2(getMaterialProperty<Real>("C2")),
     //  _n_variants(getParam<unsigned int>("n_variants")),
-    _noncons_var_num(getParam<unsigned int>("nonconserved_var_numnber")),
+    _noncons_var_num(getParam<int>("nonconserved_var_number")),
     _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_rotated_MP")),
     _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
     _precipitate_eigenstrain_rotated(getMaterialProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain_rotated")),
@@ -59,7 +60,7 @@ AuxChemElastic::computeValue()
   precip_energy = computeEnergy(_precip_conserved, _precip_nonconserved, false);
   differential = computeDifferential(_coupled_cons[_qp], _coupled_noncons[_qp]);
 
-  return (matrix_energy - precip_energy + differential);
+  return (precip_energy - matrix_energy + differential);
 }
 
 Real
@@ -75,7 +76,6 @@ AuxChemElastic::computeEnergy(Real & conserved, Real & nonconserved, bool matrix
 
   return fchem + self_elastic_energy - interaction_elastic_energy;
 }
-
 
 Real
 AuxChemElastic::computeDifferential(Real & coupled_conserved, Real & coupled_nonconserved)
@@ -120,8 +120,8 @@ AuxChemElastic::computeFchem(Real & conserved, Real & nonconserved)
 
   first_term = _a1[_qp]*0.5*(conserved - _c1[_qp])*(conserved - _c1[_qp]);
   second_term = _a2[_qp]*0.5*(conserved - _c2[_qp])*(nonconserved)*(nonconserved);
-  third_term = _a3[_qp]*0.25*(pow(nonconserved, 4));
-  fourth_term = _a4[_qp]*(pow(nonconserved, 6))/6;
+  third_term = _a3[_qp]*0.25*(std::pow(nonconserved, 4));
+  fourth_term = _a4[_qp]*(std::pow(nonconserved, 6))/6;
 
   return first_term + second_term - third_term + fourth_term;
 }
@@ -178,7 +178,7 @@ AuxChemElastic::computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonc
   Real first_term;
   Real second_term;
 
-  first_term = _a1[_qp]*(coupled_conserved - _c1[_qp]);
+ first_term = _a1[_qp]*(coupled_conserved - _c1[_qp]);
   second_term =  0.5*_a2[_qp]*coupled_nonconserved*coupled_nonconserved;
 
   return first_term + second_term;
@@ -207,8 +207,8 @@ AuxChemElastic::computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_n
   Real third_term;
 
   first_term = _a2[_qp]*coupled_nonconserved*(coupled_conserved - _c2[_qp]);
-  second_term = _a3[_qp]*pow(coupled_nonconserved, 3);
-  third_term = _a4[_qp]*pow(coupled_nonconserved, 5);
+  second_term = _a3[_qp]*std::pow(coupled_nonconserved, 3);
+  third_term = _a4[_qp]*std::pow(coupled_nonconserved, 5);
 
   return first_term - second_term + third_term;
 }
@@ -234,8 +234,8 @@ AuxChemElastic::computeDselfDnoncons()
 Real
 AuxChemElastic::computeDintDnoncons()
 {
- RankTwoTensor d_eigenstrain;
- RankTwoTensor c;
+  RankTwoTensor d_eigenstrain;
+  RankTwoTensor c;
   ElasticityTensorR4 elasticity;
 
   d_eigenstrain = (_precipitate_eigenstrain_rotated[_qp])[_noncons_var_num-1];
