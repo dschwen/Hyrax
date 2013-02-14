@@ -86,7 +86,7 @@ AuxNucleationRate::computeValue()
   // correct the density to the actual element volume to get # of atoms
   kn1 *= _current_elem_volume;
 
-  kn2 = _scale_factor*alpha*std::pow(_gamma, _dim)/(_Kb*_temperature);
+  kn2 = _scale_factor*alpha*std::pow(_gamma, (int)_dim)/(_Kb*_temperature);
 
   // check to see if we're in a particle; if so, return 0 for J*
   for(unsigned int i=0; i<_n_OP_vars; i++)
@@ -98,6 +98,6 @@ AuxNucleationRate::computeValue()
 
   }
 
-  return kn1*exp(-1.0*kn2/std::pow(_coupled_energy[_qp], _dim-1));
+  return kn1*exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
 }
 
