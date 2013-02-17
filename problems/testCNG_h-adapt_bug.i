@@ -130,21 +130,21 @@
   [../]
 []
 
-[BCs]
-  [./c_BC]
-    type = NeumannBC
-    variable = concentration
-    boundary = '0 1 2 3'
-    value = 0.0
-  [../]
+#[BCs]
+#  [./c_BC]
+#    type = NeumannBC
+#    variable = concentration
+#    boundary = '0 1 2 3'
+#    value = 0.0
+#  [../]
 
-  [./n1_BC]
-    type = NeumannBC
-    variable = n1
-    boundary = '0 1 2 3'
-    value = 0.0
-  [../]
-[]
+#  [./n1_BC]
+#    type = NeumannBC
+#    variable = n1
+#    boundary = '0 1 2 3'
+#    value = 0.0
+#  [../]
+#[]
 
 [Materials]
   [./constant]
@@ -224,6 +224,8 @@
   end_time = 2
   abort_on_solve_fail = true
   adapt_cycles = 5
+  adapt_nucleus = 7
+  nucleation_userobject = NLUO
 #  max_h_level = 2
 
   petsc_options = -snes_mf_operator
@@ -262,7 +264,7 @@
 []
 
 [Output]
-  file_base = testCNG_h-adapt_bug
+  file_base = testCNG_h-adapt_bug1
   output_initial = true
   interval = 1
   exodus = true

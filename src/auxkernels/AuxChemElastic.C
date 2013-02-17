@@ -40,12 +40,12 @@ AuxChemElastic::AuxChemElastic(const std::string & name, InputParameters paramet
     _c2(getMaterialProperty<Real>("C2")),
     //  _n_variants(getParam<unsigned int>("n_variants")),
     _noncons_var_num(getParam<int>("nonconserved_var_number")),
-    _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_rotated_MP")),
+    _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
     _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
-    _precipitate_eigenstrain_rotated(getMaterialProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain_rotated")),
-     _precipitate_elasticity(getMaterialProperty<std::vector<ElasticityTensorR4> >("precipitate_elasticity")),
+    _precipitate_eigenstrain_rotated(getMaterialProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain")),
+     _precipitate_elasticity(getMaterialProperty<std::vector<ElasticityTensorR4> >("Cijkl_precipitates_MP")),
      _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
-     _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("d_eigenstrains_rotated_MP"))
+     _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("d_eigenstrains_MP"))
 {
 }
 

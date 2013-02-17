@@ -15,6 +15,9 @@
 #define STRESSBC_H
 
 #include "IntegratedBC.h"
+#include "RankTwoTensor.h"
+#include "ElasticityTensorR4.h"
+
 //LibMesh includes
 //#include "libmesh/vector_value.h"
 
@@ -36,15 +39,23 @@ public:
 
 protected:
   virtual Real computeQpResidual();
+  virtual Real computeQpJacobian();
+
+  std::vector<Real> _stress_vector;
+
+  RankTwoTensor _boundary_stress;
+
+   MaterialProperty<ElasticityTensorR4> & _Jacobian_mult;
+
 
   //private:
-  const int _component; 
-  const Real _stress_xx;
+  const int _component;
+  /* const Real _stress_xx;
   const Real _stress_xy;
   const Real _stress_yy;
   const Real _stress_yz;
   const Real _stress_zx;
-  const Real _stress_zz;
+  const Real _stress_zz;*/
 };
 
 #endif

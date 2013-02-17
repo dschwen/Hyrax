@@ -32,11 +32,11 @@ InputParameters validParams<ACTransformElasticDF>()
 ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParameters parameters)
     : ACBulk(name, parameters),
       _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
-      _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_rotated_MP")),
+      _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
       _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
       //_d_elasticity_tensor(getMaterialProperty<std::vector<ElasticityTensorR4> >("d_elasticity_tensor")),
       _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
-      _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor > >("eigenstrains_rotated_MP")),
+      _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor > >("d_eigenstrains_MP")),
       _n_OP_vars(getParam<int>("n_OP_vars")),
       _OP_number(getParam<int>("OP_number"))
 {
