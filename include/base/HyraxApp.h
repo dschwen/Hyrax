@@ -6,10 +6,10 @@
 *
 *  30 May 2012
 *
-*  
-*  This code handles the materials parameters for a coupled 
+*
+*  This code handles the materials parameters for a coupled
 *  conserved order parameter, non-conserved order parameter
-*  system. 
+*  system.
 *************************************************************************/
 
 #ifndef HYRAXAPP_H
@@ -17,10 +17,15 @@
 
 #include "MooseApp.h"
 
+class HyraxApp;
+
+template<>
+InputParameters validParams<HyraxApp>();
+
 class HyraxApp : public MooseApp
 {
 public:
-  HyraxApp(int argc, char * argv []);
+  HyraxApp(const std::string & name, InputParameters parameters);
 };
 
 #endif //HYRAXAPP_H

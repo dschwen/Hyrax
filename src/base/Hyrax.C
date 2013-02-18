@@ -10,7 +10,9 @@
 
 #include "Moose.h"
 #include "Hyrax.h"
+#include "HyraxApp.h"
 #include "Factory.h"
+#include "AppFactory.h"
 #include "ActionFactory.h"
 
 //Kernels
@@ -79,6 +81,11 @@
 
 namespace Hyrax
 {
+  void registerApps()
+  {
+    registerApp(HyraxApp);
+  }
+
   void registerObjects(Factory & factory)
   {
     //Kernels

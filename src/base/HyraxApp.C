@@ -21,8 +21,15 @@
 #include "MiscModule.h"
 
 
-HyraxApp::HyraxApp(int argc, char * argv []) :
-    MooseApp(argc, argv)
+template<>
+InputParameters validParams<HyraxApp>()
+{
+  InputParameters params = validParams<MooseApp>();
+  return params;
+}
+
+HyraxApp::HyraxApp(const std::string & name, InputParameters parameters) :
+    MooseApp(name, parameters)
 {
   Moose::registerObjects(_factory);
   Hyrax::registerObjects(_factory);

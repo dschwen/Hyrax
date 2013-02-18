@@ -12,21 +12,33 @@
 *  system.
 *************************************************************************/
 
-#include "HyraxApp.h"
+#include "Hyrax.h"
+//Moose Includes
 #include "MooseInit.h"
 #include "Moose.h"
+#include "MooseApp.h"
+#include "AppFactory.h"
 
 // Create a performance log
-PerfLog Moose::perf_log("HYRAX");
+PerfLog Moose::perf_log("Hyrax");
 
-// Begin the main program.
-int main (int argc, char** argv)
+ // Begin the main program.
+int main(int argc, char *argv[])
 {
-  // Create a MooseInit Object
-  MooseInit init (argc, argv);
-  HyraxApp app(argc, argv);
+  // Initialize MPI, solvers and MOOSE
+  MooseInit init(argc, argv);
 
-  app.run();
+  // Register this application's MooseApp and any it depends on
+  Hyrax::registerApps();
+
+  // This creates dynamic memory that we're responsible for deleting
+  MooseApp * app = AppFactory::createApp("HyraxApp", argc, argv);
+
+  // Execute the application
+  app->run();
+
+  // Free up the memory we created earlier
+  delete app;
 
   return 0;
 }
