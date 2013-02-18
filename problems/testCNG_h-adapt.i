@@ -111,7 +111,7 @@
     variable = elemental_Supersaturation
     coupled_var = concentration
     functional_c1 = 0.006
-    execute_on = timestep_begin
+    execute_on = timestep#_begin
   [../]
 
   [./NucleationRate]
@@ -124,7 +124,7 @@
     linear_density = 50
     Z = 0.001
     Kn2 = 0.033
-    execute_on = timestep_begin
+    execute_on = timestep#_begin
   [../]
 
   [./NucleationProbability]
@@ -133,7 +133,7 @@
     coupled_aux_var = elemental_NucleationRate
     coupled_variables = 'n1'
     n_OP_vars = 1
-    execute_on = timestep_begin
+    execute_on = timestep#_begin
   [../]
 []
 
@@ -177,7 +177,7 @@
     coupled_aux = elemental_NucleationProbability
     dwell_time = 0.1
     num_orientations = 1
-#   execute_on = timestep_begin
+    execute_on = timestep#_begin
   [../]
 
   [./NISM]
@@ -235,6 +235,7 @@
   abort_on_solve_fail = true
   adapt_cycles = 5
 
+  use_nucleation_userobject = true 
   nucleation_userobject = NLUO
 
   petsc_options = -snes_mf_operator
@@ -272,7 +273,7 @@
 []
 
 [Output]
-  file_base = testCNG_h-adapt_forreal
+  file_base = testCNG_h-adapt
   output_initial = true
   interval = 100
   exodus = true

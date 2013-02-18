@@ -1,4 +1,4 @@
-# this input file is to test the concurrent nucleation and growth with mesh adaptivity and the updated 
+# this input file is to test the concurrent nucleation and growth with mesh adaptivity and the updated
 # MeshSolutionModify executioner (svn rev. 16195)
 
 [Mesh]
@@ -14,7 +14,7 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 5 
+  uniform_refine = 5
 []
 
 [Variables]
@@ -22,8 +22,9 @@
     order = THIRD
     family = HERMITE
     [./InitialCondition]
-      type = ConstantIC
-      value = 0.0562
+     type = ConstantIC
+     value = 0.0562
+    #type = RandomIC
     [../]
   [../]
 
@@ -37,6 +38,7 @@
       radius = 1.8
       x1 = 20
       y1 = 20
+     #type = RandomIC
     [../]
   [../]
 []
@@ -121,10 +123,16 @@
     OP_var_names = 'n1'
     n_OP_vars = 1
     coupled_aux_var = elemental_Supersaturation
+
+   gamma = 0.8
+   scale_factor = 1
+   Kb = 1
+
     Beta_star = 0.00005
     linear_density = 50
     Z = 0.001
-    Kn2 = 0.033
+
+    #Kn2 = 0.033
     execute_on = timestep#_begin
   [../]
 
@@ -175,7 +183,8 @@
   [./NLUO]
     type = NucleationLocationUserObject
 #    variable = n1
-    coupled_aux = elemental_NucleationProbability
+    coupled_aux_vars = 'elemental_NucleationProbability'
+    n_coupled_aux = 1
     dwell_time = 0.1
     num_orientations = 1
     execute_on = timestep#_begin
@@ -235,7 +244,7 @@
   dtmax = 0.1
   percent_change = 0.1
 
-  start_time = 0.0  
+  start_time = 0.0
   end_time = 100
 
   abort_on_solve_fail = true
@@ -262,7 +271,7 @@
       type = ErrorFractionMaxHMarker
       coarsen = 0.05
       refine = 0.75
-      max_h_level = 5	     
+      max_h_level = 5
       indicator = GJI
     [../]
     [./combo]
@@ -291,6 +300,6 @@
    exodus = true
    refinements = 5
    output_initial = true
-#   interval = 5
+  # interval = 5
  [../]
 []
