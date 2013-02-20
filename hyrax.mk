@@ -1,5 +1,3 @@
-hyrax_SRC_DIRS := $(HYRAX_DIR)/src/*/*
-
 hyrax_INC_DIRS := $(shell find $(HYRAX_DIR)/include -type d -not -path "*/.svn*")
 hyrax_INCLUDE  := $(foreach i, $(hyrax_INC_DIRS), -I$(i))
 
@@ -11,10 +9,10 @@ LIBS += $(hyrax_LIB)
 hyrax_APP := $(HYRAX_DIR)/hyrax-$(METHOD)
 
 # source files
-hyrax_srcfiles    := $(shell find $(hyrax_SRC_DIRS) -name "*.C")
-hyrax_csrcfiles   := $(shell find $(hyrax_SRC_DIRS) -name "*.c")
-hyrax_fsrcfiles   := $(shell find $(hyrax_SRC_DIRS) -name "*.f")
-hyrax_f90srcfiles := $(shell find $(hyrax_SRC_DIRS) -name "*.f90")
+hyrax_srcfiles    := $(shell find $(HYRAX_DIR)/src -name "*.C")
+hyrax_csrcfiles   := $(shell find $(HYRAX_DIR)/src -name "*.c")
+hyrax_fsrcfiles   := $(shell find $(HYRAX_DIR)/src -name "*.f")
+hyrax_f90srcfiles := $(shell find $(HYRAX_DIR)/src -name "*.f90")
 
 # object files
 hyrax_objects	:= $(patsubst %.C, %.$(obj-suffix), $(hyrax_srcfiles))
