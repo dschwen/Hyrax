@@ -130,7 +130,7 @@
 
     Beta_star = 0.00005
     linear_density = 50
-    Z = 0.001
+    Z = 0.1
 
     #Kn2 = 0.033
     execute_on = timestep#_begin
