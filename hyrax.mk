@@ -11,10 +11,10 @@ LIBS += $(hyrax_LIB)
 hyrax_APP := $(HYRAX_DIR)/hyrax-$(METHOD)
 
 # source files
-hyrax_srcfiles    := $(shell find $(hyrax_SRC_DIRS) -name *.C)
-hyrax_csrcfiles   := $(shell find $(hyrax_SRC_DIRS) -name *.c)
-hyrax_fsrcfiles   := $(shell find $(hyrax_SRC_DIRS) -name *.f)
-hyrax_f90srcfiles := $(shell find $(hyrax_SRC_DIRS) -name *.f90)
+hyrax_srcfiles    := $(shell find $(hyrax_SRC_DIRS) -name "*.C")
+hyrax_csrcfiles   := $(shell find $(hyrax_SRC_DIRS) -name "*.c")
+hyrax_fsrcfiles   := $(shell find $(hyrax_SRC_DIRS) -name "*.f")
+hyrax_f90srcfiles := $(shell find $(hyrax_SRC_DIRS) -name "*.f90")
 
 # object files
 hyrax_objects	:= $(patsubst %.C, %.$(obj-suffix), $(hyrax_srcfiles))
@@ -23,10 +23,10 @@ hyrax_objects += $(patsubst %.f, %.$(obj-suffix), $(hyrax_fsrcfiles))
 hyrax_objects += $(patsubst %.f90, %.$(obj-suffix), $(hyrax_f90srcfiles))
 
 # plugin files
-hyrax_plugfiles   := $(shell find $(HYRAX_DIR)/plugins/ -name *.C 2>/dev/null)
-hyrax_cplugfiles  := $(shell find $(HYRAX_DIR)/plugins/ -name *.c 2>/dev/null)
-hyrax_fplugfiles  := $(shell find $(HYRAX_DIR)/plugins/ -name *.f 2>/dev/null)
-hyrax_f90plugfiles:= $(shell find $(HYRAX_DIR)/plugins/ -name *.f90 2>/dev/null)
+hyrax_plugfiles   := $(shell find $(HYRAX_DIR)/plugins/ -name "*.C" 2>/dev/null)
+hyrax_cplugfiles  := $(shell find $(HYRAX_DIR)/plugins/ -name "*.c" 2>/dev/null)
+hyrax_fplugfiles  := $(shell find $(HYRAX_DIR)/plugins/ -name "*.f" 2>/dev/null)
+hyrax_f90plugfiles:= $(shell find $(HYRAX_DIR)/plugins/ -name "*.f90" 2>/dev/null)
 
 # plugins
 hyrax_plugins     := $(patsubst %.C, %-$(METHOD).plugin, $(hyrax_plugfiles))
