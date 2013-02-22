@@ -43,6 +43,10 @@ public:
 
 protected:
 
+  //local data that's concatenated onto the "global" array at the end of each step
+  std::vector<Nucleus> _local_nucleus;
+
+
 private:
 
   MooseMesh & _mesh;
@@ -58,9 +62,6 @@ private:
 
    /// The index of the phase orientation generator (we will use a high index that isn't used by the node generators)
   const unsigned int _phase_gen_index;
-
-  //local data that's concatenated onto the "global" array at the end of each step
-  std::vector<Nucleus> _local_nucleus;
 
   //global data
   std::vector<Nucleus> _nuclei;

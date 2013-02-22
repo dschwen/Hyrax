@@ -73,6 +73,7 @@
 //UserObjects
 #include "NucleationLocationUserObject.h"
 #include "NucleusIntroductionSolutionModifier.h"
+#include "OneNucleusUserObject.h"
 
 //Markers
 #include "NucleationMarker.h"
@@ -147,6 +148,7 @@ namespace Hyrax
     // UserObjects
     registerUserObject(NucleationLocationUserObject);
     registerUserObject(NucleusIntroductionSolutionModifier);
+    registerUserObject(OneNucleusUserObject);
 
     // Markers
     registerMarker(NucleationMarker);
