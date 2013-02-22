@@ -1,4 +1,5 @@
 [Mesh]
+# to get 100M dofs with this file, nx=ny=nz=90 elements
  #file = ScalingStudy_in.e
   type = GeneratedMesh
   dim = 3
@@ -374,6 +375,19 @@
   #  functional_c1 = 0.006
     execute_on = timestep
   [../]
+
+  [./ChemElastic_n3]
+    type = AuxChemElastic
+    variable = elem_ChemElastic_n3
+    coupled_conserved_var = concentration
+    coupled_nonconserved_var = n3
+    nonconserved_var_number = 3
+    precip_conserved = 0.6
+    precip_nonconserved = 1.6
+  #  functional_c1 = 0.006
+    execute_on = timestep
+  [../]
+
 
  [./NucleationRate_n1]
     type = AuxNucleationRate
