@@ -89,9 +89,10 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     _Euler_angles(0) = rotation_angle;
     R.update(_Euler_angles);
 
-    Cijkl_to_rotate = _Cijkl_precipitate;
-    Cijkl_to_rotate.rotate(R);
-    _Cijkl_precipitates_rotated[i] = Cijkl_to_rotate;
+    // Cijkl_to_rotate = _Cijkl_precipitate;
+    //Cijkl_to_rotate.rotate(R);
+    //_Cijkl_precipitates_rotated[i] = Cijkl_to_rotate;
+    _Cijkl_precipitates_rotated[i] = _Cijkl_precipitate;
 
     eigenstrain_to_rotate = _eigenstrain;
     eigenstrain_to_rotate.rotate(R);
