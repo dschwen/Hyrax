@@ -1,17 +1,15 @@
 [Mesh]
-# to get 100M dofs with this file, nx=ny=nz=90 elements
- #file = ScalingStudy_in.e
-  type = GeneratedMesh
+# 87,480,000 aux dofs, 83,016,374 NL dofs
   dim = 3
-  nx = 10
-  ny = 10
-  nz = 10
+  nx = 180
+  ny = 180
+  nz = 180
   xmin = 0
-  xmax = 10
+  xmax = 54
   ymin = 0
-  ymax = 10
+  ymax = 54
   zmin = 0
-  zmax = 10
+  zmax = 54
   elem_type = HEX8
 []
 
@@ -488,34 +486,6 @@
     boundary = '0 1 2 3 4 5'
     value = 0.0
   [../]
-
-#  [./c_BC]
-#    type = NeumannBC
-#    variable = concentration
-#    boundary = '0 1 2 3'
-#    value = 0.0
-#  [../]
-
- # [./n1_BC]
- #   type = NeumannBC
- #   variable = n1
- #   boundary = '0 1 2 3'
- #   value = 0.0
- # [../]
-
- # [./n2_BC]
- #   type = NeumannBC
- #   variable = n2
- #   boundary = '0 1 2 3'
- #   value = 0.0
- # [../]
-
- # [./n3_BC]
- #   type = NeumannBC
- #   variable = n3
- #   boundary = '0 1 2 3'
- #   value = 0.0
- # [../]
 []
 
 [Materials]
@@ -553,49 +523,41 @@
 
 [Postprocessors]
   [./ElementIntegral_n1]
-    output = file
     type = ElementIntegralVariablePostprocessor
     variable = n1
   [../]
 
   [./ElementIntegral_n2]
-    output = file
     type = ElementIntegralVariablePostprocessor
     variable = n2
   [../]
 
   [./ElementIntegral_n3]
-    output = file
     type = ElementIntegralVariablePostprocessor
     variable = n3
   [../]
 
   [./ElementIntegral_c]
-    output = file
     type = ElementIntegralVariablePostprocessor
     variable = concentration
   [../]
 
   [./NodalMaxValue_n1]
-    output = file
     type = NodalMaxValue
     variable = n1
   [../]
 
   [./NodalMaxValue_n2]
-    output = file
     type = NodalMaxValue
     variable = n2
   [../]
 
   [./NodalMaxValue_n3]
-    output = file
     type = NodalMaxValue
     variable = n3
   [../]
 
   [./NodalMaxValue_c]
-    output = file
     type = NodalMaxValue
     variable = concentration
   [../]
@@ -632,7 +594,7 @@
   type = MeshSolutionModify
   scheme = 'crank-nicolson'
 
-  num_steps = 10
+  num_steps = 3
   dt = 0.01
   dtmin = 0.0001
   dtmax = 0.1
@@ -653,40 +615,12 @@
   petsc_options_value = 'hypre boomeramg'
 []
 
-#[Adaptivity]
-#   marker = combo
-# [./Markers]
-#    [./NM]
-#      type = NucleationMarker
-#      nucleation_userobject = NLUO
-#      max_h_level = 5
-#    [../]
-#    [./EFMHM]
-#      type = ErrorFractionMaxHMarker
-#      coarsen = 0.05
-#      refine = 0.75
-#      indicator = GJI
-#      max_h_level = 5
-#    [../]
-#    [./combo]
-#      type = ComboMarker
-#      markers = 'NM EFMHM'
-#    [../]
-# [../]
-
-# [./Indicators]
-#   [./GJI]
-#    type = GradientJumpIndicator
-#    variable = concentration
-#   [../]
-# [../]
-#[]
-
 [Output]
   file_base = ScalingStudy
   output_initial = true
   interval = 1
-  exodus = true
+  exodus = false
   perf_log = true
-  postprocessor_csv = true
+  postprocessor_csv = false
+  show_setup_log_early = true
 []
