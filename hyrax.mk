@@ -1,5 +1,3 @@
-hyrax_SRC_DIRS := $(HYRAX_DIR)/src/*/*
-
 hyrax_INC_DIRS := $(shell find $(HYRAX_DIR)/include -type d -not -path "*/.svn*")
 hyrax_INCLUDE  := $(foreach i, $(hyrax_INC_DIRS), -I$(i))
 
@@ -11,28 +9,28 @@ LIBS += $(hyrax_LIB)
 hyrax_APP := $(HYRAX_DIR)/hyrax-$(METHOD)
 
 # source files
-hyrax_srcfiles    := $(shell find $(hyrax_SRC_DIRS) -name "*.C")
-hyrax_csrcfiles   := $(shell find $(hyrax_SRC_DIRS) -name "*.c")
-hyrax_fsrcfiles   := $(shell find $(hyrax_SRC_DIRS) -name "*.f")
-hyrax_f90srcfiles := $(shell find $(hyrax_SRC_DIRS) -name "*.f90")
+hyrax_srcfiles    := $(shell find $(HYRAX_DIR)/src -name "*.C" -not -name main.C)
+hyrax_csrcfiles   := $(shell find $(HYRAX_DIR)/src -name "*.c")
+hyrax_fsrcfiles   := $(shell find $(HYRAX_DIR)/src -name "*.f")
+hyrax_f90srcfiles := $(shell find $(HYRAX_DIR)/src -name "*.f90")
 
 # object files
-hyrax_objects	:= $(patsubst %.C, %.$(obj-suffix), $(hyrax_srcfiles))
-hyrax_objects	+= $(patsubst %.c, %.$(obj-suffix), $(hyrax_csrcfiles))
+hyrax_objects := $(patsubst %.C, %.$(obj-suffix), $(hyrax_srcfiles))
+hyrax_objects += $(patsubst %.c, %.$(obj-suffix), $(hyrax_csrcfiles))
 hyrax_objects += $(patsubst %.f, %.$(obj-suffix), $(hyrax_fsrcfiles))
 hyrax_objects += $(patsubst %.f90, %.$(obj-suffix), $(hyrax_f90srcfiles))
 
 # plugin files
-hyrax_plugfiles   := $(shell find $(HYRAX_DIR)/plugins/ -name "*.C" 2>/dev/null)
-hyrax_cplugfiles  := $(shell find $(HYRAX_DIR)/plugins/ -name "*.c" 2>/dev/null)
-hyrax_fplugfiles  := $(shell find $(HYRAX_DIR)/plugins/ -name "*.f" 2>/dev/null)
-hyrax_f90plugfiles:= $(shell find $(HYRAX_DIR)/plugins/ -name "*.f90" 2>/dev/null)
+hyrax_plugfiles    := $(shell find $(HYRAX_DIR)/plugins/ -name "*.C" 2>/dev/null)
+hyrax_cplugfiles   := $(shell find $(HYRAX_DIR)/plugins/ -name "*.c" 2>/dev/null)
+hyrax_fplugfiles   := $(shell find $(HYRAX_DIR)/plugins/ -name "*.f" 2>/dev/null)
+hyrax_f90plugfiles := $(shell find $(HYRAX_DIR)/plugins/ -name "*.f90" 2>/dev/null)
 
 # plugins
-hyrax_plugins     := $(patsubst %.C, %-$(METHOD).plugin, $(hyrax_plugfiles))
-hyrax_plugins     += $(patsubst %.c, %-$(METHOD).plugin, $(hyrax_cplugfiles))
-hyrax_plugins     += $(patsubst %.f, %-$(METHOD).plugin, $(hyrax_fplugfiles))
-hyrax_plugins     += $(patsubst %.f90, %-$(METHOD).plugin, $(hyrax_f90plugfiles))
+hyrax_plugins := $(patsubst %.C, %-$(METHOD).plugin, $(hyrax_plugfiles))
+hyrax_plugins += $(patsubst %.c, %-$(METHOD).plugin, $(hyrax_cplugfiles))
+hyrax_plugins += $(patsubst %.f, %-$(METHOD).plugin, $(hyrax_fplugfiles))
+hyrax_plugins += $(patsubst %.f90, %-$(METHOD).plugin, $(hyrax_f90plugfiles))
 
 # hyrax main
 hyrax_main_src    := $(HYRAX_DIR)/src/main.C
