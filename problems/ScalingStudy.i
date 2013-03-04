@@ -1,5 +1,6 @@
 [Mesh]
 # 87,480,000 aux dofs, 83,016,374 NL dofs
+  type = GeneratedMesh
   dim = 3
   nx = 180
   ny = 180
@@ -610,14 +611,14 @@
   use_nucleation_userobject = true
   nucleation_userobject = NLUO
 
-  petsc_options = -snes_mf_operator
+  petsc_options = '-snes_mf_operator -ksp_monitor -log_summary'
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
 []
 
 [Output]
   file_base = ScalingStudy
-  output_initial = true
+  output_initial = false
   interval = 1
   exodus = false
   perf_log = true
