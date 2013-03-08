@@ -74,7 +74,7 @@ private:
   unsigned int _n_variants;
 
   //vectors to hold each individual rotated tensor variant
-  std::vector<ElasticityTensorR4> _Cijkl_precipitates_rotated;
+  //std::vector<ElasticityTensorR4> _Cijkl_precipitates_rotated;
   std::vector<RankTwoTensor> _eigenstrains_rotated;
 
   // turn all these tensors into materials properties
@@ -82,7 +82,7 @@ private:
   MaterialProperty<RankTwoTensor> & _misfit_strain; //sum of all the active eigenstrains in space
   MaterialProperty<std::vector<RankTwoTensor> > & _eigenstrains_MP; //whether each variant is active or not in space
   MaterialProperty<ElasticityTensorR4> & _Cijkl_MP; //holds the matrix Cijkl everywhere
-  MaterialProperty<std::vector<ElasticityTensorR4> > & _Cijkl_precipitates_MP; //holds the precipitates Cijkl everywhere
+  MaterialProperty<ElasticityTensorR4> & _Cijkl_precipitates_MP; //holds the precipitates Cijkl everywhere
 
   // derivatives of the local elasticity tensor and the misfit strain with respect
   // to order parameter

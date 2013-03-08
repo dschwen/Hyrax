@@ -65,7 +65,7 @@ protected:
   MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
 
   MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain_rotated;
-  MaterialProperty<std::vector<ElasticityTensorR4> > & _precipitate_elasticity;
+  MaterialProperty<ElasticityTensorR4> & _precipitate_elasticity;
 
   MaterialProperty<RankTwoTensor> & _local_strain;
 

@@ -42,7 +42,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
       _eigenstrain(),
       _n_variants(getParam<int>("n_variants")),
 
-      _Cijkl_precipitates_rotated(),
+      //  _Cijkl_precipitates_rotated(),
       _eigenstrains_rotated(),
 
       _local_strain(declareProperty<RankTwoTensor >("local_strain")),
@@ -50,7 +50,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
 
       _eigenstrains_MP(declareProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
       _Cijkl_MP(declareProperty<ElasticityTensorR4>("Cijkl_MP")),
-      _Cijkl_precipitates_MP(declareProperty<std::vector<ElasticityTensorR4 > >("Cijkl_precipitates_MP")),
+      _Cijkl_precipitates_MP(declareProperty<ElasticityTensorR4>("Cijkl_precipitates_MP")),
       //_d_elasticity_tensor(declareProperty<std::vector<ElasticityTensorR4> >("d_elasticity_tensor")),
       _d_eigenstrains_MP(declareProperty<std::vector<RankTwoTensor> >("d_eigenstrains_MP")),
       _precipitate_eigenstrain(declareProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain"))
@@ -61,7 +61,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
 
   // size vectors appropriately
   _coupled_variables.resize(_n_variants);
-  _Cijkl_precipitates_rotated.resize(_n_variants);
+  // _Cijkl_precipitates_rotated.resize(_n_variants);
   _eigenstrains_rotated.resize(_n_variants);
 
   // populate with data
@@ -72,31 +72,32 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   _eigenstrain.fillFromInputVector(_eigenstrain_vector);
 
   // fill in the first variant without rotation
-  _Cijkl_precipitates_rotated[0] = _Cijkl_precipitate;
+  //_Cijkl_precipitates_rotated[0] = _Cijkl_precipitate;
   _eigenstrains_rotated[0] = _eigenstrain;
 
   // rotate all the things, in radians
   Real rotation_angle_base = 2.0*libMesh::pi/Real(_n_variants);
   Real rotation_angle = rotation_angle_base;
 
-  ElasticityTensorR4 Cijkl_to_rotate;
-  RankTwoTensor eigenstrain_to_rotate;
+  //ElasticityTensorR4 Cijkl_to_rotate;
+  //RankTwoTensor eigenstrain_to_rotate;
 
-  RotationTensor R(_Euler_angles);
+  //RotationTensor R(_Euler_angles);
 
   for(unsigned int i=1; i<_n_variants; i++)
   {
-    _Euler_angles(0) = rotation_angle;
-    R.update(_Euler_angles);
+    // _Euler_angles(0) = rotation_angle;
+    //R.update(_Euler_angles);
 
     // Cijkl_to_rotate = _Cijkl_precipitate;
     //Cijkl_to_rotate.rotate(R);
     //_Cijkl_precipitates_rotated[i] = Cijkl_to_rotate;
-    _Cijkl_precipitates_rotated[i] = _Cijkl_precipitate;
+    //_Cijkl_precipitates_rotated[i] = _Cijkl_precipitate;
 
-    eigenstrain_to_rotate = _eigenstrain;
-    eigenstrain_to_rotate.rotate(R);
-    _eigenstrains_rotated[i] = eigenstrain_to_rotate;
+    //  eigenstrain_to_rotate = _eigenstrain;
+    //eigenstrain_to_rotate.rotate(R);
+    //_eigenstrains_rotated[i] = eigenstrain_to_rotate;
+    _eigenstrains_rotated[i] = _eigenstrain.rotateXyPlane(rotation_angle);
 
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;
@@ -109,7 +110,7 @@ LinearSingleCrystalPrecipitateMaterial::computeProperties()
   for (_qp = 0; _qp < _qrule->n_points(); ++_qp)
   {
     // resize all the material properties vectors.  Don't forget this.
-    _Cijkl_precipitates_MP[_qp].resize(_n_variants);
+    //  _Cijkl_precipitates_MP[_qp].resize(_n_variants);
     _eigenstrains_MP[_qp].resize(_n_variants);
     //_d_elasticity_tensor[_qp].resize(_n_variants);
     _d_eigenstrains_MP[_qp].resize(_n_variants);
@@ -134,8 +135,9 @@ LinearSingleCrystalPrecipitateMaterial::computeQpElasticityTensor()
   _Cijkl_MP[_qp] = _Cijkl;
 
   // fill in the precipitate stiffnesses material property
-  for(unsigned int i(0); i < _n_variants; ++i)
-    (_Cijkl_precipitates_MP[_qp])[i] = _Cijkl_precipitates_rotated[i];
+  // for(unsigned int i(0); i < _n_variants; ++i)
+  //  (_Cijkl_precipitates_MP[_qp])[i] = _Cijkl_precipitates_rotated[i];
+  _Cijkl_precipitates_MP[_qp] = _Cijkl_precipitate;
 
   // Sum the order parameters and stiffnesses for the precipitates
   ElasticityTensorR4 sum_precipitate_tensors;
@@ -156,9 +158,13 @@ LinearSingleCrystalPrecipitateMaterial::computeQpElasticityTensor()
     if(interpolation_value > 1.0)
       interpolation_value = 1.0;
 
-    sum_precipitate_tensors += (_Cijkl_precipitates_MP[_qp])[i]*interpolation_value;
+    sum_precipitate_tensors += (_Cijkl_precipitates_MP[_qp])*interpolation_value;
     sum_interpolation_values += interpolation_value;
   }
+
+  //more error checking
+  if(sum_interpolation_values > 1.0)
+    sum_interpolation_values = 1.0;
 
   //local elasticity tensor
   sum_precipitate_tensors += _Cijkl_MP[_qp]*(1.0 - sum_interpolation_values);
