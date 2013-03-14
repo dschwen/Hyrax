@@ -126,11 +126,17 @@ LinearSingleCrystalPrecipitateMaterial::computeProperties()
 void
 LinearSingleCrystalPrecipitateMaterial::computeQpElasticityTensor()
 {
-  /**
+  _elasticity_tensor[_qp] = _Cijkl;
+  _Jacobian_mult[_qp] = _Cijkl;
+  _Cijkl_MP[_qp] = _Cijkl;
+  _Cijkl_precipitates_MP[_qp] = _Cijkl;
+
+   /**
    * Not making homogeneous modulus approximation between matrix and precipitate.  Works only
    * if the OP goes between zero and one!  (Forcing it to max at one, right now).
    **/
 
+  /*
   // Fill in the matrix stiffness material property
   _Cijkl_MP[_qp] = _Cijkl;
 
@@ -171,12 +177,25 @@ LinearSingleCrystalPrecipitateMaterial::computeQpElasticityTensor()
   _elasticity_tensor[_qp] = sum_precipitate_tensors;
 
   _Jacobian_mult[_qp] = _elasticity_tensor[_qp];
+  */
 }
 
 void
 LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
 {
   Real interpolation_value(0.0);
+  Real d_interp_value(0.0);
+
+  for (unsigned int i=0; i<_n_variants; i++)
+  {
+
+    interpolation_value = (*_coupled_variables[i])[_qp]*(*_coupled_variables[i])[_qp];
+    d_interp_value = 2.0*(*_coupled_variables[i])[_qp];
+
+    (_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*interpolation_value;
+    (_d_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*d_interp_value;
+  }
+/*  Real interpolation_value(0.0);
   Real d_interp_value(0.0);
   Real temp;
 
@@ -195,6 +214,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
     (_d_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*d_interp_value;
     (_precipitate_eigenstrain[_qp])[i] = _eigenstrains_rotated[i];
   }
+*/
 }
 
 void
