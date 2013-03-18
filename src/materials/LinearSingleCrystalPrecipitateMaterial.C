@@ -183,7 +183,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpElasticityTensor()
 void
 LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
 {
-  Real interpolation_value(0.0);
+/*  Real interpolation_value(0.0);
   Real d_interp_value(0.0);
 
   for (unsigned int i=0; i<_n_variants; i++)
@@ -196,14 +196,16 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
     (_d_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*d_interp_value;
     (_precipitate_eigenstrain[_qp])[i] = _eigenstrains_rotated[i];
   }
-/*  Real interpolation_value(0.0);
+*/
+
+  Real interpolation_value(0.0);
   Real d_interp_value(0.0);
   Real temp;
 
   for(unsigned int i=0; i<_n_variants; i++)
   {
     //This is bastardly; later don't forget to normalize the OP to one
-    temp = (*_coupled_variables[i])[_qp];///1.6;
+    temp = (*_coupled_variables[i])[_qp]/1.6;
     interpolation_value = temp*temp;
     //if (interpolation_value > 1.0)
     // interpolation_value = 1.0;
@@ -215,7 +217,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
     (_d_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*d_interp_value;
     (_precipitate_eigenstrain[_qp])[i] = _eigenstrains_rotated[i];
   }
-*/
+
 }
 
 void
