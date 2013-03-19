@@ -78,10 +78,11 @@ NucleationLocationUserObject::execute()
    */
   unsigned int elem_id = _current_elem->id();
   _mrand.seed(elem_id, elem_id + (_counter * _mesh.nElem()));
-  Real random_number = _mrand.rand(elem_id);
+  Real random_number; // = _mrand.rand(elem_id);
 
   for(unsigned int i(0); i<_n_coupled_aux; ++i)
   {
+    random_number = _mrand.rand(elem_id);
     //test for nucleation
     if (((*_coupled_probability[i])[0] > 0) && (random_number < (*_coupled_probability[i])[0]))
     {
@@ -93,19 +94,23 @@ NucleationLocationUserObject::execute()
       current_nucleus.setLocation(nucleus_center);
       current_nucleus.setStartTime(_t);
       current_nucleus.setEndTime(_t+_dwell_time);
-      // current_nucleus.setOriginalElement(_current_elem);
-
-      // _mrand.seed(_phase_gen_index, elem_id);
-      //int r_num = _mrand.randl(_phase_gen_index);
+      
+      if(_n_coupled_aux != _num_orientations)
+      {
+        _mrand.seed(_phase_gen_index, elem_id);
+        int r_num = _mrand.randl(_phase_gen_index);
 
       /**
        * randl supplies some integer random number, we want to be between 1 and n coupled
        * vars, so modulo size()
        */
-      //r_num = r_num%_num_orientations;
-
-      //current_nucleus.setOrientation(r_num);
-      current_nucleus.setOrientation(i);
+       r_num = r_num%_num_orientations;
+       current_nucleus.setOrientation(r_num);
+      }
+      else
+      {
+        current_nucleus.setOrientation(i);
+      }
       _local_nucleus.push_back(current_nucleus);
     }
   }
