@@ -63,8 +63,8 @@ NucleusIntroductionSolutionModifier::execute()
 {
   const std::vector<Nucleus> & nuclei = _nucleation_userobject.getNuclei();
 
-  MeshBase::const_node_iterator it_end = _mesh.local_nodes_end();
-  MeshBase::const_node_iterator it = _mesh.local_nodes_begin();
+  MeshBase::const_node_iterator it_end = _mesh.localNodesEnd();
+  MeshBase::const_node_iterator it = _mesh.localNodesBegin();
 
   // node loop to introduce nuclei into order parameter field
   for ( ; it != it_end ; ++it)

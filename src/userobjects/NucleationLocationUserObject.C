@@ -77,7 +77,7 @@ NucleationLocationUserObject::execute()
    * be different for each element, each timestep.  take steps of n_elem
    */
   unsigned int elem_id = _current_elem->id();
-  _mrand.seed(elem_id, elem_id + (_counter * _mesh.n_elem()));
+  _mrand.seed(elem_id, elem_id + (_counter * _mesh.nElem()));
   Real random_number = _mrand.rand(elem_id);
 
   for(unsigned int i(0); i<_n_coupled_aux; ++i)

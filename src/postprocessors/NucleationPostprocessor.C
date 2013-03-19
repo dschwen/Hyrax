@@ -103,8 +103,8 @@ NucleationPostprocessor::getValue()
 void
 NucleationPostprocessor::searchForNucleationEvents()
 {
-  MeshBase::const_node_iterator it_end = _mesh.local_nodes_end();
-  MeshBase::const_node_iterator it = _mesh.local_nodes_begin();
+  MeshBase::const_node_iterator it_end = _mesh.localNodesEnd();
+  MeshBase::const_node_iterator it = _mesh.localNodesBegin();
 
   // node loop to pick up nucleation locations
   for ( ; it != it_end ; ++it)
@@ -124,7 +124,7 @@ NucleationPostprocessor::searchForNucleationEvents()
     // Our seed is complicated, it needs to be different for each node, each timestep
     // so we have to take strides of n_nodes
     // This could potentially overflow but we'll deal with that later
-    _mrand.seed(node_id, node_id + (_counter * _mesh.n_nodes()));
+    _mrand.seed(node_id, node_id + (_counter * _mesh.nNodes()));
     Real random_number = _mrand.rand(node_id);
 
     // make sure we're not trying to nucleate 2nd phase in a pre-existing 2nd phase
@@ -159,8 +159,8 @@ NucleationPostprocessor::searchForNucleationEvents()
 void
 NucleationPostprocessor::changeValues()
 {
-  MeshBase::const_node_iterator it_end = _mesh.local_nodes_end();
-  MeshBase::const_node_iterator it = _mesh.local_nodes_begin();
+  MeshBase::const_node_iterator it_end = _mesh.localNodesEnd();
+  MeshBase::const_node_iterator it = _mesh.localNodesBegin();
 
   // node loop to introduce nuclei into order parameter field
   for ( ; it != it_end ; ++it)
