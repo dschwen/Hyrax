@@ -9,6 +9,6 @@
     type = 'Exodiff'
     input = 'smooth_circle_IC_Hermite_test.i'
     exodiff = 'smooth_circle_IC_Hermite_out.e'
-    method = 'OPT'
+    method = 'OPT OPROF'
   [../]
 []

@@ -17,13 +17,13 @@
     type = 'Exodiff'
     input = 'OneSeed_restart_test.i'
     exodiff = 'OneSeed_restart_out.e'
-    method = 'OPT'
+    method = 'OPT OPROF'
   [../]
 
   [./NucleationPostprocessor_test]
     type = 'Exodiff'
     input = 'NucleationPostprocessor_multi_test.i'
     exodiff = 'NucleationPostprocessor_multi_out.e'
-    method = 'OPT'
+    method = 'OPT OPROF'
   [../]
 []
