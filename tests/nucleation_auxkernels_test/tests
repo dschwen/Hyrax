@@ -56,4 +56,10 @@
     input = 'AuxChemElastic.i'
     exodiff = 'AuxChemElastic.e'
   [../]
+
+  [./AuxDeltaGStar_test]
+    type = 'Exodiff'
+    input = 'AuxDeltaGStar.i'
+    exodiff = 'AuxDeltaGStar.e'
+  [../]
 []
