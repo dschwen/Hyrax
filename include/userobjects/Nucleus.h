@@ -14,6 +14,8 @@
 #ifndef NUCLEUS_H
 #define NUCLEUS_H
 
+#include "Moose.h"
+
 #include "libmesh/libmesh.h"
 #include "libmesh/elem.h"
 #include "libmesh/point.h"
