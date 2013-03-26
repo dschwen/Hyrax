@@ -41,9 +41,9 @@ private:
   VariableValue & _coupled_energy; ///< area/volume free energy change of transformation
 
   Real _gamma;
-  Real _Kb;
-  Real _temperature;
-  Real _scale_factor;
+  //Real _Kb;
+  //Real _temperature;
+  //Real _scale_factor;
 
 };
 

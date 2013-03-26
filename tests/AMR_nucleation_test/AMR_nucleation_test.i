@@ -21,7 +21,8 @@
     family = LAGRANGE
       [./InitialCondition]
       type = RandomIC
-    #  value = 0.1
+      min = 0.007
+      max = 0.01
     [../]
   [../]
 
@@ -113,14 +114,14 @@
     OP_var_names = 'concentration'
     n_OP_vars = 1
     coupled_aux_var = elemental_Supersaturation
-    Beta_star = 10
+    Beta_star = 0.01
     linear_density = 80
-    Z = 0.1
+    Z = 0.01
     #Kn2 = 0.3
 
     gamma = 0.18
-    scale_factor = 900e-22
-
+    Kb = 1
+    scale_factor = 1
     execute_on = timestep
   [../]
 
@@ -192,13 +193,16 @@
 [Executioner]
   type = MeshSolutionModify
   scheme = 'crank-nicolson'
-  num_steps = 5
+  num_steps = 2
   dt = 0.01
-  adapt_cycles = 2
+  dtmin = 0.0001
+  dtmax = 0.1
+  adapt_nucleus = 2
 
   petsc_options = -snes_mf_operator
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
+  use_nucleation_userobject = true
   nucleation_userobject = NLUO
 []
 

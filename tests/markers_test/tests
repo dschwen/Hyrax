@@ -2,6 +2,6 @@
   [./ErrorFracMaxH_test]
     type = 'Exodiff'
     input = 'ErrorFracMaxH_test.i'
-    exodiff = 'ErrorFracMaxH_test.e'
+    exodiff = 'ErrorFracMaxH_test.e ErrorFracMaxH_test.e-s002 ErrorFracMaxH_test.e-s003 ErrorFracMaxH_test.e-s004'
   [../]
 []

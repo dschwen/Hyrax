@@ -29,6 +29,7 @@ InputParameters validParams<NucleationLocationUserObject>()
   params.addRequiredParam<Real>("dwell_time", "How long nucleation event is");
   params.set<MooseEnum>("execute_on") = "timestep_begin";
   params.addRequiredParam<int>("num_orientations", "# of orientation variants");
+  params.addParam<Real>("boundary_width", 0.0, "the distance from mesh boundary to not nucleate");
 
   return params;
 }
@@ -40,6 +41,7 @@ NucleationLocationUserObject::NucleationLocationUserObject(const std::string & n
     _n_coupled_aux(getParam<int>("n_coupled_aux")),
     _dwell_time(getParam<Real>("dwell_time")),
     _num_orientations(getParam<int>("num_orientations")),
+    _boundary_width(getParam<Real>("boundary_width")),
     _counter(0),
     _phase_gen_index(std::numeric_limits<unsigned int>::max()),
     _nuclei(0),
@@ -80,38 +82,42 @@ NucleationLocationUserObject::execute()
   _mrand.seed(elem_id, elem_id + (_counter * _mesh.nElem()));
   Real random_number; // = _mrand.rand(elem_id);
 
-  for(unsigned int i(0); i<_n_coupled_aux; ++i)
+  if(!closeToBoundary())
   {
-    random_number = _mrand.rand(elem_id);
-    //test for nucleation
-    if (((*_coupled_probability[i])[0] > 0) && (random_number < (*_coupled_probability[i])[0]))
+    for(unsigned int i(0); i<_n_coupled_aux; ++i)
     {
-      // get the centroid of the element as the center of the nucleus
-      Point nucleus_center = _current_elem->centroid();
-      //  Elem* original_elem = _current_elem;
+      random_number = _mrand.rand(elem_id);
 
-      Nucleus current_nucleus;
-      current_nucleus.setLocation(nucleus_center);
-      current_nucleus.setStartTime(_t);
-      current_nucleus.setEndTime(_t+_dwell_time);
-      
-      if(_n_coupled_aux != _num_orientations)
+      //test for nucleation
+      if (((*_coupled_probability[i])[0] > 0) && (random_number < (*_coupled_probability[i])[0]))
       {
-        _mrand.seed(_phase_gen_index, elem_id);
-        int r_num = _mrand.randl(_phase_gen_index);
+        // get the centroid of the element as the center of the nucleus
+        Point nucleus_center = _current_elem->centroid();
+        //  Elem* original_elem = _current_elem;
 
-      /**
-       * randl supplies some integer random number, we want to be between 1 and n coupled
-       * vars, so modulo size()
-       */
-       r_num = r_num%_num_orientations;
-       current_nucleus.setOrientation(r_num);
+        Nucleus current_nucleus;
+        current_nucleus.setLocation(nucleus_center);
+        current_nucleus.setStartTime(_t);
+        current_nucleus.setEndTime(_t+_dwell_time);
+
+        if(_n_coupled_aux != _num_orientations)
+        {
+          _mrand.seed(_phase_gen_index, elem_id);
+          int r_num = _mrand.randl(_phase_gen_index);
+
+          /**
+           * randl supplies some integer random number, we want to be between 1 and n coupled
+           * vars, so modulo size()
+           */
+          r_num = r_num%_num_orientations;
+          current_nucleus.setOrientation(r_num);
+        }
+        else
+        {
+          current_nucleus.setOrientation(i);
+        }
+        _local_nucleus.push_back(current_nucleus);
       }
-      else
-      {
-        current_nucleus.setOrientation(i);
-      }
-      _local_nucleus.push_back(current_nucleus);
     }
   }
 }
@@ -163,4 +169,46 @@ NucleationLocationUserObject::elementWasHit(const Elem * elem) const
     //   }
   }
   return was_hit;
+}
+
+bool
+NucleationLocationUserObject::closeToBoundary() const
+{
+  //here, we see if we are within some distance of a boundary on a mesh.
+  //NB: this is only going to work on a regular orthogonal mesh.
+  //returns true if too close to boundary.
+  Point centroid = _current_elem->centroid();
+
+  Real position_fraction[3];
+  Real boundary_fraction[3];
+
+  // it'd be really cool if we could do this, but darn you, protected info!
+  // if(!_mesh._regular_orthogonal_mesh)
+  //  return false;
+
+  for(int i(0); i<3; ++i)
+  {
+    position_fraction[i] = centroid(i)/ _mesh.dimensionWidth(i);
+    boundary_fraction[i] = _boundary_width/_mesh.dimensionWidth(i);
+    //  std::cout<<"position_fraction "<<position_fraction[i]<<std::endl;
+    //  std::cout<<"boundary_fraction "<<boundary_fraction[i]<<std::endl;
+  }
+
+  for(int i(0); i<3; ++i)
+  {
+    if(position_fraction[i] >= 0.5)
+    {
+      // std::cout<<"in 1st if"<<std::endl;
+      if(boundary_fraction[i] >= 1.0 - position_fraction[i])
+        return true;
+    }
+    else
+    {
+      //  std::cout<<"in 2nd if"<<std::endl;
+      if(boundary_fraction[i] >= position_fraction[i])
+        return true;
+    }
+  }
+
+  return false;
 }

@@ -42,6 +42,7 @@ public:
   const std::vector<Nucleus> & getNuclei() const { return _nuclei; }
 
 protected:
+  bool closeToBoundary() const;
 
   //local data that's concatenated onto the "global" array at the end of each step
   std::vector<Nucleus> _local_nucleus;
@@ -57,6 +58,8 @@ private:
 
   Real _dwell_time;
   int _num_orientations;
+
+  Real _boundary_width;
 
   int _counter;
 

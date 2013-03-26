@@ -2,6 +2,6 @@
   [./AMR_nucleation_test]
     type = 'Exodiff'
     input = 'AMR_nucleation_test.i'
-    exodiff = 'AMR_nucleation_test.e'
+    exodiff = 'AMR_nucleation_test.e AMR_nucleation_test.e-s002 AMR_nucleation_test.e-s003'
   [../]
 []

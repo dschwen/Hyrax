@@ -21,9 +21,9 @@ InputParameters validParams<AuxDeltaGStar>()
   // I'd have line in input file, coupled_aux_var = supersaturation, or chem_elastic, or whatever
 
   params.addRequiredParam<Real>("gamma", "Surface energy");
-  params.addParam<Real>("Kb", 1.3806503e-23, "Boltzmann's constant, make sure units all match");
-  params.addParam<Real>("temperature", 473, "Temperature");
-  params.addRequiredParam<Real>("scale_factor","factor to scale energy/dimensions by");
+  //params.addParam<Real>("Kb", 1.3806503e-23, "Boltzmann's constant, make sure units all match");
+  //params.addParam<Real>("temperature", 473, "Temperature");
+  //params.addRequiredParam<Real>("scale_factor","factor to scale energy/dimensions by");
 
   return params;
 }
@@ -31,10 +31,10 @@ InputParameters validParams<AuxDeltaGStar>()
 AuxDeltaGStar::AuxDeltaGStar(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
     _coupled_energy(coupledValue("coupled_aux_var")),
-    _gamma(getParam<Real>("gamma")),
-    _Kb(getParam<Real>("Kb")),
-    _temperature(getParam<Real>("temperature")),
-    _scale_factor(getParam<Real>("scale_factor"))
+    _gamma(getParam<Real>("gamma"))
+    // _Kb(getParam<Real>("Kb")),
+    //_temperature(getParam<Real>("temperature")),
+    //_scale_factor(getParam<Real>("scale_factor"))
 {
 }
 
@@ -53,7 +53,7 @@ AuxDeltaGStar::computeValue()
    else
     mooseError("honky, your problem dimesion must be 2 or 3 (AuxDeltaGStar");
 
-   kn2 = _scale_factor*alpha*std::pow(_gamma, (int)_dim)/(_Kb*_temperature);
+   kn2 = alpha*std::pow(_gamma, (int)_dim);
 
   return kn2/std::pow(_coupled_energy[_qp], (int)_dim-1);
 }
