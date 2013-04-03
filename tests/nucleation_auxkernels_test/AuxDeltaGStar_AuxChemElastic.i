@@ -1,4 +1,6 @@
-# This input file demonstrates the AuxchemElastic aux kernel.  Uses ELEMENTAL aux variables!
+# This input file demonstrates the coupled multiple Allen-Cahn, Cahn-Hilliard
+# equations and explicit nucleation.  It tests calculation of critical activation
+# energy.
 
 [Mesh]
   type = GeneratedMesh
@@ -25,13 +27,6 @@
       variable = concentration
       min = 0.0
       max = 0.01
-     # type = SmoothCircleIC
-     # x1 = 25
-     # y1 = 25
-     # int_width = 0.9
-     # invalue = 0.6
-     # outvalue = 0.05
-     # radius = 1.8
     [../]
   [../]
 
@@ -42,13 +37,6 @@
       type = RandomIC
       max = 1.6
       min = 0.0
-    #  type = SmoothCircleIC
-    #  x1 = 25
-    #  y1 = 25
-    #  int_width = 0.9
-    #  invalue = 1.6
-    #  outvalue = 0.0
-    #  radius = 1.8
     [../]
   [../]
 
@@ -63,17 +51,22 @@
    [../]
 []
 
-[AuxVariables]
-  [./elemental_ChemElastic_n1]
-    order = CONSTANT
-    family = MONOMIAL
-  [../]
-[]
-
 [TensorMechanics]
   [./solid]
     disp_x = disp_x
     disp_y = disp_y
+  [../]
+[]
+
+[AuxVariables]
+  [./elem_ChemElastic]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+
+  [./elem_DeltaGStar]
+    order = CONSTANT
+    family = MONOMIAL
   [../]
 []
 
@@ -133,13 +126,25 @@
 [AuxKernels]
   [./ChemElastic_n1]
     type = AuxChemElastic
-    variable = elemental_ChemElastic_n1
+    variable = elem_ChemElastic
     coupled_conserved_var = concentration
     coupled_nonconserved_var = n1
     nonconserved_var_number = 1
     precip_conserved = 0.6
     precip_nonconserved = 1.6
   #  functional_c1 = 0.006
+    execute_on = timestep
+  [../]
+
+  [./DeltaGStar]
+    type = AuxDeltaGStar
+    variable = elem_DeltaGStar
+    coupled_aux_var = elem_ChemElastic
+
+    gamma = 0.18
+    scale_factor = 1
+    Kb = 1
+
     execute_on = timestep
   [../]
 []
@@ -159,6 +164,7 @@
     boundary = '0 1 2 3'
   [../]
 []
+
 
 [Materials]
   [./constant]
@@ -214,10 +220,8 @@
 []
 
 [Output]
-  file_base = AuxChemElastic
+  file_base = AuxDeltaGStar_AuxChemElastic
   output_initial = true
   exodus = true
   perf_log = true
 []
-
-

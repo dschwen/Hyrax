@@ -60,7 +60,8 @@ AuxChemElastic::computeValue()
   precip_energy = computeEnergy(_precip_conserved, _precip_nonconserved, false);
   differential = computeDifferential(_coupled_cons[_qp], _coupled_noncons[_qp]);
 
-  return (precip_energy - matrix_energy + differential);
+  // return (precip_energy - matrix_energy + differential);
+  return (matrix_energy - precip_energy + differential);
 }
 
 Real
@@ -104,8 +105,11 @@ AuxChemElastic::computeDifferential(Real & coupled_conserved, Real & coupled_non
   dself_dnoncons = computeDselfDnoncons();
   dint_dnoncons = computeDintDnoncons();
 
-  first_term = (dfchem_dcons + dself_dcons + dint_dcons)*(coupled_conserved - _precip_conserved);
-  second_term = (dfchem_dnoncons + dself_dnoncons + dint_dnoncons)*(coupled_nonconserved - _precip_nonconserved);
+  // first_term = (dfchem_dcons + dself_dcons + dint_dcons)*(coupled_conserved - _precip_conserved);
+  // second_term = (dfchem_dnoncons + dself_dnoncons + dint_dnoncons)*(coupled_nonconserved - _precip_nonconserved);
+
+  first_term = (dfchem_dcons + dself_dcons + dint_dcons)*(_precip_conserved - coupled_conserved);
+  second_term = (dfchem_dnoncons + dself_dnoncons + dint_dnoncons)*(_precip_nonconserved - coupled_nonconserved);
 
   return first_term + second_term;
 }
@@ -169,7 +173,7 @@ AuxChemElastic::computeInteractionElasticEnergy(bool matrix)
 
   c = elasticity*eigenstrain;
 
-  return 0.5*c.doubleContraction(_local_strain[_qp]);
+  return c.doubleContraction(_local_strain[_qp]);
 }
 
 Real
@@ -228,7 +232,7 @@ AuxChemElastic::computeDselfDnoncons()
 
   c = elasticity*eigenstrain;
 
-  return c.doubleContraction(d_eigenstrain);
+  return 2.0*c.doubleContraction(d_eigenstrain);
 }
 
 Real
@@ -243,6 +247,6 @@ AuxChemElastic::computeDintDnoncons()
 
   c = elasticity*d_eigenstrain;
 
-  return -0.5*c.doubleContraction(_local_strain[_qp]);
+  return -2.0*c.doubleContraction(_local_strain[_qp]);
 }
 

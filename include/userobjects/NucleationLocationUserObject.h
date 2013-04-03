@@ -55,12 +55,10 @@ private:
   std::vector<VariableValue *> _coupled_probability;
 
   unsigned int _n_coupled_aux;
-
   Real _dwell_time;
   int _num_orientations;
-
   Real _boundary_width;
-
+  int _random_seed;
   int _counter;
 
    /// The index of the phase orientation generator (we will use a high index that isn't used by the node generators)

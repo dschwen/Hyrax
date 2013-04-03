@@ -30,6 +30,7 @@ InputParameters validParams<NucleationLocationUserObject>()
   params.set<MooseEnum>("execute_on") = "timestep_begin";
   params.addRequiredParam<int>("num_orientations", "# of orientation variants");
   params.addParam<Real>("boundary_width", 0.0, "the distance from mesh boundary to not nucleate");
+  params.addParam<int>("random_seed", 0.0, "the random number seed for Bernoulli trial");
 
   return params;
 }
@@ -42,6 +43,7 @@ NucleationLocationUserObject::NucleationLocationUserObject(const std::string & n
     _dwell_time(getParam<Real>("dwell_time")),
     _num_orientations(getParam<int>("num_orientations")),
     _boundary_width(getParam<Real>("boundary_width")),
+    _random_seed(getParam<int>("random_seed")),
     _counter(0),
     _phase_gen_index(std::numeric_limits<unsigned int>::max()),
     _nuclei(0),
@@ -79,7 +81,7 @@ NucleationLocationUserObject::execute()
    * be different for each element, each timestep.  take steps of n_elem
    */
   unsigned int elem_id = _current_elem->id();
-  _mrand.seed(elem_id, elem_id + (_counter * _mesh.nElem()));
+  _mrand.seed(elem_id, elem_id + _random_seed + (_counter * _mesh.nElem()));
   Real random_number; // = _mrand.rand(elem_id);
 
   if(!closeToBoundary())
@@ -102,7 +104,7 @@ NucleationLocationUserObject::execute()
 
         if(_n_coupled_aux != _num_orientations)
         {
-          _mrand.seed(_phase_gen_index, elem_id);
+          _mrand.seed(_phase_gen_index, elem_id + _random_seed);
           int r_num = _mrand.randl(_phase_gen_index);
 
           /**
