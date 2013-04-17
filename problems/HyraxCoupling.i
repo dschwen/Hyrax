@@ -5,9 +5,9 @@
   ny = 15 #240
   nz = 0
   xmin = 0
-  xmax = 76.8
+  xmax = 76.8 #153.6
   ymin = 0
-  ymax = 76.8
+  ymax = 76.8 #153.6
   zmin = 0
   zmax = 0
   elem_type = QUAD4
@@ -16,7 +16,7 @@
       id = 100
       coord = '25.6 25.6 25.6 30.72'
     [../]
-  [../]
+  [../] 
 []
 
 [Variables]
@@ -24,9 +24,18 @@
     order = THIRD
     family = HERMITE
       [./InitialCondition]
-      type = RandomIC
-      min = 0.0561
-      max = 0.0563
+      # type = PolySpecifiedSmoothCircleIC
+      # invalue = 0.6
+      # outvalue = 0.1
+      # radius = 1.8
+      # int_width = 0.9
+      # x_positions = '20 40'
+      # y_positions = '20 52'
+      # z_positions = '0 0'
+      # n_seeds = 2
+       type = RandomIC
+      min = 0.056
+      max = 0.0562
     [../]
   [../]
 
@@ -34,14 +43,15 @@
     order = FIRST
     family = LAGRANGE
     [./InitialCondition]
-      type = SmoothCircleIC
+      type = PolySpecifiedSmoothCircleIC
       invalue = 1.6
       outvalue = 0
       radius = 1.8
       int_width = 0.9
-      x1 = 20
-      y1 = 20
-   #   z1 = 2
+      x_positions = '20'
+      y_positions = '20'
+      z_positions = '0'
+      n_seeds = 1
       #type = RandomIC
       #min = 0.005
       #max = 0.01
@@ -144,11 +154,12 @@
 #  [../]
 
   [./CHSolid]
-    type = CHBulkPolyCoupled
+    type = CHBulkCoupled
     variable = concentration
     mob_name = M
-    n_OP_variables = 1 #3
-    OP_variable_names = 'n1' # n2 n3'
+    coupled_OP_var = n1
+  #  n_OP_variables = 1 #3
+   # OP_variable_names = 'n1' # n2 n3'
   [../]
 
   [./CHInterface]
@@ -160,13 +171,13 @@
   [../]
 
   [./ACSolidn1]
-    type = ACBulkPolyCoupled
+    type = ACBulkCoupled
     variable = n1
     mob_name = L
     coupled_CH_var = concentration
-    n_OP_vars = 1 #3
-    OP_var_names = 'n1' #n2 n3'
-    OP_number = 1
+    #n_OP_vars = 1 #3
+    #OP_var_names = 'n1' #n2 n3'
+    #OP_number = 1
   [../]
 
  # [./ACSolidn2]
@@ -350,16 +361,16 @@
    type = StressBC
    variable = disp_x
    component = 0
-   boundary_stress = '-0.1 0 0 0 0 0'
-   boundary = '0 2'
+   boundary_stress = '10 10 10 0 0 0'
+   boundary = '0 1 2 3'
   [../]
 
   [./stress_dispy]
    type = StressBC
    variable = disp_y
    component = 1
-   boundary_stress = '-0.1 0 0 0 0 0'
-   boundary = '0 2'
+   boundary_stress = '10 10 10 0 0 0'
+   boundary = '0 1 2 3'
   [../]
 
   [./flux_c]
@@ -381,6 +392,20 @@
     value = 0.0
     boundary = '100'
   [../]
+
+# [./Dirichlet_dispx_overall]
+#    type = DirichletBC
+#    variable = disp_x
+#    value = 0.0
+#    boundary = '0 1 2 3'
+#  [../]
+
+#  [./Dirichlet_dispy_overall]
+#    type = DirichletBC
+#    variable = disp_y
+#    value = 0.0
+#    boundary = '0 1 2 3'
+#  [../]
 []
 
 [Materials]
@@ -473,7 +498,7 @@
   scheme = 'bdf2'
 
   dt = 0.1
-  dtmin = 0.001
+  dtmin = 0.01
   dtmax = 1
 
   #Not sure what needs to go here for the end of the simulation
