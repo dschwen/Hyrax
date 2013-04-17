@@ -34,8 +34,8 @@
       # z_positions = '0 0'
       # n_seeds = 2
        type = RandomIC
-      min = 0.056
-      max = 0.0562
+      min = 1e-3
+      max = 2e-3
     [../]
   [../]
 
@@ -258,12 +258,12 @@
     variable = elem_NucleationRate_n1
     coupled_aux_var = elem_ChemElastic_n1
 
-    gamma = 3
-    scale_factor = 1
+    gamma = 0.01
+    scale_factor = 0.5
     Kb = 1
 
-    Z = 0.0001
-    Beta_star = .001
+    Z = 1e-8
+    Beta_star = 1e-5
     linear_density = 50
     OP_var_names = 'n1' # n2 n3'
     n_OP_vars = 1 #3
@@ -376,7 +376,8 @@
   [./flux_c]
     type = NeumannBC
     variable = concentration
-    value = 0.001
+    value = 1e-5
+    boundary = '0'
   [../]
 
   [./Dirichlet_dispx]
@@ -412,8 +413,8 @@
   [./constant]
     type = PFMobilityLandau
     block = 0
-    mob_CH = 0.4
-    mob_AC = 0.4
+    mob_CH = 4e-4
+    mob_AC = 4e-4
     kappa_CH = 1.5
     kappa_AC = 1.5
     A1 = 18.5
@@ -445,7 +446,7 @@
   [./ElementIntegral_c]
     type = ElementIntegralVariablePostprocessor
     variable = concentration
-    output = file
+    output = both
   [../]
 #  [./NodalFloodCount]
 #    type = NodalFloodCount
@@ -462,6 +463,7 @@
     threshold = 0.75
     execute_on = timestep
     mesh_volume = Volume
+    output = both
   [../]
 
   [./Volume]
@@ -497,13 +499,13 @@
   type = MeshSolutionModify
   scheme = 'bdf2'
 
-  dt = 0.1
-  dtmin = 0.01
-  dtmax = 1
+  dt = 10
+  dtmin = 0.1
+  dtmax = 1000
 
   #Not sure what needs to go here for the end of the simulation
   start_time = 0.0
-  end_time = 20
+  end_time = 200
 
   abort_on_solve_fail = true
   adapt_nucleus = 5
