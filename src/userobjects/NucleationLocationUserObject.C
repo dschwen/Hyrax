@@ -82,7 +82,7 @@ NucleationLocationUserObject::execute()
    */
   unsigned int elem_id = _current_elem->id();
   _mrand.seed(elem_id, elem_id + _random_seed + (_counter * _mesh.nElem()));
-  Real random_number; // = _mrand.rand(elem_id);
+  Real random_number;
 
   if(!closeToBoundary())
   {
@@ -95,7 +95,6 @@ NucleationLocationUserObject::execute()
       {
         // get the centroid of the element as the center of the nucleus
         Point nucleus_center = _current_elem->centroid();
-        //  Elem* original_elem = _current_elem;
 
         Nucleus current_nucleus;
         current_nucleus.setLocation(nucleus_center);
@@ -104,7 +103,7 @@ NucleationLocationUserObject::execute()
 
         if(_n_coupled_aux != _num_orientations)
         {
-          _mrand.seed(_phase_gen_index, elem_id + _random_seed);
+          _mrand.seed(_phase_gen_index, elem_id + _random_seed + (_counter * _mesh.nElem()));
           int r_num = _mrand.randl(_phase_gen_index);
 
           /**
@@ -119,6 +118,7 @@ NucleationLocationUserObject::execute()
           current_nucleus.setOrientation(i);
         }
         _local_nucleus.push_back(current_nucleus);
+
       }
     }
   }
@@ -192,21 +192,17 @@ NucleationLocationUserObject::closeToBoundary() const
   {
     position_fraction[i] = centroid(i)/ _mesh.dimensionWidth(i);
     boundary_fraction[i] = _boundary_width/_mesh.dimensionWidth(i);
-    //  std::cout<<"position_fraction "<<position_fraction[i]<<std::endl;
-    //  std::cout<<"boundary_fraction "<<boundary_fraction[i]<<std::endl;
   }
 
   for(int i(0); i<3; ++i)
   {
     if(position_fraction[i] >= 0.5)
     {
-      // std::cout<<"in 1st if"<<std::endl;
       if(boundary_fraction[i] >= 1.0 - position_fraction[i])
         return true;
     }
     else
     {
-      //  std::cout<<"in 2nd if"<<std::endl;
       if(boundary_fraction[i] >= position_fraction[i])
         return true;
     }
