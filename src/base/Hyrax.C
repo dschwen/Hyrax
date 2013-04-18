@@ -31,6 +31,7 @@
 #include "AuxSupersaturation.h"
 #include "AuxChemElastic.h"
 #include "AuxDeltaGStar.h"
+#include "AuxRateSimple.h"
 
 //#include "AuxTestFlip.h"
 #include "ReporterAux.h"
@@ -94,6 +95,7 @@ namespace Hyrax
     registerAux(AuxChemElastic);
     registerAux(AuxDeltaGStar);
     registerAux(ReporterAux);
+    registerAux(AuxRateSimple);
 
     //Dirac Kernels
 

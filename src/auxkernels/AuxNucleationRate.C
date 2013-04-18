@@ -53,7 +53,7 @@ AuxNucleationRate::AuxNucleationRate(const std::string & name, InputParameters p
     _scale_factor(getParam<Real>("scale_factor"))
 {
   if(_n_OP_vars != coupledComponents("OP_var_names"))
-    mooseError("Please match the number of orientation variants to coupled OPs (AverageNucleationRate).");
+    mooseError("Please match the number of orientation variants to coupled OPs (AuxNucleationRate).");
 
   _coupled_OP_vars.resize(_n_OP_vars);
 
