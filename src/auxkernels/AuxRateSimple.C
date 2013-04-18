@@ -33,7 +33,8 @@ AuxRateSimple::AuxRateSimple(const std::string & name, InputParameters parameter
   : AuxKernel(name, parameters),
     _coupled_energy(coupledValue("coupled_aux_var")),
     _Kn1(getParam<Real>("Kn1")),
-    _Kn2(getParam<Real>("Kn2"))
+    _Kn2(getParam<Real>("Kn2")),
+    _n_OP_vars(getParam<int>("n_OP_vars"))
 {
   if(_n_OP_vars != coupledComponents("OP_var_names"))
     mooseError("Please match the number of orientation variants to coupled OPs (AuxRateSimple).");
@@ -48,6 +49,6 @@ Real
 AuxRateSimple::computeValue()
 {
   // std::cout<<"exponential term"<< exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1)) <<std::endl;
-  return _Kn1*exp(-1.0*_Kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
+  return _Kn1*std::exp(-1.0*_Kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
 }
 

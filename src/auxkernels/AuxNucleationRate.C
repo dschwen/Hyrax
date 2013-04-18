@@ -102,6 +102,6 @@ AuxNucleationRate::computeValue()
   }
 
 //  std::cout<<"exponential term"<< exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1)) <<std::endl;
-  return kn1*exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
+  return kn1*std::exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
 }
 
