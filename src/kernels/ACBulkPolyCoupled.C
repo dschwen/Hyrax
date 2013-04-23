@@ -42,7 +42,6 @@ ACBulkPolyCoupled::ACBulkPolyCoupled(const std::string & name, InputParameters p
   // is operating on
   if(_n_OP_vars != coupledComponents("OP_var_names"))
     mooseError("Please match the number of orientation variants to coupled OPs (ACBulkPolyCoupled).");
-  std::cout<<"in acbulkpolycoupled ctor"<<std::endl;
 
   _coupled_OP_vars.resize(_n_OP_vars);
 
@@ -65,7 +64,7 @@ ACBulkPolyCoupled::computeDFDOP(PFFunctionType type)
   Real square_sum, quad_sum, quad_mult;
   square_sum = quad_sum = 0.0;
 
-  if (_n_OP_vars = 1)
+  if (_n_OP_vars == 1)
     quad_mult = 0.0;
   else
     quad_mult = 1.0;
