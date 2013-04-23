@@ -68,7 +68,7 @@ ACBulkPolyCoupled::computeDFDOP(PFFunctionType type)
   if (_n_OP_vars = 1)
     quad_mult = 0.0;
   else
-  quad_mult = 1.0;
+    quad_mult = 1.0;
 
   // compute the coupled OP terms
   for(unsigned int i=0; i<_n_OP_vars; i++)
@@ -77,7 +77,7 @@ ACBulkPolyCoupled::computeDFDOP(PFFunctionType type)
     {
       square_sum += ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
       quad_sum += ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
-    quad_mult *= ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
+      quad_mult *= ((*_coupled_OP_vars[i])[_qp])*((*_coupled_OP_vars[i])[_qp]);
     }
 
   }
@@ -92,12 +92,12 @@ ACBulkPolyCoupled::computeDFDOP(PFFunctionType type)
       + _a6[_qp]*(4.0*_u[_qp]*_u[_qp]*_u[_qp]*square_sum + 2.0*_u[_qp]*quad_sum)
       + 2.0*_a7[_qp]*_u[_qp]*quad_mult;
 
-case Jacobian:
-  return _phi[_j][_qp]*( _a2[_qp]*(_coupled_CH_var[_qp]- _c2[_qp]) - 3.0*_a3[_qp]*_u[_qp]*_u[_qp]
-                         + 5.0*_a4[_qp]*_u[_qp]*_u[_qp]*_u[_qp]*_u[_qp]
-                         + 2.0*_a5[_qp]*square_sum
-                         + _a6[_qp]*(12.0*_u[_qp]*_u[_qp]*square_sum + 2.0*quad_sum)
-                         +  2.0*_a7[_qp]*quad_mult) ;
+  case Jacobian:
+    return _phi[_j][_qp]*( _a2[_qp]*(_coupled_CH_var[_qp]- _c2[_qp]) - 3.0*_a3[_qp]*_u[_qp]*_u[_qp]
+                           + 5.0*_a4[_qp]*_u[_qp]*_u[_qp]*_u[_qp]*_u[_qp]
+                           + 2.0*_a5[_qp]*square_sum
+                           + _a6[_qp]*(12.0*_u[_qp]*_u[_qp]*square_sum + 2.0*quad_sum)
+                           +  2.0*_a7[_qp]*quad_mult) ;
   }
   mooseError("Invalid type passed in");
 }
