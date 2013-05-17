@@ -11,12 +11,14 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  [./ExtraNodesets]
-    [./fixednodes]
-      id = 100
-      coord = '25.6 25.6 25.6 30.72'
-    [../]
-  [../] 
+[]
+
+[MeshModifiers]
+  [./fixednodes]
+    type = AddExtraNodeset
+    boundary = 100
+    coord = '25.6 25.6 25.6 30.72'
+  [../]
 []
 
 [Variables]
