@@ -163,7 +163,6 @@ MeshSolutionModify::endStep()
   else
   {
     _time_stepper->rejectStep();
-    _problem.getNonlinearSystem()._time_scheme->rejectStep();
   }
 
   std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
