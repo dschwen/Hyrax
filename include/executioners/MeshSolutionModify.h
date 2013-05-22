@@ -14,8 +14,7 @@
 #ifndef MESHSOLUTIONMODIFY_H
 #define MESHSOLUTIONMODIFY_H
 
-//#include "Transient.h"
-#include "SolutionTimeAdaptive.h"
+#include "Transient.h"
 
 // Forward Declarations
 class MeshSolutionModify;
@@ -24,7 +23,7 @@ class NucleationLocationUserObject;
 template<>
 InputParameters validParams<MeshSolutionModify>();
 
-class MeshSolutionModify: public SolutionTimeAdaptive //Transient
+class MeshSolutionModify: public Transient
 {
 public:
 

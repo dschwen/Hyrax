@@ -13,6 +13,7 @@
 
 #include "MeshSolutionModify.h"
 #include "NucleationLocationUserObject.h"
+#include "TimeStepper.h"
 
 // C++
 #include <ostream>
@@ -22,7 +23,7 @@
 template<>
 InputParameters validParams<MeshSolutionModify>()
 {
-  InputParameters params = validParams<SolutionTimeAdaptive>();
+  InputParameters params = validParams<Transient>();
   params.addParam<unsigned int>("adapt_cycles", 1, "# of adaptivity cycles to do normally.");
   params.addParam<unsigned int>("adapt_nucleus", 1, "# of adaptivity cycles to do with nucleus introduction.");
   params.addParam<bool>("use_nucleation_userobject", false, "Whether to pull in the nucleation user object or not");
@@ -32,7 +33,7 @@ InputParameters validParams<MeshSolutionModify>()
 }
 
 MeshSolutionModify::MeshSolutionModify(const std::string & name, InputParameters parameters) :
-    SolutionTimeAdaptive(name, parameters),
+    Transient(name, parameters),
     _adapt_cycles(getParam<unsigned int>("adapt_cycles")),
     _adapt_nucleus(getParam<unsigned int>("adapt_nucleus")),
     _use_nucleation_userobject(getParam<bool>("use_nucleation_userobject")),
@@ -160,9 +161,12 @@ MeshSolutionModify::endStep()
     _problem.copyOldSolutions();
   }
   else
-    _problem.restoreSolutions();
+  {
+    _time_stepper->rejectStep();
+    _problem.getNonlinearSystem()._time_scheme->rejectStep();
+  }
 
-    std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
+  std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
 }
 
 void
@@ -188,10 +192,10 @@ MeshSolutionModify::computeDT()
   //solution is captured properly
   if (!_new_nucleus) //no event
   {
-    new_dt = SolutionTimeAdaptive::computeDT();
+    new_dt = Transient::computeDT();
   }
   else
-    new_dt = _input_dt;
+    new_dt = getParam<Real>("dt");
 
   // I also had the idea of chopping the timestep way down when a nucleation event occurs and only doing
   // one adaptivity step per timestep, and doing a few tiny timesteps to get in the adaptivity, then

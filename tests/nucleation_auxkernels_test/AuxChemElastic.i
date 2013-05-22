@@ -206,9 +206,12 @@
 
   start_time = 0.0
   num_steps = 3
-  dt = 0.01
   dtmin = 1e-4
   dtmax = 1e-1
+  [./TimeStepper]
+    type = SolutionTimeAdaptiveDT
+    dt = 0.01
+  [../]
 
   abort_on_solve_fail = true
 []

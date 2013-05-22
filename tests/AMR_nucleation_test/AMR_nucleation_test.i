@@ -194,7 +194,10 @@
   type = MeshSolutionModify
   scheme = 'crank-nicolson'
   num_steps = 2
-  dt = 0.01
+  [./TimeStepper]
+    type = SolutionTimeAdaptiveDT
+    dt = 0.01
+  [../]
   dtmin = 0.0001
   dtmax = 0.1
   adapt_nucleus = 2
