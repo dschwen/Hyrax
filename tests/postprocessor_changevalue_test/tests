@@ -25,6 +25,5 @@
     input = 'NucleationPostprocessor_multi_test.i'
     exodiff = 'NucleationPostprocessor_multi_out.e'
     method = 'OPT OPROF'
-    skip = 'bug fix in CN'
   [../]
 []
