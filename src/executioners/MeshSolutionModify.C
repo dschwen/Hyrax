@@ -179,7 +179,7 @@ MeshSolutionModify::preExecute()
 }
 
 Real
-MeshSolutionModify::computeDT()
+MeshSolutionModify::getDT()
 {
 
   Real new_dt = _dt;
@@ -191,7 +191,7 @@ MeshSolutionModify::computeDT()
   //solution is captured properly
   if (!_new_nucleus) //no event
   {
-    new_dt = Transient::computeDT();
+    new_dt = Transient::getDT();
   }
   else
     new_dt = getParam<Real>("dt");

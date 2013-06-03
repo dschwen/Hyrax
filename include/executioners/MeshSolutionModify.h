@@ -32,7 +32,7 @@ public:
 //  virtual void takeStep(Real input_dt = -1.0);
   virtual void endStep();
   virtual void preExecute();
-  Real computeDT();
+  Real getDT();
 
 protected:
   unsigned int _adapt_cycles;
