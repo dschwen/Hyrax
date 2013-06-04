@@ -4,8 +4,8 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 480
-  ny = 480
+  nx = 15 #480
+  ny = 15 #480
   nz = 0
   xmin = 0
   xmax = 153.6 #0.3*512
@@ -14,6 +14,7 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
+  uniform_refine = 5
 []
 
 [Variables]
@@ -224,7 +225,7 @@
     type = NodalVolumeFraction
     output = file
     bubble_volume_file = CNG_size_distribution_9.csv
-    Avrami_file = Avrami_9.csv
+    Avrami_file = CNG_Avrami_9.csv
     threshold = 0.75
     variable = n1
     mesh_volume = Volume
@@ -239,10 +240,15 @@
 
 [Executioner]
   type = MeshSolutionModify
-  scheme = 'crank-nicolson'
+  scheme = 'bdf2'
+
+  [./TimeStepper]
+    type = SolutionTimeAdaptiveDT
+    dt = 0.01
+  [../]
 
  # num_steps = 10
-  dt = 0.01
+#  dt = 0.01
   dtmin = 0.0001
   dtmax = 0.1
   percent_change = 0.1
@@ -250,17 +256,48 @@
   start_time = 0.0
   end_time = 50
 
-  abort_on_solve_fail = true
-#  adapt_nucleus = 5
-#  adapt_cycles = 1
+#  abort_on_solve_fail = true
+  adapt_nucleus = 5
+  adapt_cycles = 1
 
   use_nucleation_userobject = true
   nucleation_userobject = NLUO
 
-  petsc_options = -snes_mf_operator
+  l_max_its = 50
+  petsc_options = '-snes_mf_operator'
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
 []
+
+[Adaptivity]
+  marker = combo
+  [./Markers]
+    [./NM]
+      type = NucleationMarker
+      nucleation_userobject = NLUO
+      max_h_level = 5
+    [../]
+    [./EFMHM_1]
+      type = ErrorFractionMaxHMarker
+      coarsen = 0.05
+      refine = 0.75
+      max_h_level = 5
+      indicator = GJI_1
+    [../]
+    [./combo]
+      type = ComboMarker
+      markers = 'NM EFMHM_1'
+    [../]
+  [../]
+
+  [./Indicators]
+    [./GJI_1]
+      type = GradientJumpIndicator
+      variable = n1
+    [../]
+  [../]
+[]
+
 
 [Output]
   file_base = testCNG_9

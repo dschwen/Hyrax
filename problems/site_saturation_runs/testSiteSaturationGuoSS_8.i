@@ -170,7 +170,7 @@
 
 [Executioner]
   type = Transient
-   scheme = 'crank-nicolson'
+   scheme = 'bdf2'
    start_time = 0.0
    dtmin = 0.0001
    dtmax = 0.3

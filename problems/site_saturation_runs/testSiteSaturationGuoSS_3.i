@@ -44,8 +44,8 @@
      type = PolySpecifiedSmoothCircleIC
      outvalue = 0
      invalue = 1.6
-     radius = 2.0
-     int_width = 1.0
+     radius = 1.8
+     int_width = 0.9
      x_positions = '105  68  38 39  14 86 114 113 40 123 133 97 16 52  8 29  3 147 140 125'
      y_positions = '144 119 131  7 123 59  29 132 42 124  36 65 35  6 74 54 13  18  10  37'
      z_positions = '  0   0   0  0   0  0   0   0  0   0   0  0  0  0  0  0  0   0   0   0'
@@ -170,7 +170,7 @@
 
 [Executioner]
    type = Transient
-   scheme = 'crank-nicolson'
+   scheme = 'bdf2'
    start_time = 0.0
    dtmin = 0.0001
    dtmax = 0.3
