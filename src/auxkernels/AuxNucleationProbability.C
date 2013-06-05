@@ -24,6 +24,7 @@ InputParameters validParams<AuxNucleationProbability>()
   // I'd have line in input file, coupled_aux_var = j_star
   params.addRequiredCoupledVar("coupled_variables", "coupled order parameter variables");
   params.addRequiredParam<int>("n_OP_vars", "# of coupled OP variables");
+  params.addParam<Real>("OP_threshold", 0.01, "Threshold value for determining existence within 2nd phase");
 
   return params;
 }
@@ -31,7 +32,8 @@ InputParameters validParams<AuxNucleationProbability>()
 AuxNucleationProbability::AuxNucleationProbability(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
     _coupled_nuc_rate(coupledValue("coupled_aux_var")),
-    _n_OP_vars(getParam<int>("n_OP_vars"))
+    _n_OP_vars(getParam<int>("n_OP_vars")),
+    _OP_threshold(getParam<Real>("OP_threshold"))
     //  _coupled_OP(coupledValue("coupled_variable"))
 {
   if(_n_OP_vars != coupledComponents("coupled_variables"))
@@ -48,7 +50,7 @@ AuxNucleationProbability::computeValue()
 {
   for(unsigned int i=0; i<_n_OP_vars; i++)
   {
-    if((*_coupled_OP[i])[_qp] > 0.1)
+    if((*_coupled_OP[i])[_qp] > _OP_threshold)
       return 0.0;
   }
 

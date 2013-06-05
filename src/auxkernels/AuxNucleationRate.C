@@ -85,23 +85,19 @@ AuxNucleationRate::computeValue()
 
   // correct the density to the actual element volume to get # of atoms
   kn1 *= _current_elem_volume;
-//  std::cout<<"kn1 =" << kn1 <<std::endl;
 
   kn2 = _scale_factor*alpha*std::pow(_gamma, (int)_dim)/(_Kb*_temperature);
 
-//  std::cout<<"kn2 =" << kn2 <<std::endl;
-
-  // check to see if we're in a particle; if so, return 0 for J*
-  for(unsigned int i=0; i<_n_OP_vars; i++)
+  // We check to see if we're in a particle in AuxNucleationProbability.
+  /* for(unsigned int i=0; i<_n_OP_vars; i++)
   {
-    if((*_coupled_OP_vars[i])[_qp] > 0.01)
+    if((*_coupled_OP_vars[i])[_qp] > 0.1)
     {
       return 0.0;
     }
 
-  }
+    }*/
 
-//  std::cout<<"exponential term"<< exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1)) <<std::endl;
   return kn1*std::exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
 }
 

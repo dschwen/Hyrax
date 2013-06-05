@@ -41,6 +41,7 @@ private:
   VariableValue & _coupled_nuc_rate;  ///< nucleation rate for the nucleation probability calculation
   std::vector<VariableValue *> _coupled_OP;  ///< PDE variable (concentration
   unsigned int _n_OP_vars;
+  Real _OP_threshold;
 
 };
 
