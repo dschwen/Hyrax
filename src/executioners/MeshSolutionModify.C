@@ -41,82 +41,6 @@ MeshSolutionModify::MeshSolutionModify(const std::string & name, InputParameters
 {
 }
 
-/*void
-MeshSolutionModify::takeStep(Real input_dt)
-{
-  _dt_old = _dt;
-  if (input_dt == -1.0)
-    _dt = computeConstrainedDT();
-  else
-    _dt = input_dt;
-
-  _problem.onTimestepBegin();
-  if (_converged)
-  {
-    // Update backward material data structures
-    _problem.updateMaterials();
-  }
-
-  // Increment time
-  _time = _time_old + _dt;
-
-  std::cout<<"DT: "<<_dt<<std::endl;
-
-  std::cout << " Solving time step ";
-  {
-    std::ostringstream out;
-
-    out << std::setw(2)
-    << _t_step
-    << ", time="
-    << std::setw(9)
-    << std::setprecision(6)
-    << std::setfill('0')
-    << std::showpoint
-    << std::left
-    << _time
-    <<  "...";
-
-    std::cout << out.str() << std::endl;
-  }
-
-  preSolve();
-
-  _problem.timestepSetup();
-
-  // Compute Pre-Aux User Objects (Timestep begin)
-  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::PRE_AUX);
-
-  // Compute TimestepBegin AuxKernels
-  _problem.computeAuxiliaryKernels(EXEC_TIMESTEP_BEGIN);
-
-  // Compute Post-Aux User Objects (Timestep begin)
-  _problem.computeUserObjects(EXEC_TIMESTEP_BEGIN, UserObjectWarehouse::POST_AUX);
-
-  _problem.solve();
-
-  _converged = _problem.converged();
-
-  // We know whether or not the nonlinear solver thinks it converged, but we need to see if the executioner concurs
-  bool last_solve_converged = lastSolveConverged();
-
-  std::cout << "Converged:" << last_solve_converged << "\n";
-
-  if (last_solve_converged)
-    _problem.computeUserObjects(EXEC_TIMESTEP, UserObjectWarehouse::PRE_AUX);
-
-  // User definable callback
-  postSolve();
-
-  _problem.onTimestepEnd();
-
-  if (last_solve_converged)
-  {
-    _problem.computeAuxiliaryKernels(EXEC_TIMESTEP);
-    _problem.computeUserObjects(EXEC_TIMESTEP, UserObjectWarehouse::POST_AUX);
-  }
-  } */
-
 void
 MeshSolutionModify::endStep()
 {
@@ -184,9 +108,6 @@ MeshSolutionModify::getDT()
 
   Real new_dt = _dt;
 
-  // if(_use_nucleation_userobject)
-//  _new_nucleus = _nucleation_userobject->hasNewNucleus();
-
   //If there's a nucleation event, cut the timestep back down to the input timestep so the quickly varying
   //solution is captured properly
   if (!_new_nucleus) //no event
@@ -194,12 +115,7 @@ MeshSolutionModify::getDT()
     new_dt = Transient::getDT();
   }
   else
-    new_dt = getParam<Real>("dt");
-
-  // I also had the idea of chopping the timestep way down when a nucleation event occurs and only doing
-  // one adaptivity step per timestep, and doing a few tiny timesteps to get in the adaptivity, then
-  // going back to a larger (and growing) timestep.  This is kind of messy though, so I'm going to go with
-  // this method first.
+    new_dt = _time_stepper->getParam<Real>("dt");
 
   return new_dt;
 }
