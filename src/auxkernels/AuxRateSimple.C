@@ -48,6 +48,10 @@ AuxRateSimple::AuxRateSimple(const std::string & name, InputParameters parameter
 Real
 AuxRateSimple::computeValue()
 {
+// NOTE: AuxRateSimple WORKS ONLY FOR NON-ADAPTIVE MESHES!
+  if ( _mesh.changed() && _t_step > 1)
+    mooseError("AuxRateSimple cannot be used with adaptive meshing.");
+
   // std::cout<<"exponential term"<< exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1)) <<std::endl;
   return _Kn1*std::exp(-1.0*_Kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
 }

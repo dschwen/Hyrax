@@ -108,8 +108,8 @@ MeshSolutionModify::getDT()
 
   Real new_dt = _dt;
 
-  //If there's a nucleation event, cut the timestep back down to the input timestep so the quickly varying
-  //solution is captured properly
+  //If there's a nucleation event, cut the timestep back down to the timestepper input timestep
+  //so the quickly varying solution is captured properly
   if (!_new_nucleus) //no event
   {
     new_dt = Transient::getDT();
