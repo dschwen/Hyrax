@@ -9,7 +9,6 @@
 *************************************************************************/
 
 #include "CHBulkPolyCoupled.h"
-#include <ostream>
 
 /** CHBulkPolyCoupled handles the conserved order parameter(probably concentration),
  * evolved using the Cahn-Hilliard equation.  It couples to multiple order

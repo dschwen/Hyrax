@@ -60,7 +60,7 @@ private:
   MaterialProperty<Real> & _kappa_c;		///< CH gradient energy coefficient (isotropic)
 
   // Alan-Cahn equation
-  MaterialProperty<Real> & _L;			///< Allen-Chan kinetic coefficient (isotropic)
+  MaterialProperty<Real> & _L;			///< Allen-Cahn kinetic coefficient (isotropic)
   MaterialProperty<Real> & _kappa_n;		///< AC gradient energy coefficient (isotropic)
 
   // Landau polynomial coefficients

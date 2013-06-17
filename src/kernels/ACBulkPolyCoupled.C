@@ -11,7 +11,6 @@
 *************************************************************************/
 
 #include "ACBulkPolyCoupled.h"
-#include <ostream>
 
 /**
  * ACBulkPolyCoupled couples the bulk Allen-Cahn equation term with order parameter eta

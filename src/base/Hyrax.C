@@ -24,6 +24,8 @@
 #include "Value.h"
 #include "CHBulkSimmons.h"
 #include "ACBulkSimmons.h"
+#include "CHCoupledCalphad.h"
+#include "ACCoupledCalphad.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -44,6 +46,7 @@
 //Materials
 #include "PFMobilityLandau.h"
 #include "LinearSingleCrystalPrecipitateMaterial.h"
+#include "ZrHCalphad.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -87,6 +90,8 @@ namespace Hyrax
     registerKernel(Value);
     registerKernel(ACBulkSimmons);
     registerKernel(CHBulkSimmons);
+    registerKernel(CHCoupledCalphad);
+    registerKernel(ACCoupledCalphad);
 
     //Auxiliary Kernels
     registerAux(AuxSupersaturation);
@@ -105,6 +110,7 @@ namespace Hyrax
     //Materials
     registerMaterial(PFMobilityLandau);
     registerMaterial(LinearSingleCrystalPrecipitateMaterial);
+    registerMaterial(ZrHCalphad);
 
     //Initial Conditions
     registerInitialCondition(PolySpecifiedSmoothCircleIC);
