@@ -37,11 +37,16 @@ protected:
   virtual RealGradient computeGradDFDCons(PFFunctionType type, Real c, RealGradient grad_c);
 
   Real computeHeaviside();
-  RealGradient computeGradConservedTerm(Real & h);
-  RealGradient computeGradNonconservedTerm();
+  RealGradient computeGradOPDHeavisideDOP();
+  RealGradient computeGradConservedTerm(Real & h, Real & L0, Real & L1);
+  RealGradient computeGradNonconservedTerm(Real & L0, Real & L1);
 
   Real computeDGalphaDx();
-  Real computeDGdeltaDx();
+  Real computeDGdeltaDx(Real & L0, Real & L1);
+  Real computeD2GalphaDx2();
+  Real computeD2GdeltaDx2(Real & L0, Real & L1);
+  Real computeD3GalphaDx3();
+  Real computeD3GdeltaDx3(Real & L0, Real & L1);
 
   Real computeGhcpZr();
   Real computeGhcpZrH();

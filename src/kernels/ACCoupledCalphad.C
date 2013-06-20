@@ -113,8 +113,8 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
     return (-1*computeGalphamix() + computeGdeltamix())*dHeavisidedn + _w*dgdn;
 
   case Jacobian:
-    return 0;
-    // return _phi[_j][_qp]*(6-6*_u[_qp])*(-1*computeGalphamix() + computeGdeltamix()) + _w*(2 - 6*_u[_qp] + 12*_u[_qp]*_u[_qp] + 2*(square_sum) + 2*(quad_sum) + 12*(square_sum) + 2*square_mult)*_phi[_j][_qp];
+    // return 0;
+    return _phi[_j][_qp]*(6-12*_u[_qp])*(-1*computeGalphamix() + computeGdeltamix()) + _w*(2 - 12*_u[_qp] + 12*_u[_qp]*_u[_qp] + 2*(square_sum) + 2*(quad_sum) + 12*_u[_qp]*_u[_qp]*(square_sum) + 2*square_mult)*_phi[_j][_qp];
   }
   mooseError("Invalid type passed in");
 }

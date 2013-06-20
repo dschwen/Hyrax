@@ -81,57 +81,37 @@ CHCoupledCalphad::computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradie
 {
   RealGradient grad_conserved_term, grad_nonconserved_term;
   Real heaviside;
+  Real L0, L1;
+
+  //calculate h(n1,n2,..np) (numerical heaviside function)
+  heaviside = computeHeaviside();
+
+  L0 = _L0_a[_qp] + _L0_b[_qp]*_T;
+  L1 = _L1_a[_qp] + _L1_b[_qp]*_T;
 
   switch (type)
   {
   case Residual:
-    //calculate h(n1,n2,..np) (numerical heaviside function)
-    heaviside = computeHeaviside();
-
     //calculate the d/dx (dfchem/dx) grad x term
-    grad_conserved_term = computeGradConservedTerm(heaviside);
+    //std::cout<<"in residual"<<std::endl;
+    grad_conserved_term = computeGradConservedTerm(heaviside, L0, L1);
 
+    // std::cout<<"after computeGradConservedTerm"<<std::endl;
     //loop to calculate the d/dn (dfchem/dx) grad n terms
-    grad_nonconserved_term = computeGradNonconservedTerm();
+    grad_nonconserved_term = computeGradNonconservedTerm(L0, L1);
 
+    // std::cout<<"After computeGradConservedTerm"<<std::endl;
     return grad_conserved_term + grad_nonconserved_term;
 
   case Jacobian:
-    RealGradient op_sum;
-    op_sum.zero();
+    RealGradient nonconserved, conserved_first, conserved_second;
+    nonconserved = computeGradOPDHeavisideDOP()*_phi[_j][_qp]*(-1*computeD2GalphaDx2() + computeD2GdeltaDx2(L0, L1));
 
-    Real ideal_alpha, ideal_delta, excess, L0, L1;
+    conserved_first = (1-heaviside)*(computeD3GalphaDx3()*_phi[_j][_qp]*_grad_u[_qp] + computeD2GalphaDx2()*_grad_phi[_j][_qp]);
 
-    for(unsigned int i=0; i<_n_OP_variables; i++)
-      op_sum += 6*(*_coupled_OP_vars[i])[_qp]*(1 - (*_coupled_OP_vars[i])[_qp])*(*_coupled_OP_grads[i])[_qp];
+    conserved_second = heaviside*(computeD3GdeltaDx3(L0, L1)*_phi[_j][_qp]*_grad_u[_qp] + computeD2GdeltaDx2(L0, L1)*_grad_phi[_j][_qp]);
 
-    if(_u[_qp] > 0.5 || _u[_qp] < 0)
-      ideal_alpha = 0;
-    else
-      ideal_alpha = _R*_T/(_u[_qp]*(1 - 3*_u[_qp] + 2*_u[_qp]*_u[_qp]));
-
-    L0 = _L0_a[_qp] - _L0_b[_qp]*_T;
-    L1 = _L1_a[_qp] + _L1_b[_qp]*_T;
-
-    //do some checking so that equations are only calculated over the valid region
-    //here, 0<atomic fraction H <= 2/3
-    if(_u[_qp] > 2/3 || _u[_qp] < 0)
-      ideal_delta = 0;
-    else
-      ideal_delta = 2*_R*_T/(_u[_qp]*(2 - 5*_u[_qp] + 3*_u[_qp]*_u[_qp]));
-
-    excess = (L0*(_u[_qp] - 1) + L1*(3 - 6*_u[_qp])) / (2*pow(_u[_qp] - 1, 4));
-
-    Real temp1;
-
-    temp1 = (1-computeHeaviside())*_R*_T*(-1-6*_u[_qp]*-6*_u[_qp]*_u[_qp])/(std::pow(_u[_qp]-3*_u[_qp]*_u[_qp]+2*_u[_qp]*_u[_qp]*_u[_qp],2));
-
-    Real temp2;
-
-    temp2 = computeHeaviside()*(_R*_T*(-4-20*_u[_qp]-6*_u[_qp]*_u[_qp])/(std::pow(2*_u[_qp]-5*_u[_qp]*_u[_qp] +3*_u[_qp]*_u[_qp]*_u[_qp],2)) +( (L0-6*L1)*(_u[_qp]-1) - 4*(L0*(_u[_qp]-1)+3*L1*(3-6*_u[_qp])))/(2*std::pow(_u[_qp]-1,5)));
-
-    return 0;
-    // return op_sum*(-1*ideal_alpha + (ideal_delta + excess))*_phi[_j][_qp] + (temp1 + temp2)*_grad_phi[_j][_qp];
+    return nonconserved + conserved_first + conserved_second;
   }
 
   mooseError("Invalid type passed in");
@@ -143,6 +123,7 @@ CHCoupledCalphad::computeHeaviside()
   Real heaviside_first(0.0);
   Real heaviside_second(0.0);
 
+  //may need to put some checking in here so that OP fixed between 0 and 1
   for(unsigned int i=0; i<_n_OP_variables; i++)
   {
     heaviside_first += std::pow((*_coupled_OP_vars[i])[_qp], 2);
@@ -153,51 +134,36 @@ CHCoupledCalphad::computeHeaviside()
 }
 
 RealGradient
-CHCoupledCalphad::computeGradConservedTerm(Real & h)
+CHCoupledCalphad::computeGradOPDHeavisideDOP()
 {
-  Real ideal, excess;
-  Real L0, L1;
+  RealGradient op_sum;
+  op_sum.zero();
+
+  //may need to put some checking in here so that OP fixed between 0 and 1
+  for(unsigned int i=0; i<_n_OP_variables; i++)
+    op_sum += 6*(*_coupled_OP_vars[i])[_qp]*(1 - (*_coupled_OP_vars[i])[_qp])*(*_coupled_OP_grads[i])[_qp];
+
+  return op_sum;
+}
+
+RealGradient
+CHCoupledCalphad::computeGradConservedTerm(Real & h, Real & L0, Real & L1)
+{
   Real d2Galphadx2, d2Gdeltadx2;
 
-  //do some checking so that equations are only calculated over the valid region
-  //here, 0<atomic fraction H <= 0.5
-  if(_u[_qp] > 0.5 || _u[_qp] < 0)
-    ideal = 0;
-  else
-    ideal = _R*_T/(_u[_qp]*(1 - 3*_u[_qp] + 2*_u[_qp]*_u[_qp]));
+  d2Galphadx2 = (1-h)*computeD2GalphaDx2();
 
-  d2Galphadx2 = (1-h)*ideal;
-
-
-  L0 = _L0_a[_qp] - _L0_b[_qp]*_T;
-  L1 = _L1_a[_qp] + _L1_b[_qp]*_T;
-
-  //do some checking so that equations are only calculated over the valid region
-  //here, 0<atomic fraction H <= 2/3
-  if(_u[_qp] > 2/3 || _u[_qp] < 0)
-    ideal = 0;
-  else
-    ideal = 2*_R*_T/(_u[_qp]*(2 - 5*_u[_qp] + 3*_u[_qp]*_u[_qp]));
-
-  excess = (L0*(_u[_qp] - 1) + L1*(3 - 6*_u[_qp])) / (2*pow(_u[_qp] - 1, 4));
-
-  d2Gdeltadx2 = h*(ideal + excess);
+  d2Gdeltadx2 = h*computeD2GdeltaDx2(L0, L1);
+  // std::cout<<"in computeGradConservedTerm"<<std::endl;
 
   return (d2Galphadx2 + d2Gdeltadx2)*_grad_u[_qp];
 }
 
 RealGradient
-CHCoupledCalphad::computeGradNonconservedTerm()
+CHCoupledCalphad::computeGradNonconservedTerm(Real & L0, Real & L1)
 {
-  RealGradient op_sum;
-  op_sum.zero();
-
-  for(unsigned int i=0; i<_n_OP_variables; i++)
-  {
-    op_sum += 6*(*_coupled_OP_vars[i])[_qp]*(1 - (*_coupled_OP_vars[i])[_qp])*(*_coupled_OP_grads[i])[_qp];
-  }
-
-  return (-1*computeDGalphaDx() + computeDGdeltaDx())*op_sum;
+  //  std::cout<<"in computeGradNonconservedTerm"<<std::endl;
+  return (-1*computeDGalphaDx() + computeDGdeltaDx(L0, L1))*computeGradOPDHeavisideDOP();
 }
 
 Real
@@ -206,48 +172,96 @@ CHCoupledCalphad::computeDGalphaDx()
   Real reference, ideal;
 
   //do some checking so that equations are only calculated over the valid region
-  //here, 0<atomic fraction H <= 0.5
-
+  //THIS MAY NEED TO BE CHANGED
   if(_u[_qp] > 0.5 || _u[_qp] < 0)
     return 0;
+  else
+  {
+    reference = -2*computeGhcpZr() + computeGhcpZrH();
 
-  reference = -2*computeGhcpZr() + computeGhcpZrH();
+    // std::cout<<"x/(1-x) = "<< _u[_qp]/(1-_u[_qp])<<std::endl;
+    // std::cout<<"(2x-1)/(x-1)"<<(2*_u[_qp] - 1)/(_u[_qp] -1)<<std::endl;
 
-  //std::cout<<"_u[_qp] = "<<_u[_qp]<<std::endl;
-  //std::cout<<"first = "<< ( _u[_qp]/(1-_u[_qp])) <<std::endl;
-  //std::cout<<" second "<<((2*_u[_qp]-1)/(_u[_qp]-1)) << std::endl;
+    ideal = _R*_T*( std::log( _u[_qp]/(1-_u[_qp])) - 2*std::log( (2*_u[_qp] - 1)/(_u[_qp] -1) ) );
 
-  ideal = + _R*_T*( std::log( _u[_qp]/(1-_u[_qp])) - 2*std::log((1-2*_u[_qp])/(1-_u[_qp])) );
-
-  return reference + ideal;
+    return reference + ideal;
+  }
 }
 
 Real
-CHCoupledCalphad::computeDGdeltaDx()
+CHCoupledCalphad::computeDGdeltaDx(Real & L0, Real & L1)
 {
   Real reference, ideal, excess;
-  Real L0, L1;
 
   //do some checking so that equations are only calculated over the valid region
-  //here, 0<atomic fraction H <= 0.5
-
+  //THIS MAY NEED TO BE CHANGED
   if(_u[_qp] > 2/3 || _u[_qp] <  0)
     return 0;
+  else
+  {
+    reference = -(3/2)*computeGfccZr() + (1/2)*computeGfccZrH2();
 
-  L0 = _L0_a[_qp] - _L0_b[_qp]*_T;
-  L1 = _L1_a[_qp] + _L1_b[_qp]*_T;
+    // std::cout<<"-4x/(x-1) = "<< -4*_u[_qp]/(_u[_qp]-1)<<std::endl;
+    // std::cout<<"(3x-2)/(x-1)"<<(3*_u[_qp] - 2)/(_u[_qp] -1)<<std::endl;
 
-  reference = -(3/2)*computeGfccZr() + (1/2)*computeGfccZrH2();
+    ideal = _R*_T*( std::log(-4*_u[_qp]/(_u[_qp]-1))- 3*std::log((3*_u[_qp]-2)/(_u[_qp]-1)) );
 
-  //std::cout<<"_u[_qp] = "<<_u[_qp]<<std::endl;
+    excess = ( 1/(4*std::pow(_u[_qp]-1, 3)) )*( L0*(-2 + 8*_u[_qp] - 9*_u[_qp]*_u[_qp]
+                                                    + 3*std::pow(_u[_qp], 3))
+                                                - 2*L1*(-1 + 6*_u[_qp] - 9*_u[_qp]*_u[_qp]
+                                                        + 3*std::pow(_u[_qp], 3)));
 
-  ideal = + _R*_T*( std::log(-4*_u[_qp]/(_u[_qp]-1))- 3*std::log((3*_u[_qp]-2)/(_u[_qp]-1)) );
+    return reference + ideal + excess;
+  }
+}
 
-  excess = ( 1/(4*std::pow(_u[_qp]-1, 3)) )*( L0*(-2 + 8*_u[_qp] - 9*_u[_qp]*_u[_qp] + 3*std::pow(_u[_qp], 3))
-                                              -2*L1*(-1 + 6*_u[_qp] - 9*_u[_qp]*_u[_qp]
-                                                     + 3*std::pow(_u[_qp], 3)));
+Real
+CHCoupledCalphad::computeD2GalphaDx2()
+{
+  //do some checking so that equations are only calculated over the valid region
+  //THIS MAY CHANGE
+  if(_u[_qp] > 0.5 || _u[_qp] < 0)
+    return 0;
+  else
+    return _R*_T/(_u[_qp] - 3*_u[_qp]*_u[_qp] + 2*_u[_qp]*_u[_qp]*_u[_qp]);
+}
 
-  return reference + ideal + excess;;
+Real
+CHCoupledCalphad::computeD2GdeltaDx2(Real & L0, Real & L1)
+{
+  Real ideal, excess;
+
+  //do some checking so that equations are only calculated over the valid region
+  //THIS MAY CHANGE
+  if(_u[_qp] > 2/3 || _u[_qp] < 0)
+    return 0;
+  else
+  {
+    ideal = 2*_R*_T/(2*_u[_qp] - 5*_u[_qp]*_u[_qp] + 3*_u[_qp]*_u[_qp]*_u[_qp]);
+    excess = (L0*(_u[_qp] - 1) + L1*(3 - 6*_u[_qp])) / (2*pow(_u[_qp] - 1, 4));
+
+    return ideal + excess;
+  }
+}
+
+Real
+CHCoupledCalphad::computeD3GalphaDx3()
+{
+ return -1*_R*_T*(1 - 6*_u[_qp] + 6*_u[_qp]*_u[_qp])/std::pow(_u[_qp] - 3*_u[_qp]*_u[_qp]
+                                                      + 2*_u[_qp]*_u[_qp]*_u[_qp], 2);
+}
+
+Real
+CHCoupledCalphad::computeD3GdeltaDx3(Real & L0, Real & L1)
+{
+  Real ideal, excess;
+
+  ideal = -2*_R*_T*(2 - 10*_u[_qp] + 9*_u[_qp]*_u[_qp])/std::pow(2*_u[_qp] - 5*_u[_qp]*_u[_qp]
+                                                      + 3*_u[_qp]*_u[_qp]*_u[_qp], 2);
+
+  excess =  3*(L0*(1-_u[_qp]) + L1*(6*_u[_qp]-2))/(2*std::pow((_u[_qp] - 1), 5));
+
+  return ideal + excess;
 }
 
 Real
