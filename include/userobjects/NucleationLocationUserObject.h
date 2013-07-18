@@ -76,6 +76,11 @@ private:
   //check to see if new nucleus has been found
   unsigned int _old_nucleus_list_size;
   bool _has_new_nucleus;
+
+  //for whipping the damned probability algorithm into shape
+  int _master_random;
+  int _slave_random;
+  int _granddad;
 };
 
 #endif //NUCLEATIONLOCATIONUSEROBJECT_H

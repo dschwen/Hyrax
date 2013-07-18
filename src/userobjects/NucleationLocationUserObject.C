@@ -48,7 +48,9 @@ NucleationLocationUserObject::NucleationLocationUserObject(const std::string & n
     _phase_gen_index(std::numeric_limits<unsigned int>::max()),
     _nuclei(0),
     _old_nucleus_list_size(0),
-    _has_new_nucleus(false)
+    _has_new_nucleus(false),
+    _master_random(-1000),
+    _slave_random(-100)
 {
     if(_n_coupled_aux != coupledComponents("coupled_aux_vars"))
     mooseError("Please specify the correct # of coupled probabilities (NucleationLocationUserObject).");
@@ -69,6 +71,10 @@ NucleationLocationUserObject::initialize()
    //reinitialize the local vectors to size 0 with no data
    _local_nucleus.clear();
    _packed_data.clear();
+
+   _mrand.seed(_master_random, _random_seed + _counter);
+   _mrand.seed(_slave_random, _random_seed + 2*_counter);
+   _granddad = _mrand.randl(_master_random);
 }
 
 void
@@ -81,7 +87,13 @@ NucleationLocationUserObject::execute()
    * be different for each element, each timestep.  take steps of n_elem
    */
   unsigned int elem_id = _current_elem->id();
-  _mrand.seed(elem_id, elem_id + _random_seed + (_counter * _mesh.nElem()));
+
+  unsigned int grandgirl = _mrand.randl(_slave_random);
+
+  // we are driving the random seed for each element_id state off of TWO random numbers
+  _mrand.seed(elem_id, grandgirl + _granddad);
+
+  //_mrand.seed(elem_id, elem_id + _random_seed + (_counter * _mesh.nElem()));
   Real random_number;
 
   if(!closeToBoundary())
@@ -101,22 +113,23 @@ NucleationLocationUserObject::execute()
         current_nucleus.setStartTime(_t);
         current_nucleus.setEndTime(_t+_dwell_time);
 
-        if(_n_coupled_aux != _num_orientations)
-        {
-          _mrand.seed(_phase_gen_index, elem_id + _random_seed + (_counter * _mesh.nElem()));
-          int r_num = _mrand.randl(_phase_gen_index);
+        // if(_n_coupled_aux != _num_orientations)
+        // {
+        //  _mrand.seed(_phase_gen_index, elem_id + _random_seed + (_counter * _mesh.nElem()));
+        //  int r_num = _mrand.randl(_phase_gen_index);
 
           /**
            * randl supplies some integer random number, we want to be between 1 and n coupled
            * vars, so modulo size()
            */
-          r_num = r_num%_num_orientations;
-          current_nucleus.setOrientation(r_num);
-        }
-        else
-        {
+        //  r_num = r_num%_num_orientations;
+        //  current_nucleus.setOrientation(r_num);
+        // }
+        //else
+        //{
           current_nucleus.setOrientation(i);
-        }
+          //}
+          // this runs the tiny chance that there might be 2 or 3 nucleation events on the same element.
         _local_nucleus.push_back(current_nucleus);
 
       }

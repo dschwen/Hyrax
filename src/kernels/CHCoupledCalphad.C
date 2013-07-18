@@ -25,7 +25,7 @@ InputParameters validParams<CHCoupledCalphad>()
   InputParameters params = validParams<CHBulk>();
   params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
-  params.addRequiredParam<Real>("temperature", "Simulation temperature");
+  params.addParam<Real>("temperature", 600, "Simulation temperature in K");
   params.addParam<Real>("gas_constant", 8.3144621, "Universal gas constant");
   //universal gas constant supplied here in J/mol-K
 
@@ -34,30 +34,15 @@ InputParameters validParams<CHCoupledCalphad>()
 
 CHCoupledCalphad::CHCoupledCalphad(const std::string & name, InputParameters parameters)
     : CHBulk(name, parameters),
-      _G_hcp_Zr_a(getMaterialProperty<Real>("G_hcp_Zr_a")),
-      _G_hcp_Zr_b(getMaterialProperty<Real>("G_hcp_Zr_b")),
-      _G_hcp_Zr_c(getMaterialProperty<Real>("G_hcp_Zr_c")),
-      _G_hcp_Zr_d(getMaterialProperty<Real>("G_hcp_Zr_d")),
-      _G_hcp_Zr_e(getMaterialProperty<Real>("G_hcp_Zr_e")),
-      _G_hcp_ZrH_a(getMaterialProperty<Real>("G_hcp_ZrH_a")),
-      _G_hcp_ZrH_b(getMaterialProperty<Real>("G_hcp_ZrH_b")),
-      _G_fcc_Zr_a(getMaterialProperty<Real>("G_fcc_Zr_a")),
-      _G_fcc_Zr_b(getMaterialProperty<Real>("G_fcc_Zr_b")),
-      _G_fcc_Zr_c(getMaterialProperty<Real>("G_fcc_Zr_c")),
-      _G_fcc_Zr_d(getMaterialProperty<Real>("G_fcc_Zr_d")),
-      _G_fcc_Zr_e(getMaterialProperty<Real>("G_fcc_Zr_e")),
-      _G_fcc_ZrH2_a(getMaterialProperty<Real>("G_fcc_ZrH2_a")),
-      _G_fcc_ZrH2_b(getMaterialProperty<Real>("G_fcc_ZrH2_b")),
-      _G_fcc_ZrH2_c(getMaterialProperty<Real>("G_fcc_ZrH2_c")),
-      _G_H2_a(getMaterialProperty<Real>("G_H2_a")),
-      _G_H2_b(getMaterialProperty<Real>("G_H2_b")),
-      _G_H2_c(getMaterialProperty<Real>("G_H2_c")),
-      _G_H2_d(getMaterialProperty<Real>("G_H2_d")),
-      _G_H2_e(getMaterialProperty<Real>("G_H2_e")),
-      _L0_a(getMaterialProperty<Real>("L0_a")),
-      _L0_b(getMaterialProperty<Real>("L0_b")),
-      _L1_a(getMaterialProperty<Real>("L1_a")),
-      _L1_b(getMaterialProperty<Real>("L1_b")),
+      _G_hcp_Zr(getMaterialProperty<Real>("G_hcp_Zr")),
+      _G_hcp_ZrH(getMaterialProperty<Real>("G_hcp_ZrH")),
+      _G_fcc_Zr(getMaterialProperty<Real>("G_fcc_Zr")),
+      _G_fcc_ZrH2(getMaterialProperty<Real>("G_fcc_ZrH2")),
+      _G_H2(getMaterialProperty<Real>("G_H2")),
+      _L0(getMaterialProperty<Real>("L0")),
+      _L1(getMaterialProperty<Real>("L1")),
+      _molarVol_alpha_Zr(getMaterialProperty<Real>("molar_volume_alpha_Zr")),
+      _molarVol_delta_ZrH2(getMaterialProperty<Real>("molar_volume_delta_ZrH2")),
       _T(getParam<Real>("temperature")),
       _R(getParam<Real>("gas_constant")),
       _n_OP_variables(getParam<int>("n_OP_variables"))
@@ -66,13 +51,13 @@ CHCoupledCalphad::CHCoupledCalphad(const std::string & name, InputParameters par
   if(_n_OP_variables != coupledComponents("OP_variable_names"))
     mooseError("Please match the # of orientation variants to coupled OPs (CHCoupledCalphad)");
 
-  _coupled_OP_vars.resize(_n_OP_variables);
-  _coupled_OP_grads.resize(_n_OP_variables);
+  _OP.resize(_n_OP_variables);
+  _grad_OP.resize(_n_OP_variables);
 
   for(unsigned int i=0; i< _n_OP_variables; i++)
   {
-    _coupled_OP_vars[i] = &coupledValue("OP_variable_names", i);
-    _coupled_OP_grads[i] = &coupledGradient("OP_variable_names", i);
+    _OP[i] = &coupledValue("OP_variable_names", i);
+    _grad_OP[i] = &coupledGradient("OP_variable_names", i);
   }
 }
 
@@ -80,36 +65,41 @@ RealGradient
 CHCoupledCalphad::computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradient /*grad_c*/)
 {
   RealGradient grad_conserved_term, grad_nonconserved_term;
-  Real heaviside;
-  Real L0, L1;
 
-  //calculate h(n1,n2,..np) (numerical heaviside function)
-  heaviside = computeHeaviside();
+  _Heaviside = computeHeaviside();
+  computeDHeaviside();
 
-  L0 = _L0_a[_qp] + _L0_b[_qp]*_T;
-  L1 = _L1_a[_qp] + _L1_b[_qp]*_T;
-
-  switch (type)
+ switch (type)
   {
   case Residual:
     //calculate the d/dx (dfchem/dx) grad x term
-    //std::cout<<"in residual"<<std::endl;
-    grad_conserved_term = computeGradConservedTerm(heaviside, L0, L1);
+    grad_conserved_term = computeGradConservedTerm();
 
-    // std::cout<<"after computeGradConservedTerm"<<std::endl;
     //loop to calculate the d/dn (dfchem/dx) grad n terms
-    grad_nonconserved_term = computeGradNonconservedTerm(L0, L1);
+    grad_nonconserved_term = computeGradNonconservedTerm();
 
-    // std::cout<<"After computeGradConservedTerm"<<std::endl;
     return grad_conserved_term + grad_nonconserved_term;
 
   case Jacobian:
     RealGradient nonconserved, conserved_first, conserved_second;
-    nonconserved = computeGradOPDHeavisideDOP()*_phi[_j][_qp]*(-1*computeD2GalphaDx2() + computeD2GdeltaDx2(L0, L1));
+    nonconserved.zero();
+    // nonconserved = computeGradOPDHeavisideDOP()*_phi[_j][_qp]*(-1*computeD2GalphaDx2() + computeD2GdeltaDx2(L0, L1));
 
-    conserved_first = (1-heaviside)*(computeD3GalphaDx3()*_phi[_j][_qp]*_grad_u[_qp] + computeD2GalphaDx2()*_grad_phi[_j][_qp]);
+    conserved_first = (1-_Heaviside)*(computeD3GalphaDx3()*_phi[_j][_qp]*_grad_u[_qp] + computeD2GalphaDx2()*_grad_phi[_j][_qp]);
 
-    conserved_second = heaviside*(computeD3GdeltaDx3(L0, L1)*_phi[_j][_qp]*_grad_u[_qp] + computeD2GdeltaDx2(L0, L1)*_grad_phi[_j][_qp]);
+    conserved_second = _Heaviside*(computeD3GdeltaDx3()*_phi[_j][_qp]*_grad_u[_qp] + computeD2GdeltaDx2()*_grad_phi[_j][_qp]);
+
+    for(unsigned int i(0); i < _n_OP_variables; ++i)
+    {
+      nonconserved += _dHeaviside[i]*(*_grad_OP[i])[_qp]*_phi[_j][_qp];
+    }
+    nonconserved *= computeD2GdeltaDx2() - computeD2GalphaDx2();
+
+    /* nonconserved = _GradOPDHeavisideDOP[_qp]*_phi[_j][_qp]*(-1*_D2GalphaDx2[_qp] + _D2GdeltaDx2[_qp]);
+
+    conserved_first = (1.0 - _heaviside[_qp])*(_D3GalphaDx3[_qp]*_phi[_j][_qp]*_grad_u[_qp] + _D2GalphaDx2[_qp]*_grad_phi[_j][_qp]);
+
+    conserved_second = _heaviside[_qp]*(_D3GdeltaDx3[_qp]*_phi[_j][_qp]*_grad_u[_qp] + _D2GdeltaDx2[_qp]*_grad_phi[_j][_qp]); */
 
     return nonconserved + conserved_first + conserved_second;
   }
@@ -126,44 +116,71 @@ CHCoupledCalphad::computeHeaviside()
   //may need to put some checking in here so that OP fixed between 0 and 1
   for(unsigned int i=0; i<_n_OP_variables; i++)
   {
-    heaviside_first += std::pow((*_coupled_OP_vars[i])[_qp], 2);
-    heaviside_second += std::pow((*_coupled_OP_vars[i])[_qp], 3);
+    if( (*_OP[i])[_qp] > 1.0)
+    {
+      heaviside_first += 1.;
+      heaviside_second += 1.;
+    }
+    else if( (*_OP[i])[_qp] < 0.0)
+    {
+      heaviside_first += 0.;
+      heaviside_second += 0.;
+    }
+    else
+    {
+      heaviside_first += std::pow((*_OP[i])[_qp], 2.);
+      heaviside_second += std::pow((*_OP[i])[_qp], 3.);
+    }
+
   }
 
-  return 3*heaviside_first - 2*heaviside_second;
+  return 3.*heaviside_first - 2.*heaviside_second;
 }
 
-RealGradient
-CHCoupledCalphad::computeGradOPDHeavisideDOP()
+void
+CHCoupledCalphad::computeDHeaviside()
 {
-  RealGradient op_sum;
-  op_sum.zero();
+  _dHeaviside.resize(_n_OP_variables);
 
-  //may need to put some checking in here so that OP fixed between 0 and 1
-  for(unsigned int i=0; i<_n_OP_variables; i++)
-    op_sum += 6*(*_coupled_OP_vars[i])[_qp]*(1 - (*_coupled_OP_vars[i])[_qp])*(*_coupled_OP_grads[i])[_qp];
-
-  return op_sum;
+  for(unsigned int i(0); i<_n_OP_variables; ++i)
+  {
+    //piecewise
+    if( (*_OP[i])[_qp] < 0.0 || (*_OP[i])[_qp] > 1.0)
+      _dHeaviside[i] = 0.0;
+    else
+      _dHeaviside[i] = 6.0*(*_OP[i])[_qp]*(1.0 - (*_OP[i])[_qp] );
+  }
 }
 
 RealGradient
-CHCoupledCalphad::computeGradConservedTerm(Real & h, Real & L0, Real & L1)
+CHCoupledCalphad::computeGradConservedTerm()
 {
   Real d2Galphadx2, d2Gdeltadx2;
 
-  d2Galphadx2 = (1-h)*computeD2GalphaDx2();
-
-  d2Gdeltadx2 = h*computeD2GdeltaDx2(L0, L1);
+  d2Galphadx2 = (1 - _Heaviside)*computeD2GalphaDx2();
+  d2Gdeltadx2 = _Heaviside*computeD2GdeltaDx2();
   // std::cout<<"in computeGradConservedTerm"<<std::endl;
 
   return (d2Galphadx2 + d2Gdeltadx2)*_grad_u[_qp];
 }
 
 RealGradient
-CHCoupledCalphad::computeGradNonconservedTerm(Real & L0, Real & L1)
+CHCoupledCalphad::computeGradNonconservedTerm()
 {
-  //  std::cout<<"in computeGradNonconservedTerm"<<std::endl;
-  return (-1*computeDGalphaDx() + computeDGdeltaDx(L0, L1))*computeGradOPDHeavisideDOP();
+  Real dGalphadx, dGdeltadx;
+
+  dGalphadx = computeDGalphaDx();
+  dGdeltadx = computeDGdeltaDx();
+
+  RealGradient sum;
+  sum.zero();
+
+  for (unsigned int i(0); i < _n_OP_variables; ++i)
+  {
+    sum += ((1. - _dHeaviside[i])*dGalphadx  + _dHeaviside[i]*dGdeltadx)*(*_grad_OP[i])[_qp];
+  }
+
+  return sum;
 }
 
 Real
@@ -173,45 +190,49 @@ CHCoupledCalphad::computeDGalphaDx()
 
   //do some checking so that equations are only calculated over the valid region
   //THIS MAY NEED TO BE CHANGED
-  if(_u[_qp] > 0.5 || _u[_qp] < 0)
-    return 0;
+  if(_u[_qp] > 0.5)
+    return 0.0;
+  else if( _u[_qp] < 0.0)
+    return -1e20;
   else
   {
-    reference = -2*computeGhcpZr() + computeGhcpZrH();
+    reference = -2.*_G_hcp_Zr[_qp] + _G_hcp_ZrH[_qp];
 
     // std::cout<<"x/(1-x) = "<< _u[_qp]/(1-_u[_qp])<<std::endl;
     // std::cout<<"(2x-1)/(x-1)"<<(2*_u[_qp] - 1)/(_u[_qp] -1)<<std::endl;
 
-    ideal = _R*_T*( std::log( _u[_qp]/(1-_u[_qp])) - 2*std::log( (2*_u[_qp] - 1)/(_u[_qp] -1) ) );
+    ideal = _R*_T*( std::log( _u[_qp]/(1-_u[_qp]))
+                    - 2.*std::log( (2.*_u[_qp] - 1.)/(_u[_qp] - 1.) ) );
 
-    return reference + ideal;
+    return (reference + ideal)/_molarVol_alpha_Zr[_qp];
   }
 }
 
 Real
-CHCoupledCalphad::computeDGdeltaDx(Real & L0, Real & L1)
+CHCoupledCalphad::computeDGdeltaDx()
 {
   Real reference, ideal, excess;
 
   //do some checking so that equations are only calculated over the valid region
   //THIS MAY NEED TO BE CHANGED
-  if(_u[_qp] > 2/3 || _u[_qp] <  0)
-    return 0;
+  if(_u[_qp] > 2.0/3.0)
+    return 1e20;
+  else if ( _u[_qp] <  0.0)
+    return 0.0;
   else
   {
-    reference = -(3/2)*computeGfccZr() + (1/2)*computeGfccZrH2();
+    reference = -1.5*_G_fcc_Zr[_qp] + 0.5*_G_fcc_ZrH2[_qp];
 
     // std::cout<<"-4x/(x-1) = "<< -4*_u[_qp]/(_u[_qp]-1)<<std::endl;
     // std::cout<<"(3x-2)/(x-1)"<<(3*_u[_qp] - 2)/(_u[_qp] -1)<<std::endl;
 
-    ideal = _R*_T*( std::log(-4*_u[_qp]/(_u[_qp]-1))- 3*std::log((3*_u[_qp]-2)/(_u[_qp]-1)) );
+    ideal = _R*_T*( std::log(-4.*_u[_qp]/(_u[_qp] - 1.))
+                    - 3.*std::log((3.*_u[_qp] - 2.)/(_u[_qp] - 1)) );
 
-    excess = ( 1/(4*std::pow(_u[_qp]-1, 3)) )*( L0*(-2 + 8*_u[_qp] - 9*_u[_qp]*_u[_qp]
-                                                    + 3*std::pow(_u[_qp], 3))
-                                                - 2*L1*(-1 + 6*_u[_qp] - 9*_u[_qp]*_u[_qp]
-                                                        + 3*std::pow(_u[_qp], 3)));
+    excess = ( 1./(4.*std::pow(_u[_qp] - 1., 3.)) )*( _L0[_qp]*(-2. + 8.*_u[_qp] - 9.*_u[_qp]*_u[_qp] + 3.*std::pow(_u[_qp], 3.))
+                                                      - 2.*_L1[_qp]*(-1. + 6.*_u[_qp] - 9.*_u[_qp]*_u[_qp] + 3.*std::pow(_u[_qp], 3.)));
 
-    return reference + ideal + excess;
+    return (reference + ideal + excess)/_molarVol_delta_ZrH2[_qp];
   }
 }
 
@@ -220,89 +241,49 @@ CHCoupledCalphad::computeD2GalphaDx2()
 {
   //do some checking so that equations are only calculated over the valid region
   //THIS MAY CHANGE
-  if(_u[_qp] > 0.5 || _u[_qp] < 0)
-    return 0;
+  if(_u[_qp] > 0.5)
+    return 0.0;
+  else if(_u[_qp] < 0.0)
+    return 1e20;
   else
-    return _R*_T/(_u[_qp] - 3*_u[_qp]*_u[_qp] + 2*_u[_qp]*_u[_qp]*_u[_qp]);
+    return (_R*_T/(_u[_qp] - 3.*_u[_qp]*_u[_qp] + 2.*_u[_qp]*_u[_qp]*_u[_qp]))/_molarVol_alpha_Zr[_qp];
 }
 
 Real
-CHCoupledCalphad::computeD2GdeltaDx2(Real & L0, Real & L1)
+CHCoupledCalphad::computeD2GdeltaDx2()
 {
   Real ideal, excess;
 
   //do some checking so that equations are only calculated over the valid region
   //THIS MAY CHANGE
-  if(_u[_qp] > 2/3 || _u[_qp] < 0)
-    return 0;
+  if(_u[_qp] > 2./3.)
+    return 1e20;
+  else if ( _u[_qp] < 0.0)
+    return 0.0;
   else
   {
-    ideal = 2*_R*_T/(2*_u[_qp] - 5*_u[_qp]*_u[_qp] + 3*_u[_qp]*_u[_qp]*_u[_qp]);
-    excess = (L0*(_u[_qp] - 1) + L1*(3 - 6*_u[_qp])) / (2*pow(_u[_qp] - 1, 4));
+    ideal = 2.*_R*_T/(2.*_u[_qp] - 5.*_u[_qp]*_u[_qp] + 3.*_u[_qp]*_u[_qp]*_u[_qp]);
+    excess = (_L0[_qp]*(_u[_qp] - 1.) + _L1[_qp]*(3. - 6.*_u[_qp])) / (2.*pow(_u[_qp] - 1., 4.));
 
-    return ideal + excess;
+    return (ideal + excess)/_molarVol_delta_ZrH2[_qp];
   }
 }
 
 Real
 CHCoupledCalphad::computeD3GalphaDx3()
 {
- return -1*_R*_T*(1 - 6*_u[_qp] + 6*_u[_qp]*_u[_qp])/std::pow(_u[_qp] - 3*_u[_qp]*_u[_qp]
-                                                      + 2*_u[_qp]*_u[_qp]*_u[_qp], 2);
+  return (-1.*_R*_T*(1. - 6.*_u[_qp] + 6.*_u[_qp]*_u[_qp])/std::pow(_u[_qp] - 3.*_u[_qp]*_u[_qp]                                                    + 2.*_u[_qp]*_u[_qp]*_u[_qp], 2.))/_molarVol_alpha_Zr[_qp];
 }
 
 Real
-CHCoupledCalphad::computeD3GdeltaDx3(Real & L0, Real & L1)
+CHCoupledCalphad::computeD3GdeltaDx3()
 {
   Real ideal, excess;
 
-  ideal = -2*_R*_T*(2 - 10*_u[_qp] + 9*_u[_qp]*_u[_qp])/std::pow(2*_u[_qp] - 5*_u[_qp]*_u[_qp]
-                                                      + 3*_u[_qp]*_u[_qp]*_u[_qp], 2);
+  ideal = -2.*_R*_T*(2. - 10.*_u[_qp] + 9.*_u[_qp]*_u[_qp])/std::pow(2.*_u[_qp] - 5.*_u[_qp]*_u[_qp]
+                                                      + 3.*_u[_qp]*_u[_qp]*_u[_qp], 2.);
 
-  excess =  3*(L0*(1-_u[_qp]) + L1*(6*_u[_qp]-2))/(2*std::pow((_u[_qp] - 1), 5));
+  excess =  3.*(_L0[_qp]*(1.-_u[_qp]) + _L1[_qp]*(6.*_u[_qp] - 2.))/(2.*std::pow((_u[_qp] - 1.), 5.));
 
-  return ideal + excess;
-}
-
-Real
-CHCoupledCalphad::computeGhcpZr()
-{
-  //Calculates molar Gibbs free energy for Zr in HCP form - molar standard enthalpy for Zr
-
-   return _G_hcp_Zr_a[_qp] + _G_hcp_Zr_b[_qp]*_T + _G_hcp_Zr_c[_qp]*_T*std::log(_T) + _G_hcp_Zr_d[_qp]*_T*_T
-    + _G_hcp_Zr_e[_qp]/_T;
-}
-
-Real
-CHCoupledCalphad::computeGhcpZrH()
-{
-  //Calculates molar Gibbs free energy for ZrH compound - molar standard enthalpies
-
-  return _G_hcp_ZrH_a[_qp] + _G_hcp_ZrH_b[_qp]*_T + computeGhcpZr() + 0.5*computeGH2();
-}
-
-Real
-CHCoupledCalphad::computeGfccZr()
-{
-  //Calculates molar Gibbs free energy for fcc Zr - molar standard enthalpy for Zr
-
- return  _G_fcc_Zr_a[_qp] + _G_fcc_Zr_b[_qp]*_T + _G_fcc_Zr_c[_qp]*_T*std::log(_T) + _G_fcc_Zr_d[_qp]*_T*_T
-    + _G_fcc_Zr_e[_qp]/_T;
-}
-
-Real
-CHCoupledCalphad::computeGfccZrH2()
-{
-  //Calculates molar Gibbs free energy for fcc ZrH2 - molar standard enthalpies
-
-  return _G_fcc_ZrH2_a[_qp] + _G_fcc_ZrH2_b[_qp]*_T + _G_fcc_ZrH2_c[_qp]*_T*std::log(_T) + computeGhcpZr()
-    + computeGH2();
-}
-
-Real
-CHCoupledCalphad::computeGH2()
-{
-  //Calculates molar Gibbs free energy for H2 gas - molar standard enthalpy for H2
-
- return _G_H2_a[_qp] + _G_H2_b[_qp]*_T + _G_H2_c[_qp]*_T*std::log(_T) + _G_H2_d[_qp]*_T*_T + _G_H2_e[_qp]/_T;
+  return (ideal + excess)/_molarVol_delta_ZrH2[_qp];
 }

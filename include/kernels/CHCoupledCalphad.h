@@ -37,66 +37,41 @@ protected:
   virtual RealGradient computeGradDFDCons(PFFunctionType type, Real c, RealGradient grad_c);
 
   Real computeHeaviside();
-  RealGradient computeGradOPDHeavisideDOP();
-  RealGradient computeGradConservedTerm(Real & h, Real & L0, Real & L1);
-  RealGradient computeGradNonconservedTerm(Real & L0, Real & L1);
+  void computeDHeaviside();
+
+  RealGradient computeGradConservedTerm();
+  RealGradient computeGradNonconservedTerm();
 
   Real computeDGalphaDx();
-  Real computeDGdeltaDx(Real & L0, Real & L1);
+  Real computeDGdeltaDx();
   Real computeD2GalphaDx2();
-  Real computeD2GdeltaDx2(Real & L0, Real & L1);
+  Real computeD2GdeltaDx2();
   Real computeD3GalphaDx3();
-  Real computeD3GdeltaDx3(Real & L0, Real & L1);
-
-  Real computeGhcpZr();
-  Real computeGhcpZrH();
-  Real computeGfccZr();
-  Real computeGfccZrH2();
-  Real computeGH2();
+  Real computeD3GdeltaDx3();
 
 private:
-  //molar Gibbs free energy coefficients for HCP Zr
-  MaterialProperty<Real> & _G_hcp_Zr_a;
-  MaterialProperty<Real> & _G_hcp_Zr_b;
-  MaterialProperty<Real> & _G_hcp_Zr_c;
-  MaterialProperty<Real> & _G_hcp_Zr_d;
-  MaterialProperty<Real> & _G_hcp_Zr_e;
+  //molar Gibbs free energies
+  MaterialProperty<Real> & _G_hcp_Zr;
+  MaterialProperty<Real> & _G_hcp_ZrH;
+  MaterialProperty<Real> & _G_fcc_Zr;
+  MaterialProperty<Real> & _G_fcc_ZrH2;
+  MaterialProperty<Real> & _G_H2;
+  MaterialProperty<Real> & _L0;
+  MaterialProperty<Real> & _L1;
 
-  //molar Gibbs free energy coefficients for HCP ZrH
-  MaterialProperty<Real> & _G_hcp_ZrH_a;
-  MaterialProperty<Real> & _G_hcp_ZrH_b;
+  MaterialProperty<Real> & _molarVol_alpha_Zr;
+  MaterialProperty<Real> & _molarVol_delta_ZrH2;
 
-  //molar Gibbs free energy coefficients for FCC Zr
-  MaterialProperty<Real> & _G_fcc_Zr_a;
-  MaterialProperty<Real> & _G_fcc_Zr_b;
-  MaterialProperty<Real> & _G_fcc_Zr_c;
-  MaterialProperty<Real> & _G_fcc_Zr_d;
-  MaterialProperty<Real> & _G_fcc_Zr_e;
-
- //molar Gibbs free energy coefficients for FCC ZrH2
-  MaterialProperty<Real> & _G_fcc_ZrH2_a;
-  MaterialProperty<Real> & _G_fcc_ZrH2_b;
-  MaterialProperty<Real> & _G_fcc_ZrH2_c;
-
-  //molar Gibbs free energy coefficients for H2 gas
-  MaterialProperty<Real> & _G_H2_a;
-  MaterialProperty<Real> & _G_H2_b;
-  MaterialProperty<Real> & _G_H2_c;
-  MaterialProperty<Real> & _G_H2_d;
-  MaterialProperty<Real> & _G_H2_e;
-
-  //Redlich-Kister polynomial coefficients
-  MaterialProperty<Real> & _L0_a;
-  MaterialProperty<Real> & _L0_b;
-  MaterialProperty<Real> & _L1_a;
-  MaterialProperty<Real> & _L1_b;
 
   Real _T; //temperature
   Real _R; //universal gas constant
 
   unsigned int _n_OP_variables;
-  std::vector<VariableValue *> _coupled_OP_vars;
-  std::vector<VariableGradient *> _coupled_OP_grads;
+  std::vector<VariableValue *> _OP;
+  std::vector<VariableGradient *> _grad_OP;
+
+  Real _Heaviside;
+  std::vector<Real> _dHeaviside;
 };
 
 #endif //CHCOUPLEDCALPHAD_H
