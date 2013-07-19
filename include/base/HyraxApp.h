@@ -26,6 +26,9 @@ class HyraxApp : public MooseApp
 {
 public:
   HyraxApp(const std::string & name, InputParameters parameters);
+
+  static void registerApps();
+  static void registerObjects(Factory & factory);
 };
 
 #endif //HYRAXAPP_H
