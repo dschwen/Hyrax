@@ -91,7 +91,7 @@ NucleationLocationUserObject::execute()
   unsigned int grandgirl = _mrand.randl(_slave_random);
 
   // we are driving the random seed for each element_id state off of TWO random numbers
-  _mrand.seed(elem_id, grandgirl + _granddad);
+  _mrand.seed(elem_id, elem_id + grandgirl + _granddad);
 
   //_mrand.seed(elem_id, elem_id + _random_seed + (_counter * _mesh.nElem()));
   Real random_number;
