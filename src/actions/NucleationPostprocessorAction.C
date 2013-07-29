@@ -10,6 +10,7 @@
 
 #include "NucleationPostprocessorAction.h"
 #include "Factory.h"
+#include "FEProblem.h"
 
 template<>
 InputParameters validParams<NucleationPostprocessorAction>()
@@ -57,7 +58,8 @@ NucleationPostprocessorAction::act()
     // get and set input parameters
     InputParameters action_params = _factory.getValidParams("NodalVolumeFraction");
 
-    action_params.set<std::string>("variable") = variable_name;
+    action_params.set<std::vector<std::string> >("variable")
+      = std::vector<std::string> (1, variable_name);
     action_params.set<FileName>("bubble_volume_file") = particle_volume_name;
     action_params.set<Real>("threshold") = _threshold;
     action_params.set<PostprocessorName>("mesh_volume") = _mesh_volume;
@@ -65,7 +67,7 @@ NucleationPostprocessorAction::act()
     //check to see if Avrami file ouput is required
     if(_pars.isParamValid("Avrami_name_base"))
     {
-      std::string Avrami_name;
+      std::string Avrami_name(getParam<FileName>("Avrami_name_base"));
       Avrami_name.append(variable_name);
 
       action_params.set<FileName>("Avrami_file") = Avrami_name;
@@ -75,6 +77,8 @@ NucleationPostprocessorAction::act()
     //make postprocessor name
     std::string postprocessor_name = "NodalVolumeFraction_";
     postprocessor_name.append(variable_name);
+
+    action_params.print();
 
     _problem->addPostprocessor("NodalVolumeFraction", postprocessor_name, action_params);
   }

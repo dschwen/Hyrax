@@ -10,8 +10,7 @@
 
 #include "NucleationAuxAction.h"
 #include "Factory.h"
-
-#include <iostream>
+#include "FEProblem.h"
 
 template<>
 InputParameters validParams<NucleationAuxAction>()
@@ -111,12 +110,12 @@ NucleationAuxAction::act()
     InputParameters action_params = _factory.getValidParams("AuxChemElastic");
 
     action_params.set<AuxVariableName>("variable") = bulk_energy_name;
-    action_params.set<NonlinearVariableName>("coupled_nonconserved_var") = OP_vector[i-1];
+    action_params.set<std::vector<std::string> >("coupled_nonconserved_var")
+      = std::vector<std::string> (1, OP_vector[i-1]);
     action_params.set<int>("nonconserved_var_number") = i;
 
-    std::cout<<"in parameter set for AuxChemElastic " << i <<std::endl;
-
-    action_params.set<std::string>("coupled_conserved_var") = _coupled_conserved_var;
+    action_params.set<std::vector<std::string> >("coupled_conserved_var")
+      = std::vector<std::string> (1, _coupled_conserved_var);
     action_params.set<Real>("precip_conserved") = _precip_conserved;
     action_params.set<Real>("precip_nonconserved") = _precip_nonconserved;
     action_params.set<int>("nonconserved_var_number") = i;
@@ -136,7 +135,8 @@ NucleationAuxAction::act()
     action_params.set<Real>("Z") = _Z;
     action_params.set<Real>("Beta_star") = _beta_star;
     action_params.set<Real>("linear_density") = _linear_density;
-    action_params.set<AuxVariableName>("coupled_aux_var") = bulk_energy_name;
+    action_params.set<std::vector<std::string> >("coupled_aux_var")
+      = std::vector<std::string> (1, bulk_energy_name);
 
     auxkernel_name = "NucleationRate_";
     auxkernel_name.append(OP_vector[i-1]);
@@ -146,7 +146,8 @@ NucleationAuxAction::act()
    //get the parameters for nucleation probability
     action_params = _factory.getValidParams("AuxNucleationProbability");
     action_params.set<AuxVariableName>("variable") = probability_name;
-    action_params.set<AuxVariableName>("coupled_aux_var") = rate_name;
+    action_params.set<std::vector<std::string> >("coupled_aux_var")
+      = std::vector<std::string> (1, rate_name);
     action_params.set<int>("n_OP_vars") = _num_OPs;
     action_params.set<std::vector<std::string> >("coupled_variables") = OP_vector;
     action_params.set<Real>("OP_threshold") = _OP_threshold;
@@ -159,7 +160,8 @@ NucleationAuxAction::act()
     //get the parameters for delta G*
     action_params = _factory.getValidParams("AuxDeltaGStar");
     action_params.set<AuxVariableName>("variable") = G_star_name;
-    action_params.set<AuxVariableName>("coupled_aux_var") = bulk_energy_name;
+    action_params.set<std::vector<std::string> >("coupled_aux_var")
+      = std::vector<std::string> (1, bulk_energy_name);
     action_params.set<Real>("gamma") = _gamma;
 
     auxkernel_name = "DeltaGStar_";
