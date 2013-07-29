@@ -20,7 +20,6 @@ InputParameters validParams<AuxChemElastic>()
   params.addRequiredCoupledVar("coupled_nonconserved_var", "coupled non-conserved field variable");
   params.addRequiredParam<Real>("precip_conserved", "value of the equilibrium 2nd phase conserved field variable");
   params.addRequiredParam<Real>("precip_nonconserved", "value of the equilibrium 2nd phase nonconserved field variable");
-//  params.addRequiredParam<int>("n_variants","# of orientation variants for precipitate in single crystal");
   params.addRequiredParam<int>("nonconserved_var_number", "the number (starting from 1) of the nonconserved variable");
 
   return params;
@@ -38,7 +37,6 @@ AuxChemElastic::AuxChemElastic(const std::string & name, InputParameters paramet
     _a4(getMaterialProperty<Real>("A4")),
     _c1(getMaterialProperty<Real>("C1")),
     _c2(getMaterialProperty<Real>("C2")),
-    //  _n_variants(getParam<unsigned int>("n_variants")),
     _noncons_var_num(getParam<int>("nonconserved_var_number")),
     _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
     _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),

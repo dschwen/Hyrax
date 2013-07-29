@@ -20,7 +20,7 @@ template<>
 InputParameters validParams<ACBulkCoupled>()
 {
   InputParameters params = validParams<ACBulk>();
-  params.addRequiredCoupledVar("coupled_CH_var","The concentration to be coupled to the AC equation");
+  params.addRequiredCoupledVar("coupled_CH_var", "The concentration to be coupled to the AC equation");
 
   return params;
 }

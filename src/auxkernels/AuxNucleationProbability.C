@@ -8,8 +8,6 @@
 
 #include "AuxNucleationProbability.h"
 
-#include <ostream>
-
 /**
  *  AuxNucleationProbability handles the nucleation probability (P_nm) calculation in the concurrent
  *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).
@@ -34,7 +32,6 @@ AuxNucleationProbability::AuxNucleationProbability(const std::string & name, Inp
     _coupled_nuc_rate(coupledValue("coupled_aux_var")),
     _n_OP_vars(getParam<int>("n_OP_vars")),
     _OP_threshold(getParam<Real>("OP_threshold"))
-    //  _coupled_OP(coupledValue("coupled_variable"))
 {
   if(_n_OP_vars != coupledComponents("coupled_variables"))
     mooseError("Please match the number of orientation variants to coupled OPs (AuxNucleationProbability).");

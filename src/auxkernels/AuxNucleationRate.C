@@ -15,8 +15,6 @@ template<>
 InputParameters validParams<AuxNucleationRate>()
 {
   InputParameters params = validParams<AuxKernel>();
-  //params.addRequiredParam<Real>("Kn1", "First nucleation rate coefficient");
-  //params.addRequiredParam<Real>("Kn2", "Second nucleation rate coefficient");
 
   params.addRequiredCoupledVar("coupled_aux_var","coupled auxiliary variable for free energy change");
   // I'd have line in input file, coupled_aux_var = supersaturation, or chem_elastic, or whatever
@@ -27,12 +25,8 @@ InputParameters validParams<AuxNucleationRate>()
   params.addRequiredParam<Real>("scale_factor","factor to scale energy/dimensions by");
 
   params.addRequiredParam<Real>("Z", "Non-equilibrium Zeldovitch factor");
-  //params.addRequiredParam<Real>("N", "# of atoms in phase field cell");
   params.addRequiredParam<Real>("Beta_star", "1/characteristic nucleation time");
   params.addRequiredParam<Real>("linear_density", "linear atomic density of matrix");
-
-  params.addRequiredParam<int>("n_OP_vars", "# of coupled OP variables");
-  params.addRequiredCoupledVar("OP_var_names", "Array of coupled OP variable names");
 
   return params;
 }
@@ -40,25 +34,14 @@ InputParameters validParams<AuxNucleationRate>()
 AuxNucleationRate::AuxNucleationRate(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
     _coupled_energy(coupledValue("coupled_aux_var")),
-    //_Kn1(getParam<Real>("Kn1")),
-    // _Kn2(getParam<Real>("Kn2")),
     _Z(getParam<Real>("Z")),
-    //_N(getParam<Real>("N")),
-    _beta_star(getParam<Real>("Beta_star")),
+   _beta_star(getParam<Real>("Beta_star")),
     _linear_density(getParam<Real>("linear_density")),
-    _n_OP_vars(getParam<int>("n_OP_vars")),
     _gamma(getParam<Real>("gamma")),
     _Kb(getParam<Real>("Kb")),
     _temperature(getParam<Real>("temperature")),
     _scale_factor(getParam<Real>("scale_factor"))
 {
-  if(_n_OP_vars != coupledComponents("OP_var_names"))
-    mooseError("Please match the number of orientation variants to coupled OPs (AuxNucleationRate).");
-
-  _coupled_OP_vars.resize(_n_OP_vars);
-
-  for(unsigned int i=0; i< _n_OP_vars; i++)
-    _coupled_OP_vars[i] = &coupledValue("OP_var_names", i);
 }
 
 Real
@@ -87,16 +70,6 @@ AuxNucleationRate::computeValue()
   kn1 *= _current_elem_volume;
 
   kn2 = _scale_factor*alpha*std::pow(_gamma, (int)_dim)/(_Kb*_temperature);
-
-  // We check to see if we're in a particle in AuxNucleationProbability.
-  /* for(unsigned int i=0; i<_n_OP_vars; i++)
-  {
-    if((*_coupled_OP_vars[i])[_qp] > 0.1)
-    {
-      return 0.0;
-    }
-
-    }*/
 
   return kn1*std::exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
 }

@@ -19,11 +19,7 @@ InputParameters validParams<AuxDeltaGStar>()
   InputParameters params = validParams<AuxKernel>();
   params.addRequiredCoupledVar("coupled_aux_var","coupled auxiliary variable for free energy change");
   // I'd have line in input file, coupled_aux_var = supersaturation, or chem_elastic, or whatever
-
   params.addRequiredParam<Real>("gamma", "Surface energy");
-  //params.addParam<Real>("Kb", 1.3806503e-23, "Boltzmann's constant, make sure units all match");
-  //params.addParam<Real>("temperature", 473, "Temperature");
-  //params.addRequiredParam<Real>("scale_factor","factor to scale energy/dimensions by");
 
   return params;
 }
@@ -32,9 +28,6 @@ AuxDeltaGStar::AuxDeltaGStar(const std::string & name, InputParameters parameter
   : AuxKernel(name, parameters),
     _coupled_energy(coupledValue("coupled_aux_var")),
     _gamma(getParam<Real>("gamma"))
-    // _Kb(getParam<Real>("Kb")),
-    //_temperature(getParam<Real>("temperature")),
-    //_scale_factor(getParam<Real>("scale_factor"))
 {
 }
 

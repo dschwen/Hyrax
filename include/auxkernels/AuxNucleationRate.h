@@ -41,12 +41,8 @@ protected:
 private:
 
   VariableValue & _coupled_energy; ///< area/volume free energy change of transformation
-  //Real _Kn1;  				    ///< First nucleation rate value
-  //Real _Kn2;				    ///< Second nucleation rate value
-
 
   Real _Z;                                  // Zeldovich non-equilibrium factor
-  //Real _N;                                  // # of atoms in phase field cell
   Real _beta_star;                          // 1/characteristic nucleation time
   Real _linear_density;                     // linear atomic density of material
 

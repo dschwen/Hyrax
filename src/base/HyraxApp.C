@@ -69,6 +69,9 @@
 #include "OneSeed.h"
 
 //Actions
+#include "OPVariantKernelAction.h"
+#include "NucleationAuxAction.h"
+#include "NucleationPostprocessorAction.h"
 
 //UserObjects
 #include "NucleationLocationUserObject.h"
@@ -105,6 +108,9 @@ HyraxApp::HyraxApp(const std::string & name, InputParameters parameters) :
   Elk::TensorMechanics::associateSyntax(_syntax, _action_factory);
   Elk::HeatConduction::associateSyntax(_syntax, _action_factory);
   Elk::Misc::associateSyntax(_syntax, _action_factory);
+
+  //Associate syntax for Hyrax Actions
+  HyraxApp::associateSyntax(_syntax, _action_factory);
 }
 
 
@@ -160,8 +166,6 @@ HyraxApp::registerObjects(Factory & factory)
   registerPostprocessor(NucleationPostprocessor);
   registerPostprocessor(OneSeed);
 
-  // Actions
-
   // UserObjects
   registerUserObject(NucleationLocationUserObject);
   registerUserObject(NucleusIntroductionSolutionModifier);
@@ -170,4 +174,17 @@ HyraxApp::registerObjects(Factory & factory)
   // Markers
   registerMarker(NucleationMarker);
   registerMarker(ErrorFractionMaxHMarker);
+}
+
+void
+HyraxApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
+{
+  // Actions
+  registerAction(OPVariantKernelAction, "add_kernel");
+  registerAction(NucleationAuxAction, "add_aux_kernel");
+  registerAction(NucleationPostprocessorAction, "add_postprocessor");
+
+  syntax.registerActionSyntax("OPVariantKernelAction", "OPVariantKernel");
+  syntax.registerActionSyntax("NucleationAuxAction", "NucleationAux");
+  syntax.registerActionSyntax("NucleationPostprocessorAction", "NucleationPostprocessor");
 }
