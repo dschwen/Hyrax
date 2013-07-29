@@ -211,7 +211,7 @@
   [../]
 
   [./ndofs]
-    type = PrintDOFs
+    type = NumDOFs
   [../]
 []
 

@@ -142,7 +142,7 @@
   [../]
 
   [./ndofs]
-    type = PrintDOFs
+    type = NumDOFs
     output = file
   [../]
 []
