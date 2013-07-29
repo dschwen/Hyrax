@@ -171,7 +171,7 @@ active = 'Periodic'
 
 [Postprocessors]
   [./dt]
-    type = PrintDT
+    type = TimestepSize
   [../]
  
   [./elapsed_time]
