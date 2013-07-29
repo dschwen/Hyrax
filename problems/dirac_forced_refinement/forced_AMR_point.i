@@ -179,7 +179,7 @@ active = 'Periodic'
   [../]
 
   [./num_elem]
-    type = PrintNumElems
+    type = NumElems
   [../]
 []
 
