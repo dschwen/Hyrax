@@ -32,7 +32,6 @@ public:
 
   virtual void initialize();
   virtual void execute();
-  virtual void destroy() {}
   virtual void finalize();
   virtual void threadJoin(const UserObject &a);
 

@@ -29,7 +29,6 @@ public:
 
   virtual void initialize();
   virtual void execute();
-  virtual void destroy() {}
   virtual void finalize() {}
 
 protected:
@@ -47,4 +46,3 @@ Real _radius;
 };
 
 #endif //NUCLEUSINTRODUCTIONSOLUTIONMODIFIER_H
-
