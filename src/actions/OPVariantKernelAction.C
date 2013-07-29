@@ -57,7 +57,7 @@ OPVariantKernelAction::act()
   {
     std::string kernel_name;
 
-    //Get the parameters for the ACBulkPolyCoupled kernel and kernels to problem
+    //Get the parameters for the ACBulkPolyCoupled kernel and add kernels to problem
     InputParameters action_params = _factory.getValidParams("ACBulkPolyCoupled");
     action_params.set<NonlinearVariableName>("variable") = OP_vector[i-1];
     action_params.set<std::vector<std::string> >("OP_var_names") = OP_vector;
@@ -69,8 +69,18 @@ OPVariantKernelAction::act()
 
     kernel_name = "ACBulkPolyCoupled_";
     kernel_name.append(OP_vector[i-1]);
-
     _problem->addKernel("ACBulkPolyCoupled", kernel_name, action_params);
+
+    //Get the parameters for the ACTransformElasticDF kernel and add kernels to problem
+    action_params = _factory.getValidParams("ACTransformElasticDF");
+    action_params.set<NonlinearVariableName>("variable") = OP_vector[i-1];
+    action_params.set<std::vector<std::string> >("OP_var_names") = OP_vector;
+    action_params.set<int>("n_OP_vars") = _num_OPs;
+    action_params.set<int>("OP_number") = i;
+
+    kernel_name = "ACTransformElasticDF_";
+    kernel_name.append(OP_vector[i-1]);
+    _problem->addKernel("ACTransformElasticDF", kernel_name, action_params);
 
     //Get the parameters for the ACInterface kernel and add kernels to problem
     action_params = _factory.getValidParams("ACInterface");
@@ -87,7 +97,6 @@ OPVariantKernelAction::act()
 
     kernel_name = "TimeDeriv_";
     kernel_name.append(OP_vector[i-1]);
-
     _problem->addKernel("TimeDerivative", kernel_name, action_params);
 
 

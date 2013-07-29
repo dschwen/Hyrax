@@ -36,8 +36,8 @@
       # z_positions = '0 0'
       # n_seeds = 2
        type = RandomIC
-      min = 1e-3
-      max = 2e-3
+      min = -0.3
+      max = -0.31
     [../]
   [../]
 
@@ -363,7 +363,7 @@
    type = StressBC
    variable = disp_x
    component = 0
-   boundary_stress = '10 10 10 0 0 0'
+   boundary_stress = '-0.1 -0.1 -0.1 0 0 0'
    boundary = '0 1 2 3'
   [../]
 
@@ -371,7 +371,7 @@
    type = StressBC
    variable = disp_y
    component = 1
-   boundary_stress = '10 10 10 0 0 0'
+   boundary_stress = '-0.1 -0.1 -0.1 0 0 0'
    boundary = '0 1 2 3'
   [../]
 
@@ -503,11 +503,12 @@
 
   dt = 10
   dtmin = 0.1
-  dtmax = 1000
+  #dtmax = 1000
+  percent_change = 1
 
   #Not sure what needs to go here for the end of the simulation
   start_time = 0.0
-  end_time = 200
+  #end_time = 200
 
   abort_on_solve_fail = true
   adapt_nucleus = 5
