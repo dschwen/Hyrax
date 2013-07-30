@@ -67,6 +67,7 @@
 //Post Processors
 #include "NucleationPostprocessor.h"
 #include "OneSeed.h"
+#include "NucleiInformation.h"
 
 //Actions
 #include "OPVariantKernelAction.h"
@@ -165,6 +166,7 @@ HyraxApp::registerObjects(Factory & factory)
   //Postprocessors
   registerPostprocessor(NucleationPostprocessor);
   registerPostprocessor(OneSeed);
+  registerPostprocessor(NucleiInformation);
 
   // UserObjects
   registerUserObject(NucleationLocationUserObject);

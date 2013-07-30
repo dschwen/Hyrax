@@ -41,6 +41,8 @@ private:
   Real _equil_fraction;
 
   const Real _threshold;
+
+  std::string _nucleation_userobject;
 };
 
 #endif //NUCLEATIONPOSTPROCESSORACTION_H

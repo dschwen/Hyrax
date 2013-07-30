@@ -25,6 +25,7 @@ InputParameters validParams<NucleationPostprocessorAction>()
   params.addParam<Real>("equil_fraction", -1.0, "Equilibrium volume fraction of 2nd phase for Avrami analysis");
   params.addRequiredParam<Real>("threshold", "The threshold value for which a new bubble may be started");
 
+  params.addRequiredParam<Real>("userobject_name", "The name of the userobject for nucleation event location");
   return params;
 }
 
@@ -35,8 +36,8 @@ NucleationPostprocessorAction::NucleationPostprocessorAction(const std::string &
     _particle_volume_name_base(getParam<FileName>("particle_volume_name_base")),
     _mesh_volume(getParam<PostprocessorName>("mesh_volume")),
     _equil_fraction(getParam<Real>("equil_fraction")),
-    _threshold(getParam<Real>("threshold"))
-
+    _threshold(getParam<Real>("threshold")),
+    _nucleation_userobject(getParam<std::string>("nucleation_userobject"))
 {
 }
 
@@ -55,7 +56,7 @@ NucleationPostprocessorAction::act()
     variable_name.append(out.str());
     particle_volume_name.append(variable_name);
 
-    // get and set input parameters
+    // get and set input parameters for NodalVolumeFraction
     InputParameters action_params = _factory.getValidParams("NodalVolumeFraction");
 
     action_params.set<std::vector<std::string> >("variable")
@@ -78,8 +79,17 @@ NucleationPostprocessorAction::act()
     std::string postprocessor_name = "NodalVolumeFraction_";
     postprocessor_name.append(variable_name);
 
-    action_params.print();
-
+    //action_params.print();
     _problem->addPostprocessor("NodalVolumeFraction", postprocessor_name, action_params);
+
+    //Get and set input parameters for NucleiInformation
+    action_params = _factory.getValidParams("NucleiInformation");
+    action_params.set<std::string>("nucleation_userobject") = _nucleation_userobject;
+    action_params.set<int>("OP_number") = i;
+
+    postprocessor_name = "NucleiInformation_";
+    postprocessor_name.append(variable_name);
+
+    _problem->addPostprocessor("NucleiInformation", postprocessor_name, action_params);
   }
 }
