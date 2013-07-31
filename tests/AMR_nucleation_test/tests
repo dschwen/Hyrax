@@ -3,6 +3,6 @@
     type = 'Exodiff'
     input = 'AMR_nucleation_test.i'
     exodiff = 'AMR_nucleation_test.e AMR_nucleation_test.e-s002 AMR_nucleation_test.e-s003'
-    skip = 'Random # generation pattern changed'
+    #skip = 'Random # generation pattern changed'
   [../]
 []
