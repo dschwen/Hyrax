@@ -4,6 +4,10 @@
     input = 'OPVariantKernelAction.i'
     exodiff = 'OPVariantKernelAction.e'
     method = 'OPT OPROF'
+
+    # Note: use absolute (rather than relative) error tolerances
+    # for this test, since the displacements are very small.
+    exodiff_opts = '-absolute'
   [../]
 
   [./AuxKernels_test]
@@ -11,6 +15,10 @@
     input = 'NucleationAuxAction.i'
     exodiff = 'NucleationAuxAction.e'
     method = 'OPT OPROF'
+
+    # Note: use absolute (rather than relative) error tolerances
+    # for this test, since the displacements are very small.
+    exodiff_opts = '-absolute'
   [../]
 
   [./Postprocessors_test]
