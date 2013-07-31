@@ -19,11 +19,9 @@ InputParameters validParams<NucleiInformation>()
   params.addRequiredParam<UserObjectName>("nucleation_userobject", "The name of the UserObject to use for nucleation event location");
   params.addRequiredParam<int>("OP_number", "the order parameter variable for which to count # nuclei (starting from 1)");
 
-//  params.set<MooseEnum>("execute_on") = "timestep";
-// need to figure out when this needs to execute - it has to execute after the nucleation
-// location user object
+ params.set<MooseEnum>("execute_on") = "timestep";
 
-  return params;
+ return params;
 }
 
 NucleiInformation::NucleiInformation(const std::string & name, InputParameters parameters) :

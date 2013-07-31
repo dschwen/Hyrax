@@ -1,0 +1,19 @@
+[Tests]
+  [./Kernels_test]
+    type = 'Exodiff'
+    input = 'OPVariantKernelAction.i'
+    exodiff = 'OPVariantKernelAction.e'
+  [../]
+
+  [./AuxKernels_test]
+    type = 'Exodiff'
+    input = 'NucleationAuxAction.i'
+    exodiff = 'NucleationAuxAction.e'
+  [../]
+
+  [./Postprocessors_test]
+    type = 'CSVDiff'
+    input = 'NucleationPostprocessorAction.i'
+    csvdiff = 'NucleationPostprocessorAction.csv'
+  [../]
+[]

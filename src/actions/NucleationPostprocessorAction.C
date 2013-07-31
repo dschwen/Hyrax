@@ -25,7 +25,7 @@ InputParameters validParams<NucleationPostprocessorAction>()
   params.addParam<Real>("equil_fraction", -1.0, "Equilibrium volume fraction of 2nd phase for Avrami analysis");
   params.addRequiredParam<Real>("threshold", "The threshold value for which a new bubble may be started");
 
-  params.addRequiredParam<Real>("userobject_name", "The name of the userobject for nucleation event location");
+  params.addRequiredParam<std::string>("nucleation_userobject", "The name of the userobject for nucleation event location");
   return params;
 }
 
@@ -55,6 +55,7 @@ NucleationPostprocessorAction::act()
 
     variable_name.append(out.str());
     particle_volume_name.append(variable_name);
+    particle_volume_name.append(".csv");
 
     // get and set input parameters for NodalVolumeFraction
     InputParameters action_params = _factory.getValidParams("NodalVolumeFraction");
@@ -70,6 +71,7 @@ NucleationPostprocessorAction::act()
     {
       std::string Avrami_name(getParam<FileName>("Avrami_name_base"));
       Avrami_name.append(variable_name);
+      Avrami_name.append(".csv");
 
       action_params.set<FileName>("Avrami_file") = Avrami_name;
       action_params.set<Real>("equil_fraction") = _equil_fraction;
@@ -84,11 +86,18 @@ NucleationPostprocessorAction::act()
 
     //Get and set input parameters for NucleiInformation
     action_params = _factory.getValidParams("NucleiInformation");
-    action_params.set<std::string>("nucleation_userobject") = _nucleation_userobject;
+
+    action_params.print();
+
+    action_params.set<UserObjectName>("nucleation_userobject") = _nucleation_userobject;
+
+
     action_params.set<int>("OP_number") = i;
 
     postprocessor_name = "NucleiInformation_";
     postprocessor_name.append(variable_name);
+
+    action_params.print();
 
     _problem->addPostprocessor("NucleiInformation", postprocessor_name, action_params);
   }
