@@ -11,7 +11,6 @@
 #include "AuxDeltaGStar.h"
 
 #include <cmath>
-#include <ostream>
 
 template<>
 InputParameters validParams<AuxDeltaGStar>()

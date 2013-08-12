@@ -1,4 +1,4 @@
 time,NodalVolumeFraction_n1,NodalVolumeFraction_n2,NucleiInformation_n1,NucleiInformation_n2,Volume
 0,inf,-nan,0,0,36.000000000001
-0.01,0.097499999999998,0,0,0,36.000000000001
+0.01,0.097499999999998,0,466,507,36.000000000001
 

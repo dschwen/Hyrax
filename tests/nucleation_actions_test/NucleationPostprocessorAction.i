@@ -166,11 +166,11 @@
   precip_nonconserved = 1.6
 
   #for NucleationProbability
-  gamma = 3  # also for AuxDeltaGStar
+  gamma = 0.01  # also for AuxDeltaGStar
   Kb = 1
   scale_factor = 1
-  Z = 1e-4
-  Beta_star = 1e-4
+  Z = 1
+  Beta_star = 1
   linear_density = 50
 []
 

@@ -51,7 +51,7 @@ NucleiInformation::execute()
   {
     orientation = nuclei[i].getOrientation();
 
-    if(orientation == _OP_number + 1)
+    if(orientation == _OP_number - 1)
       _number++;
   }
 }

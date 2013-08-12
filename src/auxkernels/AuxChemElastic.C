@@ -9,7 +9,6 @@
 *************************************************************************/
 
 #include "AuxChemElastic.h"
-#include <ostream>
 
 template<>
 InputParameters validParams<AuxChemElastic>()

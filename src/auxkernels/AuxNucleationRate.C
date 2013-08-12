@@ -9,7 +9,6 @@
 #include "AuxNucleationRate.h"
 
 #include <cmath>
-#include <ostream>
 
 template<>
 InputParameters validParams<AuxNucleationRate>()
