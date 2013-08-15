@@ -60,8 +60,8 @@ NucleationPostprocessorAction::act()
     // get and set input parameters for NodalVolumeFraction
     InputParameters action_params = _factory.getValidParams("NodalVolumeFraction");
 
-    action_params.set<std::vector<std::string> >("variable")
-      = std::vector<std::string> (1, variable_name);
+    action_params.set<std::vector<VariableName> >("variable")
+      = std::vector<VariableName> (1, variable_name);
     action_params.set<FileName>("bubble_volume_file") = particle_volume_name;
     action_params.set<Real>("threshold") = _threshold;
     action_params.set<PostprocessorName>("mesh_volume") = _mesh_volume;

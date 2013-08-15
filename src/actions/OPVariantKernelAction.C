@@ -38,7 +38,7 @@ void
 OPVariantKernelAction::act()
 {
   //create vector of OP names
-  std::vector<std::string> OP_vector;
+  std::vector<VariableName> OP_vector;
   OP_vector.resize(_num_OPs);
 
   for(unsigned int i = 1; i <= _num_OPs; ++i)
@@ -60,12 +60,12 @@ OPVariantKernelAction::act()
     //Get the parameters for the ACBulkPolyCoupled kernel and add kernels to problem
     InputParameters action_params = _factory.getValidParams("ACBulkPolyCoupled");
     action_params.set<NonlinearVariableName>("variable") = OP_vector[i-1];
-    action_params.set<std::vector<std::string> >("OP_var_names") = OP_vector;
+    action_params.set<std::vector<VariableName> >("OP_var_names") = OP_vector;
     action_params.set<int>("n_OP_vars") = _num_OPs;
     action_params.set<int>("OP_number") = i;
 
-    action_params.set<std::vector<std::string> >("coupled_CH_var")
-      = std::vector<std::string> (1, _coupled_CH_var);
+    action_params.set<std::vector<VariableName> >("coupled_CH_var")
+      = std::vector<VariableName> (1, _coupled_CH_var);
 
     kernel_name = "ACBulkPolyCoupled_";
     kernel_name.append(OP_vector[i-1]);
@@ -74,7 +74,7 @@ OPVariantKernelAction::act()
     //Get the parameters for the ACTransformElasticDF kernel and add kernels to problem
     action_params = _factory.getValidParams("ACTransformElasticDF");
     action_params.set<NonlinearVariableName>("variable") = OP_vector[i-1];
-    action_params.set<std::vector<std::string> >("OP_var_names") = OP_vector;
+    action_params.set<std::vector<VariableName> >("OP_var_names") = OP_vector;
     action_params.set<int>("n_OP_vars") = _num_OPs;
     action_params.set<int>("OP_number") = i;
 
