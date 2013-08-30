@@ -113,7 +113,11 @@
   type = Transient
    dt = 0.001
    num_steps = 2
-  petsc_options = '-snes_mf_operator -ksp_monitor'
+
+  #Preconditioned JFNK (default)
+  solve_type = 'PJFNK'
+
+  petsc_options = '-ksp_monitor'
 []
 
 [Output]

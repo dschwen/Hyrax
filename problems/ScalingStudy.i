@@ -611,7 +611,11 @@
   use_nucleation_userobject = true
   nucleation_userobject = NLUO
 
-  petsc_options = '-snes_mf_operator -ksp_monitor -log_summary'
+
+  #Preconditioned JFNK (default)
+  solve_type = 'PJFNK'
+
+  petsc_options = '-ksp_monitor -log_summary'
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
 []

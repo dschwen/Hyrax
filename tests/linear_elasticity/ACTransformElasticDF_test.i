@@ -103,7 +103,11 @@
 
 [Executioner]
   type = Transient
-  petsc_options = '-snes_mf_operator'
+
+  #Preconditioned JFNK (default)
+  solve_type = 'PJFNK'
+
+
   scheme = 'bdf2'
 
   dt = 0.01
