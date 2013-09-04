@@ -34,6 +34,7 @@
 #include "ACBulkSimmons.h"
 #include "CHCoupledCalphad.h"
 #include "ACCoupledCalphad.h"
+#include "ACFerroelectric.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -42,6 +43,7 @@
 #include "AuxChemElastic.h"
 #include "AuxDeltaGStar.h"
 #include "AuxRateSimple.h"
+#include "AuxChem.h"
 
 //#include "AuxTestFlip.h"
 #include "ReporterAux.h"
@@ -55,6 +57,7 @@
 #include "PFMobilityLandau.h"
 #include "LinearSingleCrystalPrecipitateMaterial.h"
 #include "ZrHCalphad.h"
+#include "FerroelectricBulk.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -135,6 +138,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(CHBulkSimmons);
   registerKernel(CHCoupledCalphad);
   registerKernel(ACCoupledCalphad);
+  registerKernel(ACFerroelectric);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
@@ -144,6 +148,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerAux(AuxDeltaGStar);
   registerAux(ReporterAux);
   registerAux(AuxRateSimple);
+  registerAux(AuxChem);
 
   //Dirac Kernels
 
@@ -154,6 +159,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(PFMobilityLandau);
   registerMaterial(LinearSingleCrystalPrecipitateMaterial);
   registerMaterial(ZrHCalphad);
+  registerMaterial(FerroelectricBulk);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
