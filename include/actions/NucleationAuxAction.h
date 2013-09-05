@@ -39,7 +39,8 @@ private:
   std::string _nucleation_probability_name_base;
   std::string _deltaGstar_name_base;
 
-  //for AuxChemElastic
+  //for AuxChem or AuxChemElastic
+  bool _use_auxchem;
   std::string _coupled_conserved_var;
   Real _precip_conserved;
   Real _precip_nonconserved;

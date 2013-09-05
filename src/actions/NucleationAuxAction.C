@@ -25,7 +25,8 @@ InputParameters validParams<NucleationAuxAction>()
   params.addRequiredParam<std::string>("nucleation_probability_name_base", "name base for nucleation probability auxvar");
   params.addRequiredParam<std::string>("deltaGstar_name_base", "name base for activation energy auxvar");
 
-  //for AuxChemElastic
+  //for bulk free energy - AuxChem or AuxChemElastic
+  params.addParam<bool>("use_auxchem", false, "false to use AuxChemElastic, true to use AuxChem");
   params.addRequiredParam<std::string>("coupled_conserved_var", "coupled conserved field variable");
   params.addRequiredParam<Real>("precip_conserved", "value of the equilibrium 2nd phase conserved field variable");
   params.addRequiredParam<Real>("precip_nonconserved", "value of the equilibrium 2nd phase nonconserved field variable");
@@ -55,6 +56,7 @@ NucleationAuxAction::NucleationAuxAction(const std::string & name, InputParamete
     _nucleation_probability_name_base(getParam<std::string>("nucleation_probability_name_base")),
     _deltaGstar_name_base(getParam<std::string>("deltaGstar_name_base")),
 
+    _use_auxchem(getParam<bool>("use_auxchem")),
     _coupled_conserved_var(getParam<std::string>("coupled_conserved_var")),
     _precip_conserved(getParam<Real>("precip_conserved")),
     _precip_nonconserved(getParam<Real>("precip_nonconserved")),
@@ -106,8 +108,9 @@ NucleationAuxAction::act()
 
     std::string auxkernel_name;
 
-    //get the parameters for aux chem elastic
-    InputParameters action_params = _factory.getValidParams("AuxChemElastic");
+    //Bulk Energy input parameters
+    //get the parameters for AuxChem, CURRENTLY can use for AuxChem AND AuxChemElastic
+    InputParameters action_params = _factory.getValidParams("AuxChem");
 
     action_params.set<AuxVariableName>("variable") = bulk_energy_name;
     action_params.set<std::vector<VariableName> >("coupled_nonconserved_var")
@@ -120,14 +123,23 @@ NucleationAuxAction::act()
     action_params.set<Real>("precip_nonconserved") = _precip_nonconserved;
     action_params.set<int>("nonconserved_var_number") = i;
 
-    auxkernel_name = "AuxChemElastic_";
-    auxkernel_name.append(OP_vector[i-1]);
-
-    _problem->addAuxKernel("AuxChemElastic", auxkernel_name, action_params);
+    //figure out if we need AuxChem or AuxChemElastic
+    if(_use_auxchem)
+    {
+      auxkernel_name = "AuxChem_";
+      auxkernel_name.append(OP_vector[i-1]);
+      _problem->addAuxKernel("AuxChem", auxkernel_name, action_params);
+    }
+    else
+    {
+      auxkernel_name = "AuxChemElastic_";
+      auxkernel_name.append(OP_vector[i-1]);
+      _problem->addAuxKernel("AuxChemElastic", auxkernel_name, action_params);
+    }
 
     //get the parameters for nucleation rate
-     action_params = _factory.getValidParams("AuxNucleationRate");
-     action_params.set<AuxVariableName>("variable") = rate_name;
+    action_params = _factory.getValidParams("AuxNucleationRate");
+    action_params.set<AuxVariableName>("variable") = rate_name;
     action_params.set<Real>("gamma") = _gamma;
     action_params.set<Real>("Kb") = _Kb;
     action_params.set<Real>("temperature") = _temperature;
