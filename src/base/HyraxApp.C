@@ -34,7 +34,7 @@
 #include "ACBulkSimmons.h"
 #include "CHCoupledCalphad.h"
 #include "ACCoupledCalphad.h"
-#include "ACFerroelectric.h"
+//#include "ACFerroelectric.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -57,7 +57,7 @@
 #include "PFMobilityLandau.h"
 #include "LinearSingleCrystalPrecipitateMaterial.h"
 #include "ZrHCalphad.h"
-#include "FerroelectricBulk.h"
+//#include "FerroelectricBulk.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -138,7 +138,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(CHBulkSimmons);
   registerKernel(CHCoupledCalphad);
   registerKernel(ACCoupledCalphad);
-  registerKernel(ACFerroelectric);
+  //registerKernel(ACFerroelectric);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
@@ -159,7 +159,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(PFMobilityLandau);
   registerMaterial(LinearSingleCrystalPrecipitateMaterial);
   registerMaterial(ZrHCalphad);
-  registerMaterial(FerroelectricBulk);
+  //registerMaterial(FerroelectricBulk);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
