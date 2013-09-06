@@ -37,6 +37,8 @@ private:
   std::string _OP_name_base;
   std::string _kappa_name_OP;
   std::string _coupled_CH_var;
+
+  bool _use_elasticity;
 };
 
 #endif //OPVARIANTKERNELACTION_H

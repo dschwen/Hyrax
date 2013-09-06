@@ -21,6 +21,7 @@ InputParameters validParams<OPVariantKernelAction>()
   params.addRequiredParam<std::string>("OP_name_base", "name base of the OP variable");
   params.addParam<std::string>("kappa_name_OP", "kappa_n", "the OP kappa used with ACInterface");
   params.addRequiredParam<std::string>("coupled_CH_var", "coupled conserved variable for ACBulkPolyCoupled");
+  params.addParam<bool>("use_elasticity", true, "true if using ACTransformElasticDF, false if leaving it out");
 
   return params;
 }
@@ -30,7 +31,8 @@ OPVariantKernelAction::OPVariantKernelAction(const std::string & name, InputPara
     _num_OPs(getParam<unsigned int>("number_OPs")),
     _OP_name_base(getParam<std::string>("OP_name_base")),
     _kappa_name_OP(getParam<std::string>("kappa_name_OP")),
-    _coupled_CH_var(getParam<std::string>("coupled_CH_var"))
+    _coupled_CH_var(getParam<std::string>("coupled_CH_var")),
+    _use_elasticity(getParam<bool>("use_elasticity"))
 {
 }
 
@@ -71,16 +73,19 @@ OPVariantKernelAction::act()
     kernel_name.append(OP_vector[i-1]);
     _problem->addKernel("ACBulkPolyCoupled", kernel_name, action_params);
 
-    //Get the parameters for the ACTransformElasticDF kernel and add kernels to problem
-    action_params = _factory.getValidParams("ACTransformElasticDF");
-    action_params.set<NonlinearVariableName>("variable") = OP_vector[i-1];
-    action_params.set<std::vector<VariableName> >("OP_var_names") = OP_vector;
-    action_params.set<int>("n_OP_vars") = _num_OPs;
-    action_params.set<int>("OP_number") = i;
+    if(_use_elasticity)
+    {
+      //Get the parameters for the ACTransformElasticDF kernel and add kernels to problem
+      action_params = _factory.getValidParams("ACTransformElasticDF");
+      action_params.set<NonlinearVariableName>("variable") = OP_vector[i-1];
+      action_params.set<std::vector<VariableName> >("OP_var_names") = OP_vector;
+      action_params.set<int>("n_OP_vars") = _num_OPs;
+      action_params.set<int>("OP_number") = i;
 
-    kernel_name = "ACTransformElasticDF_";
-    kernel_name.append(OP_vector[i-1]);
-    _problem->addKernel("ACTransformElasticDF", kernel_name, action_params);
+      kernel_name = "ACTransformElasticDF_";
+      kernel_name.append(OP_vector[i-1]);
+      _problem->addKernel("ACTransformElasticDF", kernel_name, action_params);
+    }
 
     //Get the parameters for the ACInterface kernel and add kernels to problem
     action_params = _factory.getValidParams("ACInterface");
