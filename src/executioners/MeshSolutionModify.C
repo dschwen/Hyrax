@@ -45,6 +45,7 @@ void
 MeshSolutionModify::endStep()
 {
   //std::cout<<"in MeshSolutionModify::endStep()"<<std::endl;
+  _last_solve_converged = lastSolveConverged();
 
   // bool new_nucleus = false;
   unsigned int num_cycles;
@@ -57,7 +58,7 @@ MeshSolutionModify::endStep()
   else
     num_cycles = _adapt_cycles;
 
-  if (lastSolveConverged())
+  if (_last_solve_converged)
   {
     for(unsigned int i=0; i<num_cycles; i++)
     {
@@ -78,15 +79,6 @@ MeshSolutionModify::endStep()
     // if _reset_dt is true, force the output no matter what
     _problem.output(_reset_dt);
     _problem.outputPostprocessors(_reset_dt);
-
-    _time_old = _time;
-    _t_step++;
-
-    _problem.copyOldSolutions();
-  }
-  else
-  {
-    _time_stepper->rejectStep();
   }
 
   std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
