@@ -6,7 +6,7 @@
 *
 *  3 March 2012
 *
-*************************************************************************/ 
+*************************************************************************/
 
 #ifndef POLYSPECIFIEDSMOOTHCIRCLEIC_H
 #define POLYSPECIFIEDSMOOTHCIRCLEIC_H
@@ -36,7 +36,7 @@ public:
 
   // don't know if I need this.
   //virtual RealGradient gradient(const Point &p);
-  
+
 protected:
 
   int _n_seeds;
@@ -44,15 +44,18 @@ protected:
   Real _outvalue;
   Real _radius;
   Real _int_width;
-  
+
   std::vector<Real> _x_positions;
   std::vector<Real> _y_positions;
   std::vector<Real> _z_positions;
 
   std::vector<Point> _centers;
-  
+
+  bool _multiple_radii;
+  std::vector<Real> _radii;
+
 private:
-  
+
 };
 
 #endif //POLYSPECIFIEDSMOOTHCIRCLEIC_H

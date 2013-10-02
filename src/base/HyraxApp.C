@@ -35,6 +35,7 @@
 #include "CHCoupledCalphad.h"
 #include "ACCoupledCalphad.h"
 //#include "ACFerroelectric.h"
+#include "CHLarry.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -139,6 +140,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(CHCoupledCalphad);
   registerKernel(ACCoupledCalphad);
   //registerKernel(ACFerroelectric);
+  registerKernel(CHLarry);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);

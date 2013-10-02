@@ -24,13 +24,14 @@ InputParameters validParams<ZrHCalphad>()
   params.addRequiredParam<std::vector<Real> >("L0_vector", "A, B Gibbs coefficients: L0 term in fcc ZrH2");
   params.addRequiredParam<std::vector<Real> >("L1_vector", "A, B Gibbs coefficients: L1 term in fcc ZrH2");
 
-  params.addRequiredParam<Real>("H_Zr_D0", "Diffusion prefactor for H in hcp Zr (isotropic)");
-  params.addRequiredParam<Real>("H_ZrH2_D0", "Diffusion prefactor for H in fcc ZrH2 (isotropic)");
-  params.addRequiredParam<Real>("H_Zr_Q0", "Activation energy for H in hcp Zr");
-  params.addRequiredParam<Real>("H_ZrH2_Q0", "Activaton energy for H in fcc ZrH2");
+  //params.addRequiredParam<Real>("H_Zr_D0", "Diffusion prefactor for H in hcp Zr (isotropic)");
+  //params.addRequiredParam<Real>("H_ZrH2_D0", "Diffusion prefactor for H in fcc ZrH2 (isotropic)");
+  //params.addRequiredParam<Real>("H_Zr_Q0", "Activation energy for H in hcp Zr");
+  //params.addRequiredParam<Real>("H_ZrH2_Q0", "Activaton energy for H in fcc ZrH2");
 
+  params.addRequiredParam<Real>("mobility_CH","mobility coefficient for Cahn-Hilliard equation (isotropic)");
   params.addRequiredParam<Real>("mobility_AC", "mobility coefficient for Allen-Cahn equation (isotropic)");
-  params.addRequiredParam<Real>("kappa_CH", "CH gradient energy coefficient (isotropic)");
+  //params.addRequiredParam<Real>("kappa_CH", "CH gradient energy coefficient (isotropic)");
   params.addRequiredParam<Real>("kappa_AC", "AC gradient energy coefficient (isotropic)");
 
   params.addRequiredCoupledVar("conserved_var", "Atomic fraction of hydrogen");

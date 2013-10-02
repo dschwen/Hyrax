@@ -31,8 +31,11 @@ InputParameters validParams<PolySpecifiedSmoothCircleIC>()
   // pulled from SmoothCircleIC, but can't inherit from SmoothCircleIC easily.
   params.addRequiredParam<Real>("invalue", "The variable value inside the circles");
   params.addRequiredParam<Real>("outvalue", "The variable value outside the circles");
-  params.addRequiredParam<Real>("radius", "The radius of the circles");
+  params.addParam<Real>("radius", 0, "The radius of the circles");
   params.addRequiredParam<Real>("int_width", "The seed interface width (0.0 for sharp interface)");
+
+  params.addParam<bool>("multiple_radii", false, "if multiple radii are to be used");
+  params.addParam<std::vector<Real> >("radii", "radii for particles with differing radii");
 
   return params;
 }
@@ -47,7 +50,9 @@ PolySpecifiedSmoothCircleIC::PolySpecifiedSmoothCircleIC(const std::string & nam
       _int_width(getParam<Real>("int_width")),
       _x_positions(getParam<std::vector<Real> >("x_positions")),
       _y_positions(getParam<std::vector<Real> >("y_positions")),
-      _z_positions(getParam<std::vector<Real> >("z_positions"))
+      _z_positions(getParam<std::vector<Real> >("z_positions")),
+      _multiple_radii(getParam<bool>("multiple_radii")),
+      _radii(getParam<std::vector<Real> >("radii"))
 {
   int x_size, y_size, z_size;
   x_size = _x_positions.size();
@@ -57,6 +62,15 @@ PolySpecifiedSmoothCircleIC::PolySpecifiedSmoothCircleIC(const std::string & nam
   // check to make sure the input file is set up correctly
   if((_n_seeds != x_size)||(_n_seeds != y_size)||(_n_seeds != z_size))
     mooseError("Please match the number of seeds to the size of the position vectors.");
+
+  if(_multiple_radii)
+    if(_n_seeds != _radii.size())
+      mooseError("Please match the number of seeds to the size of the radii vector.");
+
+  //fill in our radii vector if we don't have multiple radii
+  if(!_multiple_radii)
+    _radii.resize(_n_seeds, _radius);
+
 
   //resize the vector of Points
   _centers.resize(_n_seeds);
@@ -102,17 +116,17 @@ PolySpecifiedSmoothCircleIC::shapeValue(const Point &p, const int j)
   rad = sqrt(rad);
 
   // set the value depending on if in seed, in interface, or outside of seed
-  if (rad <= _radius - _int_width/2.0)
+  if (rad <= _radii[j] - _int_width/2.0)
     value = _invalue;
-  else if (rad < _radius + _int_width/2.0)
+  else if (rad < _radii[j] + _int_width/2.0)
   {
-    // no division by zero because we are in the finite interface width case
-    Real int_pos = (rad - _radius + _int_width/2.0)/_int_width;
+      // no division by zero because we are in the finite interface width case
+    Real int_pos = (rad - _radii[j] + _int_width/2.0)/_int_width;
     value = _outvalue + (_invalue-_outvalue)*(1.0 - std::cos(-int_pos+libMesh::pi/2.0));
 //    _seed_value*(1.0 - std::cos(-interface_position + libMesh::pi/2.0));
   }
-  else
-    value = _outvalue;
+    else
+      value = _outvalue;
 
   return value;
 }
