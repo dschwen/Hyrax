@@ -31,6 +31,7 @@ InputParameters validParams<AuxRateSimple>()
 
 AuxRateSimple::AuxRateSimple(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
+    _mesh_dimension(_mesh.dimension()),
     _coupled_energy(coupledValue("coupled_aux_var")),
     _Kn1(getParam<Real>("Kn1")),
     _Kn2(getParam<Real>("Kn2")),
@@ -53,6 +54,6 @@ AuxRateSimple::computeValue()
     mooseError("AuxRateSimple cannot be used with adaptive meshing.");
 
   // std::cout<<"exponential term"<< exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1)) <<std::endl;
-  return _Kn1*std::exp(-1.0*_Kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
+  return _Kn1*std::exp(-1.0*_Kn2/std::pow(_coupled_energy[_qp], (int)_mesh_dimension-1));
 }
 

@@ -25,6 +25,7 @@ InputParameters validParams<AuxDeltaGStar>()
 
 AuxDeltaGStar::AuxDeltaGStar(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
+    _mesh_dimension(_mesh.dimension()),
     _coupled_energy(coupledValue("coupled_aux_var")),
     _gamma(getParam<Real>("gamma"))
 {
@@ -38,15 +39,15 @@ AuxDeltaGStar::computeValue()
 
   // handling the dimension of the problem here and making sure we get the correct
   // (areal or volume) density
-   if (_dim == 2)
+   if (_mesh_dimension == 2)
      alpha = libMesh::pi;
-   else if (_dim == 3)
+   else if (_mesh_dimension == 3)
      alpha = (16*libMesh::pi)/3;
    else
     mooseError("honky, your problem dimesion must be 2 or 3 (AuxDeltaGStar");
 
-   kn2 = alpha*std::pow(_gamma, (int)_dim);
+   kn2 = alpha*std::pow(_gamma, (int)_mesh_dimension);
 
-  return kn2/std::pow(_coupled_energy[_qp], (int)_dim-1);
+  return kn2/std::pow(_coupled_energy[_qp], (int)_mesh_dimension-1);
 }
 

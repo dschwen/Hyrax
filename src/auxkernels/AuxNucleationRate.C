@@ -32,6 +32,7 @@ InputParameters validParams<AuxNucleationRate>()
 
 AuxNucleationRate::AuxNucleationRate(const std::string & name, InputParameters parameters)
   : AuxKernel(name, parameters),
+    _mesh_dimension(_mesh.dimension()),
     _coupled_energy(coupledValue("coupled_aux_var")),
     _Z(getParam<Real>("Z")),
    _beta_star(getParam<Real>("Beta_star")),
@@ -52,12 +53,12 @@ AuxNucleationRate::computeValue()
 
   // handling the dimension of the problem here and making sure we get the correct
   // (areal or volume) density
-  if (_dim == 2)
+  if (_mesh_dimension == 2)
   {
     kn1 = _Z*_beta_star*pow(_linear_density, 2);
     alpha = libMesh::pi;
   }
-  else if (_dim == 3)
+  else if (_mesh_dimension == 3)
   {
     kn1 = _Z*_beta_star*pow(_linear_density, 3);
     alpha = (16*libMesh::pi)/3;
@@ -68,8 +69,8 @@ AuxNucleationRate::computeValue()
   // correct the density to the actual element volume to get # of atoms
   kn1 *= _current_elem_volume;
 
-  kn2 = _scale_factor*alpha*std::pow(_gamma, (int)_dim)/(_Kb*_temperature);
+  kn2 = _scale_factor*alpha*std::pow(_gamma, (int)_mesh_dimension)/(_Kb*_temperature);
 
-  return kn1*std::exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_dim-1));
+  return kn1*std::exp(-1.0*kn2/std::pow(_coupled_energy[_qp], (int)_mesh_dimension-1));
 }
 
