@@ -112,14 +112,14 @@ active = 'SMP'
   #nl_rel_tol = 1.0e-8
 
   start_time = 0.0
-  num_steps = 1
+  num_steps = 5000
   dt = 1.16e-8
 []
 
 [Output]
   file_base = CHLarrySplit3D
   output_initial = true
-  interval = 1
+  interval = 500
   exodus = true
   perf_log = true
   all_var_norms = true
