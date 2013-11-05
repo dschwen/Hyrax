@@ -32,10 +32,14 @@
 #include "Value.h"
 #include "CHBulkSimmons.h"
 #include "ACBulkSimmons.h"
-#include "CHCoupledCalphad.h"
-#include "ACCoupledCalphad.h"
+//#include "CHCoupledCalphad.h"
+//#include "ACCoupledCalphad.h"
 //#include "ACFerroelectric.h"
 #include "CHLarry.h"
+#include "CHLarrySplit.h"
+//#include "ACCoupledCalphad_screwy.h"
+//#include "CHCoupledCalphad_screwy.h"
+#include "Heat.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -45,6 +49,7 @@
 #include "AuxDeltaGStar.h"
 #include "AuxRateSimple.h"
 #include "AuxChem.h"
+#include "AuxTemperature.h"
 
 //#include "AuxTestFlip.h"
 #include "ReporterAux.h"
@@ -57,8 +62,12 @@
 //Materials
 #include "PFMobilityLandau.h"
 #include "LinearSingleCrystalPrecipitateMaterial.h"
-#include "ZrHCalphad.h"
+//#include "ZrHCalphad.h"
 //#include "FerroelectricBulk.h"
+//#include "ZrHCalphad_screwy.h"
+//#include "CalphadEnergy.h"
+//#include "CalphadAB1CD1.h"
+//#include "CalphadAB1CD2.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -137,10 +146,14 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(Value);
   registerKernel(ACBulkSimmons);
   registerKernel(CHBulkSimmons);
-  registerKernel(CHCoupledCalphad);
-  registerKernel(ACCoupledCalphad);
+//  registerKernel(CHCoupledCalphad);
+//  registerKernel(ACCoupledCalphad);
   //registerKernel(ACFerroelectric);
   registerKernel(CHLarry);
+  registerKernel(CHLarrySplit);
+//  registerKernel(CHCoupledCalphad_screwy);
+//  registerKernel(ACCoupledCalphad_screwy);
+  registerKernel(Heat);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
@@ -151,6 +164,8 @@ HyraxApp::registerObjects(Factory & factory)
   registerAux(ReporterAux);
   registerAux(AuxRateSimple);
   registerAux(AuxChem);
+  registerAux(AuxTemperature);
+
 
   //Dirac Kernels
 
@@ -160,8 +175,12 @@ HyraxApp::registerObjects(Factory & factory)
   //Materials
   registerMaterial(PFMobilityLandau);
   registerMaterial(LinearSingleCrystalPrecipitateMaterial);
-  registerMaterial(ZrHCalphad);
+//  registerMaterial(ZrHCalphad);
   //registerMaterial(FerroelectricBulk);
+//  registerMaterial(ZrHCalphad_screwy);
+//  registerMaterial(CalphadEnergy);
+//  registerMaterial(CalphadAB1CD1);
+//  registerMaterial(CalphadAB1CD2);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
