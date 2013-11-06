@@ -38,7 +38,7 @@
       n_seeds = 4
       x_positions = '0.25 0.25 0.75 0.75'
       y_positions = '0.25 0.75 0.25 0.75'
-      z_positions = '0 0 0 0'
+      z_positions = '0.50 0.50 0.50 0.50'
   [../]
 []
 
@@ -102,8 +102,11 @@ active = 'SMP'
 
   print_linear_residuals = true
 
-  petsc_options_iname = '-pc_type'
-  petsc_options_value = 'lu'
+#  petsc_options_iname = '-pc_type'
+#  petsc_options_value = 'lu'
+
+  petsc_options_iname = '-pc_type -ksp_grmres_restart -sub_ksp_type -sub_pc_type -pc_asm_overlap'
+  petsc_options_value = ' asm      31                  preonly       lu           1'
 
   #l_max_its = 20
   #l_tol = 1.0e-5
@@ -112,14 +115,14 @@ active = 'SMP'
   #nl_rel_tol = 1.0e-8
 
   start_time = 0.0
-  num_steps = 5000
+  num_steps = 10
   dt = 1.16e-8
 []
 
 [Output]
   file_base = CHLarrySplit3D
   output_initial = true
-  interval = 500
+  interval = 1
   exodus = true
   perf_log = true
   all_var_norms = true

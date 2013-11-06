@@ -4,8 +4,8 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 15 #480
-  ny = 15 #480
+  nx = 30 #480
+  ny = 30 #480
   nz = 0
   xmin = 0
   xmax = 153.6 #0.3*512
@@ -14,7 +14,7 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 5
+  uniform_refine = 4
 []
 
 [Variables]
@@ -118,14 +118,19 @@
   [../]
 
   [./NucleationRate]
-    type = AuxRateSimple
+    type = AuxNucleationRate
     variable = elemental_NucleationRate
     OP_var_names = 'n1'
     n_OP_vars = 1
     coupled_aux_var = elemental_Supersaturation
 
-    Kn1 = 1.25e-4
-    Kn2 = 0.033
+    Beta_star = 1e-4
+    Kb = 1
+    Z = 1e-3
+    gamma = 3
+    linear_density = 50
+    scale_factor = 1
+
     execute_on = timestep#_begin
   [../]
 
@@ -224,8 +229,8 @@
   [./VolumeFraction]
     type = NodalVolumeFraction
     output = both
-    bubble_volume_file = CNG_size_distribution_1.csv
-    Avrami_file = CNG_Avrami_1.csv
+    bubble_volume_file = testCNG_HT_1_SizeDistribution.csv
+    Avrami_file = testCNG_HT_1_Avrami.csv
     threshold = 0.75
     variable = n1
     mesh_volume = Volume
@@ -246,19 +251,19 @@
   [./TimeStepper]
     type = SolutionTimeAdaptiveDT
     dt = 0.01
+    percent_change = 0.01
   [../]
 
  # num_steps = 10
  # dt = 0.01
-  dtmin = 0.0001
+  dtmin = 0.001
   dtmax = 0.1
-  percent_change = 0.1
 
   start_time = 0.0
   end_time = 50
 
 #  abort_on_solve_fail = true
-  adapt_nucleus = 5
+  adapt_nucleus = 4
   adapt_cycles = 1
 
   use_nucleation_userobject = true
@@ -280,36 +285,49 @@
     [./NM]
       type = NucleationMarker
       nucleation_userobject = NLUO
-      max_h_level = 5
+      max_h_level = 4
     [../]
 
     [./EFMHM_1]
       type = ErrorFractionMaxHMarker
       coarsen = 0.05
       refine = 0.75
-      max_h_level = 5
+      max_h_level = 4
       indicator = GJI_1
+    [../]
+    
+    [./EFMHM_2]
+      type = ErrorFractionMaxHMarker
+      coarsen = 0.05
+      refine = 0.75
+      max_h_level = 4
+      indicator = GJI_2
     [../]
 
     [./combo]
       type = ComboMarker
-      markers = 'NM EFMHM_1'
+      markers = 'NM EFMHM_1 EFMHM_2'
     [../]
   [../]
 
   [./Indicators]
     [./GJI_1]
-      type = GradientJumpIndicator
+     type = GradientJumpIndicator
       variable = n1
+    [../]
+
+    [./GJI_2]
+     type = GradientJumpIndicator
+     variable = concentration
     [../]
   [../]
 []
 
 
 [Output]
-  file_base = testCNG_1
+  file_base = testCNG_HT_1
   output_initial = true
-  interval = 25
+  interval = 50
   exodus = true
   perf_log = true
   postprocessor_csv = true
