@@ -522,7 +522,6 @@
   solve_type = 'PJFNK'
 
 
-  print_linear_residuals = true
 
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
@@ -559,6 +558,7 @@
 []
 
 [Output]
+  linear_residuals = true
   file_base = HyraxCoupling
   output_initial = true
   interval = 1

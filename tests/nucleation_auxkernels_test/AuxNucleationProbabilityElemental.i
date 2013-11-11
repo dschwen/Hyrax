@@ -151,7 +151,6 @@
   solve_type = 'PJFNK'
 
 
-  print_linear_residuals = true
 
 
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
@@ -166,6 +165,7 @@
 []
 
 [Output]
+  linear_residuals = true
   file_base = AuxNucleationProbabilityElemental
   output_initial = true
   exodus = true

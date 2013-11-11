@@ -85,7 +85,6 @@
   petsc_options_iname = '-pc_type -pc_hypre_type'
   petsc_options_value = 'hypre boomeramg'
 
-  print_linear_residuals = true
 
   #l_max_its = 20
   #l_tol = 1.0e-5
@@ -99,6 +98,7 @@
 []
 
 [Output]
+  linear_residuals = true
   file_base = CHLarry3D
   output_initial = true
   interval = 1
