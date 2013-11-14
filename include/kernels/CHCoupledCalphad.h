@@ -42,29 +42,15 @@ protected:
   RealGradient computeGradConservedTerm();
   RealGradient computeGradNonconservedTerm();
 
-  Real computeDGalphaDx();
-  Real computeDGdeltaDx();
-  Real computeD2GalphaDx2();
-  Real computeD2GdeltaDx2();
-  Real computeD3GalphaDx3();
-  Real computeD3GdeltaDx3();
-
 private:
-  //molar Gibbs free energies
-  MaterialProperty<Real> & _G_hcp_Zr;
-  MaterialProperty<Real> & _G_hcp_ZrH;
-  MaterialProperty<Real> & _G_fcc_Zr;
-  MaterialProperty<Real> & _G_fcc_ZrH2;
-  MaterialProperty<Real> & _G_H2;
-  MaterialProperty<Real> & _L0;
-  MaterialProperty<Real> & _L1;
-
-  MaterialProperty<Real> & _molarVol_alpha_Zr;
-  MaterialProperty<Real> & _molarVol_delta_ZrH2;
-
-
-  Real _T; //temperature
-  Real _R; //universal gas constant
+  MaterialProperty<Real> & _W;                            //Well height
+  MaterialProperty<Real> & _Omega;                        //Molar volume
+  MaterialProperty<Real> & _dGalpha_dc;
+  MaterialProperty<Real> & _d2Galpha_dc2;
+  MaterialProperty<Real> & _d3Galpha_dc3;
+  MaterialProperty<Real> & _dGdelta_dc;
+  MaterialProperty<Real> & _d2Gdelta_dc2;
+  MaterialProperty<Real> & _d3Gdelta_dc3;
 
   unsigned int _n_OP_variables;
   std::vector<VariableValue *> _OP;

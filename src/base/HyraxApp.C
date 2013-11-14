@@ -32,13 +32,11 @@
 #include "Value.h"
 #include "CHBulkSimmons.h"
 #include "ACBulkSimmons.h"
-//#include "CHCoupledCalphad.h"
-//#include "ACCoupledCalphad.h"
+#include "CHCoupledCalphad.h"
+#include "ACCoupledCalphad.h"
 //#include "ACFerroelectric.h"
 #include "CHLarry.h"
 #include "CHLarrySplit.h"
-//#include "ACCoupledCalphad_screwy.h"
-//#include "CHCoupledCalphad_screwy.h"
 #include "Heat.h"
 
 //Auxiliary Kernels
@@ -62,12 +60,11 @@
 //Materials
 #include "PFMobilityLandau.h"
 #include "LinearSingleCrystalPrecipitateMaterial.h"
-//#include "ZrHCalphad.h"
 //#include "FerroelectricBulk.h"
-//#include "ZrHCalphad_screwy.h"
-//#include "CalphadEnergy.h"
-//#include "CalphadAB1CD1.h"
-//#include "CalphadAB1CD2.h"
+#include "ZrHCalphad.h"
+#include "CalphadEnergy.h"
+#include "CalphadAB1CD1.h"
+#include "CalphadAB1CD2.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -146,13 +143,11 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(Value);
   registerKernel(ACBulkSimmons);
   registerKernel(CHBulkSimmons);
-//  registerKernel(CHCoupledCalphad);
-//  registerKernel(ACCoupledCalphad);
+  registerKernel(CHCoupledCalphad);
+  registerKernel(ACCoupledCalphad);
   //registerKernel(ACFerroelectric);
   registerKernel(CHLarry);
   registerKernel(CHLarrySplit);
-//  registerKernel(CHCoupledCalphad_screwy);
-//  registerKernel(ACCoupledCalphad_screwy);
   registerKernel(Heat);
 
   //Auxiliary Kernels
@@ -175,12 +170,11 @@ HyraxApp::registerObjects(Factory & factory)
   //Materials
   registerMaterial(PFMobilityLandau);
   registerMaterial(LinearSingleCrystalPrecipitateMaterial);
-//  registerMaterial(ZrHCalphad);
+  registerMaterial(ZrHCalphad);
   //registerMaterial(FerroelectricBulk);
-//  registerMaterial(ZrHCalphad_screwy);
-//  registerMaterial(CalphadEnergy);
-//  registerMaterial(CalphadAB1CD1);
-//  registerMaterial(CalphadAB1CD2);
+  registerMaterial(CalphadEnergy);
+  registerMaterial(CalphadAB1CD1);
+  registerMaterial(CalphadAB1CD2);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
