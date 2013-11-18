@@ -22,18 +22,18 @@
     order = THIRD
     family = HERMITE
     [./InitialCondition]
-      type = ConstantIC
-      value = 0.1
+      #type = ConstantIC
+      #value = 0.1
       #type = RandomIC
-      #min = 0.01
-      #max = 0.011
-      #type = SmoothCircleIC
-      #invalue = 0.6
-      #outvalue = 0.01
-      #radius = 15E-9
-      #int_width = 0
-      #x1 = 0.5E-7
-      #y1 = 0.5E-7
+      #min = 0.1
+      #max = 0.11
+      type = SmoothCircleIC
+      invalue = 0.6
+      outvalue = 0.1
+      radius = 10E-9
+      int_width = 3E-9
+      x1 = 0.5E-7
+      y1 = 0.5E-7
     [../]
   [../]
 
@@ -43,7 +43,7 @@
     [./InitialCondition]
      #type = RandomIC
      #min = 0.0 # 0.9
-     #max = 0.1# 0.01
+     #max = 0.01# 0.01
      type = SmoothCircleIC
      invalue = 1.0
      outvalue = 0.0
@@ -89,13 +89,13 @@
     OP_variable_names = 'n1'
   [../]
 
-#  [./CHInterface]
-#    type = CHInterface
-#    variable = concentration
-#    kappa_name = kappa_c
-#    mob_name = M
-#    grad_mob_name = grad_M
-#  [../]
+  [./CHInterface]
+    type = CHInterface
+    variable = concentration
+    kappa_name = kappa_c
+    mob_name = M
+    grad_mob_name = grad_M
+  [../]
 
   [./ACSolidn1]
     type = ACCoupledCalphad
@@ -173,32 +173,42 @@
    type = CalphadAB1CD1
    block = 0
 
-   pure_endpoint_low_coeffs = '-7827.595 125.64905 -24.1618 -4.37791E-3 34971' #HCP_Zr
-   pure_endpoint_high_coeffs = '2589675 -34709.21 5162.9713 -3.250187 -208070050'  #H2_gas
-   mixture_coeffs = '-45965 41.6 0'  #FCC_ZrH
+   pure_endpoint_low_coeffs = '-7827.595
+                                 125.64905
+                                 -24.1618
+                                  -0.00437791
+                               34971.0' #HCP_Zr
+   pure_endpoint_high_coeffs = '2589675
+                                 -34719.21
+                                   5162.9713
+                                     -3.250187
+                             -208070050'  #H2_gas
+   mixture_coeffs = '-45965
+                         41.6
+                          0'  #FCC_ZrH
    L0_coeffs = '0 0'
    L1_coeffs = '0 0'
-   low_coeffs = '-2.6549141703672653E+04
-                 -3.1205591610163368E+07
-                  2.9524365293254311E+02
-                  7.5167997437832689E+09
-                 -4.2527422354460137E-01
-                 -4.4390959906994285E+03
-                  2.2153720566517584E-04
-                 -7.5983150207815517E+04
-                  2.7656668097620554E+07
-                 -1.8137337020144734E+01'
+   low_coeffs = '   -26549.141703672653
+                 -31205591.610163368
+                       295.24365293254311
+                7516799743.7832689
+                        -0.42527422354460137
+                     -4439.0959906994285
+                         0.00022153720566517584
+                    -75983.150207815517
+                  27656668.097620554
+                       -18.137337020144734'
 
-   high_coeffs = '-1.1748697700305443E+07
-                   7.1428722799052447E+07
-                   2.0711053625846262E+02
-                  -1.4437278547848886E+08
-                   3.5284806111023137E-01
-                   9.7186016495869264E+07
-                  -1.9493853217896482E-04
-                  -1.9533177347714059E+03
-                   2.0853116312248094E+03
-                  -3.9319750123563216E-03'
+   high_coeffs = '-1.1748697700305443E7
+                   7.1428722799052447E7
+                   2.0711053625846262E2
+                  -1.4437278547848886E8
+                   3.5284806111023137E-1
+                   9.7186016495869264E7
+                  -1.9493853217896482E-4
+                  -1.9533177347714059E3
+                   2.0853116312248094E3
+                  -3.9319750123563216E-3'
 
     coupled_temperature = temperature
     coupled_concentration = concentration
@@ -207,38 +217,52 @@
   [./deltaZrH2]
    type = CalphadAB1CD2
    block = 0
-   pure_endpoint_low_coeffs = '-227.595 124.74905 -24.1618 -4.37791E-3 34971' #FCC_Zr
-   pure_endpoint_high_coeffs = '2589675 -34709.21 5162.9713 -3.250187 -208070050' #H2_gas
-   mixture_coeffs =  '-170490 208.2 -9.47' #FCC_ZrH2'
+   pure_endpoint_low_coeffs = '-227.595
+                               124.74905
+                               -24.1618
+                                -0.00437791
+                             34971' #FCC_Zr
+    pure_endpoint_high_coeffs = '2589675
+                                 -34719.21
+                                   5162.9713
+                                     -3.250187
+                             -208070050'  #H2_gas
+   mixture_coeffs =  '-170490
+                          208.2
+                           -9.47' #FCC_ZrH2'
    L0_coeffs = '14385 -6.0'
    L1_coeffs = '-106445 87.3'
 
-   low_coeffs =  '2.6978175664339593E+04
-                 -5.2267355124714538E+07
-                  7.7077694451557377E+01
-                  2.5671915976342548E+10
-                 -3.0872406268790027E-02
-                 -4.5394250810591288E+01
-                 -1.5479208178631023E-05
-                 -8.3176435859210935E+04
-                  4.4517036341637028E+06
-                  2.1739434332085402E+01'
+   low_coeffs =  '2.6978175664339593E4
+                 -5.2267355124714538E7
+                  7.7077694451557377E1
+                  2.5671915976342548E10
+                 -3.0872406268790027E-2
+                 -4.5394250810591288E1
+                 -1.5479208178631023E-5
+                 -8.3176435859210935E4
+                  4.4517036341637028E6
+                  2.1739434332085402E1'
 
-    high_coeffs = ' -4.8353171133552969E+07
-                     2.2151622968687481E+08
-                    -6.0924808041164090E+02
-                    -3.3818504692030811E+08
-                     5.3781670052188990E-01
-                     1.7206754571759129E+08
-                    -2.6254489645679825E-04
-                     7.6102442020895887E+02
-                    -4.4943040350977139E+02
-                    -9.0858040404436430E-02'
+    high_coeffs = ' -4.8353171133552969E7
+                     2.2151622968687481E8
+                    -6.0924808041164090E2
+                    -3.3818504692030811E8
+                     5.3781670052188990E1
+                     1.7206754571759129E8
+                    -2.6254489645679825E-4
+                     7.6102442020895887E2
+                    -4.4943040350977139E2
+                    -9.0858040404436430E-2'
 
     coupled_temperature = temperature
     coupled_concentration = concentration
 
-    pure_EP1_phase1_coeffs = '-7827.595 125.64905 -24.1618 -4.37791E-3 34971' #HCP_Zr
+    pure_EP1_phase1_coeffs = '-7827.595
+                                 125.64905
+                                 -24.1618
+                                  -0.00437791
+                               34971.0' #HCP_Zr
   [../]
 []
 
@@ -268,20 +292,21 @@
   [../]
 []
 
+
 [Executioner]
   type = Transient
   scheme = 'BDF2'
 
   [./TimeStepper]
-    type = ConstantDT #SolutionTimeAdaptiveDT
-    #dt = 1E-13
-    dt = 1E-18
-    #percent_change = 0.01
+    type = SolutionTimeAdaptiveDT
+    #type = ConstantDT
+    dt = 2.5E-20
+    percent_change = 0.01
   [../]
 
   num_steps  = 10
   dtmin = 1E-21
- # dtmax = 0.1
+  dtmax = 1E-18
   #percent_change = 0.1
 
   start_time = 0.0
@@ -293,14 +318,13 @@
   nl_abs_tol = 1E-9
   l_tol  = 1E-2
 
+   #solve_type = FD
    #solve_type = NEWTON
    solve_type = JFNK
+   #solve_type = PJFNK
 
    print_linear_residuals = true
    #petsc_options = '-snes_ksp_ew'
-
-   #petsc_options_iname = '-pc_type'
-   #petsc_options_value = 'ilu'
 
    #petsc_options_iname = '-pc_type -pc_hypre_type'
    #petsc_options_value = 'hypre boomeramg'
