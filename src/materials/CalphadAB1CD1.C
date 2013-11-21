@@ -52,7 +52,8 @@ CalphadAB1CD1::calculateReference()
 Real
 CalphadAB1CD1::calculateIdeal()
 {
-  return _R*_T[_qp]*( _c[_qp]*std::log(_c[_qp]/(1-_c[_qp]))
+
+ return _R*_T[_qp]*( _c[_qp]*std::log(_c[_qp]/(1-_c[_qp]))
                       + (1-2*_c[_qp])*std::log((1-2*_c[_qp])/(1-_c[_qp])) );
 }
 
@@ -98,6 +99,7 @@ CalphadAB1CD1::computeGMix()
 
   else
   {
+
     return CalphadEnergy::computeGMix();
   }
 }

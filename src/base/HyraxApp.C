@@ -38,6 +38,8 @@
 #include "CHLarry.h"
 #include "CHLarrySplit.h"
 #include "Heat.h"
+#include "CHCoupledSplit.h"
+#include "CHCoupledCalphadSplit.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -149,6 +151,8 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(CHLarry);
   registerKernel(CHLarrySplit);
   registerKernel(Heat);
+  registerKernel(CHCoupledSplit);
+  registerKernel(CHCoupledCalphadSplit);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);

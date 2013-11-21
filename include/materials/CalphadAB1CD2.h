@@ -37,9 +37,8 @@ protected:
   virtual Real computeD2GMixDc2();
   virtual Real computeD3GMixDc3();
 
-
-
 private:
+
   std::vector<double> _pure_EP1_phase1_coeffs;
   MaterialProperty<Real> & _G_AB1CD2;
   MaterialProperty<Real> & _dG_dc;

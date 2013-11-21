@@ -17,6 +17,7 @@ InputParameters validParams<CalphadAB1CD2>()
 
   params.addRequiredParam<std::vector<Real> >("pure_EP1_phase1_coeffs", "coeffs of pure endpoint at low composition in the first phase");
 
+
   return params;
 }
 
@@ -55,7 +56,8 @@ CalphadAB1CD2::calculateReference()
 Real
 CalphadAB1CD2::calculateIdeal()
 {
-    return _R*_T[_qp]*( _c[_qp]*std::log(_c[_qp]/(2-2*_c[_qp])) + (2-3*_c[_qp])*std::log((2-3*_c[_qp])/(2-2*_c[_qp])) );
+
+  return _R*_T[_qp]*( _c[_qp]*std::log(_c[_qp]/(2-2*_c[_qp])) + (2-3*_c[_qp])*std::log((2-3*_c[_qp])/(2-2*_c[_qp])) );
 }
 
 Real
@@ -91,7 +93,7 @@ CalphadAB1CD2::calculateSecondLatticeGminusHser()
     + _pure_endpoint_high_coeffs[3]*_T[_qp]*_T[_qp]
     + _pure_endpoint_high_coeffs[4]/_T[_qp];
 
-  return first_term + second_term + third_term;
+ return first_term + second_term + third_term;
 }
 
 Real
