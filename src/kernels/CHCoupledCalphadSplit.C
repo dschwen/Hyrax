@@ -27,7 +27,8 @@ CHCoupledCalphadSplit::CHCoupledCalphadSplit(const std::string & name, InputPara
     _d2Galpha_dc2(getMaterialProperty<Real>("d2GAB1CD1_dc2")),
     _dGdelta_dc(getMaterialProperty<Real>("dGAB1CD2_dc")),
     _d2Gdelta_dc2(getMaterialProperty<Real>("d2GAB1CD2_dc2")),
-    _OP(coupledValue("coupled_OP_var"))
+    _OP(coupledValue("coupled_OP_var")),
+    _OP_var(coupled("coupled_OP_var"))
 {
 }
 
@@ -68,4 +69,29 @@ CHCoupledCalphadSplit::computeHeaviside()
     //}
 
   return 3*heaviside_first - 2*heaviside_second;
+}
+
+Real
+CHCoupledCalphadSplit::computeDHeaviside()
+{
+  return 6*_OP[_qp]*(1 - _OP[_qp]);
+}
+
+
+Real
+CHCoupledCalphadSplit::computeQpOffDiagJacobian(unsigned int jvar)
+{
+
+
+  if(jvar == _OP_var)
+  {
+    Real DHeaviside = computeDHeaviside();
+
+    return DHeaviside*(_dGdelta_dc[_qp] - _dGalpha_dc[_qp]);
+  }
+  else
+    return SplitCHCRes::computeQpOffDiagJacobian(jvar);
+
+  //haven't coupled in temperature here.  Seriously hope I don't need that.
+
 }

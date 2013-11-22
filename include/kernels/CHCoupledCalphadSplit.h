@@ -24,8 +24,10 @@ public:
 protected:
   virtual Real computeDFDC(PFFunctionType type);
 
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
+
   Real computeHeaviside();
-//  Real computeDHeaviside();
+  Real computeDHeaviside();
 
   // RealGradient computeGradConservedTerm();
   //RealGradient computeGradNonconservedTerm();
@@ -41,6 +43,8 @@ private:
   //MaterialProperty<Real> & _d3Gdelta_dc3;
 
   VariableValue & _OP;
+
+  unsigned int _OP_var;
 
   //unsigned int _n_OP_variables;
   //std::vector<VariableValue *> _OP;
