@@ -1,13 +1,15 @@
+#This simulation is non-dimensionalized
+
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 50 #100
-  ny = 50 #100
+  nx = 25 #100
+  ny = 25 #100
   nz = 0 #100
-  xmin = 25E-9
-  xmax = 75E-9
-  ymin = 25E-9
-  ymax = 75E-9
+  xmin = 0 #25
+  xmax = 12.5 #75
+  ymin = 0 #25
+  ymax = 12.5 #75
   zmin = 0
   zmax = 0
   elem_type = QUAD4
@@ -37,9 +39,24 @@
     order = FIRST
     family = LAGRANGE
   [../]
+
+  [./disp_x]
+    order = FIRST
+    family = LAGRANGE
+  [../]
+
+  [./disp_y] 
+    order = FIRST
+    family = LAGRANGE
+  [../]
 []
 
 [AuxVariables]
+#  [./temperature]
+#    order = CONSTANT
+#    family = MONOMIAL
+#  [../]
+
   [./Galpha]
     order = CONSTANT
     family = MONOMIAL
@@ -72,7 +89,20 @@
   [../]
 []
 
+[TensorMechanics]
+  [./solid]
+    disp_x = disp_x
+    disp_y = disp_y
+  [../]
+[]
+
 [AuxKernels]
+#  [./auxtemp]
+#    type = AuxTemperature
+#    variable = temperature
+#  [../]
+
+
   [./auxGalpha]
     type = MaterialRealAux
     variable = Galpha
@@ -117,28 +147,28 @@
       #type = RandomIC
       #value = 0.1
       variable = concentration
-      #min = 0.6549
-      #max = 0.6551
-      int_width = 3E-9
+      #min = 0.01
+      #max = 0.02
+      int_width = 1
       invalue = 0.6
       outvalue = 0.1
-      radius = 5E-9
-      x1 = 50E-9
-      y1 = 50E-9
+      radius = 2
+      x1 = 6.25
+      y1 = 6.25
   [../]
 
   [./PSSCIC_n]
       type = SmoothCircleIC
       variable = n
-      int_width = 3E-9
+      int_width = 1
       invalue = 1
       outvalue = 0
-      radius = 5E-9
-      x1 = 50E-9
-      y1 = 50E-9
+      radius = 2
+      x1 = 6.25
+      y1 = 6.25
       #type = RandomIC
-      #min = 0.0
-      #max = 0.001
+      #min = 0.99
+      #max = 1
   [../]
 
   [./t_init]
@@ -148,8 +178,8 @@
   [../]
 []
 
-#[Preconditioning]
-#active = 'SMP'
+[Preconditioning]
+ active = 'SMP'
 #  [./PBP]
 #   type = PBP
 #   solve_order = 'w c'
@@ -158,12 +188,16 @@
 #   off_diag_column = 'w '
 #  [../]
 
-#  [./SMP]
-#   type = SMP
-#   off_diag_row = 'mu concentration'
-#   off_diag_column = 'concentration mu'
-#  [../]
-#[]
+  [./SMP]
+   type = SMP
+   off_diag_row = 'concentration concentration concentration mu mu mu n n n temperature temperature temperature'
+   off_diag_column = 'mu n temperature concentration n temperature concentration mu temperature concentration mu n'
+  [../]
+
+  [./FD]
+    type = FDP
+  [../]
+[]
 
 [Kernels]
   [./dcdt]
@@ -173,19 +207,27 @@
   [../]
 
   [./mu_residual]
-    type = SplitCHWRes
+    type = SplitCoupledCHWRes
     variable = mu
     mob_name = M
     c = concentration
+   # n = n
+    n_OP_vars = 1
+    OP_var_names = 'n'
+    T = temperature
   [../]
 
   [./conc_residual]
     type = CHCoupledCalphadSplit
     variable = concentration
     kappa_name = kappa_c
-    coupled_OP_var = n
+    n_OP_vars = 1
+    OP_var_names = 'n'
     w = mu
+   # n = n
+    T = temperature
     #Well_height = 1
+    scaling_factor = 2.49410145E-9
   [../]
 
   [./dndt]
@@ -201,13 +243,32 @@
     n_OP_vars = 1
     OP_var_names = 'n'
     OP_number = 1
+    w = mu
+    T = temperature
+    c = concentration
+    scaling_factor = 2.49410145E-9
   [../]
 
   [./ACInterfacen1]
     type = ACInterface
     variable = n
     mob_name = L
+    #w = mu
+    #T = temperature
+    #c = concentration
     kappa_name = kappa_n
+  [../]
+
+ [./ACTransform]
+    type = ACTransformElasticDF
+    variable = n
+    OP_number = 1
+    OP_var_names = 'n'
+    n_OP_vars = 1
+    scaling_factor = 2.49410145E-9
+    #c = concentration
+    #w = mu
+    #T = temperature
   [../]
 
   [./dTdt]
@@ -218,7 +279,11 @@
 
   [./THeat]
     type = Heat
-    variable = temperature
+    variable = temperature 
+    w = mu 
+    c = concentration
+    OP_var_names = 'n'
+    n_OP_vars = 1 
   [../]
 []
 
@@ -233,13 +298,14 @@
     #H_Zr_Q0 =  4.456e4 #J/mol
     #H_ZrH2_Q0 = 5.885E4 #J/mol
 
-    mobility_AC = 2E3
+    mobility_AC = 1E0
     #mobility_CH = 2E-10 
-    mobility_CH = 2E0
+    mobility_CH = 1E3
 
-    kappa_CH = 7.812E-10
-    kappa_AC = 7.812E-9
+    kappa_CH = 1.9484
+    kappa_AC = 19.484
 
+    #well height and molar volume remain unscaled.
     well_height = 60000
 
     molar_volume = 1.4E-5
@@ -270,49 +336,7 @@
                           0'  #FCC_ZrH
    L0_coeffs = '0 0'
    L1_coeffs = '0 0'
-#   low_coeffs = '   -26549.141703672653
-#                 -31205591.610163368
-#                       295.24365293254311
-#                7516799743.7832689
-#                        -0.42527422354460137
-#                     -4439.0959906994285
-#                         0.00022153720566517584
-#                    -75983.150207815517
-#                  27656668.097620554
-#                       -18.137337020144734'
 
-#   high_coeffs = '-1.1748697700305443E7
-#                   7.1428722799052447E7
-#                   2.0711053625846262E2
-#                  -1.4437278547848886E8
-#                   3.5284806111023137E-1
-#                   9.7186016495869264E7
-#                  -1.9493853217896482E-4
-#                  -1.9533177347714059E3
-#                   2.0853116312248094E3
-#                  -3.9319750123563216E-3'
-
-   low_coeffs = ' -2.3193005500010659E3
-   	      	  -9.6686378992784186E4
- 		  -1.9584791279287277E1
- 		   2.7064582471779820E7
- 		  -4.0344221621395518E-2
-		  -4.8360390794611511E9
-		   8.8627414820406476E-6
-		  -2.6809498774745819E1
-		  -5.6036536163730307E3
-		   2.0832427364711584E-2'
-
-   high_coeffs = ' -6.4402100857458472E8
-   	           3.8572536909359312E9
-                   1.2750473955256184E4
-                  -7.7004063005537968E9
-                   3.2145786231203610E-1
-                   5.1241392707094860E9
-                  -1.9850611115707398E-4
- 		  -5.2116707213338450E4
-		   5.2220794055700229E4
-		    7.2767994212535686E-2'
 
     coupled_temperature = temperature
     coupled_concentration = concentration
@@ -337,50 +361,6 @@
    L0_coeffs = '14385 -6.0'
    L1_coeffs = '-106445 87.3'
 
-#   low_coeffs =  '2.6978175664339593E4
-#                 -5.2267355124714538E7
-#                  7.7077694451557377E1
-#                  2.5671915976342548E10
-#                 -3.0872406268790027E-2
-#                 -4.5394250810591288E1
-#                 -1.5479208178631023E-5
-#                 -8.3176435859210935E4
-#                  4.4517036341637028E6
-#                  2.1739434332085402E1'
-
-#    high_coeffs = ' -4.8353171133552969E7
-#                     2.2151622968687481E8
-#                    -6.0924808041164090E2
-#                    -3.3818504692030811E8
-#                     5.3781670052188990E-1
-#                     1.7206754571759129E8
-#                    -2.6254489645679825E-4
-#                     7.6102442020895887E2
-#                    -4.4943040350977139E2
-#                    -9.0858040404436430E-2'
-
-   low_coeffs = ' 5.1885861560133571E3
-   	         -4.8811605580390577E4
-		 -2.0128059775256556E1
-		  1.0164702396392035E4
-		 -4.0913939010625185E-2
-		 -5.9160467838341198E1
-		  9.1808114941039917E-6
-		 -3.9730434705971000E1
-		  5.3456168131031118E3
-		 -1.2961561364383261E-2'
-    
-    high_coeffs = '-4.8514324670638323E7
-    		    2.2227380532295138E8
-		   -6.3829116146213414E2
-		   -3.3936440910766947E8
-		    5.4323628798569534E-1
-		    1.7267597255673271E+8
-		   -2.6269091463396069E-4
-		    8.3948759619112002E2
-		   -5.0208515875980800E2
-		   -9.8630149789327354E-2'
-
 
     coupled_temperature = temperature
     coupled_concentration = concentration
@@ -390,6 +370,37 @@
                                  -24.1618
                                   -0.00437791
                                34971.0' #HCP_Zr
+  [../]
+
+  [./test_material]
+    type = LinearSingleCrystalPrecipitateMaterial
+    block = 0
+    disp_x = disp_x
+    disp_y = disp_y
+    #reading C_11  C_12  C_13  C_22  C_23  C_33  C_44  C_55  C_66
+    C_ijkl = '155.4E5 68.03E5 64.6E5 155.4E5  64.6E5 172.51E5 36.31E5 36.31E5 44.09E5'
+    C_precipitate ='155.4E5 68.03E5 64.6E5 155.4E5 64.6E5 172.51E5 36.31E5 36.31E5 44.09E5'
+    #reading        S_11   S_22  S_33 S_23 S_13 S_12
+    e_precipitate = '0.00551  0.0564  0.0570  0.0  0.0  0.0'
+    n_variants = 1
+    variable_names = 'n'
+    all_21 = false
+  [../]
+[]
+
+[BCs]
+  [./Dirichlet_dispx]
+    type = DirichletBC
+    variable = disp_x
+    value = 0.0
+    boundary = '1 3'
+  [../]
+
+ [./Dirichlet_dispy]
+    type = DirichletBC
+    variable = disp_y
+    value = 0.0
+    boundary = '1 3'
   [../]
 []
 
@@ -422,7 +433,7 @@
     type = NodalVolumeFraction
     variable = 'n'
     use_single_map = true
-    threshold = 0.75
+    threshold = 0.5
     execute_on = timestep
     mesh_volume = Volume
   [../]
@@ -439,40 +450,39 @@
   scheme = 'BDF2'
 
   [./TimeStepper]
-    type = SolutionTimeAdaptiveDT
-    #type = ConstantDT
-    dt = 1E-16
+     type = SolutionTimeAdaptiveDT
+    #ype = ConstantDT
+    dt = 1E-4
     percent_change = 0.1
   [../]
 
 
   #Preconditioned JFNK (default)
-  #solve_type = 'PJFNK'
-  solve_type = 'JFNK'
-  #solve_type = 'NEWTON'
+  solve_type = 'PJFNK'
+  #solve_type = 'FD'
 
-  #petsc_options_iname = '-pc_type'
-  #petsc_options_value = 'lu'
+  petsc_options_iname = '-pc_type -ksp_gmres_restart'
+  petsc_options_value = 'ilu 50'
 
-  l_max_its = 25
-  #l_tol = 1.0e-5
+   l_max_its = 250
+  #l_tol = 1.0e-8
 
   #nl_max_its = 40
-  nl_rel_tol = 3.0e-7
+  #nl_rel_tol = 3.0e-7
   #nl_max_its = 20
-  nl_abs_tol = 2.15E-6
+  #nl_abs_tol = 2.0E-5
 
   start_time = 0.0
-  num_steps = 50
-  dtmax = 1E0
-  dtmin = 1E-20
+  num_steps = 100
+  dtmax = 1E-1
+  dtmin = 1E-7
 []
 
 [Output]
-  file_base = CHCoupledCalphadSplit
+  file_base = SplitScaledSMP_SM
   output_initial = true
   interval = 1
-  linear_residuals = true
+  #linear_residuals = true
   exodus = true
   perf_log = true
   all_var_norms = true
