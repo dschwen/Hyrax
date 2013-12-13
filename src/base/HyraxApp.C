@@ -22,7 +22,6 @@
 #include "HeatConductionModule.h"
 #include "MiscModule.h"
 
-
 //Kernels
 #include "ACBulkCoupled.h"
 #include "CHBulkCoupled.h"
@@ -40,6 +39,7 @@
 #include "Heat.h"
 #include "CHCoupledSplit.h"
 #include "CHCoupledCalphadSplit.h"
+#include "SplitCoupledCHWRes.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -153,6 +153,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(Heat);
   registerKernel(CHCoupledSplit);
   registerKernel(CHCoupledCalphadSplit);
+  registerKernel(SplitCoupledCHWRes);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
@@ -164,7 +165,6 @@ HyraxApp::registerObjects(Factory & factory)
   registerAux(AuxRateSimple);
   registerAux(AuxChem);
   registerAux(AuxTemperature);
-
 
   //Dirac Kernels
 

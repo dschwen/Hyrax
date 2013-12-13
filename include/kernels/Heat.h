@@ -31,13 +31,24 @@ protected:
 
   virtual Real computeQpJacobian();
 
-  MaterialProperty<Real> & _diffusivity;
-  MaterialProperty<Real> & _dDiffusivity_dT;
+  virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
-  //anything else here that you may want to add, like coupled variables
+  MaterialProperty<Real> & _diffusivity;
+//  MaterialProperty<Real> & _dDiffusivity_dT;
 
 private:
+  unsigned int _w_var;
+  unsigned int _c_var;
+  //unsigned int _n_var;
 
+  VariableValue & _w;
+  VariableValue & _c;
+  // VariableValue & _n;
+
+  unsigned int _n_OP_vars;
+
+  std::vector<unsigned int> _n_var;
+  std::vector<VariableValue *> _coupled_OP_vars;
 };
 
 #endif //HEAT_H

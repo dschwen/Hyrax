@@ -49,15 +49,13 @@ protected:
    */
   virtual Real computeDFDOP(PFFunctionType type);
 
-  virtual Real calculateFirstTerm();
+  //virtual Real calculateFirstTerm();
 
-  virtual Real calculateSecondTerm();
+  //virtual Real calculateSecondTerm();
 
-  virtual Real calculateFirstJacobianTerm();
+  //virtual Real calculateFirstJacobianTerm();
 
-  virtual Real calculateSecondJacobianTerm();
-
-private:
+  //virtual Real calculateSecondJacobianTerm();
 
   // system elasticity tensor, varies in space
   MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
@@ -76,6 +74,10 @@ private:
 
   // Vector of references to the coupled order parameters
   std::vector<VariableValue *> _coupled_vars;
+
+  Real _scaling_factor;
+
+private:
 
 };
 

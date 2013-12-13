@@ -30,35 +30,39 @@ CalphadAB1CD1::CalphadAB1CD1(const std::string & name, InputParameters parameter
 void
 CalphadAB1CD1::computeQpProperties()
 {
-//  std::cout<<"in CalphadAB1CD1 computeQpProperties"<<std::endl;
-  _G_AB1CD1[_qp] = computeGMix();
-  _dG_dc[_qp] = computeDGMixDc();
+  Real c;
+
+  if (_c[_qp]  < 0.001)
+    c = 0.001;
+  else if (_c[_qp] > 0.499)
+    c = 0.499;
+  else c = _c[_qp];
+
+  _G_AB1CD1[_qp] = computeGMix(c);
+  _dG_dc[_qp] = computeDGMixDc(c);
   _d2G_dc2[_qp] = computeD2GMixDc2();
   _d3G_dc3[_qp] = computeD3GMixDc3();
 
-//  std::cout<<"end CalphadAB1CD1 computeQpProperties"<<std::endl;
 }
 
 Real
-CalphadAB1CD1::calculateReference()
+CalphadAB1CD1::calculateReference(Real c)
 {
   Real first_energy = calculateFirstLatticeGminusHser();
   Real second_energy = calculateSecondLatticeGminusHser();
 
-  return  (1 - 2*_c[_qp])*first_energy + _c[_qp]*second_energy;
+  return  (1 - 2*c)*first_energy + c*second_energy;
 }
 
 
 Real
-CalphadAB1CD1::calculateIdeal()
+CalphadAB1CD1::calculateIdeal(Real c)
 {
-
- return _R*_T[_qp]*( _c[_qp]*std::log(_c[_qp]/(1-_c[_qp]))
-                      + (1-2*_c[_qp])*std::log((1-2*_c[_qp])/(1-_c[_qp])) );
+  return _R*_T[_qp]*( c*std::log(c/(1-c)) + (1-2*c)*std::log((1-2*c)/(1-c)) );
 }
 
 Real
-CalphadAB1CD1::calculateExcess()
+CalphadAB1CD1::calculateExcess(Real c)
 {
   return 0;
 }
@@ -84,51 +88,38 @@ CalphadAB1CD1::calculateSecondLatticeGminusHser()
 }
 
 Real
-CalphadAB1CD1::computeGMix()
+CalphadAB1CD1::computeGMix(Real c)
 {
+  Real c1;
   //make this piecewise in concentration space
-  if( _c[_qp] < 0.0017)
+ if(_c[_qp] < 0.001)
   {
-    return computeEndPolynomial(true, Zero);
-  }
-  else if (_c[_qp] > 0.49)
-  {
-    return  computeEndPolynomial(false, Zero);
+    c1 = 0.001;
 
+    return CalphadEnergy::computeGMix(c1) + computeDGMixDc(c1)*(_c[_qp] - c1);
+  }
+
+  else if (_c[_qp] > 0.499)
+  {
+    c1 = 0.499;
+
+    return CalphadEnergy::computeGMix(c1) + computeDGMixDc(c1)*(_c[_qp] - c1);
   }
 
   else
-  {
-
-    return CalphadEnergy::computeGMix();
-  }
+    return CalphadEnergy::computeGMix(_c[_qp]);
 }
 
 Real
-CalphadAB1CD1::computeDGMixDc()
+CalphadAB1CD1::computeDGMixDc(Real c)
 {
   Real ref;
   Real ideal;
 
-  //make this piecewise in concentration space
-  if( _c[_qp] < 0.0017)
-  {
-    return computeEndPolynomial(true, First);
-  }
-  else if (_c[_qp] > 0.49)
-  {
-    return computeEndPolynomial(false, First);
-  }
+  ref = -2*calculateFirstLatticeGminusHser() + calculateSecondLatticeGminusHser();
+  ideal = _R*_T[_qp]*( std::log(c/(1-c)) - 2*std::log((1-2*c)/(1-c)) );
 
-  else
-  {
-    ref = -2*calculateFirstLatticeGminusHser() + calculateSecondLatticeGminusHser();
-
-    ideal = _R*_T[_qp]*( std::log(_c[_qp]/(1-_c[_qp])) - 2*std::log((1-2*_c[_qp])/(1-_c[_qp])) );
-
-    return ref + ideal;
-  }
-
+  return ref + ideal;
 }
 
 Real
@@ -138,14 +129,11 @@ CalphadAB1CD1::computeD2GMixDc2()
   Real ideal;
 
   //make this piecewise in concentration space
-  if( _c[_qp] < 0.0017)
-  {
-    return computeEndPolynomial(true, Second);
-  }
-  else if (_c[_qp] > 0.49)
-  {
-    return computeEndPolynomial(false, Second);
-  }
+  if( _c[_qp] < 0.001)
+    return 0;
+
+  else if (_c[_qp] > 0.499)
+    return 0;
 
   else
   {
@@ -155,7 +143,6 @@ CalphadAB1CD1::computeD2GMixDc2()
 
     return ref + ideal;
   }
-
 }
 
 Real
@@ -165,14 +152,11 @@ CalphadAB1CD1::computeD3GMixDc3()
   Real ideal;
 
   //make this piecewise in concentration space
-  if( _c[_qp] < 0.0017)
-  {
-    return computeEndPolynomial(true, Third);
-  }
-  else if (_c[_qp] > 0.49)
-  {
-    return computeEndPolynomial(false, Third);
-  }
+  if( _c[_qp] < 0.001)
+    return 0;
+
+  else if (_c[_qp] > 0.499)
+    return 0;
 
   else
   {
@@ -183,6 +167,5 @@ CalphadAB1CD1::computeD3GMixDc3()
 
     return ref + ideal;
   }
-
 }
 

@@ -22,9 +22,6 @@ InputParameters validParams<CalphadEnergy>()
   params.addRequiredParam<std::vector<Real> >("L0_coeffs", "Rudlich-Kister L0 polynomial coefficients");
   params.addRequiredParam<std::vector<Real> >("L1_coeffs", "Rudlich-Kister L1 polynomial coefficients");
 
-  params.addRequiredParam<std::vector<Real> >("low_coeffs", "tweak polynomial coeffients for low concentration");
-  params.addRequiredParam<std::vector<Real> >("high_coeffs", "tweak polynomial coeffients for high concentration");
-
   //Default in J/mol-K
   params.addParam<Real>("gas_constant", 8.3144621, "Universal gas constant");
 
@@ -41,11 +38,7 @@ CalphadEnergy::CalphadEnergy(const std::string & name, InputParameters parameter
       _mixture_coeffs(getParam<std::vector<Real> >("mixture_coeffs")),
       _L0_coeffs(getParam<std::vector<Real> >("L0_coeffs")),
       _L1_coeffs(getParam<std::vector<Real> >("L1_coeffs")),
-      _low_coeffs(getParam<std::vector<Real> >("low_coeffs")),
-      _high_coeffs(getParam<std::vector<Real> >("high_coeffs")),
-
       _R(getParam<Real>("gas_constant")),
-
       _T(coupledValue("coupled_temperature")),
       _c(coupledValue("coupled_concentration"))
 {
@@ -54,9 +47,7 @@ CalphadEnergy::CalphadEnergy(const std::string & name, InputParameters parameter
       (_pure_endpoint_high_coeffs.size() != 5) ||
       (_mixture_coeffs.size() != 3) ||
       (_L0_coeffs.size() != 2) ||
-      (_L1_coeffs.size() != 2) ||
-      (_low_coeffs.size() != 10) ||
-      (_high_coeffs.size() != 10) )
+      (_L1_coeffs.size() != 2) )
     mooseError("Please supply the correct # of values for the Gibbs coefficients (CalphadEnergy).");
 }
 
@@ -76,78 +67,25 @@ CalphadEnergy::calculateFirstLatticeGminusHser()
 }
 
 Real
-CalphadEnergy::computeGMix()
+CalphadEnergy::computeGMix(Real c)
 {
-  return calculateReference() + calculateIdeal() + calculateExcess();
+  return calculateReference(c) + calculateIdeal(c) + calculateExcess(c);
 }
 
 Real
-CalphadEnergy::computeEndPolynomial(bool low, PolynomialOrder deriv)
-{
-  if(low)
-  {
-    switch (deriv)
-    {
-    case Zero: //calculate low polynomial
-      return _low_coeffs[0] + _low_coeffs[1]*_c[_qp] + _low_coeffs[2]*_T[_qp]
-        + _low_coeffs[3]*_c[_qp]*_c[_qp] + _low_coeffs[4]*_T[_qp]*_T[_qp]
-        + _low_coeffs[5]*_c[_qp]*_c[_qp]*_c[_qp] + _low_coeffs[6]*_T[_qp]*_T[_qp]*_T[_qp]
-        + _low_coeffs[7]*_c[_qp]*_T[_qp] + _low_coeffs[8]*_c[_qp]*_c[_qp]*_T[_qp]
-        + _low_coeffs[9]*_c[_qp]*_T[_qp]*_T[_qp];
-
-    case First: //calculate low polynomial first derivative
-      return  _low_coeffs[1] + 2*_low_coeffs[3]*_c[_qp] + 3*_low_coeffs[5]*_c[_qp]*_c[_qp]
-        + _low_coeffs[7]*_T[_qp] + 2*_low_coeffs[8]*_c[_qp]*_T[_qp] + _low_coeffs[9]*_T[_qp]*_T[_qp];
-
-    case Second:  //calculate low polynomial 2nd derivative
-      return 2*_low_coeffs[3] + 6*_low_coeffs[5]*_c[_qp] + 2*_low_coeffs[8]*_T[_qp];
-
-    case Third: //calculate low polynomial 3rd derivative
-      return  6*_low_coeffs[5];
-    }
-    mooseError("Invalid type passed in");
-  }
-
-  else
-  {
-    switch (deriv)
-    {
-    case Zero: //calculate high polynomial
-      return _high_coeffs[0] + _high_coeffs[1]*_c[_qp] + _high_coeffs[2]*_T[_qp]
-        + _high_coeffs[3]*_c[_qp]*_c[_qp] + _high_coeffs[4]*_T[_qp]*_T[_qp]
-        + _high_coeffs[5]*_c[_qp]*_c[_qp]*_c[_qp] + _high_coeffs[6]*_T[_qp]*_T[_qp]*_T[_qp]
-        + _high_coeffs[7]*_c[_qp]*_T[_qp] + _high_coeffs[8]*_c[_qp]*_c[_qp]*_T[_qp]
-        + _high_coeffs[9]*_c[_qp]*_T[_qp]*_T[_qp];
-
-    case First: //calculate high polynomial first derivative
-      return  _high_coeffs[1] + 2*_high_coeffs[3]*_c[_qp] + 3*_high_coeffs[5]*_c[_qp]*_c[_qp]
-        + _high_coeffs[7]*_T[_qp] + 2*_high_coeffs[8]*_c[_qp]*_T[_qp] + _high_coeffs[9]*_T[_qp]*_T[_qp];
-
-    case Second:  //calculate high polynomial 2nd derivative
-      return 2*_high_coeffs[3] + 6*_high_coeffs[5]*_c[_qp] + 2*_high_coeffs[8]*_T[_qp];
-
-    case Third: //calculate high polynomial 3rd derivative
-      return 6*_high_coeffs[5];
-    }
-       mooseError("Invalid type passed in");
-  }
-}
-
-
-Real
-CalphadEnergy::calculateReference()
+CalphadEnergy::calculateReference(Real c)
 {
   return 0;
 }
 
 Real
-CalphadEnergy::calculateIdeal()
+CalphadEnergy::calculateIdeal(Real c)
 {
   return 0;
 }
 
 Real
-CalphadEnergy::calculateExcess()
+CalphadEnergy::calculateExcess(Real c)
 {
   return 0;
 }
@@ -159,7 +97,7 @@ CalphadEnergy::calculateSecondLatticeGminusHser()
 }
 
 Real
-CalphadEnergy::computeDGMixDc()
+CalphadEnergy::computeDGMixDc(Real c)
 {
   return 0;
 }

@@ -26,14 +26,14 @@ public:
 protected:
   virtual void computeQpProperties();
 
-  virtual Real calculateReference();
-  virtual Real calculateIdeal();
-  virtual Real calculateExcess();
+  virtual Real calculateReference(Real c);
+  virtual Real calculateIdeal(Real c);
+  virtual Real calculateExcess(Real c);
 
   virtual Real calculateSecondLatticeGminusHser();
 
-  virtual Real computeGMix();
-  virtual Real computeDGMixDc();
+  virtual Real computeGMix(Real c);
+  virtual Real computeDGMixDc(Real c);
   virtual Real computeD2GMixDc2();
   virtual Real computeD3GMixDc3();
 

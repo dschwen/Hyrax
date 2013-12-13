@@ -73,10 +73,8 @@ ZrHCalphad::ZrHCalphad(const std::string & name, InputParameters parameters)
 void
 ZrHCalphad::computeQpProperties()
 {
-
 //  _D_alpha = _H_Zr_D0*std::exp(-_H_Zr_Q0/(_R*_T));
 //  _D_delta = _H_ZrH2_D0*std::exp(-_H_ZrH2_Q0/(_R*_T));
-  // std::cout<<"in ZrHCalphad computeQpProperties"<<std::endl;
 
   _M[_qp] = _mobility_CH;
   _grad_M[_qp] = 0.0;
@@ -91,7 +89,5 @@ ZrHCalphad::computeQpProperties()
 
   _thermal_diff[_qp] = _thermal_diffusivity;
   _dThermDiff_dT[_qp] = _dThermal_diffusivity_dT;
-
-//  std::cout<<"end ZrHCalphad computeQpProperties"<<std::endl;
 }
 

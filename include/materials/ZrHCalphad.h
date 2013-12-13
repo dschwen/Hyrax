@@ -71,7 +71,6 @@ private:
   //COUPLED VARIABLES
   VariableValue & _temperature;                 //coupled Temperature field
 
-
 };
 
 #endif //ZRHCALPHAD_H

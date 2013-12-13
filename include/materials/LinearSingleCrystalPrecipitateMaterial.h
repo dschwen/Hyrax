@@ -66,6 +66,9 @@ private:
   std::vector<Real> _Cijkl_precipitate_vector;
   std::vector<Real> _eigenstrain_vector;
 
+  // Energy scaling factor for nondimensionalization of Cijkl
+  Real _scaling_factor;
+
   // Individual material information
   ElasticityTensorR4 _Cijkl_precipitate;
   RankTwoTensor _eigenstrain;
@@ -74,7 +77,6 @@ private:
   unsigned int _n_variants;
 
   //vectors to hold each individual rotated tensor variant
-  //std::vector<ElasticityTensorR4> _Cijkl_precipitates_rotated;
   std::vector<RankTwoTensor> _eigenstrains_rotated;
 
   // turn all these tensors into materials properties
@@ -84,17 +86,15 @@ private:
   MaterialProperty<ElasticityTensorR4> & _Cijkl_MP; //holds the matrix Cijkl everywhere
   MaterialProperty<ElasticityTensorR4> & _Cijkl_precipitates_MP; //holds the precipitates Cijkl everywhere
 
-  // derivatives of the local elasticity tensor and the misfit strain with respect
-  // to order parameter
-  //MaterialProperty<std::vector<ElasticityTensorR4> > & _d_elasticity_tensor;
-  MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_MP;//derivatives of the eigenstrains operating in space
+  // derivatives of the misfit strain with respect to order parameter
+  MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_MP;
 
   // These have been added to allow the auxkernel to access the elasticity tensor and
   // rotated eigenstrain values for precipitates
    MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
 
   // Vector of references to the coupled order parameters
-  std::vector<VariableValue *> _coupled_variables;
+  std::vector<VariableValue *> _OP;
 };
 
 #endif //LINEARSINGLECRYSTALPRECIPITATEMATERIAL_H

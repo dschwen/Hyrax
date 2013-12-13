@@ -25,27 +25,19 @@ public:
   CalphadEnergy(const std::string & name, InputParameters parameters);
 
 protected:
-  enum PolynomialOrder
-  {
-    Zero,
-    First,
-    Second,
-    Third
-  };
 
   virtual void computeQpProperties();
 
-  virtual Real calculateReference();
-  virtual Real calculateIdeal();
-  virtual Real calculateExcess();
+  virtual Real calculateReference(Real c);
+  virtual Real calculateIdeal(Real c);
+  virtual Real calculateExcess(Real c);
   virtual Real calculateFirstLatticeGminusHser();
   virtual Real calculateSecondLatticeGminusHser();
 
-  virtual Real computeGMix();
-  virtual Real computeDGMixDc();
+  virtual Real computeGMix(Real c);
+  virtual Real computeDGMixDc(Real c);
   virtual Real computeD2GMixDc2();
   virtual Real computeD3GMixDc3();
-  virtual Real computeEndPolynomial(bool low, PolynomialOrder deriv);
 
   //vectors to hold the coefficients of the 2 endpoints for mixing
   std::vector<Real> _pure_endpoint_low_coeffs;
@@ -55,10 +47,6 @@ protected:
   //vectors to hold the Rudlich-Kister polynomial coefficents
   std::vector<Real> _L0_coeffs;
   std::vector<Real> _L1_coeffs;
-
-  //vectors to hold the coefficients of the calphad endpoint polynomial tweak
-  std::vector<Real> _low_coeffs;
-  std::vector<Real> _high_coeffs;
 
   Real _R;                                      //Universal gas constant
 

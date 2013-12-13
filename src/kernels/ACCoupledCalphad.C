@@ -17,25 +17,42 @@ InputParameters validParams<ACCoupledCalphad>()
   params.addRequiredParam<int>("n_OP_vars", "# of coupled OP variables");
   params.addRequiredCoupledVar("OP_var_names", "Array of coupled OP variable names");
   params.addRequiredParam<int>("OP_number","# of the order parameter for this kernel, starting from 1");
+  params.addParam<Real>("scaling_factor", 1, "free energy scaling factor for nondimensionalization");
+
+  params.addRequiredCoupledVar("c", "concentration");
+  params.addRequiredCoupledVar("w", "chemical potential");
+  params.addRequiredCoupledVar("T", "temperature");
 
   return params;
 }
 
-ACCoupledCalphad::ACCoupledCalphad(const std::string & name, InputParameters parameters)
-    : ACBulk(name, parameters),
-      _W(getMaterialProperty<Real>("well_height")),
-      _Omega(getMaterialProperty<Real>("molar_volume")),
-      _G_alpha(getMaterialProperty<Real>("G_AB1CD1")),
-      _G_delta(getMaterialProperty<Real>("G_AB1CD2")),
+ACCoupledCalphad::ACCoupledCalphad(const std::string & name, InputParameters parameters) :
+    ACBulk(name, parameters),
+    _W(getMaterialProperty<Real>("well_height")),
+    _Omega(getMaterialProperty<Real>("molar_volume")),
+    _G_alpha(getMaterialProperty<Real>("G_AB1CD1")),
+    _G_delta(getMaterialProperty<Real>("G_AB1CD2")),
+    _dGalpha_dc(getMaterialProperty<Real>("dGAB1CD1_dc")),
+    _dGdelta_dc(getMaterialProperty<Real>("dGAB1CD2_dc")),
 
-      _n_OP_vars(getParam<int>("n_OP_vars")),
-      _OP_number(getParam<int>("OP_number"))
+    _n_OP_vars(getParam<int>("n_OP_vars")),
+    _OP_number(getParam<int>("OP_number")),
+    _scaling_factor(getParam<Real>("scaling_factor")),
+
+    _c_var(coupled("c")),
+    _w_var(coupled("w")),
+    _T_var(coupled("T")),
+
+    _c(coupledValue("c")),
+    _w(coupledValue("w")),
+    _T(coupledValue("T"))
 {
   // Create a vector of the coupled OP variables and set = 0 the one that the kernel
   // is operating on
   if(_n_OP_vars != coupledComponents("OP_var_names"))
     mooseError("Please match the number of orientation variants to coupled OPs (ACCoupledCalphad).");
 
+  _n_var.resize(_n_OP_vars);
   _coupled_OP_vars.resize(_n_OP_vars);
 
   for(unsigned int i=0; i< _n_OP_vars; i++)
@@ -44,13 +61,15 @@ ACCoupledCalphad::ACCoupledCalphad(const std::string & name, InputParameters par
       _coupled_OP_vars[i] = NULL;
     else
       _coupled_OP_vars[i] = &coupledValue("OP_var_names", i);
+
+    if (i != _OP_number-1)
+      _n_var[i] = coupled("OP_var_names", i);
   }
 }
 
 Real
 ACCoupledCalphad::computeDFDOP(PFFunctionType type)
 {
-  //std::cout<<"in ACCoupledCalphad computeDFDOP"<<std::endl;
   Real square_sum, quad_sum, square_mult;
   square_sum = quad_sum = 0.0;
 
@@ -82,7 +101,7 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
 
     dHeavisidedn = computeDHeavisideDOP();
 
-    return ( (_G_delta[_qp] - _G_alpha[_qp])*dHeavisidedn + _W[_qp]*dgdn ) / _Omega[_qp];
+    return _scaling_factor*( ( (_G_delta[_qp] - _G_alpha[_qp])*dHeavisidedn + _W[_qp]*dgdn ) / _Omega[_qp] );
 
   case Jacobian:
 
@@ -90,11 +109,48 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
 
     d2Heavisidedn2 = computeD2HeavisideDOP2();
 
-    return  ( ( _G_delta[_qp] - _G_alpha[_qp])*d2Heavisidedn2*_phi[_j][_qp]
-              + _W[_qp]*d2gdn2*_phi[_j][_qp] ) / _Omega[_qp];
+    return  _scaling_factor*( ( ( _G_delta[_qp] - _G_alpha[_qp])*d2Heavisidedn2*_phi[_j][_qp]
+                 + _W[_qp]*d2gdn2*_phi[_j][_qp] ) / _Omega[_qp] );
   }
   mooseError("Invalid type passed in");
 }
+
+Real
+ACCoupledCalphad::computeQpOffDiagJacobian(unsigned int jvar)
+{
+/*  for (unsigned int i=0; i< _n_OP_vars; i++)
+  {
+    if (i != _OP_number)
+    {
+      if (jvar == _n_var[i])
+      {
+        Real val = (*_coupled_OP_vars[i])[_qp];
+        Real s = (*_coupled_OP_vars[_n_OP_vars - (i+_OP_number)%_n_OP_vars -1])[_qp];
+
+        Real ans = 2*val*val*(2*_u[_qp] + 2*val*val*_u[_qp] + 4*_u[_qp]*_u[_qp]*_u[_qp] + 2*_u[_qp]*s*s );
+        ans /= _Omega[_qp];
+        ans *= _test[_i][_qp]*_phi[_j][_qp];
+        return ans;
+      }
+
+    }
+    }*/
+
+  if (jvar == _c_var)
+    return _L[_qp]*_test[_i][_qp]*_phi[_j][_qp]*
+      (_scaling_factor*( computeDHeavisideDOP()*(_dGdelta_dc[_qp] - _dGalpha_dc[_qp]) )/_Omega[_qp] );
+
+  else if (jvar == _w_var)
+    return 0;
+
+  else if (jvar == _T_var)
+    //return _L[_qp]*_test[_i][_qp]*_phi[_j][_qp]*(d/dT of df/dn);
+    return 0;
+
+  else
+    mooseError("Screwed up ACCoupledCalphad::computeQpOffDiagJacobian()");
+}
+
 
 Real
 ACCoupledCalphad::computeDHeavisideDOP()

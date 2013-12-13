@@ -26,8 +26,6 @@ InputParameters validParams<CHCoupledCalphad>()
   params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
 
-  params.print();
-
   return params;
 }
 

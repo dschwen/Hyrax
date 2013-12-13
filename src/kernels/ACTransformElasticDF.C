@@ -9,7 +9,6 @@
 *************************************************************************/
 
 #include "ACTransformElasticDF.h"
-#include <ostream>
 
 /**
  * ACTransformElasticDF handles the elastic energy term for a solid-solid transformation
@@ -26,6 +25,8 @@ InputParameters validParams<ACTransformElasticDF>()
   params.addRequiredParam<int>("n_OP_vars", "# of orientation variants for precips in single crystal");
   params.addRequiredParam<int>("OP_number","# of the order parameter for this kernel, starting from 1");
 
+  params.addParam<Real>("scaling_factor", 1, "elastic energy scaling factor for nondimensionalization");
+
   return params;
 }
 
@@ -34,11 +35,11 @@ ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParame
       _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
       _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
       _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
-      //_d_elasticity_tensor(getMaterialProperty<std::vector<ElasticityTensorR4> >("d_elasticity_tensor")),
       _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
       _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor > >("d_eigenstrains_MP")),
       _n_OP_vars(getParam<int>("n_OP_vars")),
-      _OP_number(getParam<int>("OP_number"))
+      _OP_number(getParam<int>("OP_number")),
+      _scaling_factor(getParam<Real>("scaling_factor"))
 {
   // Create a vector of the coupled variables and set = 0 the one that the kernel
   // is operating on
@@ -50,19 +51,35 @@ ACTransformElasticDF::ACTransformElasticDF(const std::string & name, InputParame
   for(unsigned int i=0; i< _n_OP_vars; i++)
   {
     if(i == _OP_number-1)
-    {
       _coupled_vars[i] = NULL;
-    }
     else
-    {
       _coupled_vars[i] = &coupledValue("OP_var_names", i);
-    }
   }
 }
 
 Real
 ACTransformElasticDF::computeDFDOP(PFFunctionType type)
 {
+  RankTwoTensor a = _elasticity_tensor[_qp]*(_d_eigenstrains_rotated_MP[_qp])[_OP_number-1]*(-1);
+  RankTwoTensor b = _elasticity_tensor[_qp]*(_elastic_strain[_qp]);
+
+  Real first = 0.5*a.doubleContraction(_elastic_strain[_qp]);
+  Real second = 0.5*b.doubleContraction( (_d_eigenstrains_rotated_MP[_qp])[_OP_number-1]*(-1) );
+
+  switch(type)
+  {
+  case Residual:
+    return _scaling_factor*(first + second);
+
+  case Jacobian:
+    return 0;
+  }
+
+  mooseError("invalid type passed in");
+}
+
+/*
+
 // Follow mostly what is in ACGrGrElasticDF:
 
   Real first_term(0.0), second_term(0.0);
@@ -77,10 +94,10 @@ ACTransformElasticDF::computeDFDOP(PFFunctionType type)
     // second term contains the e_ij derivative = e_kl derivative
     second_term = calculateSecondTerm();
 
-   return first_term + 2.0*second_term;
+    return _scaling_factor*( first_term + 2.0*second_term);
 
   case Jacobian:
-    return 0.0;
+    return _scaling_factor*( 0.0 );
   }
   mooseError("Invalid type passed in");
 }
@@ -113,4 +130,5 @@ ACTransformElasticDF::calculateSecondJacobianTerm()
 {
   return 0.0;
 }
+  */
 
