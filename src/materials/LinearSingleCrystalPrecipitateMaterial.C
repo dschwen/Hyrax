@@ -106,10 +106,12 @@ LinearSingleCrystalPrecipitateMaterial::computeProperties()
 void
 LinearSingleCrystalPrecipitateMaterial::computeQpElasticityTensor()
 {
-  _elasticity_tensor[_qp] = _Cijkl/_scaling_factor;
-  _Jacobian_mult[_qp] = _Cijkl/_scaling_factor;
-  _Cijkl_MP[_qp] = _Cijkl/_scaling_factor;
-  _Cijkl_precipitates_MP[_qp] = _Cijkl/_scaling_factor;
+  Real inverse = 1/_scaling_factor;
+
+  _elasticity_tensor[_qp] = _Cijkl/inverse;
+  _Jacobian_mult[_qp] = _Cijkl/inverse;       ;
+  _Cijkl_MP[_qp] = _Cijkl/inverse;
+  _Cijkl_precipitates_MP[_qp] = _Cijkl/inverse;
 }
 
 void

@@ -81,6 +81,9 @@
 #include "OneSeed.h"
 #include "NucleiInformation.h"
 
+//TimeSteppers
+#include "InitialSolutionAdaptiveDT.h"
+
 //Actions
 #include "OPVariantKernelAction.h"
 #include "NucleationAuxAction.h"
@@ -192,6 +195,9 @@ HyraxApp::registerObjects(Factory & factory)
   registerPostprocessor(NucleationPostprocessor);
   registerPostprocessor(OneSeed);
   registerPostprocessor(NucleiInformation);
+
+  //TimeSteppers
+  registerTimeStepper(InitialSolutionAdaptiveDT);
 
   // UserObjects
   registerUserObject(NucleationLocationUserObject);
