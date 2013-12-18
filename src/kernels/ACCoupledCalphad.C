@@ -118,19 +118,20 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
 Real
 ACCoupledCalphad::computeQpOffDiagJacobian(unsigned int jvar)
 {
-/*  for (unsigned int i=0; i< _n_OP_vars; i++)
-  {
+  /* for (unsigned int i=0; i< _n_OP_vars; i++)
+    {
     if (i != _OP_number)
     {
       if (jvar == _n_var[i])
       {
-        Real val = (*_coupled_OP_vars[i])[_qp];
-        Real s = (*_coupled_OP_vars[_n_OP_vars - (i+_OP_number)%_n_OP_vars -1])[_qp];
+        //Real val = (*_coupled_OP_vars[i])[_qp];
+        //Real s = (*_coupled_OP_vars[_n_OP_vars - (i+_OP_number)%_n_OP_vars -1])[_qp];
 
-        Real ans = 2*val*val*(2*_u[_qp] + 2*val*val*_u[_qp] + 4*_u[_qp]*_u[_qp]*_u[_qp] + 2*_u[_qp]*s*s );
-        ans /= _Omega[_qp];
-        ans *= _test[_i][_qp]*_phi[_j][_qp];
-        return ans;
+        //Real ans = 2*val*val*(2*_u[_qp] + 2*val*val*_u[_qp] + 4*_u[_qp]*_u[_qp]*_u[_qp] + 2*_u[_qp]*s*s );
+        //ans /= _Omega[_qp];
+        //ans *= _test[_i][_qp]*_phi[_j][_qp];
+        //return ans;
+        return 0;
       }
 
     }
@@ -148,7 +149,8 @@ ACCoupledCalphad::computeQpOffDiagJacobian(unsigned int jvar)
     return 0;
 
   else
-    mooseError("Screwed up ACCoupledCalphad::computeQpOffDiagJacobian()");
+    return 0;
+    // mooseError("Screwed up ACCoupledCalphad::computeQpOffDiagJacobian()");
 }
 
 

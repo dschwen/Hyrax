@@ -83,6 +83,7 @@
 
 //TimeSteppers
 #include "InitialSolutionAdaptiveDT.h"
+#include "PhaseFractionDT.h"
 
 //Actions
 #include "OPVariantKernelAction.h"
@@ -198,6 +199,7 @@ HyraxApp::registerObjects(Factory & factory)
 
   //TimeSteppers
   registerTimeStepper(InitialSolutionAdaptiveDT);
+  registerTimeStepper(PhaseFractionDT);
 
   // UserObjects
   registerUserObject(NucleationLocationUserObject);
