@@ -3,13 +3,13 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 25 #100
-  ny = 25 #100
+  nx = 50 100
+  ny = 50 #100
   nz = 0 #100
   xmin = 0 #25
-  xmax = 12.5 #75
+  xmax = 25   #75
   ymin = 0 #25
-  ymax = 12.5 #75
+  ymax = 25  #75
   zmin = 0
   zmax = 0
   elem_type = QUAD4
@@ -19,14 +19,12 @@
 
 [Variables]
   [./concentration]
-   # order = SECOND
     order = FIRST
     family = LAGRANGE
   [../]
 
   [./mu]
     order = FIRST
-    #order = SECOND
     family = LAGRANGE
   [../]
 
@@ -149,23 +147,23 @@
       variable = concentration
       #min = 0.01
       #max = 0.02
-      int_width = 1
+      int_width = 3
       invalue = 0.6
       outvalue = 0.1
-      radius = 2
-      x1 = 6.25
-      y1 = 6.25
+      radius = 4
+      x1 = 12.5
+      y1 = 12.5
   [../]
 
   [./PSSCIC_n]
       type = SmoothCircleIC
       variable = n
-      int_width = 1
+      int_width = 3
       invalue = 1
       outvalue = 0
-      radius = 2
-      x1 = 6.25
-      y1 = 6.25
+      radius = 4
+      x1 = 12.5
+      y1 = 12.5
       #type = RandomIC
       #min = 0.99
       #max = 1
@@ -180,14 +178,6 @@
 
 [Preconditioning]
  active = 'SMP'
-#  [./PBP]
-#   type = PBP
-#   solve_order = 'w c'
-#   preconditioner = 'AMG ASM'
-#   off_diag_row = 'c '
-#   off_diag_column = 'w '
-#  [../]
-
   [./SMP]
    type = SMP
    off_diag_row = 'concentration concentration concentration mu mu mu n n n temperature temperature temperature'
@@ -265,7 +255,7 @@
     OP_number = 1
     OP_var_names = 'n'
     n_OP_vars = 1
-    scaling_factor = 2.49410145E-9
+    #scaling_factor = 2.49410145E-9
     #c = concentration
     #w = mu
     #T = temperature
@@ -378,13 +368,14 @@
     disp_x = disp_x
     disp_y = disp_y
     #reading C_11  C_12  C_13  C_22  C_23  C_33  C_44  C_55  C_66
-    C_ijkl = '155.4E5 68.03E5 64.6E5 155.4E5  64.6E5 172.51E5 36.31E5 36.31E5 44.09E5'
-    C_precipitate ='155.4E5 68.03E5 64.6E5 155.4E5 64.6E5 172.51E5 36.31E5 36.31E5 44.09E5'
+    C_ijkl = '155.4E9 68.03E9 64.6E9 155.4E9  64.6E9 172.51E9 36.31E9 36.31E9 44.09E9'
+    C_precipitate ='155.4E9 68.03E9 64.6E9 155.4E9 64.6E9 172.51E9 36.31E9 36.31E9 44.09E9'
     #reading        S_11   S_22  S_33 S_23 S_13 S_12
     e_precipitate = '0.00551  0.0564  0.0570  0.0  0.0  0.0'
     n_variants = 1
     variable_names = 'n'
     all_21 = false
+    scaling_factor = 2.49410145E-9
   [../]
 []
 
@@ -393,14 +384,14 @@
     type = DirichletBC
     variable = disp_x
     value = 0.0
-    boundary = '1 3'
+    boundary = '0 1 2 3'
   [../]
 
  [./Dirichlet_dispy]
     type = DirichletBC
     variable = disp_y
     value = 0.0
-    boundary = '1 3'
+    boundary = '0 1 2 3'
   [../]
 []
 
@@ -452,7 +443,7 @@
   [./TimeStepper]
      type = SolutionTimeAdaptiveDT
     #ype = ConstantDT
-    dt = 1E-4
+    dt = 1E-3
     percent_change = 0.1
   [../]
 
