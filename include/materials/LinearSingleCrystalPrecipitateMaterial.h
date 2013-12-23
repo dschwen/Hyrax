@@ -69,7 +69,7 @@ private:
   // Energy scaling factor for nondimensionalization of Cijkl
   Real _scaling_factor;
 
-  // Individual material information
+  // Individual material information.  Don't touch these once they're initialized!
   ElasticityTensorR4 _Cijkl_precipitate;
   RankTwoTensor _eigenstrain;
 
@@ -95,6 +95,9 @@ private:
 
   // Vector of references to the coupled order parameters
   std::vector<VariableValue *> _OP;
+
+  std::vector<Real> _misfit_T_coeffs_vector;
+  RankTwoTensor _misfit_T_coeffs;
 };
 
 #endif //LINEARSINGLECRYSTALPRECIPITATEMATERIAL_H

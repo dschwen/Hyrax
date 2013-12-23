@@ -32,6 +32,8 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
 
   params.addParam<Real>("scaling_factor", 1, "free energy scaling factor for nondimensionalization");
 
+  params.addParam<std::vector<Real> >("misfit_temperature_coeffs", "misfit strain temperature coefficients, e11, e22, e33, e33, e23, e13, e12");
+
   return params;
 }
 
@@ -53,11 +55,19 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     _Cijkl_MP(declareProperty<ElasticityTensorR4>("Cijkl_MP")),
     _Cijkl_precipitates_MP(declareProperty<ElasticityTensorR4>("Cijkl_precipitates_MP")),
     _d_eigenstrains_MP(declareProperty<std::vector<RankTwoTensor> >("d_eigenstrains_MP")),
-    _precipitate_eigenstrain(declareProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain"))
+    _precipitate_eigenstrain(declareProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain")),
+    _misfit_T_coeffs_vector(getParam<std::vector<Real> >("misfit_temperature_coeffs"))
+
 {
   // check to make sure the input file is all set up right
   if(_n_variants != coupledComponents("variable_names"))
     mooseError("Please match the number of orientation variants with coupled order parameters (LSXPM).");
+
+  // make sure you don't do something stupid with the temperature coeffcients in the input file
+  if (_has_T && _misfit_T_coeffs_vector.size() != 6)
+      mooseError("please have 6 misfit temperature coefficients (LSXPM)");
+  else
+    _misfit_T_coeffs_vector.assign(6, 0);
 
   // size vectors appropriately
   _OP.resize(_n_variants);
@@ -67,23 +77,10 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   for(unsigned int i=0; i < _n_variants; i++)
     _OP[i] = &coupledValue("variable_names", i);
 
+  // fill in the original tensors.  Don't touch after this!
   _Cijkl_precipitate.fillFromInputVector(_Cijkl_precipitate_vector, _all_21);
   _eigenstrain.fillFromInputVector(_eigenstrain_vector);
-
-  // fill in the first variant without rotation
-  _eigenstrains_rotated[0] = _eigenstrain;
-
-  // rotate all the things, in radians
-  Real rotation_angle_base = 2.0*libMesh::pi/Real(_n_variants);
-  Real rotation_angle = rotation_angle_base;
-
-  for(unsigned int i=1; i<_n_variants; i++)
-  {
-    _eigenstrains_rotated[i] = _eigenstrain.rotateXyPlane(rotation_angle);
-
-    // increment the rotation angle for the next go-round
-    rotation_angle = rotation_angle + rotation_angle_base;
-  }
+  _misfit_T_coeffs.fillFromInputVector(_misfit_T_coeffs_vector);
 }
 
 void
@@ -109,7 +106,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpElasticityTensor()
   Real inverse = 1/_scaling_factor;
 
   _elasticity_tensor[_qp] = _Cijkl/inverse;
-  _Jacobian_mult[_qp] = _Cijkl/inverse;       ;
+  _Jacobian_mult[_qp] = _Cijkl/inverse;
   _Cijkl_MP[_qp] = _Cijkl/inverse;
   _Cijkl_precipitates_MP[_qp] = _Cijkl/inverse;
 }
@@ -120,9 +117,36 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
   Real interpolation_value(0.0);
   Real d_interp_value(0.0);
 
+  RankTwoTensor current_misfit;
+
+  Real T;
+  if (_has_T)
+    T = (*_T)[_qp];
+  else
+    T = 0;
+
+  // calculate the current misfit strain for the first orientation
+  current_misfit = _eigenstrain + _misfit_T_coeffs*T;
+
+  // calculate the rotations and fill in
+  // fill in the first variant without rotation
+  _eigenstrains_rotated[0] = _eigenstrain;
+
+  // rotate all the things, in radians
+  Real rotation_angle_base = 2.0*libMesh::pi/Real(_n_variants);
+  Real rotation_angle = rotation_angle_base;
+
+  for(unsigned int i=1; i<_n_variants; i++)
+  {
+    _eigenstrains_rotated[i] = _eigenstrain.rotateXyPlane(rotation_angle);
+
+    // increment the rotation angle for the next go-round
+    rotation_angle = rotation_angle + rotation_angle_base;
+  }
+
+  //fill in the material properties
   for (unsigned int i=0; i<_n_variants; i++)
   {
-
     interpolation_value = (*_OP[i])[_qp]*(*_OP[i])[_qp];
     d_interp_value = 2.0*(*_OP[i])[_qp];
 
