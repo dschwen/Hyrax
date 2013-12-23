@@ -41,6 +41,9 @@ hyrax_deps := $(patsubst %.C, %.$(obj-suffix).d, $(hyrax_srcfiles)) \
               $(patsubst %.c, %.$(obj-suffix).d, $(hyrax_csrcfiles)) \
               $(patsubst %.C, %.$(obj-suffix).d, $(hyrax_main_src))
 
+# clang static analyzer files
+hyrax_analyzer := $(patsubst %.C, %.plist.$(obj-suffix), $(hyrax_srcfiles))
+
 # If building shared libs, make the plugins a dependency, otherwise don't.
 ifeq ($(libmesh_shared),yes)
   hyrax_plugin_deps := $(hyrax_plugins)
@@ -55,6 +58,9 @@ $(hyrax_LIB): $(hyrax_objects) $(hyrax_plugin_deps)
 	@$(libmesh_LIBTOOL) --tag=CXX $(LIBTOOLFLAGS) --mode=link --quiet \
 	  $(libmesh_CXX) $(libmesh_CXXFLAGS) -o $@ $(hyrax_objects) $(libmesh_LIBS) $(libmesh_LDFLAGS) $(EXTERNAL_FLAGS) -rpath $(HYRAX_DIR)
 	@$(libmesh_LIBTOOL) --mode=install --quiet install -c $(hyrax_LIB) $(HYRAX_DIR)
+
+# Clang static analyzer
+sa:: $(hyrax_analyzer)
 
 # include HYRAX dep files
 -include $(hyrax_deps)
