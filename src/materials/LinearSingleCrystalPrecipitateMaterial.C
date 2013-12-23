@@ -130,7 +130,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
 
   // calculate the rotations and fill in
   // fill in the first variant without rotation
-  _eigenstrains_rotated[0] = _eigenstrain;
+  _eigenstrains_rotated[0] = current_misfit;
 
   // rotate all the things, in radians
   Real rotation_angle_base = 2.0*libMesh::pi/Real(_n_variants);
@@ -138,7 +138,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
 
   for(unsigned int i=1; i<_n_variants; i++)
   {
-    _eigenstrains_rotated[i] = _eigenstrain.rotateXyPlane(rotation_angle);
+    _eigenstrains_rotated[i] = current_misfit.rotateXyPlane(rotation_angle);
 
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;
