@@ -122,7 +122,7 @@ PolySpecifiedSmoothCircleIC::shapeValue(const Point &p, const int j)
   {
       // no division by zero because we are in the finite interface width case
     Real int_pos = (rad - _radii[j] + _int_width/2.0)/_int_width;
-    value = _outvalue + (_invalue-_outvalue)*(1.0 - std::cos(-int_pos+libMesh::pi/2.0));
+    value = _outvalue + (_invalue - _outvalue)*(1 + std::cos(int_pos*libMesh::pi))/2;
 //    _seed_value*(1.0 - std::cos(-interface_position + libMesh::pi/2.0));
   }
     else
