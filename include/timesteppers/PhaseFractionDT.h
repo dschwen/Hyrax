@@ -38,8 +38,8 @@ protected:
 
   Real _growth_factor;
 
-  PostprocessorValue & _volfrac;
-  PostprocessorValue & _volfrac_old;
+  const PostprocessorValue & _volfrac;
+  const PostprocessorValue & _volfrac_old;
 
 private:
 };
