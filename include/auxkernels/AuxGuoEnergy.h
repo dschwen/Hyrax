@@ -4,60 +4,57 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-*  6 February 2013
+*  27 December 2013
 *
 *************************************************************************/
 
-#ifndef AUXCHEMELASTIC_H
-#define AUXCHEMELASTIC_H
+#ifndef AUXGUOENERGY_H
+#define AUXGUOENERGY_H
 
-#include "AuxKernel.h"
+#include "AuxChemElastic.h"
 #include "RankTwoTensor.h"
 #include "ElasticityTensorR4.h"
 
 //forward declaration
-class AuxChemElastic;
+class AuxGuoEnergy;
 
 template<>
-InputParameters validParams<AuxChemElastic>();
+InputParameters validParams<AuxGuoEnergy>();
 
-class AuxChemElastic : public AuxKernel
+class AuxGuoEnergy : public AuxChemElastic
 {
 public:
-  AuxChemElastic(const std::string & name, InputParameters parameters);
+  AuxGuoEnergy(const std::string & name, InputParameters parameters);
 
 protected:
-  virtual Real computeValue();
+  // virtual Real computeValue();
 
-  virtual Real computeEnergy(Real & conserved, Real & nonconserved, bool matrix);
-  virtual Real computeDifferential(Real & coupled_conserved,Real & nonconserved);
+  //virtual Real computeEnergy(Real & conserved, Real & nonconserved, bool matrix);
+  //virtual Real computeDifferential(Real & coupled_conserved,Real & nonconserved);
 
   virtual Real computeFchem(Real & conserved, Real & nonconserved);
-  virtual Real computeSelfElasticEnergy(bool matrix);
-  virtual Real computeInteractionElasticEnergy(bool matrix);
+  //virtual Real computeSelfElasticEnergy(bool matrix);
+  //virtual Real computeInteractionElasticEnergy(bool matrix);
 
   virtual Real computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserved);
   virtual Real computeDselfDcons();
   virtual Real computeDintDcons();
 
   virtual Real computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_nonconserved);
-  virtual Real computeDselfDnoncons();
-  virtual Real computeDintDnoncons();
+  //virtual Real computeDselfDnoncons();
+  //virtual Real computeDintDnoncons();
 
+  /*
   VariableValue & _coupled_cons;
   VariableValue & _coupled_noncons;
 
   Real _precip_conserved;
   Real _precip_nonconserved;
+  */
 
-  /*MaterialProperty<Real> & _a1;
-  MaterialProperty<Real> & _a2;
-  MaterialProperty<Real> & _a3;
-  MaterialProperty<Real> & _a4;
-  MaterialProperty<Real> & _c1;
-  MaterialProperty<Real> & _c2; */
 
   // unsigned int _n_variants;
+  /*
   unsigned int _noncons_var_num;
 
   MaterialProperty<std::vector<RankTwoTensor> > & _eigenstrains_rotated_MP;
@@ -69,8 +66,15 @@ protected:
   MaterialProperty<RankTwoTensor> & _local_strain;
 
   MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
+  */
 
 private:
+  MaterialProperty<Real> & _a1;
+  MaterialProperty<Real> & _a2;
+  MaterialProperty<Real> & _a3;
+  MaterialProperty<Real> & _a4;
+  MaterialProperty<Real> & _c1;
+  MaterialProperty<Real> & _c2;
 };
 
-#endif //AUXCHEMELASTIC_H
+#endif //AUXGUOENERGY_H

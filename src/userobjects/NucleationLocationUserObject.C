@@ -44,10 +44,16 @@ NucleationLocationUserObject::NucleationLocationUserObject(const std::string & n
     _num_orientations(getParam<int>("num_orientations")),
     _boundary_width(getParam<Real>("boundary_width")),
     _random_seed(getParam<int>("random_seed")),
-    _counter(0),
+    // _counter(0),
+    //make restartable
+    _counter(declareRestartableData<int>("counter", 0)),
     _phase_gen_index(std::numeric_limits<unsigned int>::max()),
-    _nuclei(0),
-    _old_nucleus_list_size(0),
+    // _nuclei(0),
+    //make restartable
+    _nuclei(declareRestartableData<std::vector<Nucleus> >("nuclei")),
+    //_old_nucleus_list_size(0),
+    //make restartable
+    _old_nucleus_list_size(declareRestartableData<unsigned int>("old_nucleus_list_size", 0)),
     _has_new_nucleus(false),
     _master_random(-1000),
     _slave_random(-100)

@@ -1,0 +1,19 @@
+[Tests]
+  [./AuxBulkEnergyCalphad_test]
+    type = 'CSVDiff'
+    input = 'AuxBulkEnergyCalphad.i'
+    csvdiff = 'AuxBulkEnergyCalphad.csv'
+  [../]
+
+  [./AuxGradientEnergy_test]
+    type = 'CSVDiff'
+    input = 'AuxGradientEnergy.i'
+    csvdiff = 'AuxGradientEnergy.csv'
+  [../]
+
+  [./AuxElasticEnergy_test]
+    type = 'CSVDiff'
+    input = 'AuxElasticEnergy.i'
+    csvdiff = 'AuxElasticEnergy.csv'
+  [../]
+[]

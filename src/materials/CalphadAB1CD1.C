@@ -1,171 +1,128 @@
-/*************************************************************************
-*
-*  Welcome to HYRAX!
-*  Andrea M. Jokisaari
-*  CASL/MOOSE
-*
-*  7 November 2013
-*
-*************************************************************************/
-
 #include "CalphadAB1CD1.h"
+//#include "CalphadParameters.h"
 
-template<>
-InputParameters validParams<CalphadAB1CD1>()
-{
-  InputParameters params = validParams<CalphadEnergy>();
+#include <cmath>
 
-  return params;
-}
-
-CalphadAB1CD1::CalphadAB1CD1(const std::string & name, InputParameters parameters) :
-    CalphadEnergy(name, parameters),
-    _G_AB1CD1(declareProperty<Real>("G_AB1CD1")),
-    _dG_dc(declareProperty<Real>("dGAB1CD1_dc")),
-    _d2G_dc2(declareProperty<Real>("d2GAB1CD1_dc2")),
-    _d3G_dc3(declareProperty<Real>("d3GAB1CD1_dc3"))
+CalphadAB1CD1::CalphadAB1CD1() :
+    CalphadFreeEnergy()
 {
 }
 
 void
-CalphadAB1CD1::computeQpProperties()
+CalphadAB1CD1::parameterize(Real & R, std::vector<Real> & low, std::vector<Real> & high, std::vector<Real> & mix)
 {
-  Real c;
+  _pure_endpoint_1_coeffs = low;
+  _pure_endpoint_2_coeffs = high;
+  _mixture_coeffs = mix;
 
-  if (_c[_qp]  < 0.001)
-    c = 0.001;
-  else if (_c[_qp] > 0.499)
-    c = 0.499;
-  else c = _c[_qp];
-
-  _G_AB1CD1[_qp] = computeGMix(c);
-  _dG_dc[_qp] = computeDGMixDc(c);
-  _d2G_dc2[_qp] = computeD2GMixDc2();
-  _d3G_dc3[_qp] = computeD3GMixDc3();
-
+  _R = R;
 }
 
 Real
-CalphadAB1CD1::calculateReference(Real c)
+CalphadAB1CD1::calculateReference(const Real & c, const Real & T) const
 {
-  Real first_energy = calculateFirstLatticeGminusHser();
-  Real second_energy = calculateSecondLatticeGminusHser();
+  Real first_energy = calculateFirstLatticeGminusHser(c, T);
+  Real second_energy = calculateSecondLatticeGminusHser(c, T);
 
   return  (1 - 2*c)*first_energy + c*second_energy;
 }
 
-
 Real
-CalphadAB1CD1::calculateIdeal(Real c)
+CalphadAB1CD1::calculateIdeal(const Real & c, const Real & T) const
 {
-  return _R*_T[_qp]*( c*std::log(c/(1-c)) + (1-2*c)*std::log((1-2*c)/(1-c)) );
+  return _R*T*( c*std::log(c/(1-c)) + (1-2*c)*std::log((1-2*c)/(1-c)) );
 }
 
 Real
-CalphadAB1CD1::calculateExcess(Real c)
+CalphadAB1CD1::calculateExcess(const Real & c, const Real & T) const
 {
   return 0;
 }
 
 Real
-CalphadAB1CD1::calculateSecondLatticeGminusHser()
+CalphadAB1CD1::calculateSecondLatticeGminusHser(const Real & c, const Real & T) const
 {
-  Real first_term = _mixture_coeffs[0] + _mixture_coeffs[1]*_T[_qp];
+  Real first_term = _mixture_coeffs[0] + _mixture_coeffs[1]*T;
 
-  Real second_term = _pure_endpoint_low_coeffs[0]
-    + _pure_endpoint_low_coeffs[1]*_T[_qp]
-    + _pure_endpoint_low_coeffs[2]*_T[_qp]*std::log(_T[_qp])
-    + _pure_endpoint_low_coeffs[3]*_T[_qp]*_T[_qp]
-    + _pure_endpoint_low_coeffs[4]/_T[_qp];
+  Real second_term = _pure_endpoint_1_coeffs[0]
+    + _pure_endpoint_1_coeffs[1]*T
+    + _pure_endpoint_1_coeffs[2]*T*std::log(T)
+    + _pure_endpoint_1_coeffs[3]*T*T
+    + _pure_endpoint_1_coeffs[4]/T;
 
-  Real third_term = 0.5*(_pure_endpoint_high_coeffs[0]
-                           + _pure_endpoint_high_coeffs[1]*_T[_qp]
-                           + _pure_endpoint_high_coeffs[2]*_T[_qp]*std::log(_T[_qp])
-                           + _pure_endpoint_high_coeffs[3]*_T[_qp]*_T[_qp]
-                           + _pure_endpoint_high_coeffs[4]/_T[_qp] );
+  Real third_term = 0.5*(_pure_endpoint_2_coeffs[0]
+                           + _pure_endpoint_2_coeffs[1]*T
+                           + _pure_endpoint_2_coeffs[2]*T*std::log(T)
+                           + _pure_endpoint_2_coeffs[3]*T*T
+                           + _pure_endpoint_2_coeffs[4]/T );
 
   return first_term + second_term + third_term;
 }
 
 Real
-CalphadAB1CD1::computeGMix(Real c)
+CalphadAB1CD1::computeGMix(const Real & c, const Real & T) const
 {
   Real c1;
   //make this piecewise in concentration space
- if(_c[_qp] < 0.001)
+  if( c < 0.001)
   {
     c1 = 0.001;
 
-    return CalphadEnergy::computeGMix(c1) + computeDGMixDc(c1)*(_c[_qp] - c1);
+    return CalphadFreeEnergy::computeGMix(c1, T) + computeDGMixDc(c1, T)*(c - c1);
   }
-
-  else if (_c[_qp] > 0.499)
+  else if (c > 0.499)
   {
     c1 = 0.499;
 
-    return CalphadEnergy::computeGMix(c1) + computeDGMixDc(c1)*(_c[_qp] - c1);
+    return CalphadFreeEnergy::computeGMix(c1, T) + computeDGMixDc(c1, T)*(c - c1);
   }
-
   else
-    return CalphadEnergy::computeGMix(_c[_qp]);
+    return CalphadFreeEnergy::computeGMix(c, T);
 }
 
 Real
-CalphadAB1CD1::computeDGMixDc(Real c)
+CalphadAB1CD1::computeDGMixDc(const Real & c, const Real & T) const
 {
   Real ref;
   Real ideal;
+  Real c1;
 
-  ref = -2*calculateFirstLatticeGminusHser() + calculateSecondLatticeGminusHser();
-  ideal = _R*_T[_qp]*( std::log(c/(1-c)) - 2*std::log((1-2*c)/(1-c)) );
+   if( c < 0.001)
+     c1 = 0.001;
 
-  return ref + ideal;
+   else if (c > 0.499)
+     c1 = 0.499;
+
+   else
+     c1 = c;
+
+   ref = -2*calculateFirstLatticeGminusHser(c1, T) + calculateSecondLatticeGminusHser(c1, T);
+
+    ideal = _R*T*( std::log(c1/(1-c1)) - 2*std::log((1-2*c1)/(1-c1)) );
+
+    return ref + ideal;
+
 }
 
 Real
-CalphadAB1CD1::computeD2GMixDc2()
+CalphadAB1CD1::computeD2GMixDc2(const Real & c, const Real & T) const
 {
   Real ref;
   Real ideal;
 
   //make this piecewise in concentration space
-  if( _c[_qp] < 0.001)
+  if( c < 0.001)
     return 0;
 
-  else if (_c[_qp] > 0.499)
+  else if (c > 0.499)
     return 0;
 
   else
   {
     ref = 0;
 
-    ideal = _R*_T[_qp]*( 1/( _c[_qp]*(2*_c[_qp]*_c[_qp] - 3*_c[_qp] + 1)) );
+    ideal = _R*T*( 1/( c*(2*c*c - 3*c + 1)) );
 
     return ref + ideal;
   }
 }
-
-Real
-CalphadAB1CD1::computeD3GMixDc3()
-{
-  Real ref;
-  Real ideal;
-
-  //make this piecewise in concentration space
-  if( _c[_qp] < 0.001)
-    return 0;
-
-  else if (_c[_qp] > 0.499)
-    return 0;
-
-  else
-  {
-    ref = 0;
-
-    ideal = -1*_R*_T[_qp]*( (6*_c[_qp]*_c[_qp] -6*_c[_qp] + 1)
-                            / std::pow( _c[_qp]*(2*_c[_qp]*_c[_qp] - 3*_c[_qp] + 1), 2) );
-
-    return ref + ideal;
-  }
-}
-

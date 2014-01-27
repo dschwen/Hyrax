@@ -160,7 +160,9 @@
   nucleation_probability_name_base = NucleationProbability_
   deltaGstar_name_base = NucleationGStar_
 
-  #for AuxChemElastic
+  ###for AuxChemElastic
+  #for AuxGuoEnergy
+  bulk_energy_name = AuxGuoEnergy
   coupled_conserved_var = concentration
   precip_conserved = 0.6
   precip_nonconserved = 1.6

@@ -50,9 +50,13 @@
 #include "AuxRateSimple.h"
 #include "AuxChem.h"
 #include "AuxTemperature.h"
-
+#include "AuxGuoEnergy.h"
+#include "AuxCalphadEnergy.h"
 //#include "AuxTestFlip.h"
 #include "ReporterAux.h"
+#include "AuxBulkEnergyCalphad.h"
+#include "AuxGradientEnergy.h"
+#include "AuxElasticEnergy.h"
 
 //Dirac Kernels
 
@@ -64,9 +68,9 @@
 #include "LinearSingleCrystalPrecipitateMaterial.h"
 //#include "FerroelectricBulk.h"
 #include "ZrHCalphad.h"
-#include "CalphadEnergy.h"
-#include "CalphadAB1CD1.h"
-#include "CalphadAB1CD2.h"
+#include "CalphadEnergyMaterial.h"
+#include "CalphadAB1CD1Material.h"
+#include "CalphadAB1CD2Material.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -170,6 +174,11 @@ HyraxApp::registerObjects(Factory & factory)
   registerAux(AuxRateSimple);
   registerAux(AuxChem);
   registerAux(AuxTemperature);
+  registerAux(AuxGuoEnergy);
+  registerAux(AuxCalphadEnergy);
+  registerAux(AuxBulkEnergyCalphad);
+  registerAux(AuxGradientEnergy);
+  registerAux(AuxElasticEnergy);
 
   //Dirac Kernels
 
@@ -181,9 +190,9 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(LinearSingleCrystalPrecipitateMaterial);
   registerMaterial(ZrHCalphad);
   //registerMaterial(FerroelectricBulk);
-  registerMaterial(CalphadEnergy);
-  registerMaterial(CalphadAB1CD1);
-  registerMaterial(CalphadAB1CD2);
+  registerMaterial(CalphadEnergyMaterial);
+  registerMaterial(CalphadAB1CD1Material);
+  registerMaterial(CalphadAB1CD2Material);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);

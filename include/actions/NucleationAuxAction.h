@@ -40,7 +40,9 @@ private:
   std::string _deltaGstar_name_base;
 
   //for AuxChem or AuxChemElastic
-  bool _use_auxchem;
+  // bool _use_auxchem;
+  std::string _bulk_energy_name;
+
   std::string _coupled_conserved_var;
   Real _precip_conserved;
   Real _precip_nonconserved;

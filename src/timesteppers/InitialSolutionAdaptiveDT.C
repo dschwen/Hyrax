@@ -9,6 +9,7 @@
 *************************************************************************/
 
 #include "InitialSolutionAdaptiveDT.h"
+#include <iostream>
 
 template<>
 InputParameters validParams<InitialSolutionAdaptiveDT>()
@@ -26,26 +27,47 @@ InitialSolutionAdaptiveDT::InitialSolutionAdaptiveDT(const std::string & name, I
     SolutionTimeAdaptiveDT(name, parameters),
     _initial_dt(getParam<Real>("initial_dt")),
     _has_initial_dt(getParam<bool>("has_initial_dt")),
-    _n_initial_steps(getParam<unsigned int>("n_initial_steps"))
+    _n_initial_steps(getParam<unsigned int>("n_initial_steps")),
+    _total_t_step(declareRestartableData("total_t_step", -1))
 {
 }
-
 
 Real
 InitialSolutionAdaptiveDT::computeInitialDT()
 {
-  if(_has_initial_dt)
-    return _initial_dt;
+
+  std::cout<<"_total_t_step = "<<_total_t_step<<std::endl;
+  std::cout<<"_t_step = "<<_t_step<<std::endl;
+
+  _total_t_step += 1;
+  std::cout<<"_total_t_step = "<<_total_t_step<<std::endl;
+
+
+  if( _t_step == _total_t_step)
+  {
+    if(_has_initial_dt)
+      return _initial_dt;
+    else
+      return getParam<Real>("dt");
+
+ }
   else
-    return getParam<Real>("dt");
+    return SolutionTimeAdaptiveDT::computeDT();
 }
 
 
 Real
 InitialSolutionAdaptiveDT::computeDT()
 {
-  if (_t_step == _n_initial_steps + 1 && _has_initial_dt)
-    return getParam<Real>("dt");
-  else
-    return SolutionTimeAdaptiveDT::computeDT();
+  _total_t_step += 1;
+
+  std::cout<<"_total_t_step = "<<_total_t_step<<std::endl;
+  std::cout<<"_t_step = "<<_t_step<<std::endl;
+
+  //if (_t_step == _n_initial_steps + 1 && _has_initial_dt)
+  if (_total_t_step == _n_initial_steps + 1 && _has_initial_dt)
+      return getParam<Real>("dt");
+    else
+      return SolutionTimeAdaptiveDT::computeDT();
+
 }

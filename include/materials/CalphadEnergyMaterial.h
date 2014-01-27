@@ -8,27 +8,27 @@
 *
 *************************************************************************/
 
-#ifndef CALPHADENERGY_H
-#define CALPHADENERGY_H
+#ifndef CALPHADENERGYMATERIAL_H
+#define CALPHADENERGYMATERIAL_H
 
 #include "Material.h"
 
 //forward declaration
-class CalphadEnergy;
+class CalphadEnergyMaterial;
 
 template<>
-InputParameters validParams<CalphadEnergy>();
+InputParameters validParams<CalphadEnergyMaterial>();
 
-class CalphadEnergy : public Material
+class CalphadEnergyMaterial : public Material
 {
 public:
-  CalphadEnergy(const std::string & name, InputParameters parameters);
+  CalphadEnergyMaterial(const std::string & name, InputParameters parameters);
 
 protected:
 
   virtual void computeQpProperties();
 
-  virtual Real calculateReference(Real c);
+  /*virtual Real calculateReference(Real c);
   virtual Real calculateIdeal(Real c);
   virtual Real calculateExcess(Real c);
   virtual Real calculateFirstLatticeGminusHser();
@@ -37,7 +37,7 @@ protected:
   virtual Real computeGMix(Real c);
   virtual Real computeDGMixDc(Real c);
   virtual Real computeD2GMixDc2();
-  virtual Real computeD3GMixDc3();
+  virtual Real computeD3GMixDc3();*/
 
   //vectors to hold the coefficients of the 2 endpoints for mixing
   std::vector<Real> _pure_endpoint_low_coeffs;
@@ -58,6 +58,8 @@ private:
 
   // Inherited classes will put their energies as materials properties
   // here and declare with unique names
+  // Also need to add their particular energy object, for example:
+  // CalphadEnergy _energy;
 
 };
 

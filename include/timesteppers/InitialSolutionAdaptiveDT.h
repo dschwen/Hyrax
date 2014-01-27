@@ -31,6 +31,8 @@ protected:
   bool _has_initial_dt;
   unsigned int _n_initial_steps;
 
+  int & _total_t_step;
+
 private:
 
 };

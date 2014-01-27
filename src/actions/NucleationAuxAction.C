@@ -26,7 +26,8 @@ InputParameters validParams<NucleationAuxAction>()
   params.addRequiredParam<std::string>("deltaGstar_name_base", "name base for activation energy auxvar");
 
   //for bulk free energy - AuxChem or AuxChemElastic
-  params.addParam<bool>("use_auxchem", false, "false to use AuxChemElastic, true to use AuxChem");
+  //params.addParam<bool>("use_auxchem", false, "false to use AuxChemElastic, true to use AuxChem");
+  params.addRequiredParam<std::string>("bulk_energy_name", "name of which bulk energy auxkernel to use");
   params.addRequiredParam<std::string>("coupled_conserved_var", "coupled conserved field variable");
   params.addRequiredParam<Real>("precip_conserved", "value of the equilibrium 2nd phase conserved field variable");
   params.addRequiredParam<Real>("precip_nonconserved", "value of the equilibrium 2nd phase nonconserved field variable");
@@ -56,7 +57,8 @@ NucleationAuxAction::NucleationAuxAction(const std::string & name, InputParamete
     _nucleation_probability_name_base(getParam<std::string>("nucleation_probability_name_base")),
     _deltaGstar_name_base(getParam<std::string>("deltaGstar_name_base")),
 
-    _use_auxchem(getParam<bool>("use_auxchem")),
+    //_use_auxchem(getParam<bool>("use_auxchem")),
+    _bulk_energy_name(getParam<std::string>("bulk_energy_name")),
     _coupled_conserved_var(getParam<std::string>("coupled_conserved_var")),
     _precip_conserved(getParam<Real>("precip_conserved")),
     _precip_nonconserved(getParam<Real>("precip_nonconserved")),
@@ -124,18 +126,27 @@ NucleationAuxAction::act()
     action_params.set<int>("nonconserved_var_number") = i;
 
     //figure out if we need AuxChem or AuxChemElastic
-    if(_use_auxchem)
+    if(_bulk_energy_name == "AuxChem")
     {
       auxkernel_name = "AuxChem_";
       auxkernel_name.append(OP_vector[i-1]);
       _problem->addAuxKernel("AuxChem", auxkernel_name, action_params);
     }
-    else
+    else if(_bulk_energy_name == "AuxGuoEnergy")
     {
-      auxkernel_name = "AuxChemElastic_";
+      auxkernel_name = "AuxGuoEnergy_";
       auxkernel_name.append(OP_vector[i-1]);
-      _problem->addAuxKernel("AuxChemElastic", auxkernel_name, action_params);
+      _problem->addAuxKernel("AuxGuoEnergy", auxkernel_name, action_params);
     }
+    else if(_bulk_energy_name == "AuxCalphadEnergy")
+    {
+      auxkernel_name = "AuxCalphadEnergy_";
+      auxkernel_name.append(OP_vector[i-1]);
+      _problem->addAuxKernel("AuxCalphadEnergy", auxkernel_name, action_params);
+    }
+    else
+      mooseError("Please enter AuxKernel bulk energy name for NucleationAuxAction");
+
 
     //get the parameters for nucleation rate
     action_params = _factory.getValidParams("AuxNucleationRate");

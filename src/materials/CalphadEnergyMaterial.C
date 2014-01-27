@@ -8,10 +8,10 @@
 *
 *************************************************************************/
 
-#include "CalphadEnergy.h"
+#include "CalphadEnergyMaterial.h"
 
 template<>
-InputParameters validParams<CalphadEnergy>()
+InputParameters validParams<CalphadEnergyMaterial>()
 {
   InputParameters params = validParams<Material>();
 
@@ -31,7 +31,7 @@ InputParameters validParams<CalphadEnergy>()
   return params;
 }
 
-CalphadEnergy::CalphadEnergy(const std::string & name, InputParameters parameters)
+CalphadEnergyMaterial::CalphadEnergyMaterial(const std::string & name, InputParameters parameters)
     : Material(name, parameters),
       _pure_endpoint_low_coeffs(getParam<std::vector<Real> >("pure_endpoint_low_coeffs")),
       _pure_endpoint_high_coeffs(getParam<std::vector<Real> >("pure_endpoint_high_coeffs")),
@@ -52,11 +52,11 @@ CalphadEnergy::CalphadEnergy(const std::string & name, InputParameters parameter
 }
 
 void
-CalphadEnergy::computeQpProperties()
+CalphadEnergyMaterial::computeQpProperties()
 {
 }
 
-Real
+/*Real
 CalphadEnergy::calculateFirstLatticeGminusHser()
 {
   return _pure_endpoint_low_coeffs[0]
@@ -113,3 +113,4 @@ CalphadEnergy::computeD3GMixDc3()
 {
   return 0;
 }
+*/

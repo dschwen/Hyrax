@@ -132,7 +132,7 @@
 
 [AuxKernels]
   [./ChemElastic_n1]
-    type = AuxChemElastic
+    type = AuxGuoEnergy #AuxChemElastic
     variable = elemental_ChemElastic_n1
     coupled_conserved_var = concentration
     coupled_nonconserved_var = n1

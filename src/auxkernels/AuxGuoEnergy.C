@@ -4,38 +4,43 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-*  6 February 2013
+*  27 December 2013
 *
 *************************************************************************/
 
-#include "AuxChemElastic.h"
+#include "AuxGuoEnergy.h"
 
 template<>
-InputParameters validParams<AuxChemElastic>()
+InputParameters validParams<AuxGuoEnergy>()
 {
-  InputParameters params = validParams<AuxKernel>();
+  InputParameters params = validParams<AuxChemElastic>();
 
+  /*
   params.addRequiredCoupledVar("coupled_conserved_var", "coupled conserved field variable");
   params.addRequiredCoupledVar("coupled_nonconserved_var", "coupled non-conserved field variable");
   params.addRequiredParam<Real>("precip_conserved", "value of the equilibrium 2nd phase conserved field variable");
   params.addRequiredParam<Real>("precip_nonconserved", "value of the equilibrium 2nd phase nonconserved field variable");
   params.addRequiredParam<int>("nonconserved_var_number", "the number (starting from 1) of the nonconserved variable");
+  */
 
   return params;
 }
 
-AuxChemElastic::AuxChemElastic(const std::string & name, InputParameters parameters) :
-    AuxKernel(name, parameters),
+AuxGuoEnergy::AuxGuoEnergy(const std::string & name, InputParameters parameters) :
+    AuxChemElastic(name, parameters),
+/*
     _coupled_cons(coupledValue("coupled_conserved_var")),
     _coupled_noncons(coupledValue("coupled_nonconserved_var")),
     _precip_conserved(getParam<Real>("precip_conserved")),
     _precip_nonconserved(getParam<Real>("precip_nonconserved")),
-/*    _a1(getMaterialProperty<Real>("A1")),
+*/
+    _a1(getMaterialProperty<Real>("A1")),
     _a2(getMaterialProperty<Real>("A2")),
     _a3(getMaterialProperty<Real>("A3")),
     _a4(getMaterialProperty<Real>("A4")),
     _c1(getMaterialProperty<Real>("C1")),
-    _c2(getMaterialProperty<Real>("C2")), */
+    _c2(getMaterialProperty<Real>("C2")) //,
+/*
     _noncons_var_num(getParam<int>("nonconserved_var_number")),
     _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
     _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
@@ -43,11 +48,13 @@ AuxChemElastic::AuxChemElastic(const std::string & name, InputParameters paramet
     _precipitate_elasticity(getMaterialProperty<ElasticityTensorR4>("Cijkl_precipitates_MP")),
     _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
     _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("d_eigenstrains_MP"))
+*/
 {
 }
 
+/*
 Real
-AuxChemElastic::computeValue()
+AuxGuoEnergy::computeValue()
 {
   Real matrix_energy(0.0);
   Real precip_energy(0.0);
@@ -60,9 +67,11 @@ AuxChemElastic::computeValue()
   // return (precip_energy - matrix_energy + differential);
   return (matrix_energy - precip_energy + differential);
 }
+*/
 
+/*
 Real
-AuxChemElastic::computeEnergy(Real & conserved, Real & nonconserved, bool matrix)
+AuxGuoEnergy::computeEnergy(Real & conserved, Real & nonconserved, bool matrix)
 {
   Real fchem(0.0);
   Real self_elastic_energy(0.0);
@@ -74,9 +83,11 @@ AuxChemElastic::computeEnergy(Real & conserved, Real & nonconserved, bool matrix
 
   return fchem + self_elastic_energy - interaction_elastic_energy;
 }
+*/
 
+/*
 Real
-AuxChemElastic::computeDifferential(Real & coupled_conserved, Real & coupled_nonconserved)
+AuxGuoEnergy::computeDifferential(Real & coupled_conserved, Real & coupled_nonconserved)
 {
   // partial derivative of f_chem with respect to conserved variable
   Real dfchem_dcons(0.0);
@@ -102,22 +113,35 @@ AuxChemElastic::computeDifferential(Real & coupled_conserved, Real & coupled_non
   dself_dnoncons = computeDselfDnoncons();
   dint_dnoncons = computeDintDnoncons();
 
+  // first_term = (dfchem_dcons + dself_dcons + dint_dcons)*(coupled_conserved - _precip_conserved);
+  // second_term = (dfchem_dnoncons + dself_dnoncons + dint_dnoncons)*(coupled_nonconserved - _precip_nonconserved);
+
   first_term = (dfchem_dcons + dself_dcons + dint_dcons)*(_precip_conserved - coupled_conserved);
   second_term = (dfchem_dnoncons + dself_dnoncons + dint_dnoncons)*(_precip_nonconserved - coupled_nonconserved);
 
   return first_term + second_term;
 }
-
+*/
 
 Real
-AuxChemElastic::computeFchem(Real & conserved, Real & nonconserved)
+AuxGuoEnergy::computeFchem(Real & conserved, Real & nonconserved)
 {
-  return 0;
+  Real first_term;
+  Real second_term;
+  Real third_term;
+  Real fourth_term;
+
+  first_term = _a1[_qp]*0.5*(conserved - _c1[_qp])*(conserved - _c1[_qp]);
+  second_term = _a2[_qp]*0.5*(conserved - _c2[_qp])*(nonconserved)*(nonconserved);
+  third_term = _a3[_qp]*0.25*(std::pow(nonconserved, 4));
+  fourth_term = _a4[_qp]*(std::pow(nonconserved, 6))/6;
+
+  return first_term + second_term - third_term + fourth_term;
 }
 
-
+/*
 Real
-AuxChemElastic::computeSelfElasticEnergy(bool matrix)
+AuxGuoEnergy::computeSelfElasticEnergy(bool matrix)
 {
   RankTwoTensor eigenstrain;
   RankTwoTensor c;
@@ -138,9 +162,11 @@ AuxChemElastic::computeSelfElasticEnergy(bool matrix)
 
   return 0.5*c.doubleContraction(eigenstrain);
 }
+*/
 
+/*
 Real
-AuxChemElastic::computeInteractionElasticEnergy(bool matrix)
+AuxGuoEnergy::computeInteractionElasticEnergy(bool matrix)
 {
   RankTwoTensor eigenstrain;
   RankTwoTensor c;
@@ -161,34 +187,52 @@ AuxChemElastic::computeInteractionElasticEnergy(bool matrix)
 
   return c.doubleContraction(_local_strain[_qp]);
 }
-
+*/
 
 Real
-AuxChemElastic::computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserved)
+AuxGuoEnergy::computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserved)
 {
-  return 0;
+  Real first_term;
+  Real second_term;
+
+ first_term = _a1[_qp]*(coupled_conserved - _c1[_qp]);
+  second_term =  0.5*_a2[_qp]*coupled_nonconserved*coupled_nonconserved;
+
+  return first_term + second_term;
 }
 
 Real
-AuxChemElastic::computeDselfDcons()
+AuxGuoEnergy::computeDselfDcons()
 {
+  //this is legitimately 0 for the current formulation
+
   return 0.0;
 }
 
 Real
-AuxChemElastic::computeDintDcons()
+AuxGuoEnergy::computeDintDcons()
 {
+// this is legitimately 0 for the current formulation
   return 0.0;
 }
 
 Real
-AuxChemElastic::computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_nonconserved)
+AuxGuoEnergy::computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_nonconserved)
 {
-  return 0;
+  Real first_term;
+  Real second_term;
+  Real third_term;
+
+  first_term = _a2[_qp]*coupled_nonconserved*(coupled_conserved - _c2[_qp]);
+  second_term = _a3[_qp]*std::pow(coupled_nonconserved, 3);
+  third_term = _a4[_qp]*std::pow(coupled_nonconserved, 5);
+
+  return first_term - second_term + third_term;
 }
 
+/*
 Real
-AuxChemElastic::computeDselfDnoncons()
+AuxGuoEnergy::computeDselfDnoncons()
 {
 
   RankTwoTensor eigenstrain;
@@ -204,9 +248,11 @@ AuxChemElastic::computeDselfDnoncons()
 
   return 2.0*c.doubleContraction(d_eigenstrain);
 }
+*/
 
+ /*
 Real
-AuxChemElastic::computeDintDnoncons()
+AuxGuoEnergy::computeDintDnoncons()
 {
   RankTwoTensor d_eigenstrain;
   RankTwoTensor c;
@@ -219,4 +265,4 @@ AuxChemElastic::computeDintDnoncons()
 
   return -2.0*c.doubleContraction(_local_strain[_qp]);
 }
-
+*/

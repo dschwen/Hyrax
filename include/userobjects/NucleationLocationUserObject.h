@@ -58,13 +58,17 @@ private:
   int _num_orientations;
   Real _boundary_width;
   int _random_seed;
-  int _counter;
+  //int _counter;
+  //make restartable
+  int & _counter;
 
    /// The index of the phase orientation generator (we will use a high index that isn't used by the node generators)
   const unsigned int _phase_gen_index;
 
   //global data
-  std::vector<Nucleus> _nuclei;
+  //std::vector<Nucleus> _nuclei;
+  //make restartable
+  std::vector<Nucleus> & _nuclei;
 
   // The Moose stateful random number generator
   MooseRandom _mrand;
@@ -73,7 +77,10 @@ private:
    std::vector<Real> _packed_data;
 
   //check to see if new nucleus has been found
-  unsigned int _old_nucleus_list_size;
+  //unsigned int _old_nucleus_list_size;
+  //make restartable
+  unsigned int & _old_nucleus_list_size;
+
   bool _has_new_nucleus;
 
   //for whipping the damned probability algorithm into shape
