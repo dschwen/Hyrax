@@ -43,6 +43,7 @@
     order = CONSTANT
     family = MONOMIAL
   [../]
+[]
 
 [Kernels]
   [./diffusion]

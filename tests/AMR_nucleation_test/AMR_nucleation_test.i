@@ -111,12 +111,12 @@
   [./NucleationRate]
     type = AuxNucleationRate
     variable = elemental_NucleationRate
-    OP_var_names = 'concentration'
-    n_OP_vars = 1
+   # OP_var_names = 'concentration'
+   # n_OP_vars = 1
     coupled_aux_var = elemental_Supersaturation
     Beta_star = 0.01
     linear_density = 80
-    Z = 0.01
+    Z = 0.001
     #Kn2 = 0.3
 
     gamma = 0.18
@@ -176,6 +176,7 @@
     n_coupled_aux = 1
     dwell_time = 0.1
     num_orientations = 1
+    execute_on = timestep
   [../]
 
   [./NISM]
@@ -193,9 +194,9 @@
 [Executioner]
   type = MeshSolutionModify
   scheme = 'crank-nicolson'
-  num_steps = 2
+  num_steps = 3
   [./TimeStepper]
-    type = SolutionTimeAdaptiveDT
+    type = ConstantDT #SolutionTimeAdaptiveDT
     dt = 0.01
   [../]
   dtmin = 0.0001
@@ -229,4 +230,6 @@
   interval = 1
   exodus = true
   perf_log = true
+
+  num_checkpoint_files = 1
 [../]

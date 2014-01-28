@@ -396,8 +396,7 @@
 
   start_time = 0.0
   num_steps = 3
-  dtmax = 1E-1
-  dtmin = 1E-5
+
 []
 
 [Output]

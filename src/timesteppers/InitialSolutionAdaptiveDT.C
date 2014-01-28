@@ -36,12 +36,8 @@ Real
 InitialSolutionAdaptiveDT::computeInitialDT()
 {
 
-  std::cout<<"_total_t_step = "<<_total_t_step<<std::endl;
-  std::cout<<"_t_step = "<<_t_step<<std::endl;
-
-  _total_t_step += 1;
-  std::cout<<"_total_t_step = "<<_total_t_step<<std::endl;
-
+  if(_total_t_step < 1)
+    _total_t_step += 1;
 
   if( _t_step == _total_t_step)
   {
@@ -61,10 +57,6 @@ InitialSolutionAdaptiveDT::computeDT()
 {
   _total_t_step += 1;
 
-  std::cout<<"_total_t_step = "<<_total_t_step<<std::endl;
-  std::cout<<"_t_step = "<<_t_step<<std::endl;
-
-  //if (_t_step == _n_initial_steps + 1 && _has_initial_dt)
   if (_total_t_step == _n_initial_steps + 1 && _has_initial_dt)
       return getParam<Real>("dt");
     else

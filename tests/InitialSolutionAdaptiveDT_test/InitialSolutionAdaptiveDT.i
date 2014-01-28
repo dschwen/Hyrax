@@ -1,8 +1,8 @@
-# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system.  This test is 
+# This input file is designed to test the coupled Allen-Cahn, Cahn-Hilliard equation system.  This test is
 # for regression testing.
 
 [Mesh]
-  type = GeneratedMesh  
+  type = GeneratedMesh
   dim = 2
   nx = 25
   ny = 25
@@ -70,11 +70,13 @@
   start_time = 0.0
   num_steps = 5
 []
- 
+
 [Output]
   file_base = InitialSolutionAdaptiveDT
   output_initial = true
   interval = 1
   exodus = true
   perf_log = true
+
+  num_checkpoint_files = 1
 []

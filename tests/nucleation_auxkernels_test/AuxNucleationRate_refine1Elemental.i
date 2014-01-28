@@ -49,6 +49,7 @@
     order = CONSTANT
     family = MONOMIAL
   [../]
+[]
 
 [Kernels]
   [./time_deriv_diff]
@@ -94,8 +95,8 @@
     Z = 0.1
     Beta_star = 100
     linear_density = 5
-    n_OP_vars = 1
-    OP_var_names = 'n1'
+   # n_OP_vars = 1
+   #OP_var_names = 'n1'
     execute_on = timestep
   [../]
 []
@@ -112,13 +113,10 @@
 [Executioner]
   type = Transient
    dt = 0.001
-   num_steps = 2
+   num_steps = 4
 
   #Preconditioned JFNK (default)
   solve_type = 'PJFNK'
-
-
-  print_linear_residuals = true
 
 []
 
