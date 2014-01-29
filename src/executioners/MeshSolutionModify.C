@@ -79,7 +79,7 @@ MeshSolutionModify::endStep()
     // if _at_sync_point is true, force the output no matter what
     _problem.output(_at_sync_point);
     _problem.outputPostprocessors(_at_sync_point);
-    _problem.outputRestart();
+    _problem.outputRestart(_at_sync_point);
   }
 
   std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
