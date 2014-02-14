@@ -74,6 +74,7 @@
 #include "CalphadAB1CD1Material.h"
 #include "CalphadAB1CD2Material.h"
 #include "PrecipitateMatrixMisfitMaterial.h"
+#include "ZrHCalphadDiffusivity.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -199,6 +200,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(CalphadAB1CD1Material);
   registerMaterial(CalphadAB1CD2Material);
   registerMaterial(PrecipitateMatrixMisfitMaterial);
+  registerMaterial(ZrHCalphadDiffusivity);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
