@@ -32,7 +32,7 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>();
 class LinearSingleCrystalPrecipitateMaterial : public TensorMechanicsMaterial //LinearElasticMaterial
 {
 public:
-  LinearSingleCrystalPrecipitateMaterial(const std:: string & name, InputParameters parameters);
+  LinearSingleCrystalPrecipitateMaterial(const std::string & name, InputParameters parameters);
 
 protected:
   virtual void computeProperties();
@@ -61,7 +61,7 @@ protected:
 
   virtual void computeQpStress();
 
-private:
+
   // vectors to get the input values
   std::vector<Real> _Cijkl_precipitate_vector;
   std::vector<Real> _eigenstrain_vector;
@@ -98,6 +98,9 @@ private:
 
   std::vector<Real> _misfit_T_coeffs_vector;
   RankTwoTensor _misfit_T_coeffs;
+
+private:
+
 };
 
 #endif //LINEARSINGLECRYSTALPRECIPITATEMATERIAL_H

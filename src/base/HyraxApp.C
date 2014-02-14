@@ -40,6 +40,8 @@
 #include "CHCoupledSplit.h"
 #include "CHCoupledCalphadSplit.h"
 #include "SplitCoupledCHWRes.h"
+#include "CHPrecipMatrixElasticity.h"
+#include "ACPrecipMatrixElasticity.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -71,6 +73,7 @@
 #include "CalphadEnergyMaterial.h"
 #include "CalphadAB1CD1Material.h"
 #include "CalphadAB1CD2Material.h"
+#include "PrecipitateMatrixMisfitMaterial.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -163,6 +166,8 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(CHCoupledSplit);
   registerKernel(CHCoupledCalphadSplit);
   registerKernel(SplitCoupledCHWRes);
+  registerKernel(CHPrecipMatrixElasticity);
+  registerKernel(ACPrecipMatrixElasticity);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
@@ -193,6 +198,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(CalphadEnergyMaterial);
   registerMaterial(CalphadAB1CD1Material);
   registerMaterial(CalphadAB1CD2Material);
+  registerMaterial(PrecipitateMatrixMisfitMaterial);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);

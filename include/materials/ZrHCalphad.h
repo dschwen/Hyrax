@@ -30,15 +30,7 @@ protected:
 //  Real computeMobility();
 //  RealGradient computeGradMobility();
 
-private:
-
   //INPUT VARIABLES
-  //Diffusion coefficient information
-  //Real _H_Zr_D0;
-  //Real _H_ZrH2_D0;
-  //Real _H_Zr_Q0;
-  //Real _H_ZrH2_Q0;
-
   Real _mobility_CH;
   Real _mobility_AC;
 
@@ -70,6 +62,8 @@ private:
 
   //COUPLED VARIABLES
   VariableValue & _temperature;                 //coupled Temperature field
+
+private:
 
 };
 
