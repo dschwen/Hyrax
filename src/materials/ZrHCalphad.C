@@ -15,7 +15,7 @@ InputParameters validParams<ZrHCalphad>()
 {
   InputParameters params = validParams<Material>();
 
-  params.addRequiredParam<Real>("mobility_CH","mobility coefficient for Cahn-Hilliard equation (isotropic)");
+  params.addParam<Real>("mobility_CH", 1, "mobility coefficient for Cahn-Hilliard equation (isotropic)");
   params.addRequiredParam<Real>("mobility_AC", "mobility coefficient for Allen-Cahn equation (isotropic)");
   params.addRequiredParam<Real>("kappa_CH", "CH gradient energy coefficient (isotropic)");
   params.addRequiredParam<Real>("kappa_AC", "AC gradient energy coefficient (isotropic)");

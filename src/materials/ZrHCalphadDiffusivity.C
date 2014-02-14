@@ -25,6 +25,7 @@ InputParameters validParams<ZrHCalphadDiffusivity>()
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
   params.addRequiredCoupledVar("concentration", "coupled concentration variable");
   params.addRequiredCoupledVar("temperature", "coupled temperature variable");
+  params.addParam<Real>("CH_mobility_scaling", 1, "scaling factor to divide by to nondimensionalize mobility");
 
   return params;
 }
@@ -37,6 +38,7 @@ ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const std::string & name, InputPara
       _H_Zr_Q0(getParam<Real>("H_Zr_Q0")),
       _H_ZrH2_Q0(getParam<Real>("H_ZrH2_Q0")),
       _R(getParam<Real>("R")),
+      _mobility_CH_scaling(getParam<Real>("CH_mobility_scaling")),
       _d2Galpha_dc2(getMaterialProperty<Real>("d2GAB1CD1_dc2")),
       _d2Gdelta_dc2(getMaterialProperty<Real>("d2GAB1CD2_dc2")),
       _D_alpha(declareProperty<Real>("D_alpha")),
@@ -76,7 +78,9 @@ ZrHCalphadDiffusivity::computeQpProperties()
   if (curvature < 1E-10 && curvature > -1E-10)
     curvature = 1E-10;
 
-  _M[_qp] = _D_alpha[_qp]/curvature;
+  //nondimensionalize the mobility here
+  _M[_qp] = (_D_alpha[_qp]/curvature)/_mobility_CH_scaling;
+
   _grad_M[_qp] = 0.0;
 
   _L[_qp] = _mobility_AC;

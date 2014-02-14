@@ -36,6 +36,7 @@ private:
   Real _H_Zr_Q0;
   Real _H_ZrH2_Q0;
   Real _R;
+  Real _mobility_CH_scaling;
 
   MaterialProperty<Real> & _d2Galpha_dc2;
   MaterialProperty<Real> & _d2Gdelta_dc2;
