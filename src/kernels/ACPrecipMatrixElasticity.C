@@ -15,7 +15,7 @@ InputParameters validParams<ACPrecipMatrixElasticity>()
 {
   InputParameters params = validParams<ACBulk>();
   params.addRequiredParam<int>("OP_number","# of the order parameter for this kernel, starting from 1");
-  params.addParam<Real>("scaling_factor", 1, "elastic energy scaling factor for nondimensionalization");
+ params.addParam<Real>("scaling_factor", 1, "elastic energy scaling factor for nondimensionalization");
 
   return params;
 }
