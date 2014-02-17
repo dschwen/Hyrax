@@ -39,6 +39,7 @@ PrecipitateMatrixMisfitMaterial::PrecipitateMatrixMisfitMaterial(const std::stri
     _dn_elasticity_tensor(declareProperty<std::vector<ElasticityTensorR4> >("dn_elasticity_tensor")),
     _dn_misfit_strain(declareProperty<std::vector<RankTwoTensor> >("dn_misfit_strain")),
     _dc_misfit_strain(declareProperty<RankTwoTensor>("dc_misfit_strain")),
+    _dcdn_misfit_strain(declareProperty<std::vector<RankTwoTensor> >("dcdn_misfit_strain")),
     _solute(coupledValue("solute_name"))
 
     //_scaling_factor(getParam<Real>("scaling_factor")),
@@ -68,10 +69,14 @@ PrecipitateMatrixMisfitMaterial::computeProperties()
 {
   for (_qp = 0; _qp < _qrule->n_points(); ++_qp)
   {
+    _eigenstrains_MP[_qp].resize(_n_variants);
+    _d_eigenstrains_MP[_qp].resize(_n_variants);
+    _precipitate_eigenstrain[_qp].resize(_n_variants);
+
     _dn_eigenstrain_matrix_MP[_qp].resize(_n_variants);
     _dn_elasticity_tensor[_qp].resize(_n_variants);
     _dn_misfit_strain[_qp].resize(_n_variants);
-
+    _dcdn_misfit_strain[_qp].resize(_n_variants);
 
     computeQpElasticityTensor();
     computeQpEigenstrain();
@@ -163,6 +168,7 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
     OP_sum += (*_OP[i])[_qp]*(*_OP[i])[_qp];
     sum_precipitate_strains += (_eigenstrains_MP[_qp])[i];
     (_dn_misfit_strain[_qp])[i] = (_d_eigenstrains_MP[_qp])[i] - (_dn_eigenstrain_matrix_MP[_qp])[i];
+    (_dcdn_misfit_strain[_qp])[i] = _eigenstrain_matrix*2*(*_OP[i])[_qp];
   }
 
   _dc_misfit_strain[_qp] = _eigenstrain_matrix*(1 - OP_sum);

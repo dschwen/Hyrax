@@ -3,7 +3,7 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 50 100
+  nx = 50 #100
   ny = 50 #100
   nz = 0 #100
   xmin = 0 #25

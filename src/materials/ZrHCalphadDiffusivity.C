@@ -24,7 +24,6 @@ InputParameters validParams<ZrHCalphadDiffusivity>()
   params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
   params.addRequiredCoupledVar("concentration", "coupled concentration variable");
-  params.addRequiredCoupledVar("temperature", "coupled temperature variable");
   params.addParam<Real>("CH_mobility_scaling", 1, "scaling factor to divide by to nondimensionalize mobility");
 
   return params;
@@ -44,8 +43,7 @@ ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const std::string & name, InputPara
       _D_alpha(declareProperty<Real>("D_alpha")),
       _D_delta(declareProperty<Real>("D_delta")),
       _n_OP_variables(getParam<int>("n_OP_variables")),
-      _c(coupledValue("concentration")),
-      _T(coupledValue("coupled_temperature"))
+      _c(coupledValue("concentration"))
 {
   // Create a vector of the coupled OP variables and gradients
   if(_n_OP_variables != coupledComponents("OP_variable_names"))
@@ -62,8 +60,8 @@ ZrHCalphadDiffusivity::computeQpProperties()
 {
   Real Heaviside = computeHeaviside();
 
-  _D_alpha[_qp] = _H_Zr_D0*std::exp(-_H_Zr_Q0/(_R*_T[_qp]));
-  _D_delta[_qp] = _H_ZrH2_D0*std::exp(-_H_ZrH2_Q0/(_R*_T[_qp]));
+  _D_alpha[_qp] = _H_Zr_D0*std::exp(-_H_Zr_Q0/(_R*_temperature[_qp]));
+  _D_delta[_qp] = _H_ZrH2_D0*std::exp(-_H_ZrH2_Q0/(_R*_temperature[_qp]));
 
 
   //Dalpha*(1-heaviside) + Ddelta*(heaviside)?

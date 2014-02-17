@@ -48,7 +48,6 @@ private:
   std::vector<VariableValue *> _OP;
 
   VariableValue & _c;
-  VariableValue & _T;
 
 };
 

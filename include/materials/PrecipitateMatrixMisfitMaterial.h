@@ -50,6 +50,7 @@ private:
 
   MaterialProperty<std::vector<RankTwoTensor> > & _dn_misfit_strain;
   MaterialProperty<RankTwoTensor> & _dc_misfit_strain;
+  MaterialProperty<std::vector<RankTwoTensor> > & _dcdn_misfit_strain;
 
   VariableValue & _solute;
 };

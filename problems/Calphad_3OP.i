@@ -107,8 +107,8 @@
       invalue = 1
       outvalue = 0
       radius = 5
-      x1 = 20
-      y1 = 20
+      x1 = 15
+      y1 = 35
   [../]
 
   [./PSSCIC_n2]  
@@ -117,7 +117,7 @@
       int_width = 3
       invalue = 1  
       outvalue = 0
-      radius = 5  
+      radius = 5 
       x1 = 25
       y1 = 25
   [../]
@@ -128,9 +128,9 @@
       int_width = 3
       invalue = 1  
       outvalue = 0
-      radius = 5  
-      x1 = 30
-      y1 = 30
+      radius = 5
+      x1 = 35
+      y1 = 35
   [../]
 
   [./t_init]
