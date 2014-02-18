@@ -12,6 +12,7 @@
 # Note: Make sure that there is no whitespace after the word 'yes' if enabling
 # an application
 ###############################################################################
+CURR_DIR	?= $(shell pwd)
 ROOT_DIR        ?= $(shell dirname `pwd`)
 
 ifeq ($(MOOSE_DEV),true)
@@ -19,6 +20,13 @@ ifeq ($(MOOSE_DEV),true)
 else
 	MOOSE_DIR ?= $(ROOT_DIR)/moose
 endif
+ELK_DIR         ?= $(ROOT_DIR)/elk
+HYRAX_DIR       ?= $(ROOT_DIR)/hyrax
+
+MAKE_LIBRARY := no
+APPLICATION_NAME := hyrax
+
+DEP_APPS    ?= $(shell $(MOOSE_DIR)/scripts/find_dep_apps.py $(APPLICATION_NAME))
 
 ################################## ELK MODULES ################################
 PHASE_FIELD       := yes
@@ -28,20 +36,11 @@ HEAT_CONDUCTION   := yes
 MISC              := yes
 ###############################################################################
 
-# framework
 include $(MOOSE_DIR)/build.mk
+#dependencies
 include $(MOOSE_DIR)/moose.mk
-
-# modules
-ELK_DIR ?= $(ROOT_DIR)/elk
 include $(ELK_DIR)/elk.mk
-
-# dep apps
-APPLICATION_DIR    := $(ROOT_DIR)/hyrax
-APPLICATION_NAME   := hyrax
-BUILD_EXEC         := yes
-DEP_APPS           := $(shell $(MOOSE_DIR)/scripts/find_dep_apps.py $(APPLICATION_NAME))
-include            $(MOOSE_DIR)/app.mk
+include $(HYRAX_DIR)/hyrax.mk
 
 ###############################################################################
 # Additional special case targets should be added here
