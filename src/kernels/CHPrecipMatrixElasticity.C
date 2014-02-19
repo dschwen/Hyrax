@@ -57,6 +57,7 @@ CHPrecipMatrixElasticity::computeDFDC(PFFunctionType type)
 {
   RankTwoTensor a = _elasticity_tensor[_qp]*(_elastic_strain[_qp]);
   RankTwoTensor b = _elasticity_tensor[_qp]*_dc_misfit_strain[_qp]*(-1);
+  //in this case, dc_elasticity_tensor = 0
 
   Real first  = a.doubleContraction( (_dc_misfit_strain[_qp])*(-1) );
   Real second = b.doubleContraction( _elastic_strain[_qp] );
@@ -68,13 +69,13 @@ CHPrecipMatrixElasticity::computeDFDC(PFFunctionType type)
 
   case Jacobian:
     return _scaling_factor*_phi[_j][_qp]*b.doubleContraction( (_dc_misfit_strain[_qp])*(-1) );
+    //return 0;
   }
 
   mooseError("invalid type passed in");
 }
 
 
-//really hope i don't need any off diagonal shit here
 Real
 CHPrecipMatrixElasticity::computeQpOffDiagJacobian(unsigned int jvar)
 {
@@ -83,14 +84,14 @@ CHPrecipMatrixElasticity::computeQpOffDiagJacobian(unsigned int jvar)
     if (jvar == _n_var[i])
     {
       RankTwoTensor a = _elasticity_tensor[_qp]*_elastic_strain[_qp];
-      RankTwoTensor b =  _elasticity_tensor[_qp]*(_dn_misfit_strain[_qp])[i];
+      RankTwoTensor b = _elasticity_tensor[_qp]*(_dn_misfit_strain[_qp])[i]*(-1);
       RankTwoTensor c = (_dn_elasticity_tensor[_qp])[i]*_elastic_strain[_qp];
 
-      Real first = a.doubleContraction( (_dcdn_misfit_strain[_qp])[i] );
-      Real second = b.doubleContraction( _dc_misfit_strain[_qp]);
-      Real third = c.doubleContraction( _dc_misfit_strain[_qp]) ;
+      Real Jaa = a.doubleContraction( ( (_dcdn_misfit_strain[_qp])[i])*(-1) );
+      Real Jab = b.doubleContraction( (_dc_misfit_strain[_qp])*(-1) );
+      Real Jac = c.doubleContraction( (_dc_misfit_strain[_qp])*(-1) );
 
-      return _scaling_factor*_phi[_j][_qp]*_test[_i][_qp]*(first + second + third);
+      return _scaling_factor*_phi[_j][_qp]*_test[_i][_qp]*(Jaa + Jab + Jac);
     }
   }
 

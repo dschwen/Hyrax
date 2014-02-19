@@ -37,9 +37,11 @@ protected:
   // system elasticity tensor, varies in space
   MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
   MaterialProperty<std::vector<ElasticityTensorR4> > & _dn_elasticity_tensor;
+  MaterialProperty<std::vector<ElasticityTensorR4> > & _dndn_elasticity_tensor;
 
   MaterialProperty<RankTwoTensor> & _elastic_strain;
   MaterialProperty<std::vector<RankTwoTensor> > & _dn_misfit_strain;
+  MaterialProperty<std::vector<RankTwoTensor> > & _dndn_misfit_strain;
 
   // orientation variant number for this kernel (1 to n)
   unsigned int _OP_number;

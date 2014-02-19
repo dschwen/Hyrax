@@ -38,6 +38,10 @@ protected:
   //virtual void computeQpStrain();
   //virtual void computeQpStress();
 
+  Real computeHeaviside();
+  Real computeDHeaviside(unsigned int i);
+  Real computeD2Heaviside(unsigned int i);
+
 private:
 
   std::vector<Real> _eigenstrain_matrix_vector;
@@ -46,10 +50,17 @@ private:
   MaterialProperty<RankTwoTensor> & _eigenstrain_matrix_MP;
   MaterialProperty<std::vector<RankTwoTensor> > & _dn_eigenstrain_matrix_MP;
   MaterialProperty<RankTwoTensor> & _dc_eigenstrain_matrix_MP;
+
   MaterialProperty<std::vector<ElasticityTensorR4> > & _dn_elasticity_tensor;
+  MaterialProperty<ElasticityTensorR4> & _dc_elasticity_tensor;
+  MaterialProperty<std::vector<ElasticityTensorR4> > & _dndn_elasticity_tensor;
+  MaterialProperty<ElasticityTensorR4> & _dcdc_elasticity_tensor;
+  MaterialProperty<std::vector<ElasticityTensorR4> > & _dcdn_elasticity_tensor;
 
   MaterialProperty<std::vector<RankTwoTensor> > & _dn_misfit_strain;
   MaterialProperty<RankTwoTensor> & _dc_misfit_strain;
+  MaterialProperty<std::vector<RankTwoTensor> > & _dndn_misfit_strain;
+  MaterialProperty<RankTwoTensor> & _dcdc_misfit_strain;
   MaterialProperty<std::vector<RankTwoTensor> > & _dcdn_misfit_strain;
 
   VariableValue & _solute;

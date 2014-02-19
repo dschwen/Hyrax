@@ -33,32 +33,24 @@ PrecipitateMatrixMisfitMaterial::PrecipitateMatrixMisfitMaterial(const std::stri
     LinearSingleCrystalPrecipitateMaterial(name, parameters),
     _eigenstrain_matrix_vector(getParam<std::vector<Real> >("e_matrix")),
     _eigenstrain_matrix(),
+
     _eigenstrain_matrix_MP(declareProperty<RankTwoTensor>("eigenstrain_matrix_MP")),
     _dn_eigenstrain_matrix_MP(declareProperty<std::vector<RankTwoTensor> >("dn_eigenstrain_matrix_MP")),
     _dc_eigenstrain_matrix_MP(declareProperty<RankTwoTensor>("dc_eigenstrain_matrix_MP")),
+
     _dn_elasticity_tensor(declareProperty<std::vector<ElasticityTensorR4> >("dn_elasticity_tensor")),
+    _dc_elasticity_tensor(declareProperty<ElasticityTensorR4>("dc_elasticity_tensor")),
+    _dndn_elasticity_tensor(declareProperty<std::vector<ElasticityTensorR4> >("dndn_elasticity_tensor")),
+    _dcdc_elasticity_tensor(declareProperty<ElasticityTensorR4>("dcdc_elasticity_tensor")),
+    _dcdn_elasticity_tensor(declareProperty<std::vector<ElasticityTensorR4> >("dcdn_elasticity_tensor")),
+
     _dn_misfit_strain(declareProperty<std::vector<RankTwoTensor> >("dn_misfit_strain")),
     _dc_misfit_strain(declareProperty<RankTwoTensor>("dc_misfit_strain")),
+    _dndn_misfit_strain(declareProperty<std::vector<RankTwoTensor> >("dndn_misfit_strain")),
+    _dcdc_misfit_strain(declareProperty<RankTwoTensor>("dcdc_misfit_strain")),
     _dcdn_misfit_strain(declareProperty<std::vector<RankTwoTensor> >("dcdn_misfit_strain")),
+
     _solute(coupledValue("solute_name"))
-
-    //_scaling_factor(getParam<Real>("scaling_factor")),
-
-    //_Cijkl_precipitate(),
-    //_eigenstrain(),
-    //_n_variants(getParam<int>("n_variants")),
-    //_eigenstrains_rotated(),
-
-    //_local_strain(declareProperty<RankTwoTensor >("local_strain")),
-    //_misfit_strain(declareProperty<RankTwoTensor >("misfit_strain")),
-
-    //_eigenstrains_MP(declareProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
-    //_Cijkl_MP(declareProperty<ElasticityTensorR4>("Cijkl_MP")),
-    //_Cijkl_precipitates_MP(declareProperty<ElasticityTensorR4>("Cijkl_precipitates_MP")),
-    //_d_eigenstrains_MP(declareProperty<std::vector<RankTwoTensor> >("d_eigenstrains_MP")),
-    //_precipitate_eigenstrain(declareProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain")),
-    //_misfit_T_coeffs_vector(getParam<std::vector<Real> >("misfit_temperature_coeffs"))
-
 {
   // fill in the original tensors.  Don't touch after this!
   _eigenstrain_matrix.fillFromInputVector(_eigenstrain_matrix_vector);
@@ -71,11 +63,17 @@ PrecipitateMatrixMisfitMaterial::computeProperties()
   {
     _eigenstrains_MP[_qp].resize(_n_variants);
     _d_eigenstrains_MP[_qp].resize(_n_variants);
+    _dn_eigenstrain_matrix_MP[_qp].resize(_n_variants);
+
     _precipitate_eigenstrain[_qp].resize(_n_variants);
 
-    _dn_eigenstrain_matrix_MP[_qp].resize(_n_variants);
     _dn_elasticity_tensor[_qp].resize(_n_variants);
+    _dndn_elasticity_tensor[_qp].resize(_n_variants);
+    _dcdn_elasticity_tensor[_qp].resize(_n_variants);
+
     _dn_misfit_strain[_qp].resize(_n_variants);
+    _dcdn_misfit_strain[_qp].resize(_n_variants);
+    _dndn_misfit_strain[_qp].resize(_n_variants);
     _dcdn_misfit_strain[_qp].resize(_n_variants);
 
     computeQpElasticityTensor();
@@ -91,6 +89,8 @@ PrecipitateMatrixMisfitMaterial::computeQpElasticityTensor()
   //going to need to put temperature dependence in here
 
   Real inverse = 1/_scaling_factor;
+  ElasticityTensorR4 zeros;
+  zeros.zero();
 
   _Cijkl_MP[_qp] = _Cijkl/inverse;
   _Cijkl_precipitates_MP[_qp] = _Cijkl_precipitate/inverse;
@@ -99,13 +99,21 @@ PrecipitateMatrixMisfitMaterial::computeQpElasticityTensor()
   for (unsigned int i=0; i<_n_variants; i++)
   {
     sum_OP += (*_OP[i])[_qp]*(*_OP[i])[_qp];
-    (_dn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2*(*_OP[i])[_qp] )/inverse;
+    //(_dn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2*(*_OP[i])[_qp] )/inverse;
+    (_dn_elasticity_tensor[_qp])[i] = (_Cijkl_precipitate - _Cijkl)*computeDHeaviside(i)/inverse;
+    //(_dndn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2 )/inverse;
+    (_dndn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*computeD2Heaviside(i) )/inverse;
+    (_dcdn_elasticity_tensor[_qp])[i] = zeros;
   }
 
-  _elasticity_tensor[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
+  //_elasticity_tensor[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
+  _elasticity_tensor[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*computeHeaviside())/inverse;
+  _dc_elasticity_tensor[_qp] = zeros;
+  _dcdc_elasticity_tensor[_qp] = zeros;
 
   //not sure if I actually got the Jacobian multiplier right here.
-  _Jacobian_mult[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
+  //_Jacobian_mult[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
+  _Jacobian_mult[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*computeHeaviside())/inverse;
 }
 
 void
@@ -159,7 +167,9 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
 {
   //sum up the misfit strains for the orientation variants
   RankTwoTensor sum_precipitate_strains;
+  RankTwoTensor zeros;
   sum_precipitate_strains.zero();
+  zeros.zero();
 
   Real OP_sum = 0;
 
@@ -168,18 +178,19 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
     OP_sum += (*_OP[i])[_qp]*(*_OP[i])[_qp];
     sum_precipitate_strains += (_eigenstrains_MP[_qp])[i];
     (_dn_misfit_strain[_qp])[i] = (_d_eigenstrains_MP[_qp])[i] - (_dn_eigenstrain_matrix_MP[_qp])[i];
-    (_dcdn_misfit_strain[_qp])[i] = _eigenstrain_matrix*2*(*_OP[i])[_qp];
+
+    (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_eigenstrain_matrix*_solute[_qp] )*-2;
+    (_dndn_misfit_strain[_qp])[i] = _eigenstrain_matrix*2*(*_OP[i])[_qp];
   }
 
-  _dc_misfit_strain[_qp] = _eigenstrain_matrix*(1 - OP_sum);
-
   _misfit_strain[_qp] = sum_precipitate_strains + _eigenstrain_matrix_MP[_qp];
+  _dc_misfit_strain[_qp] = _eigenstrain_matrix*(1 - OP_sum);
+  _dcdc_misfit_strain[_qp] = zeros;
 }
 
 
 //void
-//PrecipitateMatrixMisfitMaterial::computeQpElasticStress()
-//{
+//
 //  computeQpStress();
 //}
 
@@ -198,3 +209,32 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
 //  // stress = C * e
 //  _stress[_qp] = _elasticity_tensor[_qp]*_elastic_strain[_qp];
 //}
+
+
+Real
+PrecipitateMatrixMisfitMaterial::computeHeaviside()
+{
+  Real heaviside_first(0);
+  Real heaviside_second(0);
+
+  //may need to put some checking in here so that OP fixed between 0 and 1
+  for(unsigned int i=0; i<_n_variants; i++)
+  {
+    heaviside_first += std::pow((*_OP[i])[_qp], 2);
+    heaviside_second += std::pow((*_OP[i])[_qp], 3);
+  }
+
+  return 3*heaviside_first - 2*heaviside_second;
+}
+
+Real
+PrecipitateMatrixMisfitMaterial::computeDHeaviside(unsigned int i)
+{
+  return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
+}
+
+Real
+PrecipitateMatrixMisfitMaterial::computeD2Heaviside(unsigned int i)
+{
+  return 6*(1 - (*_OP[i])[_qp]);
+}

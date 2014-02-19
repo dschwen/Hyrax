@@ -24,8 +24,10 @@ ACPrecipMatrixElasticity::ACPrecipMatrixElasticity(const std::string & name, Inp
     : ACBulk(name, parameters),
       _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
       _dn_elasticity_tensor(getMaterialProperty<std::vector<ElasticityTensorR4> >("dn_elasticity_tensor")),
+      _dndn_elasticity_tensor(getMaterialProperty<std::vector<ElasticityTensorR4> >("dndn_elasticity_tensor")),
       _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
       _dn_misfit_strain(getMaterialProperty<std::vector<RankTwoTensor> >("dn_misfit_strain")),
+      _dndn_misfit_strain(getMaterialProperty<std::vector<RankTwoTensor> >("dndn_misfit_strain")),
       _OP_number(getParam<int>("OP_number")),
       _scaling_factor(getParam<Real>("scaling_factor"))
 {
@@ -34,13 +36,26 @@ ACPrecipMatrixElasticity::ACPrecipMatrixElasticity(const std::string & name, Inp
 Real
 ACPrecipMatrixElasticity::computeDFDOP(PFFunctionType type)
 {
-  RankTwoTensor a = _elasticity_tensor[_qp]*(_elastic_strain[_qp]);
-  RankTwoTensor b = _elasticity_tensor[_qp]*(_dn_misfit_strain[_qp])[_OP_number-1]*(-1);
-  RankTwoTensor c = (_dn_elasticity_tensor[_qp])[_OP_number-1]*_elastic_strain[_qp];
+  unsigned int i = _OP_number - 1;
 
-  Real first  = a.doubleContraction( (_dn_misfit_strain[_qp])[_OP_number-1]*(-1) );
+  RankTwoTensor a = _elasticity_tensor[_qp]*(_elastic_strain[_qp]);
+  RankTwoTensor b = _elasticity_tensor[_qp]*(( _dn_misfit_strain[_qp])[i]*(-1) );
+  RankTwoTensor c = (_dn_elasticity_tensor[_qp])[i]*_elastic_strain[_qp];
+
+  RankTwoTensor Jb =  _elasticity_tensor[_qp]*(( _dndn_misfit_strain[_qp])[i]*(-1) );
+  RankTwoTensor Jc = (_dndn_elasticity_tensor[_qp])[i]*( _elastic_strain[_qp]);
+  RankTwoTensor Jd = (_dndn_elasticity_tensor[_qp])[i]*(( _dndn_misfit_strain[_qp])[i]*(-1) );
+
+  Real first  = a.doubleContraction( (_dn_misfit_strain[_qp])[i]*(-1) );
   Real second = b.doubleContraction( _elastic_strain[_qp] );
   Real third  = c.doubleContraction( _elastic_strain[_qp] );
+
+  Real Jaa = a.doubleContraction( (_dndn_misfit_strain[_qp])[i]*(-1) );
+  Real Jbb = Jb.doubleContraction( _elastic_strain[_qp] );
+  Real Jcc = Jc.doubleContraction( _elastic_strain[_qp] );
+  Real Jab = b.doubleContraction( (_dn_misfit_strain[_qp])[i]*(-1) );
+  Real Jca = c.doubleContraction( (_dn_misfit_strain[_qp])[i]*(-1) );
+  Real Jcb = Jd.doubleContraction( _elastic_strain[_qp] );
 
   switch(type)
   {
@@ -48,7 +63,8 @@ ACPrecipMatrixElasticity::computeDFDOP(PFFunctionType type)
     return _scaling_factor*0.5*(first + second + third);
 
   case Jacobian:
-    return 0;
+    return _scaling_factor*0.5*_phi[_j][_qp]*(Jaa + Jbb + Jcc + 2*Jab + 2*Jca + 2*Jcb);
+    //return 0;
   }
 
   mooseError("invalid type passed in");
