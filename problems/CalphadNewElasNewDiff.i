@@ -255,6 +255,9 @@
     variable = concentration
     kappa_name = kappa_c
     w = mu
+    n_OP_vars = 1
+    OP_var_names = 'n'
+    T = temperature
   [../]
 []
 
@@ -424,7 +427,7 @@
   [./TimeStepper]
      type = SolutionTimeAdaptiveDT
     #ype = ConstantDT
-    dt = 1E-5
+    dt = 1E-3
     percent_change = 0.1
   [../]
 
@@ -434,7 +437,8 @@
   #solve_type = 'FD'
 
   petsc_options_iname = '-pc_type -ksp_gmres_restart'
-  petsc_options_value = 'ilu 50'
+  #petsc_options_value = 'ilu 50'
+  petsc_options_value = 'lu 50'
 
    l_max_its = 50
   #l_tol = 1.0e-8
@@ -451,7 +455,7 @@
 []
 
 [Output]
-  file_base = CalphadNewElasNewDiff
+  file_base = CalphadNewElasNewDiff3
   output_initial = true
   interval = 1
   linear_residuals = true
