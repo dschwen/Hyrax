@@ -59,6 +59,7 @@
 #include "AuxBulkEnergyCalphad.h"
 #include "AuxGradientEnergy.h"
 #include "AuxElasticEnergy.h"
+#include "AuxFullNucleationRate.h"
 
 //Dirac Kernels
 
@@ -185,6 +186,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerAux(AuxBulkEnergyCalphad);
   registerAux(AuxGradientEnergy);
   registerAux(AuxElasticEnergy);
+  registerAux(AuxFullNucleationRate);
 
   //Dirac Kernels
 

@@ -14,335 +14,236 @@
 template<>
 InputParameters validParams<AuxCalphadEnergy>()
 {
-  InputParameters params = validParams<AuxChemElastic>();
+  InputParameters params = validParams<AuxKernel>();
 
-/*
-  params.addRequiredCoupledVar("coupled_conserved_var", "coupled conserved field variable");
-  params.addRequiredCoupledVar("coupled_nonconserved_var", "coupled non-conserved field variable");
+  ///params.addRequiredCoupledVar("coupled_nonconserved_var", "coupled non-conserved field variable");
   params.addRequiredParam<Real>("precip_conserved", "value of the equilibrium 2nd phase conserved field variable");
   params.addRequiredParam<Real>("precip_nonconserved", "value of the equilibrium 2nd phase nonconserved field variable");
-  params.addRequiredParam<int>("nonconserved_var_number", "the number (starting from 1) of the nonconserved variable");
-*/
 
-  params.addParam<Real>("scaling_factor", 1, "free energy scaling factor for nondimensionalization");
+  params.addRequiredParam<int>("OP_number", "the number (starting from 1) of the nonconserved variable");
+  params.addRequiredParam<int>("n_OP_vars", "# of coupled OP variables");
+  params.addRequiredCoupledVar("OP_var_names", "Array of coupled OP variable names");
 
-  //Default in J/mol-K
-  params.addParam<Real>("gas_constant", 8.3144621, "Universal gas constant");
-
-  params.addRequiredCoupledVar("coupled_temperature", "temperature to be used to calculating Gibbs energies");
-
-  params.addRequiredParam<std::vector<Real> >("hcp_Zr_coeffs", " A, B, C, D, E Gibbs coeffs for HCP Zr");
-  params.addRequiredParam<std::vector<Real> >("H2_coeffs", "A, B, C, D, E Gibbs coeffs for H2 gas");
-  params.addRequiredParam<std::vector<Real> >("hcp_ZrH_coeffs", "A, B, C, D, E Gibbs coeffs for HCP ZrH");
-  params.addRequiredParam<std::vector<Real> >("fcc_Zr_coeffs", " A, B, C, D, E Gibbs coeffs for FCC Zr");
-  params.addRequiredParam<std::vector<Real> >("fcc_ZrH2_coeffs", "A, B, C, D, E Gibbs coeffs for FCC ZrH2");
-
-  params.addRequiredParam<std::vector<Real> >("L0_coeffs", "Rudlich-Kister L0 polynomial coefficients");
-  params.addRequiredParam<std::vector<Real> >("L1_coeffs", "Rudlich-Kister L1 polynomial coefficients");
+  params.addRequiredCoupledVar("concentration", "coupled concentration variable");
 
   return params;
 }
 
 AuxCalphadEnergy::AuxCalphadEnergy(const std::string & name, InputParameters parameters) :
-    AuxChemElastic(name, parameters),
-    _R(getParam<Real>("gas_constant")),
-    _T(coupledValue("coupled_temperature")),
+    AuxKernel(name, parameters),
+    _precip_cons(getParam<Real>("precip_conserved")),
+    _precip_noncons(getParam<Real>("precip_nonconserved")),
+
+    _G_alpha(getMaterialProperty<Real>("G_AB1CD1")),
+    _G_delta(getMaterialProperty<Real>("G_AB1CD2")),
+    _G_alpha_precip(getMaterialProperty<Real>("G_AB1CD1_precip")),
+    _G_delta_precip(getMaterialProperty<Real>("G_AB1CD2_precip")),
+    _dG_alpha(getMaterialProperty<Real>("dGAB1CD1_dc")),
+    _dG_delta(getMaterialProperty<Real>("dGAB1CD2_dc")),
+
+    _dn_misfit_strain(getMaterialProperty<std::vector<RankTwoTensor> >("dn_misfit_strain")),
+    _dc_misfit_strain(getMaterialProperty<RankTwoTensor>("dc_misfit_strain")),
+    _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
+    _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
+
+    _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
+    _Cijkl_MP(getMaterialProperty<ElasticityTensorR4>("Cijkl_MP")),
+    _Cijkl_precipitate_MP(getMaterialProperty<ElasticityTensorR4>("Cijkl_precipitates_MP")),
+
+    _precipitate_eigenstrain(getMaterialProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain")),
+    _matrix_eigenstrain(getMaterialProperty<RankTwoTensor>("matrix_eigenstrain")),
+
     _Omega(getMaterialProperty<Real>("molar_volume")),
     _W(getMaterialProperty<Real>("well_height")),
-    _scaling_factor(getParam<Real>("scaling_factor")),
-    _alpha(),
-    _delta(),
-    _hcp_Zr_coeffs(getParam<std::vector<Real> >("hcp_Zr_coeffs")),
-    _hcp_ZrH_coeffs(getParam<std::vector<Real> >("hcp_ZrH_coeffs")),
-    _fcc_Zr_coeffs(getParam<std::vector<Real> >("fcc_Zr_coeffs")),
-    _fcc_ZrH2_coeffs(getParam<std::vector<Real> >("fcc_ZrH2_coeffs")),
-    _H2_coeffs(getParam<std::vector<Real> >("H2_coeffs")),
-    _L0_coeffs(getParam<std::vector<Real> >("L0_coeffs")),
-    _L1_coeffs(getParam<std::vector<Real> >("L1_coeffs"))
-    /*
-    _coupled_cons(coupledValue("coupled_conserved_var")),
-    _coupled_noncons(coupledValue("coupled_nonconserved_var")),
-    _precip_conserved(getParam<Real>("precip_conserved")),
-    _precip_nonconserved(getParam<Real>("precip_nonconserved")),
-*/
 
-/*
-    _noncons_var_num(getParam<int>("nonconserved_var_number")),
-    _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
-    _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
-    _precipitate_eigenstrain_rotated(getMaterialProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain")),
-    _precipitate_elasticity(getMaterialProperty<ElasticityTensorR4>("Cijkl_precipitates_MP")),
-    _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
-    _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("d_eigenstrains_MP"))
-*/
+    _OP_number(getParam<int>("OP_number")),
+    _n_OP_vars(getParam<int>("n_OP_vars")),
+    _X(coupledValue("concentration")),
+
+    _H(0),
+    _g(0),
+    _dH_dOP(0),
+    _dg_dOP(0)
+//need to add in strains here
 {
-  _alpha.parameterize(_R, _hcp_Zr_coeffs, _H2_coeffs, _hcp_ZrH_coeffs);
-  _delta.parameterize(_R, _fcc_Zr_coeffs, _H2_coeffs, _fcc_ZrH2_coeffs,
-                      _L0_coeffs, _L1_coeffs, _hcp_Zr_coeffs);
+  if(_n_OP_vars != coupledComponents("OP_var_names"))
+    mooseError("Please match the number of orientation variants to coupled OPs (ACCoupledCalphad).");
+
+  _OP.resize(_n_OP_vars);
+
+  for (unsigned int i=0; i<_n_OP_vars; i++)
+    _OP[i] = &coupledValue("OP_var_names", i);
 }
 
 Real
 AuxCalphadEnergy::computeValue()
 {
-  Real matrix_energy(0.0);
-  Real precip_energy(0.0);
-  Real differential(0.0);
+  computeHeaviside();
+  computeDHeaviside();
+  computeBarrier();
+  computeDBarrier();
 
-  matrix_energy = computeEnergy(_coupled_cons[_qp], _coupled_noncons[_qp], true);
-  precip_energy = computeEnergy(_precip_conserved, _precip_nonconserved, false);
-  differential = computeDifferential(_coupled_cons[_qp], _coupled_noncons[_qp]);
+  Real matrix_energy = computeMatrixEnergy();
+
+  Real precip_energy = computePrecipEnergy();
+
+  Real differential = computeDifferential();
 
   std::cout<<"differential = "<<differential<<std::endl;
 
   return (matrix_energy - precip_energy + differential);
 }
 
-
-/*
 Real
-AuxCalphadEnergy::computeEnergy(Real & conserved, Real & nonconserved, bool matrix)
+AuxCalphadEnergy::computeMatrixEnergy()
 {
-  Real fchem(0.0);
-  Real self_elastic_energy(0.0);
-  Real interaction_elastic_energy(0.0);
+  Real chemical_energy =  ( (1 - _H)*_G_alpha[_qp] + _H*_G_delta[_qp] + _W[_qp]*_g) / _Omega[_qp];
+  RankTwoTensor a = _elasticity_tensor[_qp]*(_elastic_strain[_qp]);
 
-  fchem = computeFchem(conserved, nonconserved);
-  self_elastic_energy = computeSelfElasticEnergy(matrix);
-  interaction_elastic_energy = computeInteractionElasticEnergy(matrix);
+  Real elastic_energy = a.doubleContraction( _elastic_strain[_qp]);
 
-  return fchem + self_elastic_energy - interaction_elastic_energy;
-}
-*/
-
-
-Real
-AuxCalphadEnergy::computeDifferential(Real & coupled_conserved, Real & coupled_nonconserved)
-{
-  // partial derivative of f_chem with respect to conserved variable
-  Real dfchem_dcons(0.0);
-  // partial derivative of f_chem with respect to nonconserved variable
-  Real dfchem_dnoncons(0.0);
-
-  // partial derivatives of self-elastic energies
-  Real dself_dcons(0.0);
-  Real dself_dnoncons(0.0);
-
-  // partial derivative of interaction elastic energy
-  Real dint_dcons(0.0);
-  Real dint_dnoncons(0.0);
-
-  Real first_term(0.0);
-  Real second_term(0.0);
-
-  dfchem_dcons = computeDfchemDcons(coupled_conserved, coupled_nonconserved);
-  dself_dcons = computeDselfDcons();
-  dint_dcons = computeDintDcons();
-
-  dfchem_dnoncons = computeDfchemDnoncons(coupled_conserved, coupled_nonconserved);
-  dself_dnoncons = computeDselfDnoncons();
-  dint_dnoncons = computeDintDnoncons();
-
-  // first_term = (dfchem_dcons + dself_dcons + dint_dcons)*(coupled_conserved - _precip_conserved);
-  // second_term = (dfchem_dnoncons + dself_dnoncons + dint_dnoncons)*(coupled_nonconserved - _precip_nonconserved);
-
-  first_term = (dfchem_dcons + dself_dcons + dint_dcons)*(_precip_conserved - coupled_conserved);
-  second_term = (dfchem_dnoncons + dself_dnoncons + dint_dnoncons)*(_precip_nonconserved - coupled_nonconserved);
-
-  std::cout<<"dfchem_dcons = "<<dfchem_dcons<<std::endl;
-
-  return first_term + second_term;
-}
-
-
-Real
-AuxCalphadEnergy::computeFchem(Real & conserved, Real & nonconserved)
-{
-  Real heaviside = computeHeaviside(nonconserved);
-  Real g = computeBarrier(nonconserved);
-
-  Real G_alpha;
-  Real G_delta;
-
-  //set the cutoff values for the energy as done in the Calphad kernels
-  // if(conserved < 0.001)
-  //  G_alpha = computeGalpha(0.001);
-  //else if (conserved > 0.499)
-  //  G_alpha = computeGalpha(0.499);
-  //else
-  G_alpha = _alpha.computeGMix(conserved, _T[_qp]);
-
-    //if (conserved < 0.100)
-    //G_delta = computeGdelta(0.001);
-    //else if (conserved > 0.655)
-    //G_delta = computeGdelta(0.655);
-    //else
-  G_delta = _delta.computeGMix(conserved, _T[_qp]);
-
-  return ( (1-heaviside)*G_alpha + heaviside*G_delta + _W[_qp]*g) / _Omega[_qp];
-
-
-  //this needs to be the actual phase field free energy, including the order parameter...
-  //remember, this energy gets computed for each order parameter separately.
-  // f = ( 1-h(n) )*gmix_alpha(x,T) + h(n)*gmix_delta(x,T) + w*g(n)
+  return 0.5*(chemical_energy + elastic_energy);
 }
 
 Real
-AuxCalphadEnergy::computeHeaviside(Real & nonconserved)
+AuxCalphadEnergy::computePrecipEnergy()
 {
-  return 3*std::pow(nonconserved, 2) - 2*std::pow(nonconserved, 3);
+  //this needs to be computed FOR the precipitate if it were this point...
+
+  Real chemical_energy = ( (1 - _H)*_G_alpha_precip[_qp] + _H*_G_delta_precip[_qp] + _W[_qp]*_g) / _Omega[_qp];
+
+ RankTwoTensor elastic_precip_strain = _local_strain[_qp] - (_precipitate_eigenstrain[_qp])[_OP_number-1];
+
+ Real elastic_energy = elastic_precip_strain.doubleContraction( elastic_precip_strain);
+
+ return 0.5*(chemical_energy + elastic_energy);
 }
 
 Real
-AuxCalphadEnergy::computeBarrier(Real & nonconserved)
+AuxCalphadEnergy::computeDifferential()
 {
-  return std::pow(nonconserved, 2) - 2*std::pow(nonconserved, 3) + std::pow(nonconserved, 4);
+  Real dfchem_dOP = ( (_G_delta[_qp] - _G_alpha[_qp])*_dH_dOP + _W[_qp]*_dg_dOP ) / _Omega[_qp];
+
+  Real dfchem_dX = ( (1-_H)*_dG_alpha[_qp] + _H*_dG_delta[_qp] ) / _Omega[_qp];
+
+  RankTwoTensor a = _Cijkl_MP[_qp]*_elastic_strain[_qp];
+  RankTwoTensor b = _Cijkl_MP[_qp]*(_dc_misfit_strain[_qp])*(-1);
+
+  Real e1 = a.doubleContraction( (_dc_misfit_strain[_qp])*(-1) );
+  Real e2 = b.doubleContraction( _elastic_strain[_qp] );
+  Real e3 = 0;
+
+  Real dfel_dX = 0.5*(e1 + e2 + e3);
+
+
+  ElasticityTensorR4 dCijkl = (_Cijkl_precipitate_MP[_qp] - _Cijkl_MP[_qp])*(-1*_dH_dOP);
+  b = _Cijkl_MP[_qp]*( (_dn_misfit_strain[_qp])[_OP_number-1]) *(-1);
+  RankTwoTensor c = dCijkl*_elastic_strain[_qp];
+
+  e1 = a.doubleContraction( ( (_dn_misfit_strain[_qp])[_OP_number-1] )*(-1) );
+  e2 = b.doubleContraction( _elastic_strain[_qp]);
+  e3 = c.doubleContraction( _elastic_strain[_qp]);
+
+  Real dfel_dOP = 0.5*(e1 + e2 + e3);
+
+  Real dfdc = (dfchem_dX + dfel_dX)*(_precip_cons - _X[_qp]);
+
+  Real dfdOP = (dfchem_dOP + dfel_dOP)*(_precip_noncons - (*_OP[_OP_number-1])[_qp]);
+
+  return dfdc + dfdOP;
 }
 
-Real
-AuxCalphadEnergy::computeDHeaviside(Real & nonconserved)
+void
+AuxCalphadEnergy::computeHeaviside()
 {
-  return 6*nonconserved*(1 - nonconserved);
-}
+  Real heaviside_first(0);
+  Real heaviside_second(0);
 
-Real
-AuxCalphadEnergy::computeDBarrier(Real & nonconserved)
-{
-  return 2*nonconserved*(1 - 3*nonconserved + 2*std::pow(nonconserved, 2) );
-}
-
-/*
-Real
-AuxCalphadEnergy::computeSelfElasticEnergy(bool matrix)
-{
-  RankTwoTensor eigenstrain;
-  RankTwoTensor c;
-  ElasticityTensorR4 elasticity;
-
-  if(matrix)
+  //may need to put some checking in here so that OP fixed between 0 and 1
+  for(unsigned int i=0; i<_n_OP_vars; i++)
   {
-    eigenstrain = (_eigenstrains_rotated_MP[_qp])[_noncons_var_num-1];
-    elasticity = _elasticity_tensor[_qp];
+    heaviside_first += std::pow((*_OP[i])[_qp], 2);
+    heaviside_second += std::pow((*_OP[i])[_qp], 3);
   }
+
+  _H = 3*heaviside_first - 2*heaviside_second;
+}
+
+void
+AuxCalphadEnergy::computeBarrier()
+{
+  Real first(0);
+  Real second(0);
+  Real third(0);
+  Real fourth(0);
+  Real fifth(0);
+
+  Real sixth;
+  if(_n_OP_vars == 1)
+    sixth = 0;
   else
+    sixth = 1;
+
+  for (unsigned int i=0; i<_n_OP_vars; i++)
   {
-    eigenstrain = (_precipitate_eigenstrain_rotated[_qp])[_noncons_var_num-1];
-    elasticity = _precipitate_elasticity[_qp];
+    first += std::pow((*_OP[i])[_qp], 2);
+    second += std::pow((*_OP[i])[_qp], 3);
+    third += std::pow((*_OP[i])[_qp], 4);
+
+    Real square_sum(0);
+    Real quad_sum(0);
+    for (unsigned int j=0; j < _n_OP_vars; j++)
+    {
+      if (j > i)
+        square_sum += std::pow((*_OP[j])[_qp], 2);
+
+      if (j != i)
+        quad_sum += std::pow((*_OP[j])[_qp], 4);
+    }
+
+    fourth +=  ( std::pow((*_OP[i])[_qp], 2) )*square_sum;
+    fifth += ( std::pow((*_OP[i])[_qp], 2) )*quad_sum;
+
+    sixth *= std::pow((*_OP[i])[_qp], 2);
   }
 
-  c = elasticity*eigenstrain;
-
-  return 0.5*c.doubleContraction(eigenstrain);
+  _g = first - 2*second + third + fourth + fifth + sixth;
 }
-*/
 
-/*
-Real
-AuxCalphadEnergy::computeInteractionElasticEnergy(bool matrix)
+void
+AuxCalphadEnergy::computeDHeaviside()
 {
-  RankTwoTensor eigenstrain;
-  RankTwoTensor c;
-  ElasticityTensorR4 elasticity;
+   _dH_dOP = 6*(*_OP[_OP_number-1])[_qp]*(1 - (*_OP[_OP_number-1])[_qp]);
+}
 
-  if(matrix)
-  {
-    eigenstrain = (_eigenstrains_rotated_MP[_qp])[_noncons_var_num-1];
-    elasticity = _elasticity_tensor[_qp];
-  }
+void
+AuxCalphadEnergy::computeDBarrier()
+{
+  Real n = (*_OP[_OP_number-1])[_qp];
+
+  Real square_sum, quad_sum, square_mult;
+  square_sum = quad_sum = 0.0;
+
+  if (_n_OP_vars == 1)
+    square_mult = 0.0;
   else
+    square_mult = 1.0;
+
+  //compute the coupled OP terms
+  for(unsigned int i=0; i<_n_OP_vars; i++)
   {
-    eigenstrain = (_precipitate_eigenstrain_rotated[_qp])[_noncons_var_num-1];
-    elasticity = _precipitate_elasticity[_qp];
+    if(i != _OP_number-1)
+    {
+      Real OP;
+      OP = (*_OP[i])[_qp];
+
+      square_sum += OP*OP;
+      quad_sum += OP*OP*OP*OP;
+      square_mult *= OP*OP;
+    }
   }
 
-  c = elasticity*eigenstrain;
-
-  return c.doubleContraction(_local_strain[_qp]);
-}
-*/
-
-Real
-AuxCalphadEnergy::computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserved)
-{
-  Real heaviside = computeHeaviside(coupled_nonconserved);
-  Real g = computeBarrier(coupled_nonconserved);
-
-  Real dG_alpha;
-  Real dG_delta;
-
-  dG_alpha = _alpha.computeDGMixDc(coupled_conserved, _T[_qp]);
-
-  dG_delta = _delta.computeDGMixDc(coupled_conserved, _T[_qp]);
-
-  std::cout<<"dG_alpha = "<<dG_alpha<<std::endl;
-
-  return ( (1-heaviside)*dG_alpha + heaviside*dG_delta + _W[_qp]*g) / _Omega[_qp];
+   _dg_dOP = 2*n - 6*n*n + 4*n*n*n + 2*n*square_sum + 2*n*quad_sum + 4*n*n*n*square_sum
+     + 2*n*square_mult;
 }
 
-Real
-AuxCalphadEnergy::computeDselfDcons()
-{
-  //this is legitimately 0 for the current formulation
-
-  return 0.0;
-}
-
-Real
-AuxCalphadEnergy::computeDintDcons()
-{
-// this is legitimately 0 for the current formulation
-  return 0.0;
-}
-
-Real
-AuxCalphadEnergy::computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_nonconserved)
-{
-  Real Dheaviside = computeDHeaviside(coupled_nonconserved);
-  Real Dg = computeDBarrier(coupled_nonconserved);
-
-  Real G_alpha;
-  Real G_delta;
-
-  G_alpha = _alpha.computeGMix(coupled_conserved, _T[_qp]);
-
-  G_delta = _delta.computeGMix(coupled_conserved, _T[_qp]);
-
-  return ( Dheaviside*(G_delta - G_alpha) + _W[_qp]*Dg) / _Omega[_qp];
-}
-
-
-/*
-Real
-AuxCalphadEnergy::computeDselfDnoncons()
-{
-
-  RankTwoTensor eigenstrain;
-  RankTwoTensor d_eigenstrain;
-  RankTwoTensor c;
-  ElasticityTensorR4 elasticity;
-
-  eigenstrain = (_eigenstrains_rotated_MP[_qp])[_noncons_var_num-1];
-  d_eigenstrain =( _d_eigenstrains_rotated_MP[_qp])[_noncons_var_num-1];
-  elasticity = _elasticity_tensor[_qp];
-
-  c = elasticity*eigenstrain;
-
-  return 2.0*c.doubleContraction(d_eigenstrain);
-}
-*/
-
- /*
-Real
-AuxCalphadEnergy::computeDintDnoncons()
-{
-  RankTwoTensor d_eigenstrain;
-  RankTwoTensor c;
-  ElasticityTensorR4 elasticity;
-
-  d_eigenstrain = (_precipitate_eigenstrain_rotated[_qp])[_noncons_var_num-1];
-  elasticity = _precipitate_elasticity[_qp];
-
-  c = elasticity*d_eigenstrain;
-
-  return -2.0*c.doubleContraction(_local_strain[_qp]);
-}
-*/

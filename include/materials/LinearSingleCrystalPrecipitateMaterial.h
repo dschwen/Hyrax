@@ -99,6 +99,9 @@ protected:
   std::vector<Real> _misfit_T_coeffs_vector;
   RankTwoTensor _misfit_T_coeffs;
 
+  Real _percent_precip_misfit;
+  RankTwoTensor _current_precip_misfit;
+
 private:
 
 };

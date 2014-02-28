@@ -42,7 +42,6 @@ protected:
   Real computeDHeaviside(unsigned int i);
   Real computeD2Heaviside(unsigned int i);
 
-private:
 
   std::vector<Real> _eigenstrain_matrix_vector;
   RankTwoTensor _eigenstrain_matrix;
@@ -50,6 +49,8 @@ private:
   MaterialProperty<RankTwoTensor> & _eigenstrain_matrix_MP;
   MaterialProperty<std::vector<RankTwoTensor> > & _dn_eigenstrain_matrix_MP;
   MaterialProperty<RankTwoTensor> & _dc_eigenstrain_matrix_MP;
+
+  MaterialProperty<RankTwoTensor> & _matrix_eigenstrain;  //lambda_ijkl*%factor as material property
 
   MaterialProperty<std::vector<ElasticityTensorR4> > & _dn_elasticity_tensor;
   MaterialProperty<ElasticityTensorR4> & _dc_elasticity_tensor;
@@ -64,6 +65,14 @@ private:
   MaterialProperty<std::vector<RankTwoTensor> > & _dcdn_misfit_strain;
 
   VariableValue & _solute;
+
+  Real _percent_matrix_misfit;
+  RankTwoTensor _current_matrix_misfit;
+
+  Real _precip_conc;
+  Real _precip_OP;
+
+private:
 };
 
 #endif //PRECIPITATEMATRIXMISFITMATERIAL_H

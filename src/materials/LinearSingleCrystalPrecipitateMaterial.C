@@ -34,6 +34,8 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
 
   params.addParam<std::vector<Real> >("misfit_temperature_coeffs", "misfit strain temperature coefficients, e11, e22, e33, e33, e23, e13, e12");
 
+  params.addParam<Real>("percent_precip_misfit", 1, "percent of misfit strain of precip to be applied, between 0 and 1");
+
   return params;
 }
 
@@ -56,7 +58,8 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     _Cijkl_precipitates_MP(declareProperty<ElasticityTensorR4>("Cijkl_precipitates_MP")),
     _d_eigenstrains_MP(declareProperty<std::vector<RankTwoTensor> >("d_eigenstrains_MP")),
     _precipitate_eigenstrain(declareProperty<std::vector<RankTwoTensor> >("precipitate_eigenstrain")),
-    _misfit_T_coeffs_vector(getParam<std::vector<Real> >("misfit_temperature_coeffs"))
+    _misfit_T_coeffs_vector(getParam<std::vector<Real> >("misfit_temperature_coeffs")),
+    _percent_precip_misfit(getParam<Real>("percent_precip_misfit"))
 
 {
   // check to make sure the input file is all set up right
@@ -68,6 +71,10 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
       mooseError("please have 6 misfit temperature coefficients (LSXPM)");
   else
     _misfit_T_coeffs_vector.assign(6, 0);
+
+  //make sure your misfit strain application is between 0 and 100%
+  if (_percent_precip_misfit > 1 || _percent_precip_misfit < 0)
+    mooseError("Please give a percent precip misfit between 0 and 1 (LSXPM)");
 
   // size vectors appropriately
   _OP.resize(_n_variants);
@@ -117,7 +124,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
   Real interpolation_value(0.0);
   Real d_interp_value(0.0);
 
-  RankTwoTensor current_misfit;
+  // RankTwoTensor current_misfit;
 
   Real T;
   if (_has_T)
@@ -126,11 +133,11 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
     T = 0;
 
   // calculate the current misfit strain for the first orientation
-  current_misfit = _eigenstrain + _misfit_T_coeffs*T;
+  _current_precip_misfit = (_eigenstrain + _misfit_T_coeffs*T)*_percent_precip_misfit;
 
   // calculate the rotations and fill in
   // fill in the first variant without rotation
-  _eigenstrains_rotated[0] = current_misfit;
+  _eigenstrains_rotated[0] = _current_precip_misfit;
 
   // rotate all the things, in radians
   Real rotation_angle_base = 2.0*libMesh::pi/Real(_n_variants);
@@ -138,7 +145,7 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
 
   for(unsigned int i=1; i<_n_variants; i++)
   {
-    _eigenstrains_rotated[i] = current_misfit.rotateXyPlane(rotation_angle);
+    _eigenstrains_rotated[i] = _current_precip_misfit.rotateXyPlane(rotation_angle);
 
     // increment the rotation angle for the next go-round
     rotation_angle = rotation_angle + rotation_angle_base;

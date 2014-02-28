@@ -25,7 +25,11 @@ InputParameters validParams<PrecipitateMatrixMisfitMaterial>()
   params.addRequiredParam<std::vector<Real> >("e_matrix","Eigenstrain tensor for solute in matrix: e11, e22, e33, e23, e13, e12");
   params.addRequiredCoupledVar("solute_name","coupled variable name of solute in matrix");
 
-  return params;
+ params.addParam<Real>("percent_matrix_misfit", 1, "percent of misfit strain of matrix to be applied, between 0 and 1");
+ params.addParam<Real>("precip_conc", 0.6, "concentration of precipitate");
+ params.addParam<Real>("precip_OP", 1, "concentration of precipitate");
+
+ return params;
 }
 
 PrecipitateMatrixMisfitMaterial::PrecipitateMatrixMisfitMaterial(const std::string & name,
@@ -37,6 +41,7 @@ PrecipitateMatrixMisfitMaterial::PrecipitateMatrixMisfitMaterial(const std::stri
     _eigenstrain_matrix_MP(declareProperty<RankTwoTensor>("eigenstrain_matrix_MP")),
     _dn_eigenstrain_matrix_MP(declareProperty<std::vector<RankTwoTensor> >("dn_eigenstrain_matrix_MP")),
     _dc_eigenstrain_matrix_MP(declareProperty<RankTwoTensor>("dc_eigenstrain_matrix_MP")),
+    _matrix_eigenstrain(declareProperty<RankTwoTensor>("matrix_eigenstrain")),
 
     _dn_elasticity_tensor(declareProperty<std::vector<ElasticityTensorR4> >("dn_elasticity_tensor")),
     _dc_elasticity_tensor(declareProperty<ElasticityTensorR4>("dc_elasticity_tensor")),
@@ -50,8 +55,15 @@ PrecipitateMatrixMisfitMaterial::PrecipitateMatrixMisfitMaterial(const std::stri
     _dcdc_misfit_strain(declareProperty<RankTwoTensor>("dcdc_misfit_strain")),
     _dcdn_misfit_strain(declareProperty<std::vector<RankTwoTensor> >("dcdn_misfit_strain")),
 
-    _solute(coupledValue("solute_name"))
+    _solute(coupledValue("solute_name")),
+    _percent_matrix_misfit(getParam<Real>("percent_matrix_misfit"))//,
+    // _precip_conc(getParam<Real>("precip_conc")),
+    //_precip_conc(getParam<Real>("precip_OP"))
 {
+  //make sure misfit strain application is between 0 and 100%
+  if (_percent_matrix_misfit > 1 || _percent_matrix_misfit < 0)
+    mooseError("Please give a percent matrix misfit between 0 and 1 (PMMM)");
+
   // fill in the original tensors.  Don't touch after this!
   _eigenstrain_matrix.fillFromInputVector(_eigenstrain_matrix_vector);
 }
@@ -134,16 +146,20 @@ void
 PrecipitateMatrixMisfitMaterial::computeQpMatrixEigenstrain()
 {
   Real interpolation_value(0);
+  //RankTwoTensor current_misfit;
+
+  _current_matrix_misfit = _eigenstrain_matrix*_percent_matrix_misfit;
 
   for (unsigned int i=0; i<_n_variants; i++)
   {
     interpolation_value =+ (*_OP[i])[_qp]*(*_OP[i])[_qp];
-    (_dn_eigenstrain_matrix_MP[_qp])[i] = _eigenstrain_matrix*2*_solute[_qp]*(*_OP[i])[_qp];
+    (_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*_solute[_qp]*(*_OP[i])[_qp];
   }
 
-  _eigenstrain_matrix_MP[_qp] = _eigenstrain_matrix*_solute[_qp]*(1 - interpolation_value);
-  _dc_eigenstrain_matrix_MP[_qp] = _eigenstrain_matrix*(1 - interpolation_value);
+  _eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*_solute[_qp]*(1 - interpolation_value);
+  _dc_eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*(1 - interpolation_value);
 
+  _matrix_eigenstrain[_qp] = _current_matrix_misfit;
   //miiight want some stuff here for derivative values...
 
 }
@@ -179,12 +195,14 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
     sum_precipitate_strains += (_eigenstrains_MP[_qp])[i];
     (_dn_misfit_strain[_qp])[i] = (_d_eigenstrains_MP[_qp])[i] - (_dn_eigenstrain_matrix_MP[_qp])[i];
 
-    (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_eigenstrain_matrix*_solute[_qp] )*-2;
-    (_dndn_misfit_strain[_qp])[i] = _eigenstrain_matrix*2*(*_OP[i])[_qp];
+    // (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_eigenstrain_matrix*_solute[_qp] )*-2;
+    // (_dndn_misfit_strain[_qp])[i] = _eigenstrain_matrix*2*(*_OP[i])[_qp];
+    (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_current_matrix_misfit*_solute[_qp] )*-2;
+    (_dndn_misfit_strain[_qp])[i] = _current_matrix_misfit*2*(*_OP[i])[_qp];
   }
 
   _misfit_strain[_qp] = sum_precipitate_strains + _eigenstrain_matrix_MP[_qp];
-  _dc_misfit_strain[_qp] = _eigenstrain_matrix*(1 - OP_sum);
+  _dc_misfit_strain[_qp] = _current_matrix_misfit*(1 - OP_sum);
   _dcdc_misfit_strain[_qp] = zeros;
 }
 

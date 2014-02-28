@@ -42,11 +42,16 @@ private:
 
   CalphadAB1CD2 _energy;
 
+  Real _low_cutoff;
+  Real _high_cutoff;
+  Real _precip_conc;
+
   std::vector<double> _pure_EP1_phase1_coeffs;
   MaterialProperty<Real> & _G_AB1CD2;
   MaterialProperty<Real> & _dG_dc;
   MaterialProperty<Real> & _d2G_dc2;
   //MaterialProperty<Real> & _d3G_dc3;
+  MaterialProperty<Real> & _G_AB1CD2_precip;
 };
 
 #endif //CALPHADAB1CD2MATERIAL_H

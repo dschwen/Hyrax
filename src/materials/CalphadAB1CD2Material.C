@@ -17,6 +17,9 @@ InputParameters validParams<CalphadAB1CD2Material>()
 
   params.addRequiredParam<std::vector<Real> >("pure_EP1_phase1_coeffs", "coeffs of pure endpoint at low composition in the first phase");
 
+  params.addParam<Real>("low_cutoff", 0.001, "linearization cutoff, low end");
+  params.addParam<Real>("high_cutoff", 0.655, "linearization cutoff, high end");
+  params.addParam<Real>("precip_conc", 0.6, "concentration of precipitate");
 
   return params;
 }
@@ -24,11 +27,15 @@ InputParameters validParams<CalphadAB1CD2Material>()
 CalphadAB1CD2Material::CalphadAB1CD2Material(const std::string & name, InputParameters parameters) :
     CalphadEnergyMaterial(name, parameters),
     _energy(),
+    _low_cutoff(getParam<Real>("low_cutoff")),
+    _high_cutoff(getParam<Real>("high_cutoff")),
+    _precip_conc(getParam<Real>("precip_conc")),
     _pure_EP1_phase1_coeffs(getParam<std::vector<Real> >("pure_EP1_phase1_coeffs")),
     _G_AB1CD2(declareProperty<Real>("G_AB1CD2")),
     _dG_dc(declareProperty<Real>("dGAB1CD2_dc")),
-    _d2G_dc2(declareProperty<Real>("d2GAB1CD2_dc2"))//,
+    _d2G_dc2(declareProperty<Real>("d2GAB1CD2_dc2")),
     // _d3G_dc3(declareProperty<Real>("d3GAB1CD2_dc3"))
+    _G_AB1CD2_precip(declareProperty<Real>("G_AB1CD2_precip"))
 {
   _energy.parameterize(_R, _pure_endpoint_low_coeffs, _pure_endpoint_high_coeffs, _mixture_coeffs,
                        _L0_coeffs, _L1_coeffs, _pure_EP1_phase1_coeffs);
@@ -39,10 +46,10 @@ CalphadAB1CD2Material::computeQpProperties()
 {
   Real c;
 
-  if (_c[_qp]  < 0.001)
-    c = 0.001;
-  else if (_c[_qp] > 0.655)
-    c = 0.655;
+  if (_c[_qp]  < _low_cutoff)
+    c = _low_cutoff;
+  else if (_c[_qp] > _high_cutoff)
+    c = _high_cutoff;
   else c = _c[_qp];
 
   /* _G_AB1CD2[_qp] = computeGMix(c);
@@ -55,6 +62,7 @@ CalphadAB1CD2Material::computeQpProperties()
   _dG_dc[_qp] = _energy.computeDGMixDc(c, _T[_qp]);
   _d2G_dc2[_qp] = _energy.computeD2GMixDc2(c, _T[_qp]);
 
+  _G_AB1CD2_precip[_qp] = _energy.computeGMix(_precip_conc, _T[_qp]);
 }
 /*
 Real
