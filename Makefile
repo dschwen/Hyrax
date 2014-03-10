@@ -13,21 +13,18 @@ HERD_TRUNK_DIR     ?= $(shell dirname `pwd`)
 FRAMEWORK_DIR      ?= $(MOOSE_DIR)/framework
 ###############################################################################
 
-################################## ELK MODULES ################################
+# framework
+include $(FRAMEWORK_DIR)/build.mk
+include $(FRAMEWORK_DIR)/moose.mk
+
+################################## MODULES ####################################
 PHASE_FIELD       := yes
 SOLID_MECHANICS   := yes
 TENSOR_MECHANICS  := yes
 HEAT_CONDUCTION   := yes
 MISC              := yes
+include           $(MOOSE_DIR)/modules/modules.mk
 ###############################################################################
-
-# framework
-include $(FRAMEWORK_DIR)/build.mk
-include $(FRAMEWORK_DIR)/moose.mk
-
-# modules
-ELK_DIR ?= $(HERD_TRUNK_DIR)/elk
-include $(ELK_DIR)/elk.mk
 
 # dep apps
 APPLICATION_DIR    := $(HERD_TRUNK_DIR)/hyrax

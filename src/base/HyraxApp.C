@@ -15,12 +15,12 @@
 #include "AppFactory.h"
 #include "ActionFactory.h"
 
-//Elk Includes
-#include "SolidMechanicsModule.h"
-#include "TensorMechanicsModule.h"
-#include "PhaseFieldModule.h"
-#include "HeatConductionModule.h"
-#include "MiscModule.h"
+//Module Includes
+#include "SolidMechanicsApp.h"
+#include "TensorMechanicsApp.h"
+#include "PhaseFieldApp.h"
+#include "HeatConductionApp.h"
+#include "MiscApp.h"
 
 //Kernels
 #include "ACBulkCoupled.h"
@@ -123,18 +123,20 @@ HyraxApp::HyraxApp(const std::string & name, InputParameters parameters) :
   Moose::registerObjects(_factory);
   HyraxApp::registerObjects(_factory);
 
-  // Register Elk Modules
-  Elk::PhaseField::registerObjects(_factory);
-  Elk::SolidMechanics::registerObjects(_factory);
-  Elk::TensorMechanics::registerObjects(_factory);
-  Elk::HeatConduction::registerObjects(_factory);
+  // Register Modules
+  PhaseFieldApp::registerObjects(_factory);
+  SolidMechanicsApp::registerObjects(_factory);
+  TensorMechanicsApp::registerObjects(_factory);
+  HeatConductionApp::registerObjects(_factory);
+  MiscApp::registerObjects(_factory);
 
   // Associate Syntax from SolidMechanics Module
   Moose::associateSyntax(_syntax, _action_factory);
-  Elk::SolidMechanics::associateSyntax(_syntax, _action_factory);
-  Elk::TensorMechanics::associateSyntax(_syntax, _action_factory);
-  Elk::HeatConduction::associateSyntax(_syntax, _action_factory);
-  Elk::Misc::associateSyntax(_syntax, _action_factory);
+  PhaseFieldApp::associateSyntax(_syntax, _action_factory);
+  SolidMechanicsApp::associateSyntax(_syntax, _action_factory);
+  TensorMechanicsApp::associateSyntax(_syntax, _action_factory);
+  HeatConductionApp::associateSyntax(_syntax, _action_factory);
+  MiscApp::associateSyntax(_syntax, _action_factory);
 
   //Associate syntax for Hyrax Actions
   HyraxApp::associateSyntax(_syntax, _action_factory);
