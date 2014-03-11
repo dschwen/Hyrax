@@ -3,17 +3,20 @@
     type = 'CSVDiff'
     input = 'AuxBulkEnergyCalphad.i'
     csvdiff = 'AuxBulkEnergyCalphad.csv'
+    method = 'opt oprof'
   [../]
 
   [./AuxGradientEnergy_test]
     type = 'CSVDiff'
     input = 'AuxGradientEnergy.i'
     csvdiff = 'AuxGradientEnergy.csv'
+    method = 'opt oprof'
   [../]
 
   [./AuxElasticEnergy_test]
     type = 'CSVDiff'
     input = 'AuxElasticEnergy.i'
     csvdiff = 'AuxElasticEnergy.csv'
+    method = 'opt oprof'
   [../]
 []
