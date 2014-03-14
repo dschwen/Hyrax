@@ -245,4 +245,9 @@ HyraxApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
   syntax.registerActionSyntax("OPVariantKernelAction", "OPVariantKernel");
   syntax.registerActionSyntax("NucleationAuxAction", "NucleationAux");
   syntax.registerActionSyntax("NucleationPostprocessorAction", "NucleationPostprocessor");
+
+  syntax.registerActionSyntax("RecoverBaseAction", "Output");
+  syntax.registerActionSyntax("SetupOutputAction", "Output");
+  syntax.registerActionSyntax("SetupOutputNameAction", "Output");
+  syntax.registerActionSyntax("SetupOverSamplingAction", "Output/OverSampling");
 }
