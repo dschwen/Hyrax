@@ -89,7 +89,15 @@ AuxCalphadEnergy::computeValue()
 
   Real differential = computeDifferential();
 
-  std::cout<<"differential = "<<differential<<std::endl;
+  //this is ugly, but I want to give it a try...
+  /* if (matrix_energy - precip_energy + differential > matrix_energy - precip_energy)
+    return matrix_energy - precip_energy + differential;
+  else
+    return matrix_energy - precip_energy;
+  */
+  // std::cout<<"matrix energy ="<<matrix_energy<<std::endl;
+  //std::cout<<"precip energy ="<<precip_energy<<std::endl;
+  //std::cout<<"differential = "<<differential<<std::endl;
 
   return (matrix_energy - precip_energy + differential);
 }
@@ -97,31 +105,42 @@ AuxCalphadEnergy::computeValue()
 Real
 AuxCalphadEnergy::computeMatrixEnergy()
 {
+  //Joules/meter^3
   Real chemical_energy =  ( (1 - _H)*_G_alpha[_qp] + _H*_G_delta[_qp] + _W[_qp]*_g) / _Omega[_qp];
   RankTwoTensor a = _elasticity_tensor[_qp]*(_elastic_strain[_qp]);
 
-  Real elastic_energy = a.doubleContraction( _elastic_strain[_qp]);
+  Real elastic_energy = 0.5*a.doubleContraction( _elastic_strain[_qp]);
 
-  return 0.5*(chemical_energy + elastic_energy);
+  //std::cout<<"matrix elastic energy = "<<elastic_energy<<std::endl;
+  //std::cout<<"matrix chemical energy = "<<chemical_energy<<std::endl;
+
+  return chemical_energy + elastic_energy;
 }
 
 Real
 AuxCalphadEnergy::computePrecipEnergy()
 {
   //this needs to be computed FOR the precipitate if it were this point...
-
-  Real chemical_energy = ( (1 - _H)*_G_alpha_precip[_qp] + _H*_G_delta_precip[_qp] + _W[_qp]*_g) / _Omega[_qp];
+//joules/meter^3
+ Real chemical_energy = _G_delta_precip[_qp] / _Omega[_qp];
 
  RankTwoTensor elastic_precip_strain = _local_strain[_qp] - (_precipitate_eigenstrain[_qp])[_OP_number-1];
 
- Real elastic_energy = elastic_precip_strain.doubleContraction( elastic_precip_strain);
+ RankTwoTensor a = _Cijkl_precipitate_MP[_qp]*elastic_precip_strain;
 
- return 0.5*(chemical_energy + elastic_energy);
+ Real elastic_energy = 0.5*a.doubleContraction( elastic_precip_strain);
+
+ //std::cout<<"precip elastic energy = "<<elastic_energy<<std::endl;
+ //std::cout<<"precip chemical energy = "<<chemical_energy<<std::endl;
+
+
+ return chemical_energy + elastic_energy;
 }
 
 Real
 AuxCalphadEnergy::computeDifferential()
 {
+  //Joules/meter^3
   Real dfchem_dOP = ( (_G_delta[_qp] - _G_alpha[_qp])*_dH_dOP + _W[_qp]*_dg_dOP ) / _Omega[_qp];
 
   Real dfchem_dX = ( (1-_H)*_dG_alpha[_qp] + _H*_dG_delta[_qp] ) / _Omega[_qp];
@@ -135,6 +154,7 @@ AuxCalphadEnergy::computeDifferential()
 
   Real dfel_dX = 0.5*(e1 + e2 + e3);
 
+  // std::cout<<"dfel_dX = "<<dfel_dX<<std::endl;
 
   ElasticityTensorR4 dCijkl = (_Cijkl_precipitate_MP[_qp] - _Cijkl_MP[_qp])*(-1*_dH_dOP);
   b = _Cijkl_MP[_qp]*( (_dn_misfit_strain[_qp])[_OP_number-1]) *(-1);
@@ -145,6 +165,8 @@ AuxCalphadEnergy::computeDifferential()
   e3 = c.doubleContraction( _elastic_strain[_qp]);
 
   Real dfel_dOP = 0.5*(e1 + e2 + e3);
+
+  // std::cout<<"dfel_dOP = "<<dfel_dOP<<std::endl;
 
   Real dfdc = (dfchem_dX + dfel_dX)*(_precip_cons - _X[_qp]);
 

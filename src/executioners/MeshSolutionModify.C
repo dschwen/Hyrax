@@ -108,7 +108,12 @@ MeshSolutionModify::getDT()
     new_dt = Transient::getDT();
   }
   else
-    new_dt = _time_stepper->getParam<Real>("dt");
+  {
+    if( lastSolveConverged() )
+      new_dt = _time_stepper->getParam<Real>("dt");
+    else
+      new_dt = Transient::getDT();
+  }
 
   return new_dt;
 }

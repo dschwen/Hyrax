@@ -104,8 +104,9 @@ PrecipitateMatrixMisfitMaterial::computeQpElasticityTensor()
   ElasticityTensorR4 zeros;
   zeros.zero();
 
-  _Cijkl_MP[_qp] = _Cijkl/inverse;
-  _Cijkl_precipitates_MP[_qp] = _Cijkl_precipitate/inverse;
+  //leave these unscaled for the auxkernel calculations
+  _Cijkl_MP[_qp] = _Cijkl;
+  _Cijkl_precipitates_MP[_qp] = _Cijkl_precipitate;
 
   Real sum_OP = 0;
   for (unsigned int i=0; i<_n_variants; i++)
@@ -147,16 +148,24 @@ PrecipitateMatrixMisfitMaterial::computeQpMatrixEigenstrain()
 {
   Real interpolation_value(0);
   //RankTwoTensor current_misfit;
+  Real solute = _solute[_qp];
+  
+  // make sure you don't go outside the [0,1] interval for concentration
+  if (solute < 0)
+   solute = 0;
 
   _current_matrix_misfit = _eigenstrain_matrix*_percent_matrix_misfit;
 
   for (unsigned int i=0; i<_n_variants; i++)
   {
     interpolation_value =+ (*_OP[i])[_qp]*(*_OP[i])[_qp];
-    (_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*_solute[_qp]*(*_OP[i])[_qp];
+//    (_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*_solute[_qp]*(*_OP[i])[_qp];
+    (_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*solute*(*_OP[i])[_qp];
   }
 
-  _eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*_solute[_qp]*(1 - interpolation_value);
+ // _eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*_solute[_qp]*(1 - interpolation_value);
+   _eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*solute*(1 - interpolation_value);
+
   _dc_eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*(1 - interpolation_value);
 
   _matrix_eigenstrain[_qp] = _current_matrix_misfit;
@@ -189,6 +198,11 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
 
   Real OP_sum = 0;
 
+  Real solute = _solute[_qp];
+  
+  if (solute < 0)
+   solute = 0;
+
   for(unsigned int i=0; i<_n_variants; i++)
   {
     OP_sum += (*_OP[i])[_qp]*(*_OP[i])[_qp];
@@ -197,7 +211,9 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
 
     // (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_eigenstrain_matrix*_solute[_qp] )*-2;
     // (_dndn_misfit_strain[_qp])[i] = _eigenstrain_matrix*2*(*_OP[i])[_qp];
-    (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_current_matrix_misfit*_solute[_qp] )*-2;
+    
+    //(_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_current_matrix_misfit*_solute[_qp] )*-2;
+    (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_current_matrix_misfit*solute )*-2;
     (_dndn_misfit_strain[_qp])[i] = _current_matrix_misfit*2*(*_OP[i])[_qp];
   }
 

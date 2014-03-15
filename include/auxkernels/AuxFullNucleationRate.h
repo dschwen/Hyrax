@@ -62,6 +62,10 @@ private:
 
   MaterialProperty<Real> & _D;
 
+  Real _jump_distance;
+
+  MaterialProperty<Real> & _Omega;
+
 };
 
 #endif //AUXFULLNUCLEATIONRATE_H
