@@ -349,14 +349,13 @@
   num_steps = 1
 []
 
-[Output]
+[Outputs]
   file_base = AuxElasticEnergy
   output_initial = true
-  interval = 1
-  #linear_residuals = true
   exodus = true
-  perf_log = true
-  all_var_norms = true
-
-  postprocessor_csv = true
+  [./console]
+    type = Console
+    perf_log = true
+  [../]
+  csv = true
 []

@@ -221,12 +221,13 @@
   abort_on_solve_fail = true
 []
 
-[Output]
-  linear_residuals = true
+[Outputs]
   file_base = AuxChemElastic
   output_initial = true
   exodus = true
-  perf_log = true
+  [./console]
+    type = Console
+    perf_log = true
+    linear_residuals = true
+  [../]
 []
-
-

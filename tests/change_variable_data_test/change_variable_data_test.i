@@ -87,8 +87,8 @@
   dt = 1.0
 []
 
-[Output]
+[Outputs]
   output_initial = true
-  interval = 1
   exodus = true
+  console = true
 []

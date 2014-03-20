@@ -71,12 +71,15 @@
   num_steps = 5
 []
 
-[Output]
+[Outputs]
   file_base = InitialSolutionAdaptiveDT
   output_initial = true
-  interval = 1
   exodus = true
-  perf_log = true
+  checkpoint = true
+  [./console]
+    type = Console
+    perf_log = true
+    linear_residuals = true
+  [../]
 
-  num_checkpoint_files = 1
 []

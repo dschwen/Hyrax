@@ -165,10 +165,13 @@ active = 'Periodic'
   dt = 0.03
 []
 
-[Output]
+[Outputs]
   file_base = Postprocessor_changeValue_out
   output_initial = true
-  interval = 1
   exodus = true
-  perf_log = true
+  [./console]
+    type = Console
+    perf_log = true
+    linear_residuals = true
+  [../]
 []

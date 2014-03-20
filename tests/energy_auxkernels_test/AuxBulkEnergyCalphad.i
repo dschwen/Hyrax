@@ -285,14 +285,14 @@
   num_steps = 2
 []
 
-[Output]
+[Outputs]
   file_base = AuxBulkEnergyCalphad
   output_initial = true
-  interval = 1
-  #linear_residuals = true
   exodus = true
-  perf_log = true
-  all_var_norms = true
-
-  postprocessor_csv = true
+  [./console]
+    type = Console
+    perf_log = true
+    linear_residuals = true
+  [../]
+  csv = true
 []

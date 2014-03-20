@@ -224,12 +224,14 @@
  [../]
 []
 
-[Output]
+[Outputs]
   file_base = AMR_nucleation_test
-  output_initial = true
-  interval = 1
   exodus = true
-  perf_log = true
-
-  num_checkpoint_files = 1
+  output_initial = true
+  [./console]
+    type = Console
+    perf_log = true
+    linear_residuals = true
+  [../]
+  checkpoint = true
 [../]

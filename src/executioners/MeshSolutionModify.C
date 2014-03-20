@@ -76,11 +76,15 @@ MeshSolutionModify::endStep()
     }
     _problem.computeUserObjects(EXEC_CUSTOM);
 
+    // perform the output for the current timestep
+    _output_warehouse.outputStep();
+
     // if _at_sync_point is true, force the output no matter what
     _problem.output(_at_sync_point);
     _problem.outputPostprocessors(_at_sync_point);
     _problem.outputRestart(_at_sync_point);
   }
+
 
   std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
 }

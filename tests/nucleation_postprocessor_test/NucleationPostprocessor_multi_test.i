@@ -308,14 +308,14 @@ active = 'Periodic'
 #  [../]
 []
 
-[Output]
+[Outputs]
   file_base = NucleationPostprocessor_multi_out
   output_initial = true
   interval = 1
   exodus = true
-  perf_log = true
-
-  #[./OverSampling]
-  #  refinements = 2
-  #[../]
+  [./console]
+    type = Console
+    perf_log = true
+    linear_residuals = true
+  [../]
 []
