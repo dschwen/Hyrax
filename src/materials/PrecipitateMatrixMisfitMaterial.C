@@ -111,7 +111,7 @@ PrecipitateMatrixMisfitMaterial::computeQpElasticityTensor()
   Real sum_OP = 0;
   for (unsigned int i=0; i<_n_variants; i++)
   {
-    sum_OP += (*_OP[i])[_qp]*(*_OP[i])[_qp];
+    //sum_OP += (*_OP[i])[_qp]*(*_OP[i])[_qp];
     //(_dn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2*(*_OP[i])[_qp] )/inverse;
     (_dn_elasticity_tensor[_qp])[i] = (_Cijkl_precipitate - _Cijkl)*computeDHeaviside(i)/inverse;
     //(_dndn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2 )/inverse;
@@ -149,7 +149,7 @@ PrecipitateMatrixMisfitMaterial::computeQpMatrixEigenstrain()
   Real interpolation_value(0);
   //RankTwoTensor current_misfit;
   Real solute = _solute[_qp];
-  
+
   // make sure you don't go outside the [0,1] interval for concentration
   if (solute < 0)
    solute = 0;
@@ -164,7 +164,7 @@ PrecipitateMatrixMisfitMaterial::computeQpMatrixEigenstrain()
   }
 
  // _eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*_solute[_qp]*(1 - interpolation_value);
-   _eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*solute*(1 - interpolation_value);
+  _eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*solute*(1 - interpolation_value);
 
   _dc_eigenstrain_matrix_MP[_qp] = _current_matrix_misfit*(1 - interpolation_value);
 
@@ -199,7 +199,7 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
   Real OP_sum = 0;
 
   Real solute = _solute[_qp];
-  
+
   if (solute < 0)
    solute = 0;
 
@@ -209,9 +209,8 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
     sum_precipitate_strains += (_eigenstrains_MP[_qp])[i];
     (_dn_misfit_strain[_qp])[i] = (_d_eigenstrains_MP[_qp])[i] - (_dn_eigenstrain_matrix_MP[_qp])[i];
 
-    // (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_eigenstrain_matrix*_solute[_qp] )*-2;
     // (_dndn_misfit_strain[_qp])[i] = _eigenstrain_matrix*2*(*_OP[i])[_qp];
-    
+
     //(_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_current_matrix_misfit*_solute[_qp] )*-2;
     (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_current_matrix_misfit*solute )*-2;
     (_dndn_misfit_strain[_qp])[i] = _current_matrix_misfit*2*(*_OP[i])[_qp];
@@ -251,11 +250,21 @@ PrecipitateMatrixMisfitMaterial::computeHeaviside()
   Real heaviside_first(0);
   Real heaviside_second(0);
 
+  Real OP;
+
   //may need to put some checking in here so that OP fixed between 0 and 1
   for(unsigned int i=0; i<_n_variants; i++)
   {
-    heaviside_first += std::pow((*_OP[i])[_qp], 2);
-    heaviside_second += std::pow((*_OP[i])[_qp], 3);
+    OP = (*_OP[i])[_qp];
+    if (OP < 0)
+      OP = 0;
+    if (OP > 1)
+      OP = 1;
+
+    //heaviside_first += std::pow((*_OP[i])[_qp], 2);
+    // heaviside_second += std::pow((*_OP[i])[_qp], 3);
+    heaviside_first += std::pow(OP, 2);
+    heaviside_second += std::pow(OP, 3);
   }
 
   return 3*heaviside_first - 2*heaviside_second;
@@ -264,11 +273,25 @@ PrecipitateMatrixMisfitMaterial::computeHeaviside()
 Real
 PrecipitateMatrixMisfitMaterial::computeDHeaviside(unsigned int i)
 {
-  return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
+  Real OP = (*_OP[i])[_qp];
+  if (OP < 0)
+    OP = 0;
+  if (OP > 1)
+    OP = 1;
+
+  //return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
+  return 6*OP*(1 - OP);
 }
 
 Real
 PrecipitateMatrixMisfitMaterial::computeD2Heaviside(unsigned int i)
 {
-  return 6*(1 - (*_OP[i])[_qp]);
+  Real OP = (*_OP[i])[_qp];
+  if (OP < 0)
+    OP = 0;
+  if (OP > 1)
+    OP = 1;
+
+  //return 6*(1 - (*_OP[i])[_qp]);
+  return 6*(1 - OP);
 }
