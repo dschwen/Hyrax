@@ -42,8 +42,15 @@ MeshSolutionModify::MeshSolutionModify(const std::string & name, InputParameters
 }
 
 void
-MeshSolutionModify::endStep()
+MeshSolutionModify::endStep(Real input_time)
 {
+  if (input_time == -1.0)
+    _time = _time_old + _dt;
+  else
+    _time = input_time;
+
+  _picard_converged=false;
+
   //std::cout<<"in MeshSolutionModify::endStep()"<<std::endl;
   _last_solve_converged = lastSolveConverged();
 
