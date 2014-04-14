@@ -47,7 +47,11 @@ AuxNucleationProbability::computeValue()
 {
   for(unsigned int i=0; i<_n_OP_vars; i++)
   {
-    if((*_coupled_OP[i])[_qp] > _OP_threshold)
+    Real OP = (*_coupled_OP[i])[_qp];
+    if (OP < 0)
+      OP = _OP_threshold;
+
+    if(OP > _OP_threshold)
       return 0.0;
   }
 

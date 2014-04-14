@@ -9,6 +9,7 @@
 #include "AuxFullNucleationRate.h"
 
 #include <cmath>
+#include <iostream>
 
 template<>
 InputParameters validParams<AuxFullNucleationRate>()
@@ -75,11 +76,10 @@ AuxFullNucleationRate::computeValue()
   computeCriticalFrequency();
   computeNumAtoms();
 
-//  std::cout<<"ZNBetastar = "<< _Z*_N*_beta_star <<std::endl;
-//  std::cout<<"(-1*G_star)/(Kb*T) = "<<(-1*_G_star)/ (_Kb*_T[_qp]) <<std::endl;
-//  std::cout<<"exp(stuff) = "<<std::exp((-1*_G_star)/ (_Kb*_T[_qp]))<<std::endl;
-
-//  std::cout<<"J* scaled ="<<_scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ))<<std::endl;
+  std::cout<<"ZNBetastar = "<< _Z*_N*_beta_star <<std::endl;
+  std::cout<<"(-1*G_star)/(Kb*T) = "<<(-1*_G_star)/ (_Kb*_T[_qp]) <<std::endl;
+  std::cout<<"exp(stuff) = "<<std::exp((-1*_G_star)/ (_Kb*_T[_qp]))<<std::endl;
+  std::cout<<"J* scaled ="<<_scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ))<<std::endl;
 
   return  _scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ));
 }
@@ -97,7 +97,7 @@ AuxFullNucleationRate::computeCriticalRadius()
     //else
     //mooseError("honky, your problem dimesion must be 2 or 3 (AuxFullNucleationRate");
 
-//  std::cout<<"r* = "<<_r_star<<std::endl;
+  std::cout<<"r* = "<<_r_star<<std::endl;
 }
 
 void
@@ -129,7 +129,7 @@ AuxFullNucleationRate::computeCriticalEnergy()
 
   _G_star = alpha*std::pow(_gamma, 3)/std::pow(_coupled_energy[_qp], 2);
 
-  // std::cout<<"G* in Joules = "<<_G_star<<std::endl;
+  std::cout<<"G* in Joules = "<<_G_star<<std::endl;
 
   //_G_star = (4*libMesh::pi*_r_star*_r_star*_coupled_energy[_qp])
   //  + 2*libMesh::pi*_r_star*_gamma;
@@ -167,7 +167,7 @@ AuxFullNucleationRate::computeZeldovichFactor()
 
   _Z =std::sqrt( _G_star/( 3*libMesh::pi*Nc*Nc*_Kb*_T[_qp] ));
 
-  //std::cout<<"Z = "<<_Z<<std::endl;
+  std::cout<<"Z = "<<_Z<<std::endl;
 }
 
 void
@@ -209,7 +209,7 @@ AuxFullNucleationRate::computeNumAtoms()
 
     _N = vol/atomic_volume;
 
-    // std::cout<<"N = "<<_N<<std::endl;
+     std::cout<<"N = "<<_N<<std::endl;
 }
 
 

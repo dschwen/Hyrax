@@ -39,6 +39,8 @@ private:
   MaterialProperty<Real> & _dG_dc;
   MaterialProperty<Real> & _d2G_dc2;
   //MaterialProperty<Real> & _d3G_dc3;
+  MaterialProperty<Real> & _d2G_dcdT;
+
   MaterialProperty<Real> & _G_AB1CD1_precip;
 };
 

@@ -42,6 +42,7 @@
 #include "SplitCoupledCHWRes.h"
 #include "CHPrecipMatrixElasticity.h"
 #include "ACPrecipMatrixElasticity.h"
+#include "Soret.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -172,6 +173,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(SplitCoupledCHWRes);
   registerKernel(CHPrecipMatrixElasticity);
   registerKernel(ACPrecipMatrixElasticity);
+  registerKernel(Soret);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);

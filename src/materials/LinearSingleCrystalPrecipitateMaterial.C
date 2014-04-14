@@ -87,6 +87,8 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   // fill in the original tensors.  Don't touch after this!
   _Cijkl_precipitate.fillFromInputVector(_Cijkl_precipitate_vector, _all_21);
   _eigenstrain.fillFromInputVector(_eigenstrain_vector);
+
+
   _misfit_T_coeffs.fillFromInputVector(_misfit_T_coeffs_vector);
 }
 
@@ -154,14 +156,14 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
   //fill in the material properties
   for (unsigned int i=0; i<_n_variants; i++)
   {
-    Real OP = (*_OP[i])[_qp];
+    /*  Real OP = (*_OP[i])[_qp];
     if (OP < 0)
-      OP = 0;
+    OP = 0;*/
 
-    //interpolation_value = (*_OP[i])[_qp]*(*_OP[i])[_qp];
-    //d_interp_value = 2.0*(*_OP[i])[_qp];
-    interpolation_value = OP*OP;
-    d_interp_value = 2*OP;
+    interpolation_value = (*_OP[i])[_qp]*(*_OP[i])[_qp];
+    d_interp_value = 2.0*(*_OP[i])[_qp];
+    // interpolation_value = OP*OP;
+    //d_interp_value = 2*OP;
 
     (_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*interpolation_value;
     (_d_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*d_interp_value;

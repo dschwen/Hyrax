@@ -126,3 +126,54 @@ CalphadAB1CD1::computeD2GMixDc2(const Real & c, const Real & T) const
     return ref + ideal;
   }
 }
+
+Real
+CalphadAB1CD1::computeD2GMixDcDT(const Real & c, const Real & T) const
+{
+  Real ref;
+  Real ideal;
+  Real c1;
+
+   if( c < 0.001)
+     c1 = 0.001;
+
+   else if (c > 0.499)
+     c1 = 0.499;
+
+   else
+     c1 = c;
+
+   ref = -2*calculateDFirstLatticeGminusHserDT(c1, T) + calculateDSecondLatticeGminusHserDT(c1, T);
+
+   ideal = _R*( std::log(c1/(1-c1)) - 2*std::log((1-2*c1)/(1-c1)) );
+
+   return ref + ideal;
+}
+
+Real
+CalphadAB1CD1::calculateDFirstLatticeGminusHserDT(const Real & c, const Real & T) const
+{
+  return _pure_endpoint_1_coeffs[1]
+    + _pure_endpoint_1_coeffs[2]*(1 + std::log(T))
+    + _pure_endpoint_1_coeffs[3]*2*T
+    - _pure_endpoint_1_coeffs[4]/(T*T);
+}
+
+Real
+CalphadAB1CD1::calculateDSecondLatticeGminusHserDT(const Real & c, const Real & T) const
+{
+  Real first_term = _mixture_coeffs[1];
+
+  Real second_term = _pure_endpoint_1_coeffs[1]
+    + _pure_endpoint_1_coeffs[2]*(1 + std::log(T))
+    + _pure_endpoint_1_coeffs[3]*2*T
+    - _pure_endpoint_1_coeffs[4]/(T*T);
+
+  Real third_term = 0.5*(_pure_endpoint_2_coeffs[1]
+                         + _pure_endpoint_2_coeffs[2]*(1 + std::log(T))
+                         + _pure_endpoint_2_coeffs[3]*2*T
+                         - _pure_endpoint_2_coeffs[4]/(T*T) );
+
+  return first_term + second_term + third_term;
+}
+

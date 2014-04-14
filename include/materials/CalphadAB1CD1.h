@@ -18,10 +18,13 @@ public:
 
   //virtual Real calculateFirstLatticeGminusHser();
   virtual Real calculateSecondLatticeGminusHser(const Real & c, const Real & T) const;
+  virtual Real calculateDFirstLatticeGminusHserDT(const Real & c, const Real & T) const;
+   virtual Real calculateDSecondLatticeGminusHserDT(const Real & c, const Real & T) const;
 
   virtual Real computeGMix(const Real & c, const Real & T) const;
   virtual Real computeDGMixDc(const Real & c, const Real & T) const;
   virtual Real computeD2GMixDc2(const Real & c, const Real & T) const;
+  virtual Real computeD2GMixDcDT(const Real & c, const Real & T) const;
 
 protected:
 private:

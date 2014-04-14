@@ -158,16 +158,16 @@ PrecipitateMatrixMisfitMaterial::computeQpMatrixEigenstrain()
 
   for (unsigned int i=0; i<_n_variants; i++)
   {
-    Real OP = (*_OP[i])[_qp];
+    /*  Real OP = (*_OP[i])[_qp];
     if (OP < 0)
-      OP = 0;
+    OP = 0;*/
 
-   // interpolation_value =+ (*_OP[i])[_qp]*(*_OP[i])[_qp];
-   interpolation_value =+ OP;
+   interpolation_value =+ (*_OP[i])[_qp]*(*_OP[i])[_qp];
+   // interpolation_value =+ OP;
 
 //    (_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*_solute[_qp]*(*_OP[i])[_qp];
-    //(_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*solute*(*_OP[i])[_qp];
-    (_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*solute*OP;
+   (_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*solute*(*_OP[i])[_qp];
+   // (_dn_eigenstrain_matrix_MP[_qp])[i] = _current_matrix_misfit*2*solute*OP;
 
   }
 
@@ -213,12 +213,12 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
 
   for(unsigned int i=0; i<_n_variants; i++)
   {
-    Real OP = (*_OP[i])[_qp];
+    /*   Real OP = (*_OP[i])[_qp];
     if (OP < 0)
-      OP = 0;
+    OP = 0;*/
 
-    //OP_sum += (*_OP[i])[_qp]*(*_OP[i])[_qp];
-    OP_sum += OP*OP;
+    OP_sum += (*_OP[i])[_qp]*(*_OP[i])[_qp];
+    //OP_sum += OP*OP;
 
     sum_precipitate_strains += (_eigenstrains_MP[_qp])[i];
     (_dn_misfit_strain[_qp])[i] = (_d_eigenstrains_MP[_qp])[i] - (_dn_eigenstrain_matrix_MP[_qp])[i];
@@ -227,8 +227,8 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
 
     //(_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_current_matrix_misfit*_solute[_qp] )*-2;
     (_dcdn_misfit_strain[_qp])[i] = ( (_precipitate_eigenstrain[_qp])[i] -_current_matrix_misfit*solute )*-2;
-    //(_dndn_misfit_strain[_qp])[i] = _current_matrix_misfit*2*(*_OP[i])[_qp];
-    (_dndn_misfit_strain[_qp])[i] = _current_matrix_misfit*2*OP;
+    (_dndn_misfit_strain[_qp])[i] = _current_matrix_misfit*2*(*_OP[i])[_qp];
+    //(_dndn_misfit_strain[_qp])[i] = _current_matrix_misfit*2*OP;
 
   }
 
