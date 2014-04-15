@@ -23,6 +23,7 @@ InputParameters validParams<AuxNucleationProbability>()
   params.addRequiredCoupledVar("coupled_variables", "coupled order parameter variables");
   params.addRequiredParam<int>("n_OP_vars", "# of coupled OP variables");
   params.addParam<Real>("OP_threshold", 0.01, "Threshold value for determining existence within 2nd phase");
+  params.addParam<Real>("P_threshold",1,"Threshold value above which to ignore probability");
 
   return params;
 }
@@ -31,7 +32,8 @@ AuxNucleationProbability::AuxNucleationProbability(const std::string & name, Inp
   : AuxKernel(name, parameters),
     _coupled_nuc_rate(coupledValue("coupled_aux_var")),
     _n_OP_vars(getParam<int>("n_OP_vars")),
-    _OP_threshold(getParam<Real>("OP_threshold"))
+    _OP_threshold(getParam<Real>("OP_threshold")),
+    _P_threshold(getParam<Real>("P_threshold"))
 {
   if(_n_OP_vars != coupledComponents("coupled_variables"))
     mooseError("Please match the number of orientation variants to coupled OPs (AuxNucleationProbability).");
@@ -47,13 +49,13 @@ AuxNucleationProbability::computeValue()
 {
   for(unsigned int i=0; i<_n_OP_vars; i++)
   {
-    Real OP = (*_coupled_OP[i])[_qp];
-    if (OP < 0)
-      OP = _OP_threshold;
-
-    if(OP > _OP_threshold)
-      return 0.0;
+    //Real OP = (*_coupled_OP[i])[_qp];
+    if ( (*_coupled_OP[i])[_qp] > _OP_threshold)
+     return -1;
   }
+
+//  if (1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt) > _P_threshold)
+//    return 0;
 
   return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt);
 }

@@ -32,8 +32,9 @@ InputParameters validParams<AuxFullNucleationRate>()
   params.addRequiredCoupledVar("X", "atomic fraction of solute");
 
   params.addRequiredParam<Real>("jump_distance", "atomic distance");
-//  params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
-  // params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
+  params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
+  params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
+  params.addParam<Real>("OP_threshold", 0.1, "threshold below which not to calculate nucleation rate");
 
 
   return params;
@@ -49,14 +50,15 @@ AuxFullNucleationRate::AuxFullNucleationRate(const std::string & name, InputPara
     _gamma(getParam<Real>("gamma")),
     _Kb(getParam<Real>("Kb")),
     _scale_factor(getParam<Real>("scale_factor")),
-    //  _n_OP_variables(getParam<int>("n_OP_variables")),
+    _n_OP_variables(getParam<int>("n_OP_variables")),
     _T(coupledValue("T")),
     _X(coupledValue("X")),
     _D(getMaterialProperty<Real>("D_alpha")),
     _jump_distance(getParam<Real>("jump_distance")),
-    _Omega(getMaterialProperty<Real>("molar_volume"))
+    _Omega(getMaterialProperty<Real>("molar_volume")),
+    _OP_threshold(getParam<Real>("OP_threshold"))
 {
-/*  // Create a vector of the coupled OP variables and gradients
+ // Create a vector of the coupled OP variables and gradients
   if(_n_OP_variables != coupledComponents("OP_variable_names"))
     mooseError("Please match the # of orientation variants to coupled OPs (CHCoupledCalphad)");
 
@@ -64,7 +66,6 @@ AuxFullNucleationRate::AuxFullNucleationRate(const std::string & name, InputPara
 
   for(unsigned int i=0; i< _n_OP_variables; i++)
     _OP[i] = &coupledValue("OP_variable_names", i);
-*/
 }
 
 Real
@@ -76,10 +77,16 @@ AuxFullNucleationRate::computeValue()
   computeCriticalFrequency();
   computeNumAtoms();
 
-  std::cout<<"ZNBetastar = "<< _Z*_N*_beta_star <<std::endl;
+  /*std::cout<<"ZNBetastar = "<< _Z*_N*_beta_star <<std::endl;
   std::cout<<"(-1*G_star)/(Kb*T) = "<<(-1*_G_star)/ (_Kb*_T[_qp]) <<std::endl;
   std::cout<<"exp(stuff) = "<<std::exp((-1*_G_star)/ (_Kb*_T[_qp]))<<std::endl;
   std::cout<<"J* scaled ="<<_scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ))<<std::endl;
+  */
+  for (unsigned int i=0; i< _n_OP_variables; i++)
+   {
+    if ((*_OP[i])[_qp] > _OP_threshold)
+	return 0;
+   }
 
   return  _scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ));
 }
@@ -97,7 +104,7 @@ AuxFullNucleationRate::computeCriticalRadius()
     //else
     //mooseError("honky, your problem dimesion must be 2 or 3 (AuxFullNucleationRate");
 
-  std::cout<<"r* = "<<_r_star<<std::endl;
+    // std::cout<<"r* = "<<_r_star<<std::endl;
 }
 
 void
@@ -129,7 +136,7 @@ AuxFullNucleationRate::computeCriticalEnergy()
 
   _G_star = alpha*std::pow(_gamma, 3)/std::pow(_coupled_energy[_qp], 2);
 
-  std::cout<<"G* in Joules = "<<_G_star<<std::endl;
+  // std::cout<<"G* in Joules = "<<_G_star<<std::endl;
 
   //_G_star = (4*libMesh::pi*_r_star*_r_star*_coupled_energy[_qp])
   //  + 2*libMesh::pi*_r_star*_gamma;
@@ -167,7 +174,7 @@ AuxFullNucleationRate::computeZeldovichFactor()
 
   _Z =std::sqrt( _G_star/( 3*libMesh::pi*Nc*Nc*_Kb*_T[_qp] ));
 
-  std::cout<<"Z = "<<_Z<<std::endl;
+//  std::cout<<"Z = "<<_Z<<std::endl;
 }
 
 void
@@ -209,7 +216,7 @@ AuxFullNucleationRate::computeNumAtoms()
 
     _N = vol/atomic_volume;
 
-     std::cout<<"N = "<<_N<<std::endl;
+    //   std::cout<<"N = "<<_N<<std::endl;
 }
 
 

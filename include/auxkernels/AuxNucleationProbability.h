@@ -42,7 +42,7 @@ private:
   std::vector<VariableValue *> _coupled_OP;  ///< PDE variable (concentration
   unsigned int _n_OP_vars;
   Real _OP_threshold;
-
+  Real _P_threshold;
 };
 
 #endif //AUXNUCLEATIONPROBABILITY_H

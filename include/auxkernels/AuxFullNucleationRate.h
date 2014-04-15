@@ -55,8 +55,8 @@ private:
   //Real _temperature;
   Real _scale_factor;
 
-  // unsigned int _n_OP_variables;
-  //std::vector<VariableValue *> _OP;
+  unsigned int _n_OP_variables;
+  std::vector<VariableValue *> _OP;
   VariableValue & _T;
   VariableValue & _X;
 
@@ -65,7 +65,7 @@ private:
   Real _jump_distance;
 
   MaterialProperty<Real> & _Omega;
-
+  Real _OP_threshold;
 };
 
 #endif //AUXFULLNUCLEATIONRATE_H
