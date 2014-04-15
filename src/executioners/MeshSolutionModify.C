@@ -77,20 +77,18 @@ MeshSolutionModify::endStep(Real input_time)
       {
         std::cout<<"_problem.adaptMesh()"<<std::endl;
         _problem.adaptMesh();
-        _problem.out().meshChanged();
-      }
+}
 #endif
     }
     _problem.computeUserObjects(EXEC_CUSTOM);
 
+    // indicate a forceed output if at a sync point
+    if (_at_sync_point)
+      _output_warehouse.forceOutput();
+
     // perform the output for the current timestep
     _output_warehouse.outputStep();
-
-    // if _at_sync_point is true, force the output no matter what
-    _problem.output(_at_sync_point);
-    _problem.outputPostprocessors(_at_sync_point);
-    _problem.outputRestart(_at_sync_point);
-  }
+}
 
 
   std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
