@@ -54,9 +54,9 @@ AuxNucleationProbability::computeValue()
      return -1;
   }
 
-//  if (1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt) > _P_threshold)
-//    return 0;
-
-  return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt);
+  if (1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt) > _P_threshold)
+    return 0;
+  else
+    return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt);
 }
 
