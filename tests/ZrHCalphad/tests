@@ -3,7 +3,7 @@
     type = 'Exodiff'
     input = 'ZrHCalphad.i'
     exodiff = 'ZrHCalphad.e'
-  
+    method = 'OPT OPROF'  # Too slow for debug     
   [../]
 
   [./ZrHCalphad_3OP_test]
