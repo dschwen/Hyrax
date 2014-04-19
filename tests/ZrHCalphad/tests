@@ -10,6 +10,6 @@
     type = 'Exodiff'
     input = 'ZrHCalphad_3OP.i'
     exodiff = 'ZrHCalphad_3OP.e'
-   
+    method = 'OPT OPROF'  # Too slow for debug   
   [../]
 []
