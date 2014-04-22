@@ -31,7 +31,7 @@ public:
   CHBulkPolyCoupled(const std::string & name, InputParameters parameters);
 
 protected:
-  virtual RealGradient computeGradDFDCons(PFFunctionType type, Real c, RealGradient grad_c);
+  virtual RealGradient computeGradDFDCons(PFFunctionType type);
 
 
 private:

@@ -26,16 +26,16 @@ CHLarry::CHLarry(const std::string & name, InputParameters parameters)
 }
 
 RealGradient
-CHLarry::computeGradDFDCons(PFFunctionType type, Real c, RealGradient grad_c)
+CHLarry::computeGradDFDCons(PFFunctionType type)
 {
   switch (type)
   {
   case Residual:
-    return _W*(2.0 - 12.0*c + 12.0*c*c)*grad_c;
+    return _W*(2.0 - 12.0*_u[_qp] + 12.0*_u[_qp]*_u[_qp]) * _grad_u[_qp];
 
   case Jacobian:
     //this isn't necessarily perfect
-    return _W*_grad_phi[_j][_qp]*(-12.0*_phi[_j][_qp] + 24.0*c*_phi[_j][_qp]);
+    return _W*_grad_phi[_j][_qp]*(-12.0*_phi[_j][_qp] + 24.0*_u[_qp]*_phi[_j][_qp]);
   }
   mooseError("invalid type passed in");
 }

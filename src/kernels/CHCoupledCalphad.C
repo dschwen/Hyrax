@@ -57,7 +57,7 @@ CHCoupledCalphad::CHCoupledCalphad(const std::string & name, InputParameters par
 }
 
 RealGradient
-CHCoupledCalphad::computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradient /*grad_c*/)
+CHCoupledCalphad::computeGradDFDCons(PFFunctionType type)
 {
   //std::cout<<"in CHCoupledCalphad computeDFDOP"<<std::endl;
   RealGradient grad_conserved_term, grad_nonconserved_term;
@@ -152,4 +152,3 @@ CHCoupledCalphad::computeGradNonconservedTerm()
 
   return sum;
 }
-

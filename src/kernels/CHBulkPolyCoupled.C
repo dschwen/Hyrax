@@ -47,7 +47,7 @@ CHBulkPolyCoupled::CHBulkPolyCoupled(const std::string & name, InputParameters p
 }
 
 RealGradient
-CHBulkPolyCoupled::computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradient grad_c)
+CHBulkPolyCoupled::computeGradDFDCons(PFFunctionType type)
 {
   RealGradient op_sum;
   op_sum.zero();
@@ -60,7 +60,7 @@ CHBulkPolyCoupled::computeGradDFDCons(PFFunctionType type, Real /*c*/, RealGradi
       op_sum += (*_coupled_OP_variables[i])[_qp]*(*_coupled_OP_grads[i])[_qp];
     }
 
-    return _a1[_qp]*(grad_c) + _a2[_qp]*(op_sum);
+    return _a1[_qp]*(_grad_u[_qp]) + _a2[_qp]*(op_sum);
     //return _a1[_qp]*(grad_c) + _a2[_qp]*(_coupled_var[_qp]*_coupled_grad[_qp]) ;
 
   case Jacobian:
