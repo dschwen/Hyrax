@@ -151,7 +151,7 @@ NucleationLocationUserObject::finalize()
   Nucleus::pack(_local_nucleus, _packed_data);
 
   // Gather all the shared data onto each processor
-  Parallel::allgather(_packed_data, false);
+  _communicator.allgather(_packed_data, false);
 
   //unpack all the data into the "global" variable
   Nucleus::unpack(_packed_data, _nuclei);

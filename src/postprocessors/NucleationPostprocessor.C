@@ -77,10 +77,10 @@ NucleationPostprocessor::modifySolutionVector()
   searchForNucleationEvents();
 
   // Gather all the shared data onto each processor
-  Parallel::allgather(_local_start_times, false);
-  Parallel::allgather(_local_end_times, false);
-  Parallel::allgather(_local_orientation_type, false);
-  Parallel::allgather(_local_node_ids, false);
+  _communicator.allgather(_local_start_times, false);
+  _communicator.allgather(_local_end_times, false);
+  _communicator.allgather(_local_orientation_type, false);
+  _communicator.allgather(_local_node_ids, false);
 
   std::copy(_local_start_times.begin(), _local_start_times.end(), std::back_inserter(_start_times));
   std::copy(_local_end_times.begin(), _local_end_times.end(), std::back_inserter(_end_times));
