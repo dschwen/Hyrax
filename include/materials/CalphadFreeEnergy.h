@@ -5,6 +5,8 @@
 #include "libmesh/libmesh.h"
 #include <vector>
 
+using libMesh::Real;
+
 class CalphadFreeEnergy
 {
 public:
