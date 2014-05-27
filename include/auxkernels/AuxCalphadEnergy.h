@@ -64,7 +64,7 @@ protected:
 
 
   MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
-  MaterialProperty<RankTwoTensor> _matrix_eigenstrain;
+  MaterialProperty<RankTwoTensor> & _matrix_eigenstrain;
 
   MaterialProperty<Real> & _Omega;
   MaterialProperty<Real> & _W;
