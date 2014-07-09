@@ -85,7 +85,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     _OP[i] = &coupledValue("variable_names", i);
 
   // fill in the original tensors.  Don't touch after this!
-  _Cijkl_precipitate.fillFromInputVector(_Cijkl_precipitate_vector, _all_21);
+  _Cijkl_precipitate.fillFromInputVector(_Cijkl_precipitate_vector, _fill_method);
   _eigenstrain.fillFromInputVector(_eigenstrain_vector);
 
 

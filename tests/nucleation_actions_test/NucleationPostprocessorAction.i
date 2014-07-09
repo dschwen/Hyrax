@@ -226,7 +226,7 @@
     e_precipitate = '0.00551  0.0564  0.0570  0.0  0.0  0.0'
     n_variants = 2
     variable_names = 'n1 n2'
-    all_21 = false
+    fill_method = symmetric9
   [../]
 []
 
