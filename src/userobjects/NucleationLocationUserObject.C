@@ -27,7 +27,11 @@ InputParameters validParams<NucleationLocationUserObject>()
   params.addRequiredCoupledVar("coupled_aux_vars", "coupled elemental auxiliary variables");
   params.addRequiredParam<int>("n_coupled_aux", "# of coupled aux variables");
   params.addRequiredParam<Real>("dwell_time", "How long nucleation event is");
-  params.set<MooseEnum>("execute_on") = "timestep_begin";
+
+  std::vector<MooseEnum> execute_options = SetupInterface::getExecuteOptions();
+  execute_options[0] = "timestep_begin";
+  params.set<std::vector<MooseEnum> >("execute_on") = execute_options;
+
   params.addRequiredParam<int>("num_orientations", "# of orientation variants");
   params.addParam<Real>("boundary_width", 0.0, "the distance from mesh boundary to not nucleate");
   params.addParam<int>("random_seed", 0.0, "the random number seed for Bernoulli trial");
