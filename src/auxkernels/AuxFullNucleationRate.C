@@ -34,7 +34,7 @@ InputParameters validParams<AuxFullNucleationRate>()
   params.addRequiredParam<Real>("jump_distance", "atomic distance");
   params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
-  params.addParam<Real>("OP_threshold", 0.1, "threshold below which not to calculate nucleation rate");
+  params.addParam<Real>("OP_threshold", 0.0001, "threshold below which not to calculate nucleation rate");
 
 
   return params;
@@ -88,80 +88,34 @@ AuxFullNucleationRate::computeValue()
 	return 0;
    }
 */
-  return  _scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ));
+  Real rate = _scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ));
+
+  if (rate < 0)
+    return 0;
+  else
+    return rate;
+
+  //return  _scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ));
 }
 
 void
 AuxFullNucleationRate::computeCriticalRadius()
 {
-//  if (_mesh_dimension == 2)
-//  _r_star = _gamma/(-4*_coupled_energy[_qp]);
+  //this is calculated as if in 3D
+  _r_star = 2*_gamma/_coupled_energy[_qp];
 
-  //else if (_mesh_dimension == 3)
-  //removed the negative sign
-    _r_star = 2*_gamma/_coupled_energy[_qp];
-
-    //else
-    //mooseError("honky, your problem dimesion must be 2 or 3 (AuxFullNucleationRate");
-
-    // std::cout<<"r* = "<<_r_star<<std::endl;
+  // std::cout<<"r* = "<<_r_star<<std::endl;
 }
 
 void
 AuxFullNucleationRate::computeCriticalEnergy()
 {
-  // if (_mesh_dimension == 2)
-  //_G_star = (4*libMesh::pi*_r_star*_r_star*_coupled_energy[_qp])
-  //  + 2*libMesh::pi*_r_star*_gamma;
-
-  //else if (_mesh_dimension == 3)
-  // _G_star = (4*libMesh::pi*_r_star*_r_star*_r_star*_coupled_energy[_qp])/3
-  //  + 4*libMesh::pi*_r_star*_r_star*_gamma;
-
-    //else
-    //mooseError("honky, your problem dimesion must be 2 or 3 (AuxFullNucleationRate");
-  //unsigned int d = (int) _mesh_dimension;
-
- Real alpha;
-
- // if (_mesh_dimension == 2)
- // alpha = libMesh::pi;
-
- // else if (_mesh_dimension == 3)
-    alpha = 16*libMesh::pi/3;
-
-    // else
-    //mooseError("honky, your problem dimesion must be 2 or 3 (AuxFullNucleationRate");
-
+  //this is calculated as if in 3D
+  Real alpha = 16*libMesh::pi/3;
 
   _G_star = alpha*std::pow(_gamma, 3)/std::pow(_coupled_energy[_qp], 2);
 
   // std::cout<<"G* in Joules = "<<_G_star<<std::endl;
-
-  //_G_star = (4*libMesh::pi*_r_star*_r_star*_coupled_energy[_qp])
-  //  + 2*libMesh::pi*_r_star*_gamma;
-
-  //else if (_mesh_dimension == 3)
-  // _G_star = (4*libMesh::pi*_r_star*_r_star*_r_star*_coupled_energy[_qp])/3
-  //  + 4*libMesh::pi*_r_star*_r_star*_gamma;
-
-    //else
-    //mooseError("honky, your problem dimesion must be 2 or 3 (AuxFullNucleationRate");
-
-  // Real critical_volume = 4*libMesh::pi*_r_star*_r_star*_r_star/3;
-
-  //rstar seems kind of large, so I'm going to chop it in half, hence /8)
-  //Real critical_volume = 4*libMesh::pi*_r_star*_r_star*_r_star/3/8;
-
-  //here I'm assuming that the molar volume is constant across phases.. meh
-  //Real num_atoms = critical_volume*6.02214E23/_Omega[_qp];
-
-  // _G_star /= num_atoms;
-
-
-//  std::cout<<"critical volume = "<<critical_volume<<std::endl;
-//  std::cout<<"num_atoms = "<<num_atoms<<std::endl;
-//  std::cout<<"G* = "<<_G_star<<std::endl;
 }
 
 void
@@ -174,7 +128,7 @@ AuxFullNucleationRate::computeZeldovichFactor()
 
   _Z =std::sqrt( _G_star/( 3*libMesh::pi*Nc*Nc*_Kb*_T[_qp] ));
 
-//  std::cout<<"Z = "<<_Z<<std::endl;
+  //std::cout<<"Z = "<<_Z<<std::endl;
 }
 
 void
@@ -183,40 +137,32 @@ AuxFullNucleationRate::computeCriticalFrequency()
   Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density;
 
   // Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density/4;
-// std::cout<<"Zc*X = "<<Zc*_X[_qp]<<std::endl;
+  //std::cout<<"Zc*X = "<<Zc*_X[_qp]<<std::endl;
 
   _beta_star = Zc*_X[_qp]*_D[_qp]/ ( std::pow(_jump_distance,2)) ;
 
-//  std::cout<<"beta* = "<<_beta_star<<std::endl;
+  // std::cout<<"beta* = "<<_beta_star<<std::endl;
 }
 
 void
 AuxFullNucleationRate::computeNumAtoms()
 {
-  // if (_mesh_dimension == 2)
-  // _N = std::pow(_linear_density, 2);
+ //correct the density to the actual element volume to get # of atoms
+ //THIS IS CURRENTLY WRONG
 
-  //else if (_mesh_dimension == 3)
-  //  _N = std::pow(_linear_density, 3);
+ Real atomic_volume = _Omega[_qp]/6.02214E23;
 
-    //else
-    //mooseError("honky, your problem dimesion must be 2 or 3 (AuxNucleationRate");
+ //this is definitely kind of f'd but it's a good start
+ //this is for 2D only.
+ Real vol = std::sqrt(_current_elem_volume);
+ vol = vol*vol*vol*1E-9*1E-9*1E-9;
 
-  // correct the density to the actual element volume to get # of atoms
-    //THIS IS CURRENTLY WRONG
+ //std::cout<<"atomic volume = "<<atomic_volume<<std::endl;
+ //std::cout<<"volume = "<<vol<<std::endl;
 
-    Real atomic_volume = _Omega[_qp]/6.02214E23;
+ _N = vol/atomic_volume;
 
-    //this is definitely kind of f'd but it's a good start
-    Real vol = std::sqrt(_current_elem_volume);
-    vol = vol*vol*vol*1E-9*1E-9*1E-9;
-
-    //  std::cout<<"atomic volume = "<<atomic_volume<<std::endl;
-    // std::cout<<"volume = "<<vol<<std::endl;
-
-    _N = vol/atomic_volume;
-
-    //   std::cout<<"N = "<<_N<<std::endl;
+ //std::cout<<"N = "<<_N<<std::endl;
 }
 
 
