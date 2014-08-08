@@ -1,0 +1,39 @@
+#include "SmoothBoxIC.h"
+#include "libmesh/libmesh.h"
+#include <iostream>
+#include <cmath>
+
+template<>
+InputParameters validParams<SmoothBoxIC>()
+{
+  InputParameters params = validParams<InitialCondition>();
+  params.addParam<int>("problem_dimension", 2, "the problem dimension");
+  params.addRequiredParam<Real>("length", "length of the side of the cube");
+
+  return params;
+}
+
+
+SmoothBoxIC::SmoothBoxIC(const std::string & name, InputParameters parameters):
+    InitialCondition(name, parameters),
+    _prob_dim(getParam<int>("problem_dimension")),
+    _length(getParam<Real>("length"))
+{
+}
+
+Real
+SmoothBoxIC::value(const Point & p)
+{
+  Real value = 1.0;
+  Real test;
+
+  for(unsigned int i = 0; i < _prob_dim; i++)
+  {
+    test = 0.5*(std::tanh( p(i) + _length/2) - std::tanh( p(i) - _length/2) );
+
+    if( value > test)
+      value = test;
+  }
+
+  return value;
+}

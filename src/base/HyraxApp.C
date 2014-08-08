@@ -81,6 +81,7 @@
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
 #include "EllipsoidIC.h"
+#include "SmoothBoxIC.h"
 
 //Dampers
 
@@ -211,6 +212,7 @@ HyraxApp::registerObjects(Factory & factory)
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
   registerInitialCondition(EllipsoidIC);
+  registerInitialCondition(SmoothBoxIC);
 
   //Dampers
 
