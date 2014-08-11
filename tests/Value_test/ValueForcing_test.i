@@ -39,7 +39,7 @@
     type = ParsedFunction
     value = 1.0*x
   [../]
-[]b
+[]
 
 [Kernels]
   [./Value_test]
