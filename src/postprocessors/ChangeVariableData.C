@@ -23,9 +23,9 @@ InputParameters validParams<ChangeVariableData>()
   // params.addRequiredParam<std::string>("coupled_aux", "The aux variable that we want to couple in");
   // We really want to only run this at the end of each timestep, so we'll force that here
 
-  std::vector<MooseEnum> execute_options = SetupInterface::getExecuteOptions();
-  execute_options[0] = "timestep";
-  params.set<std::vector<MooseEnum> >("execute_on") = execute_options;
+  MultiMooseEnum execute_options(SetupInterface::getExecuteOptions());
+  execute_options = "timestep";
+  params.set<MultiMooseEnum>("execute_on") = execute_options;
 
   return params;
 }
