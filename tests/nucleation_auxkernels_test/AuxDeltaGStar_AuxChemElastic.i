@@ -51,13 +51,6 @@
    [../]
 []
 
-[TensorMechanics]
-  [./solid]
-    disp_x = disp_x
-    disp_y = disp_y
-  [../]
-[]
-
 [AuxVariables]
   [./elem_ChemElastic]
     order = CONSTANT
@@ -71,6 +64,11 @@
 []
 
 [Kernels]
+  [./TensorMechanics]
+    disp_x = disp_x
+    disp_y = disp_y
+  [../]
+
   [./CH]
     type = CHBulkPolyCoupled
     variable = concentration

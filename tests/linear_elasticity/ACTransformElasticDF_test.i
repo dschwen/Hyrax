@@ -48,14 +48,12 @@
   [../]
 []
 
-[TensorMechanics]
- [./solid]
-  disp_x = disp_x
-  disp_y = disp_y
- [../]
-[]
-
 [Kernels]
+  [./TensorMechanics]
+    disp_x = disp_x
+    disp_y = disp_y
+  [../]
+
   [./dn1dt]
     type = TimeDerivative
     variable = n1

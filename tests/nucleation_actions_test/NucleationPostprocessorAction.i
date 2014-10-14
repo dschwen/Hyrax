@@ -130,10 +130,8 @@
     mob_name = M
     grad_mob_name = grad_M
   [../]
-[]
 
-[TensorMechanics]
-  [./solid]
+  [./TensorMechanics]
     disp_x = disp_x
     disp_y = disp_y
   [../]
