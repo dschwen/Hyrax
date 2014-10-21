@@ -35,28 +35,30 @@ InputParameters validParams<AuxFullNucleationRate>()
   params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
   params.addParam<Real>("OP_threshold", 0.0001, "threshold below which not to calculate nucleation rate");
+  params.addParam<Real>("length_scale_factor", "characteristic length the simulation is scaled by");
 
 
   return params;
 }
 
 AuxFullNucleationRate::AuxFullNucleationRate(const std::string & name, InputParameters parameters)
-  : AuxKernel(name, parameters),
-    _mesh_dimension(_mesh.dimension()),
-    _coupled_energy(coupledValue("coupled_bulk_energy_change")),
-    _Z(),
-    _beta_star(),
-    _linear_density(getParam<Real>("linear_density")),
-    _gamma(getParam<Real>("gamma")),
-    _Kb(getParam<Real>("Kb")),
-    _scale_factor(getParam<Real>("scale_factor")),
-    _n_OP_variables(getParam<int>("n_OP_variables")),
-    _T(coupledValue("T")),
-    _X(coupledValue("X")),
-    _D(getMaterialProperty<Real>("D_alpha")),
-    _jump_distance(getParam<Real>("jump_distance")),
-    _Omega(getMaterialProperty<Real>("molar_volume")),
-    _OP_threshold(getParam<Real>("OP_threshold"))
+    : AuxKernel(name, parameters),
+      _mesh_dimension(_mesh.dimension()),
+      _coupled_energy(coupledValue("coupled_bulk_energy_change")),
+      _Z(),
+      _beta_star(),
+      _linear_density(getParam<Real>("linear_density")),
+      _gamma(getParam<Real>("gamma")),
+      _Kb(getParam<Real>("Kb")),
+      _scale_factor(getParam<Real>("scale_factor")),
+      _n_OP_variables(getParam<int>("n_OP_variables")),
+      _T(coupledValue("T")),
+      _X(coupledValue("X")),
+      _D(getMaterialProperty<Real>("D_alpha")),
+      _jump_distance(getParam<Real>("jump_distance")),
+  _Omega(getMaterialProperty<Real>("molar_volume")),
+  _OP_threshold(getParam<Real>("OP_threshold")),
+  _length_scale(getParam<Real>("length_scale_factor"))
 {
  // Create a vector of the coupled OP variables and gradients
   if(_n_OP_variables != coupledComponents("OP_variable_names"))
@@ -148,14 +150,22 @@ void
 AuxFullNucleationRate::computeNumAtoms()
 {
  //correct the density to the actual element volume to get # of atoms
- //THIS IS CURRENTLY WRONG
 
  Real atomic_volume = _Omega[_qp]/6.02214E23;
 
- //this is definitely kind of f'd but it's a good start
- //this is for 2D only.
- Real vol = std::sqrt(_current_elem_volume);
- vol = vol*vol*vol*1E-9*1E-9*1E-9;
+ //this still assumes all the nucleation rate computation is 3D
+
+ Real vol;
+
+ if (_mesh_dimension == 2)
+   vol = std::sqrt(_current_elem_volume);
+ else if (_mesh_dimension == 3 )
+   vol = std::pow(_current_elem_volume, (1/3));
+ else
+   mooseError("please perform this simulation in 2D or 3D (AuxFullNucleationRate)");
+
+//this volume is scaled by the simulation length scale
+ vol = vol*vol*vol*_length_scale*_length_scale*_length_scale;
 
  //std::cout<<"atomic volume = "<<atomic_volume<<std::endl;
  //std::cout<<"volume = "<<vol<<std::endl;
@@ -164,6 +174,3 @@ AuxFullNucleationRate::computeNumAtoms()
 
  //std::cout<<"N = "<<_N<<std::endl;
 }
-
-
-

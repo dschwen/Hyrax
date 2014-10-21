@@ -43,6 +43,8 @@
 #include "CHPrecipMatrixElasticity.h"
 #include "ACPrecipMatrixElasticity.h"
 #include "Soret.h"
+#include "SimpleConstantDiffusion.h"
+#include "NonlinearDiffusion.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -175,6 +177,8 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(CHPrecipMatrixElasticity);
   registerKernel(ACPrecipMatrixElasticity);
   registerKernel(Soret);
+  registerKernel(SimpleConstantDiffusion);
+  registerKernel(NonlinearDiffusion);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);

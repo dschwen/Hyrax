@@ -66,6 +66,7 @@ private:
 
   MaterialProperty<Real> & _Omega;
   Real _OP_threshold;
+  Real _length_scale;
 };
 
 #endif //AUXFULLNUCLEATIONRATE_H
