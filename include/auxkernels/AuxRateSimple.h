@@ -8,7 +8,7 @@
 *
 *************************************************************************/
 
-#ifndef AUXRATESIMPLE_HH
+#ifndef AUXRATESIMPLE_H
 #define AUXRATESIMPLE_H
 
 #include "AuxKernel.h"
