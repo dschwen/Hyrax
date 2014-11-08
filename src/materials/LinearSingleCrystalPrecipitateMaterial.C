@@ -69,7 +69,8 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
   // make sure you don't do something stupid with the temperature coeffcients in the input file
   if (_has_T && _misfit_T_coeffs_vector.size() != 6)
       mooseError("please have 6 misfit temperature coefficients (LSXPM)");
-  else
+  //FUCK THIS ERROR SO HARD
+  else if (!_has_T)
     _misfit_T_coeffs_vector.assign(6, 0);
 
   //make sure your misfit strain application is between 0 and 100%
@@ -125,8 +126,6 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
 {
   Real interpolation_value(0.0);
   Real d_interp_value(0.0);
-
-  // RankTwoTensor current_misfit;
 
   Real T;
   if (_has_T)
