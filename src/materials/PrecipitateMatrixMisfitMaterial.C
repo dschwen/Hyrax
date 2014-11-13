@@ -56,9 +56,7 @@ PrecipitateMatrixMisfitMaterial::PrecipitateMatrixMisfitMaterial(const std::stri
     _dcdn_misfit_strain(declareProperty<std::vector<RankTwoTensor> >("dcdn_misfit_strain")),
 
     _solute(coupledValue("solute_name")),
-    _percent_matrix_misfit(getParam<Real>("percent_matrix_misfit"))//,
-    // _precip_conc(getParam<Real>("precip_conc")),
-    //_precip_conc(getParam<Real>("precip_OP"))
+    _percent_matrix_misfit(getParam<Real>("percent_matrix_misfit"))
 {
   //make sure misfit strain application is between 0 and 100%
   if (_percent_matrix_misfit > 1 || _percent_matrix_misfit < 0)
@@ -111,22 +109,21 @@ PrecipitateMatrixMisfitMaterial::computeQpElasticityTensor()
   Real sum_OP = 0;
   for (unsigned int i=0; i<_n_variants; i++)
   {
-    //sum_OP += (*_OP[i])[_qp]*(*_OP[i])[_qp];
-    //(_dn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2*(*_OP[i])[_qp] )/inverse;
-    (_dn_elasticity_tensor[_qp])[i] = (_Cijkl_precipitate - _Cijkl)*computeDHeaviside(i)/inverse;
-    //(_dndn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2 )/inverse;
-    (_dndn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*computeD2Heaviside(i) )/inverse;
+    (_dn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2*(*_OP[i])[_qp] )/inverse;
+    //(_dn_elasticity_tensor[_qp])[i] = (_Cijkl_precipitate - _Cijkl)*computeDHeaviside(i)/inverse;
+    (_dndn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2 )/inverse;
+    //(_dndn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*computeD2Heaviside(i) )/inverse;
     (_dcdn_elasticity_tensor[_qp])[i] = zeros;
   }
 
-  //_elasticity_tensor[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
-  _elasticity_tensor[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*computeHeaviside())/inverse;
+  _elasticity_tensor[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
+  //_elasticity_tensor[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*computeHeaviside())/inverse;
   _dc_elasticity_tensor[_qp] = zeros;
   _dcdc_elasticity_tensor[_qp] = zeros;
 
   //not sure if I actually got the Jacobian multiplier right here.
-  //_Jacobian_mult[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
-  _Jacobian_mult[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*computeHeaviside())/inverse;
+  _Jacobian_mult[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
+  //_Jacobian_mult[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*computeHeaviside())/inverse;
 }
 
 void
@@ -237,29 +234,6 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
   _dcdc_misfit_strain[_qp] = zeros;
 }
 
-
-//void
-//
-//  computeQpStress();
-//}
-
-//void
-//PrecipitateMatrixMisfitMaterial::computeQpStrain()
-//{
-//  //strain = (grad_disp + grad_disp^T)/2
-//  RankTwoTensor grad_tensor(_grad_disp_x[_qp],_grad_disp_y[_qp],_grad_disp_z[_qp]);
-
-//  _local_strain[_qp] = (grad_tensor + grad_tensor.transpose())/2.0;
-//}
-
-//void
-//PrecipitateMatrixMisfitMaterial::computeQpStress()
-//{
-//  // stress = C * e
-//  _stress[_qp] = _elasticity_tensor[_qp]*_elastic_strain[_qp];
-//}
-
-
 Real
 PrecipitateMatrixMisfitMaterial::computeHeaviside()
 {
@@ -277,8 +251,6 @@ PrecipitateMatrixMisfitMaterial::computeHeaviside()
     if (OP > 1)
       OP = 1;
 
-    //heaviside_first += std::pow((*_OP[i])[_qp], 2);
-    // heaviside_second += std::pow((*_OP[i])[_qp], 3);
     heaviside_first += std::pow(OP, 2);
     heaviside_second += std::pow(OP, 3);
   }
@@ -295,7 +267,6 @@ PrecipitateMatrixMisfitMaterial::computeDHeaviside(unsigned int i)
   if (OP > 1)
     OP = 1;
 
-  //return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
   return 6*OP*(1 - OP);
 }
 
@@ -308,6 +279,5 @@ PrecipitateMatrixMisfitMaterial::computeD2Heaviside(unsigned int i)
   if (OP > 1)
     OP = 1;
 
-  //return 6*(1 - (*_OP[i])[_qp]);
   return 6*(1 - OP);
 }
