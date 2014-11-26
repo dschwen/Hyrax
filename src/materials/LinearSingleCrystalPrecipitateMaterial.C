@@ -28,12 +28,13 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
   params.addRequiredParam<std::vector<Real> >("C_precipitate", "Stiffness tensor for precipitate");
   params.addRequiredParam<std::vector<Real> >("e_precipitate","Eigenstrain tensor for precipitate: e11, e22, e33, e23, e13, e12");
   params.addRequiredParam<int>("n_variants","# of orientation variants for precipitate in single crystal");
-  params.addRequiredCoupledVar("variable_names","Array of coupled variable names");
+
+  params.addCoupledVar("temperature", 0.0, "Temperature in Kelvin");
+  params.addRequiredCoupledVar("variable_names", "Array of coupled variable names");
 
   params.addParam<Real>("scaling_factor", 1, "free energy scaling factor for nondimensionalization");
 
   params.addParam<std::vector<Real> >("misfit_temperature_coeffs", "misfit strain temperature coefficients, e11, e22, e33, e33, e23, e13, e12");
-
   params.addParam<Real>("percent_precip_misfit", 1, "percent of misfit strain of precip to be applied, between 0 and 1");
 
   return params;
@@ -41,12 +42,13 @@ InputParameters validParams<LinearSingleCrystalPrecipitateMaterial>()
 
 LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(const std::string & name, InputParameters parameters) :
     TensorMechanicsMaterial(name, parameters),
-    _Cijkl_precipitate_vector(getParam<std::vector<Real> >("C_precipitate")),
     _eigenstrain_vector(getParam<std::vector<Real> >("e_precipitate")),
     _scaling_factor(getParam<Real>("scaling_factor")),
 
-    _Cijkl_precipitate(),
+    _Cijkl_precipitate(getParam<std::vector<Real> >("C_precipitate"), (RankFourTensor::FillMethod)(int)getParam<MooseEnum>("fill_method")),
+
     _eigenstrain(),
+    _T(coupledValue("temperature")),
     _n_variants(getParam<int>("n_variants")),
     _eigenstrains_rotated(),
 
@@ -67,11 +69,11 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     mooseError("Please match the number of orientation variants with coupled order parameters (LSXPM).");
 
   // make sure you don't do something stupid with the temperature coeffcients in the input file
-  if (_has_T && _misfit_T_coeffs_vector.size() != 6)
-      mooseError("please have 6 misfit temperature coefficients (LSXPM)");
-  //FUCK THIS ERROR SO HARD
-  else if (!_has_T)
+  if (_misfit_T_coeffs_vector.size() != 6)
+  {
+    mooseWarning("No misfit temperature coefficients (LSXPM) specified.");
     _misfit_T_coeffs_vector.assign(6, 0);
+  }
 
   //make sure your misfit strain application is between 0 and 100%
   if (_percent_precip_misfit > 1 || _percent_precip_misfit < 0)
@@ -86,10 +88,7 @@ LinearSingleCrystalPrecipitateMaterial::LinearSingleCrystalPrecipitateMaterial(c
     _OP[i] = &coupledValue("variable_names", i);
 
   // fill in the original tensors.  Don't touch after this!
-  _Cijkl_precipitate.fillFromInputVector(_Cijkl_precipitate_vector, _fill_method);
   _eigenstrain.fillFromInputVector(_eigenstrain_vector);
-
-
   _misfit_T_coeffs.fillFromInputVector(_misfit_T_coeffs_vector);
 }
 
@@ -127,14 +126,8 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
   Real interpolation_value(0.0);
   Real d_interp_value(0.0);
 
-  Real T;
-  if (_has_T)
-    T = (*_T)[_qp];
-  else
-    T = 0;
-
   // calculate the current misfit strain for the first orientation
-  _current_precip_misfit = (_eigenstrain + _misfit_T_coeffs*T)*_percent_precip_misfit;
+  _current_precip_misfit = (_eigenstrain + _misfit_T_coeffs * _T[_qp]) * _percent_precip_misfit;
 
   // calculate the rotations and fill in
   // fill in the first variant without rotation
@@ -159,13 +152,13 @@ LinearSingleCrystalPrecipitateMaterial::computeQpEigenstrain()
     if (OP < 0)
     OP = 0;*/
 
-    interpolation_value = (*_OP[i])[_qp]*(*_OP[i])[_qp];
-    d_interp_value = 2.0*(*_OP[i])[_qp];
+    interpolation_value = (*_OP[i])[_qp] * (*_OP[i])[_qp];
+    d_interp_value = 2.0 * (*_OP[i])[_qp];
     // interpolation_value = OP*OP;
     //d_interp_value = 2*OP;
 
-    (_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*interpolation_value;
-    (_d_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i]*d_interp_value;
+    (_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i] * interpolation_value;
+    (_d_eigenstrains_MP[_qp])[i] = _eigenstrains_rotated[i] * d_interp_value;
     (_precipitate_eigenstrain[_qp])[i] = _eigenstrains_rotated[i];
   }
 }

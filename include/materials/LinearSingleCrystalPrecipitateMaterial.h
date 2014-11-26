@@ -63,7 +63,6 @@ protected:
 
 
   // vectors to get the input values
-  std::vector<Real> _Cijkl_precipitate_vector;
   std::vector<Real> _eigenstrain_vector;
 
   // Energy scaling factor for nondimensionalization of Cijkl
@@ -72,6 +71,8 @@ protected:
   // Individual material information.  Don't touch these once they're initialized!
   ElasticityTensorR4 _Cijkl_precipitate;
   RankTwoTensor _eigenstrain;
+
+  VariableValue & _T;
 
   // number of orientation variants for the precipitate in a single matrix crystal
   unsigned int _n_variants;
