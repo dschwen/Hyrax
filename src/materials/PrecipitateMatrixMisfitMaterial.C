@@ -88,6 +88,7 @@ PrecipitateMatrixMisfitMaterial::computeProperties()
 
     computeQpElasticityTensor();
     computeQpEigenstrain();
+
     computeQpElasticStrain();
     computeQpElasticStress();
   }

@@ -19,4 +19,11 @@
     csvdiff = 'AuxElasticEnergy.csv'
     method = 'opt oprof'
   [../]
+
+  [./AuxCalphadElasticity_test]
+    type = 'Exodiff'
+    input = 'AuxCalphadElasticity.i'
+    exodiff = 'AuxCalphadElasticity.e'
+    method = 'opt oprof'
+  [../]
 []

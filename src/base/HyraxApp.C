@@ -63,6 +63,7 @@
 #include "AuxGradientEnergy.h"
 #include "AuxElasticEnergy.h"
 #include "AuxFullNucleationRate.h"
+#include "AuxCalphadElasticity.h"
 
 //Dirac Kernels
 
@@ -84,6 +85,7 @@
 #include "PolySpecifiedSmoothCircleIC.h"
 #include "EllipsoidIC.h"
 #include "SmoothBoxIC.h"
+#include "DiamondIC.h"
 
 //Dampers
 
@@ -196,6 +198,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerAux(AuxGradientEnergy);
   registerAux(AuxElasticEnergy);
   registerAux(AuxFullNucleationRate);
+  registerAux(AuxCalphadElasticity);
 
   //Dirac Kernels
 
@@ -217,6 +220,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
   registerInitialCondition(EllipsoidIC);
   registerInitialCondition(SmoothBoxIC);
+  registerInitialCondition(DiamondIC);
 
   //Dampers
 

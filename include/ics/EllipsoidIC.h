@@ -49,4 +49,4 @@ private:
 
 };
 
-#endif //POLYSPECIFIEDSMOOTHCIRCLEIC_H
+#endif //ELLIPSOIDIC_H
