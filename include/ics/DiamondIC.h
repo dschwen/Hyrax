@@ -9,7 +9,7 @@
 *************************************************************************/
 
 #ifndef DIAMONDIC_H
-#define DIMAONDIC_H
+#define DIAMONDIC_H
 
 #include "InitialCondition.h"
 #include "libmesh/point.h"

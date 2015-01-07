@@ -84,10 +84,10 @@ MeshSolutionModify::endStep(Real input_time)
 
     // indicate a forced output if at a sync point
     if (_at_sync_point)
-      _output_warehouse.outputStep(OUTPUT_FORCED);
+      _problem.outputStep(OUTPUT_FORCED);
 
     // perform the output for the current timestep
-    _output_warehouse.outputStep(OUTPUT_TIMESTEP_END);
+    _problem.outputStep(OUTPUT_TIMESTEP_END);
 }
 
 
