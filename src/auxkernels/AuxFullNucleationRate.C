@@ -11,6 +11,8 @@
 #include <cmath>
 #include <iostream>
 
+//NOTE: THIS ASSUMES ELEMENTS ARE SQUARE OR CUBIC!
+
 template<>
 InputParameters validParams<AuxFullNucleationRate>()
 {
@@ -36,8 +38,7 @@ InputParameters validParams<AuxFullNucleationRate>()
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
   params.addParam<Real>("OP_threshold", 0.0001, "threshold below which not to calculate nucleation rate");
   params.addParam<Real>("length_scale_factor", "characteristic length the simulation is scaled by");
-
-
+  
   return params;
 }
 
@@ -56,16 +57,16 @@ AuxFullNucleationRate::AuxFullNucleationRate(const std::string & name, InputPara
       _X(coupledValue("X")),
       _D(getMaterialProperty<Real>("D_alpha")),
       _jump_distance(getParam<Real>("jump_distance")),
-  _Omega(getMaterialProperty<Real>("molar_volume")),
-  _OP_threshold(getParam<Real>("OP_threshold")),
-  _length_scale(getParam<Real>("length_scale_factor"))
+      _Omega(getMaterialProperty<Real>("molar_volume")),
+      _OP_threshold(getParam<Real>("OP_threshold")),
+      _length_scale(getParam<Real>("length_scale_factor"))
 {
- // Create a vector of the coupled OP variables and gradients
+  // Create a vector of the coupled OP variables and gradients
   if(_n_OP_variables != coupledComponents("OP_variable_names"))
     mooseError("Please match the # of orientation variants to coupled OPs (CHCoupledCalphad)");
-
+  
   _OP.resize(_n_OP_variables);
-
+  
   for(unsigned int i=0; i< _n_OP_variables; i++)
     _OP[i] = &coupledValue("OP_variable_names", i);
 }
@@ -154,16 +155,17 @@ AuxFullNucleationRate::computeNumAtoms()
  Real atomic_volume = _Omega[_qp]/6.02214E23;
 
  //this still assumes all the nucleation rate computation is 3D
+ //this also assumes the elements are square.  MAJOR ASSUMPTION.
 
  Real vol;
 
  if (_mesh_dimension == 2)
    vol = std::sqrt(_current_elem_volume);
  else if (_mesh_dimension == 3 )
-   vol = std::pow(_current_elem_volume, (1/3));
+   vol = std::pow(_current_elem_volume, (1./3.));
  else
    mooseError("please perform this simulation in 2D or 3D (AuxFullNucleationRate)");
-
+ 
 //this volume is scaled by the simulation length scale
  vol = vol*vol*vol*_length_scale*_length_scale*_length_scale;
 
