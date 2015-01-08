@@ -38,7 +38,7 @@ InputParameters validParams<AuxFullNucleationRate>()
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
   params.addParam<Real>("OP_threshold", 0.0001, "threshold below which not to calculate nucleation rate");
   params.addParam<Real>("length_scale_factor", "characteristic length the simulation is scaled by");
-  
+
   return params;
 }
 
@@ -64,9 +64,9 @@ AuxFullNucleationRate::AuxFullNucleationRate(const std::string & name, InputPara
   // Create a vector of the coupled OP variables and gradients
   if(_n_OP_variables != coupledComponents("OP_variable_names"))
     mooseError("Please match the # of orientation variants to coupled OPs (CHCoupledCalphad)");
-  
+
   _OP.resize(_n_OP_variables);
-  
+
   for(unsigned int i=0; i< _n_OP_variables; i++)
     _OP[i] = &coupledValue("OP_variable_names", i);
 }
@@ -165,7 +165,7 @@ AuxFullNucleationRate::computeNumAtoms()
    vol = std::pow(_current_elem_volume, (1./3.));
  else
    mooseError("please perform this simulation in 2D or 3D (AuxFullNucleationRate)");
- 
+
 //this volume is scaled by the simulation length scale
  vol = vol*vol*vol*_length_scale*_length_scale*_length_scale;
 
