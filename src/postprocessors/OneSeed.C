@@ -105,7 +105,7 @@ OneSeed::modifySolutionVector()
     if(_t>= _restart_time && _restart)
     {
       _restart = false;
-      std::cout<<"set _restart to "<< _restart<<std::endl;
+      _console << "set _restart to "<< _restart<<std::endl;
     }
 
   }

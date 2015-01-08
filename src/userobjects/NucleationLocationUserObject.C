@@ -160,7 +160,7 @@ NucleationLocationUserObject::finalize()
   //unpack all the data into the "global" variable
   Nucleus::unpack(_packed_data, _nuclei);
 
-  std::cout<<"NLUO::finalize nucleus size = "<<_nuclei.size()<<std::endl;
+  _console << "NLUO::finalize nucleus size = "<<_nuclei.size()<<std::endl;
 
   //see if a new nucleus has been found
   if(_nuclei.size() > _old_nucleus_list_size)
@@ -168,7 +168,7 @@ NucleationLocationUserObject::finalize()
   else
     _has_new_nucleus = false;
 
-  std::cout<<"NLUO::finalize has new nucleus = "<<_has_new_nucleus<<std::endl;
+  _console << "NLUO::finalize has new nucleus = "<<_has_new_nucleus<<std::endl;
 }
 
 void

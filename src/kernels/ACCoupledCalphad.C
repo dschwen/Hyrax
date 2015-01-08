@@ -92,10 +92,10 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
     }
   }
 
-  // std::cout<<"OP number = "<<_OP_number<<std::endl;
-  // std::cout<<"square_sum = "<<square_sum<<std::endl;
-  // std::cout<<"square_mult = "<<square_mult<<std::endl;
-  // std::cout<<"quad_sum = "<<quad_sum<<std::endl<<std::endl;
+  // _console<<"OP number = "<<_OP_number<<std::endl;
+  // _console<<"square_sum = "<<square_sum<<std::endl;
+  // _console<<"square_mult = "<<square_mult<<std::endl;
+  // _console<<"quad_sum = "<<quad_sum<<std::endl<<std::endl;
 
   Real dgdn, dHeavisidedn, d2gdn2, d2Heavisidedn2;
   switch (type)

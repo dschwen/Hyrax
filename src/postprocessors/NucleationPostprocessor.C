@@ -116,7 +116,7 @@ NucleationPostprocessor::searchForNucleationEvents()
     // Pull out the value of the nucleation probability at this node
     Real probability = _coupled.getNodalValue(*node);
 
-    //std::cout<<"Probability = "<<probability<<std::endl;
+    //_console<<"Probability = "<<probability<<std::endl;
 
     // Generate a random number based on the node id and timestep
     unsigned int node_id = node->id();

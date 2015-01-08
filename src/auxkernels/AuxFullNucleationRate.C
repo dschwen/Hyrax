@@ -79,10 +79,10 @@ AuxFullNucleationRate::computeValue()
   computeCriticalFrequency();
   computeNumAtoms();
 
-  /*std::cout<<"ZNBetastar = "<< _Z*_N*_beta_star <<std::endl;
-  std::cout<<"(-1*G_star)/(Kb*T) = "<<(-1*_G_star)/ (_Kb*_T[_qp]) <<std::endl;
-  std::cout<<"exp(stuff) = "<<std::exp((-1*_G_star)/ (_Kb*_T[_qp]))<<std::endl;
-  std::cout<<"J* scaled ="<<_scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ))<<std::endl;
+  /*_console<<"ZNBetastar = "<< _Z*_N*_beta_star <<std::endl;
+  _console<<"(-1*G_star)/(Kb*T) = "<<(-1*_G_star)/ (_Kb*_T[_qp]) <<std::endl;
+  _console<<"exp(stuff) = "<<std::exp((-1*_G_star)/ (_Kb*_T[_qp]))<<std::endl;
+  _console<<"J* scaled ="<<_scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ))<<std::endl;
   */
 /*  for (unsigned int i=0; i< _n_OP_variables; i++)
    {
@@ -106,7 +106,7 @@ AuxFullNucleationRate::computeCriticalRadius()
   //this is calculated as if in 3D
   _r_star = 2*_gamma/_coupled_energy[_qp];
 
-  // std::cout<<"r* = "<<_r_star<<std::endl;
+  // _console<<"r* = "<<_r_star<<std::endl;
 }
 
 void
@@ -117,7 +117,7 @@ AuxFullNucleationRate::computeCriticalEnergy()
 
   _G_star = alpha*std::pow(_gamma, 3)/std::pow(_coupled_energy[_qp], 2);
 
-  // std::cout<<"G* in Joules = "<<_G_star<<std::endl;
+  // _console<<"G* in Joules = "<<_G_star<<std::endl;
 }
 
 void
@@ -130,7 +130,7 @@ AuxFullNucleationRate::computeZeldovichFactor()
 
   _Z =std::sqrt( _G_star/( 3*libMesh::pi*Nc*Nc*_Kb*_T[_qp] ));
 
-  //std::cout<<"Z = "<<_Z<<std::endl;
+  //_console<<"Z = "<<_Z<<std::endl;
 }
 
 void
@@ -139,11 +139,11 @@ AuxFullNucleationRate::computeCriticalFrequency()
   Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density;
 
   // Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density/4;
-  //std::cout<<"Zc*X = "<<Zc*_X[_qp]<<std::endl;
+  //_console<<"Zc*X = "<<Zc*_X[_qp]<<std::endl;
 
   _beta_star = Zc*_X[_qp]*_D[_qp]/ ( std::pow(_jump_distance,2)) ;
 
-  // std::cout<<"beta* = "<<_beta_star<<std::endl;
+  // _console<<"beta* = "<<_beta_star<<std::endl;
 }
 
 void
@@ -167,10 +167,10 @@ AuxFullNucleationRate::computeNumAtoms()
 //this volume is scaled by the simulation length scale
  vol = vol*vol*vol*_length_scale*_length_scale*_length_scale;
 
- //std::cout<<"atomic volume = "<<atomic_volume<<std::endl;
- //std::cout<<"volume = "<<vol<<std::endl;
+ //_console<<"atomic volume = "<<atomic_volume<<std::endl;
+ //_console<<"volume = "<<vol<<std::endl;
 
  _N = vol/atomic_volume;
 
- //std::cout<<"N = "<<_N<<std::endl;
+ //_console<<"N = "<<_N<<std::endl;
 }

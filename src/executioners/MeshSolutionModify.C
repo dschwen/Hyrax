@@ -51,7 +51,7 @@ MeshSolutionModify::endStep(Real input_time)
 
   _picard_converged=false;
 
-  //std::cout<<"in MeshSolutionModify::endStep()"<<std::endl;
+  //_console<<"in MeshSolutionModify::endStep()"<<std::endl;
   _last_solve_converged = lastSolveConverged();
 
   // bool new_nucleus = false;
@@ -75,7 +75,7 @@ MeshSolutionModify::endStep(Real input_time)
 #ifdef LIBMESH_ENABLE_AMR
       if (_problem.adaptivity().isOn())
       {
-        std::cout<<"_problem.adaptMesh()"<<std::endl;
+        _console << "_problem.adaptMesh()"<<std::endl;
         _problem.adaptMesh();
 }
 #endif
@@ -91,7 +91,7 @@ MeshSolutionModify::endStep(Real input_time)
 }
 
 
-  std::cout<<"end of MeshSolutionModify::endStep()\n\n"<<std::endl;
+  _console << "end of MeshSolutionModify::endStep()\n\n"<<std::endl;
 }
 
 void

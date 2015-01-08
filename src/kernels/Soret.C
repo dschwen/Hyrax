@@ -33,7 +33,7 @@ Soret::Soret(const std::string & name, InputParameters parameters) :
 Real
 Soret::computeQpResidual()
 {
-  //  std::cout<<"soret_residual = "<< ( _grad_test[_i][_qp]*_L1Q[_qp]*_grad_T[_qp] ) / _T[_qp]<<std::endl;
+  //  _console<<"soret_residual = "<< ( _grad_test[_i][_qp]*_L1Q[_qp]*_grad_T[_qp] ) / _T[_qp]<<std::endl;
   return ( _grad_test[_i][_qp]*_L1Q[_qp]*_grad_T[_qp] ) / _T[_qp];
 }
 

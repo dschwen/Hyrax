@@ -59,7 +59,7 @@ CHCoupledCalphad::CHCoupledCalphad(const std::string & name, InputParameters par
 RealGradient
 CHCoupledCalphad::computeGradDFDCons(PFFunctionType type)
 {
-  //std::cout<<"in CHCoupledCalphad computeDFDOP"<<std::endl;
+  //_console<<"in CHCoupledCalphad computeDFDOP"<<std::endl;
   RealGradient grad_conserved_term, grad_nonconserved_term;
 
   _Heaviside = computeHeaviside();
@@ -74,10 +74,10 @@ CHCoupledCalphad::computeGradDFDCons(PFFunctionType type)
     //loop to calculate the d/dn (dfchem/dx) grad n terms
     grad_nonconserved_term = computeGradNonconservedTerm();
 
-    // std::cout<<"Omega = "<<_Omega[_qp]<<std::endl;
-    // std::cout<<"grad_conserved_term = "<<grad_conserved_term<<std::endl;
-    // std::cout<<"grad_nonconserved_term = "<<grad_nonconserved_term<<std::endl;
-    // std::cout<<"grad_conserved_term + grad_nonconserved_term) / _Omega[_qp] = "<<(grad_conserved_term + grad_nonconserved_term) / _Omega[_qp]<<std::endl;
+    // _console<<"Omega = "<<_Omega[_qp]<<std::endl;
+    // _console<<"grad_conserved_term = "<<grad_conserved_term<<std::endl;
+    // _console<<"grad_nonconserved_term = "<<grad_nonconserved_term<<std::endl;
+    // _console<<"grad_conserved_term + grad_nonconserved_term) / _Omega[_qp] = "<<(grad_conserved_term + grad_nonconserved_term) / _Omega[_qp]<<std::endl;
 
     return (grad_conserved_term + grad_nonconserved_term) / _Omega[_qp];
 

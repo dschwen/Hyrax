@@ -95,9 +95,9 @@ AuxCalphadEnergy::computeValue()
   else
     return matrix_energy - precip_energy;
   */
-  // std::cout<<"matrix energy ="<<matrix_energy<<std::endl;
-  //std::cout<<"precip energy ="<<precip_energy<<std::endl;
-  //std::cout<<"differential = "<<differential<<std::endl;
+  // _console<<"matrix energy ="<<matrix_energy<<std::endl;
+  //_console<<"precip energy ="<<precip_energy<<std::endl;
+  //_console<<"differential = "<<differential<<std::endl;
 
   return (matrix_energy - precip_energy + differential);
 }
@@ -111,8 +111,8 @@ AuxCalphadEnergy::computeMatrixEnergy()
 
   Real elastic_energy = 0.5*a.doubleContraction( _elastic_strain[_qp]);
 
-  //std::cout<<"matrix elastic energy = "<<elastic_energy<<std::endl;
-  //std::cout<<"matrix chemical energy = "<<chemical_energy<<std::endl;
+  //_console<<"matrix elastic energy = "<<elastic_energy<<std::endl;
+  //_console<<"matrix chemical energy = "<<chemical_energy<<std::endl;
 
   return chemical_energy + elastic_energy;
 }
@@ -130,8 +130,8 @@ AuxCalphadEnergy::computePrecipEnergy()
 
  Real elastic_energy = 0.5*a.doubleContraction( elastic_precip_strain);
 
- //std::cout<<"precip elastic energy = "<<elastic_energy<<std::endl;
- //std::cout<<"precip chemical energy = "<<chemical_energy<<std::endl;
+ //_console<<"precip elastic energy = "<<elastic_energy<<std::endl;
+ //_console<<"precip chemical energy = "<<chemical_energy<<std::endl;
 
 
  return chemical_energy + elastic_energy;
@@ -154,7 +154,7 @@ AuxCalphadEnergy::computeDifferential()
 
   Real dfel_dX = 0.5*(e1 + e2 + e3);
 
-  // std::cout<<"dfel_dX = "<<dfel_dX<<std::endl;
+  // _console<<"dfel_dX = "<<dfel_dX<<std::endl;
 
   ElasticityTensorR4 dCijkl = (_Cijkl_precipitate_MP[_qp] - _Cijkl_MP[_qp])*(-1*_dH_dOP);
   b = _Cijkl_MP[_qp]*( (_dn_misfit_strain[_qp])[_OP_number-1]) *(-1);
@@ -166,7 +166,7 @@ AuxCalphadEnergy::computeDifferential()
 
   Real dfel_dOP = 0.5*(e1 + e2 + e3);
 
-  // std::cout<<"dfel_dOP = "<<dfel_dOP<<std::endl;
+  // _console<<"dfel_dOP = "<<dfel_dOP<<std::endl;
 
   Real dfdc = (dfchem_dX + dfel_dX)*(_precip_cons - _X[_qp]);
 

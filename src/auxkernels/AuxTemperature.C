@@ -24,7 +24,7 @@ AuxTemperature::AuxTemperature(const std::string & name, InputParameters paramet
     : AuxKernel(name, parameters),
       _T(getParam<Real>("temp_in_K"))
 {
-  std::cout<<"AuxTemperature constructor"<<std::endl;
+  _console << "AuxTemperature constructor"<<std::endl;
 }
 
 Real

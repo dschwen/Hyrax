@@ -77,12 +77,12 @@ ZrHCalphadDiffusivity::computeQpProperties()
     solute = 0.001;
 
   _M[_qp] = ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
-  //std::cout<<"M = "<<_M[_qp]<<std::endl;
+  //_console<<"M = "<<_M[_qp]<<std::endl;
 
 //  _L1Q[_qp] = (_Q_transport - _temperature[_qp]*_d2Galpha_dcdT[_qp]);
-  //std::cout<<"L1Q = "<<_L1Q[_qp]<<std::endl;
-  //std::cout<<"temp = "<<_temperature[_qp]<<std::endl;
-  //std::cout<<"d2Galpha_dcdT = "<<_d2Galpha_dcdT[_qp]<<std::endl;
+  //_console<<"L1Q = "<<_L1Q[_qp]<<std::endl;
+  //_console<<"temp = "<<_temperature[_qp]<<std::endl;
+  //_console<<"d2Galpha_dcdT = "<<_d2Galpha_dcdT[_qp]<<std::endl;
 
   Real curvature =  (1-Heaviside)*_d2Galpha_dc2[_qp] + Heaviside*_d2Gdelta_dc2[_qp];
 
@@ -94,10 +94,10 @@ ZrHCalphadDiffusivity::computeQpProperties()
 
   //nondimensionalize the mobility here
   // _M[_qp] = (_D_alpha[_qp]/curvature)/_mobility_CH_scaling;
-  //std::cout<<"earlier M = "<< (_D_alpha[_qp]/curvature)/_mobility_CH_scaling<<std::endl;
-  //std::cout<<"curvature = "<<curvature<<std::endl;
-  //std::cout<<"D_alpha = "<<_D_alpha[_qp]<<std::endl;
-  //std::cout<<"mobility scaling = "<<_mobility_CH_scaling<<std::endl;
+  //_console<<"earlier M = "<< (_D_alpha[_qp]/curvature)/_mobility_CH_scaling<<std::endl;
+  //_console<<"curvature = "<<curvature<<std::endl;
+  //_console<<"D_alpha = "<<_D_alpha[_qp]<<std::endl;
+  //_console<<"mobility scaling = "<<_mobility_CH_scaling<<std::endl;
 
   _grad_M[_qp] = 0.0;
 
