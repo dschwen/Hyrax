@@ -1,8 +1,8 @@
 # This input file is for creating/testing forced mesh refinement for the element in which a Dirac point
 # source is introduced.
 
-# The purpose of this seemingly hare-brained exercise is to model nucleation in a phase field model.  In 
-# this case, there is a coupled Allen-Cahn (variable=n1), Cahn-Hilliard (variable=c) equation system.  A 
+# The purpose of this seemingly hare-brained exercise is to model nucleation in a phase field model.  In
+# this case, there is a coupled Allen-Cahn (variable=n1), Cahn-Hilliard (variable=c) equation system.  A
 # Dirac point source for the order parameter variable is introduced and the mesh must be refined there such
 # that there are enough points across the interfaces for a phase field model to be stable.  The
 # concentration will naturally increase at that point to create a proper nucleus.
@@ -164,7 +164,7 @@ active = 'Periodic'
   dt = 0.003
 
 #  num_refines = 2
- 
+
 # The adaptivity section should probably be played with at will.
   [./Adaptivity]
     error_estimator = LaplacianErrorEstimator
@@ -178,7 +178,7 @@ active = 'Periodic'
   [./dt]
     type = TimestepSize
   [../]
- 
+
   [./elapsed_time]
     type = PrintElapsedTime
   [../]

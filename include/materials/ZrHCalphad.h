@@ -45,13 +45,13 @@ protected:
   Real _dThermal_diffusivity_dT;
 
   //MATERIAL PROPERTIES
-  MaterialProperty<Real> & _M;			//Cahn-Hilliard mobility (isotropic)
+  MaterialProperty<Real> & _M;                  //Cahn-Hilliard mobility (isotropic)
   MaterialProperty<RealGradient> & _grad_M;
 
-  MaterialProperty<Real> & _L;			//Allen-Cahn kinetic coefficient (isotropic)
+  MaterialProperty<Real> & _L;                  //Allen-Cahn kinetic coefficient (isotropic)
 
-  MaterialProperty<Real> & _kappa_c;		//CH gradient energy coefficient (isotropic)
-  MaterialProperty<Real> & _kappa_n;		//AC gradient energy coefficient (isotropic)
+  MaterialProperty<Real> & _kappa_c;            //CH gradient energy coefficient (isotropic)
+  MaterialProperty<Real> & _kappa_n;            //AC gradient energy coefficient (isotropic)
 
   MaterialProperty<Real> & _W;                  //well height
 

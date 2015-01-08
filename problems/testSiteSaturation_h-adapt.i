@@ -88,7 +88,7 @@
 #[BCs]
 #  [./Neumann_C]
 #    type = NeumannBC
-#    variable = concentration 
+#    variable = concentration
 #    boundary = '0 1 2 3'
 #  [../]
 
@@ -180,7 +180,7 @@
       type = ErrorFractionMaxHMarker
       coarsen = 0.05
       refine = 0.75
-      max_h_level = 5        
+      max_h_level = 5
       indicator = GJI
     [../]
 #    [./combo]

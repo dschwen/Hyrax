@@ -138,7 +138,7 @@ active = 'Periodic'
   dt = 0.3
 
   time_periods = 'p1 p2 p3'
-  time_period_starts = '0 0.6 2.6' 
+  time_period_starts = '0 0.6 2.6'
    #time_period_ends =
 []
 

@@ -220,7 +220,7 @@
   scheme = 'crank-nicolson'
  # num_steps = 10
   dt = 0.01
-  start_time = 0.0  
+  start_time = 0.0
   end_time = 2
   abort_on_solve_fail = true
   adapt_cycles = 5
@@ -249,7 +249,7 @@
       type = ErrorFractionMaxHMarker
       coarsen = 0.05
       refine = 0.75
-      max_h_level = 5	     
+      max_h_level = 5
       indicator = GJI
     [../]
     [./combo]

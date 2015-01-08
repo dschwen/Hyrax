@@ -231,7 +231,7 @@
     type = NodalMaxValue
     variable = n2
   [../]
- 
+
   [./NodalMaxValue_n3]
     output = file
     type = NodalMaxValue
@@ -298,7 +298,7 @@
   #nl_abs_tol = 1.1e-5
 
   start_time = 0.0
-  num_steps = 5000 
+  num_steps = 5000
   dt = 1.0e-3
   abort_on_solve_fail = true
 

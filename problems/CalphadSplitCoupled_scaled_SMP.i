@@ -224,11 +224,11 @@
 
   [./THeat]
     type = Heat
-    variable = temperature 
-    w = mu 
+    variable = temperature
+    w = mu
     c = concentration
     OP_var_names = 'n'
-    n_OP_vars = 1 
+    n_OP_vars = 1
   [../]
 []
 
@@ -239,12 +239,12 @@
     block = 0
 
     #H_Zr_D0 = 7.00e5 #um^2/s
-    #H_ZrH2_D0 = 1.53e5	 # um^2/s
+    #H_ZrH2_D0 = 1.53e5 # um^2/s
     #H_Zr_Q0 =  4.456e4 #J/mol
     #H_ZrH2_Q0 = 5.885E4 #J/mol
 
     mobility_AC = 1E0
-    #mobility_CH = 2E-10 
+    #mobility_CH = 2E-10
     mobility_CH = 1E3
 
     kappa_CH = 1.9484
@@ -370,7 +370,7 @@
     type = PhaseFractionDT
 
     dt = 1E-3
-    growth_factor = 0.1 
+    growth_factor = 0.1
 
     initial_dt = 1E-5
     has_initial_dt = true

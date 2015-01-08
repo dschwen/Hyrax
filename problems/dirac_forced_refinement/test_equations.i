@@ -157,7 +157,7 @@ active = 'Periodic'
   start_time = 0.0
   num_steps = 15
   dt = 0.3
- 
+
 #  [./Adaptivity]
 #    error_estimator = LaplacianErrorEstimator
 #    refine_fraction = 0.85

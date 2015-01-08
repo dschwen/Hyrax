@@ -8,9 +8,9 @@
   ny = 15
   nz = 0
   xmin = 0
-  xmax = 153.6 
+  xmax = 153.6
   ymin = 0
-  ymax = 153.6 
+  ymax = 153.6
   zmin = 0
   zmax = 0
   elem_type = QUAD4
@@ -46,7 +46,7 @@
      invalue = 1.6
      radius = 1.8
      int_width = 0.9
-     x_positions = '112 139 89 117 38  36 109 14 26 107 19 130   2 90 23  73 34 144 123 35' 
+     x_positions = '112 139 89 117 38  36 109 14 26 107 19 130   2 90 23  73 34 144 123 35'
      y_positions = ' 47  85 74 115 57 149  43 94 17 109 83  96 106 54 62 112  9  32  15 87'
      z_positions = '  0   0  0   0   0   0   0   0  0   0  0   0   0  0   0   0  0   0  0  0'
      n_seeds = 20
@@ -98,7 +98,7 @@
 [BCs]
   [./Neumann_C]
     type = NeumannBC
-    variable = concentration 
+    variable = concentration
     boundary = '0 1 2 3'
   [../]
 

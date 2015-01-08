@@ -166,10 +166,10 @@
   [../]
 
   [./centervalue_n1]
-    type = PointValue    
+    type = PointValue
     variable = n1
     point = '19.2 19.2 0'
-  [../]  
+  [../]
 []
 
 [Executioner]
@@ -184,12 +184,12 @@
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'
 
-  l_max_its = 30 
+  l_max_its = 30
   nl_max_its = 15
 
   start_time = 0.0
-  end_time = 2.0 
- #  num_steps = 2000 
+  end_time = 2.0
+ #  num_steps = 2000
   dt = 0.01
   abort_on_solve_fail = true
 

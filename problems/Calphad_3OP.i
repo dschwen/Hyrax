@@ -111,22 +111,22 @@
       y1 = 35
   [../]
 
-  [./PSSCIC_n2]  
+  [./PSSCIC_n2]
       type = SmoothCircleIC
       variable = n2
       int_width = 3
-      invalue = 1  
+      invalue = 1
       outvalue = 0
-      radius = 5 
+      radius = 5
       x1 = 25
       y1 = 25
   [../]
 
-  [./PSSCIC_n3]  
+  [./PSSCIC_n3]
       type = SmoothCircleIC
       variable = n3
       int_width = 3
-      invalue = 1  
+      invalue = 1
       outvalue = 0
       radius = 5
       x1 = 35
@@ -226,7 +226,7 @@
     OP_number = 1
     w = mu
     T = t
-    c = c 
+    c = c
     scaling_factor = 2.49410145E-9
   [../]
 
@@ -272,12 +272,12 @@
     block = 0
 
     #H_Zr_D0 = 7.00e5 #um^2/s
-    #H_ZrH2_D0 = 1.53e5	 # um^2/s
+    #H_ZrH2_D0 = 1.53e5 # um^2/s
     #H_Zr_Q0 =  4.456e4 #J/mol
     #H_ZrH2_Q0 = 5.885E4 #J/mol
 
     mobility_AC = 1E0
-    #mobility_CH = 2E-10 
+    #mobility_CH = 2E-10
     mobility_CH = 1E3
 
     kappa_CH = 1.9484
@@ -302,7 +302,7 @@
                                  -24.1618
                                   -0.00437791
                                34971.0' #HCP_Zr
-  
+
  pure_endpoint_high_coeffs = '2589675
                                  -34719.21
                                    5126.9713
@@ -425,7 +425,7 @@
     #type = PhaseFractionDT
 
     dt = 2E-3
-    #growth_factor = 0.1 
+    #growth_factor = 0.1
 
     initial_dt = 1E-4
     has_initial_dt = true

@@ -5,10 +5,10 @@
   dim = 2
   nx = 100 #500
   ny = 100 #500
-  nz = 0 
-  xmin = 200 
+  nz = 0
+  xmin = 200
   xmax = 300 #500
-  ymin = 200 
+  ymin = 200
   ymax = 300 #500
   zmin = 0
   zmax = 0
@@ -267,7 +267,7 @@
     block = 0
 
     #H_Zr_D0 = 7.00e5 #um^2/s
-    #H_ZrH2_D0 = 1.53e5	 # um^2/s
+    #H_ZrH2_D0 = 1.53e5 # um^2/s
     #H_Zr_Q0 =  4.456e4 #J/mol
     #H_ZrH2_Q0 = 5.885E4 #J/mol
 

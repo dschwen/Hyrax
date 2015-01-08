@@ -1,4 +1,4 @@
-#This input file is to test the Alan-Cahn, Cahn-Hilliard + solid mechanics 
+#This input file is to test the Alan-Cahn, Cahn-Hilliard + solid mechanics
 # for three precipitates, of order parameter 1, 2, and 3.
 
 [Mesh]
@@ -213,7 +213,7 @@
   [../]
 []
 
-[BCs] 
+[BCs]
   [./conc_BC]
     type = NeumannBC
     variable = concentration
@@ -306,7 +306,7 @@
 
   l_max_its = 15
   nl_max_its = 50
-  
+
   start_time = 0.0
   num_steps = 10
   dt = 0.003
@@ -319,7 +319,7 @@
   interval = 1
   exodus = true
   perf_log = true
-  
+
   [./OverSampling]
     exodus = true
     refinements = 3

@@ -1,4 +1,4 @@
-# This input file is to test the full Cahn-Hilliard, Alan-Cahn + solid mechanics for a single precipitate 
+# This input file is to test the full Cahn-Hilliard, Alan-Cahn + solid mechanics for a single precipitate
 # of the first order parameter.
 
 #[Debug]

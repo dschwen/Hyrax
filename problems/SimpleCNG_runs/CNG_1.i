@@ -295,7 +295,7 @@
       max_h_level = 4
       indicator = GJI_1
     [../]
-    
+
     [./EFMHM_2]
       type = ErrorFractionMaxHMarker
       coarsen = 0.05

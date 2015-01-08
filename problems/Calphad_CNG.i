@@ -421,7 +421,7 @@
     concentration = concentration
 
     H_Zr_D0 = 7.00e-7    #m^2/s
-    H_ZrH2_D0 = 1.53e-7	 # m^2/s
+    H_ZrH2_D0 = 1.53e-7  # m^2/s
     H_Zr_Q0 =  4.456e4   #J/mol
     H_ZrH2_Q0 = 5.885E4  #J/mol
 

@@ -158,7 +158,7 @@
     OP_var_names = 'n1 n2 n3'
     n_OP_vars = 3
   [../]
- 
+
   [./ACTransformn2]
     type = ACTransformElasticDF
     variable = n2
@@ -259,7 +259,7 @@
 []
 
 [Postprocessors]
-# postprocessors process the field variables and return a scalar value each timestep.  The Nucleation 
+# postprocessors process the field variables and return a scalar value each timestep.  The Nucleation
 # Postprocessor is used to introduce order parameter nuclei into the system.
 
   [./ElementIntegralVariablePostprocessor_n1]
@@ -297,7 +297,7 @@
     type = NodalMaxValue
     variable = n2
   [../]
- 
+
   [./NodalMaxValue_n3]
     output = file
     type = NodalMaxValue

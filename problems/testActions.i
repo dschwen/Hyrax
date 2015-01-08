@@ -266,7 +266,7 @@
     type = NodalVolumeFraction
     output = both
     bubble_volume_file = stress0_a-2.csv
-#    Avrami_file = Avrami_0-2_a.csv  
+#    Avrami_file = Avrami_0-2_a.csv
     threshold = 0.75
     variable = n2
     mesh_volume = Volume

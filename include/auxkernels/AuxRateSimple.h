@@ -42,8 +42,8 @@ private:
   const unsigned int _mesh_dimension;
 
   VariableValue & _coupled_energy; ///< area/volume free energy change of transformation
-  Real _Kn1;  				    ///< First nucleation rate value
-  Real _Kn2;				    ///< Second nucleation rate value
+  Real _Kn1;                       ///< First nucleation rate value
+  Real _Kn2;                       ///< Second nucleation rate value
 
   unsigned int _n_OP_vars;
   std::vector<VariableValue *> _coupled_OP_vars;

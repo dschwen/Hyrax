@@ -5,10 +5,10 @@
   dim = 2
   nx = 100 #500
   ny = 100 #500
-  nz = 0 
-  xmin = 200 
+  nz = 0
+  xmin = 200
   xmax = 300 #500
-  ymin = 200 
+  ymin = 200
   ymax = 300 #500
   zmin = 0
   zmax = 0

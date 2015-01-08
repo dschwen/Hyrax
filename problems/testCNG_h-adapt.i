@@ -13,7 +13,7 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 5 
+  uniform_refine = 5
 []
 
 [Variables]
@@ -229,13 +229,13 @@
 
  # num_steps = 10
   dt = 0.01
-  start_time = 0.0  
+  start_time = 0.0
   end_time = 100
 
   abort_on_solve_fail = true
   adapt_cycles = 5
 
-  use_nucleation_userobject = true 
+  use_nucleation_userobject = true
   nucleation_userobject = NLUO
 
 
@@ -258,7 +258,7 @@
       type = ErrorFractionMaxHMarker
       coarsen = 0.05
       refine = 0.75
-      max_h_level = 5	     
+      max_h_level = 5
       indicator = GJI
     [../]
     [./combo]

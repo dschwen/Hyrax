@@ -221,7 +221,7 @@ active = 'Periodic'
   interval = 1
   exodus = true
   perf_log = true
-  
+
   #[./OverSampling]
   #  refinements = 2
   #[../]

@@ -5,11 +5,11 @@
   dim = 2
   nx = 200
   ny = 200
-  nz = 0 
+  nz = 0
   xmin = 0
   xmax = 200
-  ymin = 0 
-  ymax = 200 
+  ymin = 0
+  ymax = 200
   zmin = 0
   zmax = 0
   elem_type = QUAD4
@@ -264,7 +264,7 @@
     block = 0
 
     #H_Zr_D0 = 7.00e5 #um^2/s
-    #H_ZrH2_D0 = 1.53e5	 # um^2/s
+    #H_ZrH2_D0 = 1.53e5 # um^2/s
     #H_Zr_Q0 =  4.456e4 #J/mol
     #H_ZrH2_Q0 = 5.885E4 #J/mol
 

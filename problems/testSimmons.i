@@ -95,7 +95,7 @@
 [BCs]
   [./Neumann_C]
     type = NeumannBC
-    variable = concentration 
+    variable = concentration
     boundary = '0 1 2 3'
   [../]
 

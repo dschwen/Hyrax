@@ -100,7 +100,7 @@
     type = TimeDerivative
     variable = n1
   [../]
- 
+
   [./dn2dt]
     type = TimeDerivative
     variable = n2
@@ -306,7 +306,7 @@ active = 'Periodic'
   interval = 1
   exodus = true
   perf_log = true
-  
+
   #[./OverSampling]
   #  refinements = 2
   #[../]

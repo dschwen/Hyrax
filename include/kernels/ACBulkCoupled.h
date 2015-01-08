@@ -45,7 +45,7 @@ protected:
 
   VariableValue & _coupled_CH_var;  ///< the Cahn-Hilliard variable (concentration, probably)
 
-  
+
 private:
 
 };

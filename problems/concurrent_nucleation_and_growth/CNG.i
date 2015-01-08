@@ -252,7 +252,7 @@
     OP_var_names = 'n1 n2 n3'
     n_OP_vars = 3
   [../]
- 
+
   [./ACTransformn2]
     type = ACTransformElasticDF
     variable = n2
@@ -325,7 +325,7 @@
     index_j = 1
     variable = s11_aux
   [../]
- 
+
  [./matl_s12]
     type = RankTwoAux
     rank_two_tensor = stress
@@ -373,7 +373,7 @@
     index_j = 1
     variable = e11_aux
   [../]
- 
+
  [./matl_e12]
     type = RankTwoAux
     rank_two_tensor = elastic_strain
@@ -482,7 +482,7 @@
     disp_y = disp_y
     #reading C_11  C_12  C_13  C_22  C_23  C_33  C_44  C_55  C_66
     C_ijkl ='155.4 68.03 64.6 155.4  64.6 172.51 36.31 36.31 44.09'
-    C_precipitate ='155.4 68.03 64.6 155.4  64.6 172.51 36.31 36.31 44.09'		   
+    C_precipitate ='155.4 68.03 64.6 155.4  64.6 172.51 36.31 36.31 44.09'
     #reading        S_11   S_22  S_33 S_23 S_13 S_12
     e_precipitate = '0.00551  0.0564  0.0570  0.0  0.0  0.0'
     n_variants = 3

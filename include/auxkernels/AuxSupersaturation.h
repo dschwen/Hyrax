@@ -42,7 +42,7 @@ private:
 
   VariableValue & _coupled_conc;  ///< PDE variable (concentration)
   Real _c1;   ///< parameter from landau polynomial (first energy well position in c-space)
-  Real _supersaturation;	  ///< C-C1
+  Real _supersaturation;  ///< C-C1
 };
 
 #endif //AUXSUPERSATURATION_H

@@ -8,9 +8,9 @@
   ny = 15 #480
   nz = 0
   xmin = 0
-  xmax = 153.6 
+  xmax = 153.6
   ymin = 0
-  ymax = 153.6 
+  ymax = 153.6
   zmin = 0
   zmax = 0
   elem_type = QUAD4
@@ -98,7 +98,7 @@
 [BCs]
   [./Neumann_C]
     type = NeumannBC
-    variable = concentration 
+    variable = concentration
     boundary = '0 1 2 3'
   [../]
 
@@ -180,7 +180,7 @@
     type = SolutionTimeAdaptiveDT
     dt = 1e-2
   [../]
-  
+
 
   #Preconditioned JFNK (default)
   solve_type = 'PJFNK'
