@@ -5,7 +5,7 @@
 *  CASL/MOOSE
 *
 * 13 January 2015
-*  
+*
 *************************************************************************/
 
 #include "AuxVolumetricFullNucleationRate.h"
@@ -81,7 +81,7 @@ AuxVolumetricFullNucleationRate::AuxVolumetricFullNucleationRate(const std::stri
 Real
 AuxVolumetricFullNucleationRate::computeValue()
 {
-  
+
   computeCriticalRadius();
   computeCriticalEnergy();
   computeZeldovichFactor();
@@ -96,7 +96,7 @@ AuxVolumetricFullNucleationRate::computeValue()
   _console<<"Kb = "<<_Kb<<std::endl;
   _console<<"T = "<<_T[_qp]<<std::endl;
   _console<<"exp(-Gstar/kT) = "<<std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) )<<std::endl;
-  
+
   Real rate = _scale_factor*( _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) ));
 
   if (rate < 0)
@@ -126,7 +126,7 @@ AuxFullNucleationRate::computeCriticalEnergy()
   // _console<<"G* in Joules = "<<_G_star<<std::endl;
   }*/
 
-  
+
 /*void
 AuxFullNucleationRate::computeZeldovichFactor()
 {

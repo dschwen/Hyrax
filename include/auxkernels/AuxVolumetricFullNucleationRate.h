@@ -70,7 +70,7 @@ protected:
   */
 private:
   Real _rate_volume;
-  
+
 };
 
 #endif //AUXVOLUMETRICFULLNUCLEATIONRATE_H

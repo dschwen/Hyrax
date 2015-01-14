@@ -316,7 +316,7 @@
     type = ConstantDT #SolutionTimeAdaptiveDT
     dt = 0.1
   [../]
-  
+
   adapt_nucleus = 4
 
 
