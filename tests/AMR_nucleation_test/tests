@@ -5,4 +5,10 @@
     exodiff = 'AMR_nucleation_test.e AMR_nucleation_test.e-s002 AMR_nucleation_test.e-s003 AMR_nucleation_test.e-s004'
     #skip = 'Random # generation pattern changed'
   [../]
+
+  [./AMR_volumetric_rate_test]
+    type = 'Exodiff'
+    input = 'AMR_volumetric_rate_test.i'
+    exodiff = 'AMR_volumetric_rate_test.e AMR_volumetric_rate_test.e-s002 AMR_volumetric_rate_test.e-s003'
+  [../]
 []

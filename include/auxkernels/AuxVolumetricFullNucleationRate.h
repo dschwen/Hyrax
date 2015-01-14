@@ -4,37 +4,38 @@
 *  Andrea M. Jokisaari
 *  CASL/MOOSE
 *
-* 20  February 2014
+* 13 January 2015
 *
 *************************************************************************/
 
-#ifndef AUXFULLNUCLEATIONRATE_H
-#define AUXFULLNUCLEATIONRATE_H
+#ifndef AUXVOLUMETRICFULLNUCLEATIONRATE_H
+#define AUXVOLUMETRICFULLNUCLEATIONRATE_H
 
-#include "AuxKernel.h"
+#include "AuxFullNucleationRate.h"
 
-class AuxFullNucleationRate;
+class AuxVolumetricFullNucleationRate;
 
 template<>
-InputParameters validParams<AuxFullNucleationRate>();
+InputParameters validParams<AuxVolumetricFullNucleationRate>();
 
-class AuxFullNucleationRate : public AuxKernel
+class AuxVolumetricFullNucleationRate : public AuxFullNucleationRate
 {
 public:
-  AuxFullNucleationRate(const std::string & name, InputParameters parameters);
+  AuxVolumetricFullNucleationRate(const std::string & name, InputParameters parameters);
 
 protected:
 
-  virtual Real computeValue();
+//  virtual Real computeValue();
 
-  virtual void computeCriticalRadius();
-  virtual void computeCriticalEnergy();
+//  virtual void computeCriticalRadius();
+//  virtual void computeCriticalEnergy();
 
-  virtual void computeZeldovichFactor();
-  virtual void computeCriticalFrequency();
+//  virtual void computeZeldovichFactor();
+//  virtual void computeCriticalFrequency();
 
   virtual void computeNumAtoms();
 
+  /*
   const unsigned int _mesh_dimension;
 
   VariableValue & _coupled_energy;          // J/m^3 free energy change of transformation
@@ -66,6 +67,10 @@ protected:
   MaterialProperty<Real> & _Omega;
   Real _OP_threshold;
   Real _length_scale;
+  */
+private:
+  Real _rate_volume;
+  
 };
 
-#endif //AUXFULLNUCLEATIONRATE_H
+#endif //AUXVOLUMETRICFULLNUCLEATIONRATE_H
