@@ -109,15 +109,14 @@ AuxCalphadElasticity::computeElasticEnergy()
 {
   //needs to be the local elastic stress and the precipitate misfit tensor
   //this needs to be orientation dependent, so we need to use OP_number
-  //if Cijkl is scaled, then this energy will be scaled.  This is not good.
+  //if Cijkl is scaled, then this energy will be scaled. Self_energy must also
+  //be scaled so that the whole computation is unscaled using the scaling factor.
+
   Real inverse = 1/_scaling_factor;
 
   return -1*inverse*( _self_energy
                       - _stress[_qp].doubleContraction( (_precipitate_eigenstrain[_qp])[_OP_number-1] ));
-//  return -1*(_self_energy - _stress[_qp]*_misfit_strain_tensor[_qp]);
 }
-
-
 
 Real
 AuxCalphadElasticity::computeDifferential()
