@@ -338,7 +338,7 @@
     variable = 'n1'
     use_single_map = true
     threshold = 0.5
-    execute_on = timestep
+    execute_on = timestep_end
     mesh_volume = Volume
   [../]
 
@@ -347,7 +347,7 @@
     variable = 'n2'
     use_single_map = true
     threshold = 0.5
-    execute_on = timestep
+    execute_on = timestep_end
     mesh_volume = Volume
   [../]
 

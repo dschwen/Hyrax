@@ -120,7 +120,7 @@
     type = NodalVolumeFraction
     variable = n1
     threshold = 0.75
-    execute_on = timestep
+    execute_on = timestep_end
     mesh_volume = Volume
   [../]
 

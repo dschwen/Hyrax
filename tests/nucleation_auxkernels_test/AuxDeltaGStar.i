@@ -63,7 +63,7 @@
     variable = elem_Supersaturation
     coupled_var = concentration
     functional_c1 = 0.006
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./DeltaGStar]
@@ -75,7 +75,7 @@
     scale_factor = 1
     Kb = 1
 
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 []
 

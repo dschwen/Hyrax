@@ -195,7 +195,7 @@
     n_OP_vars = 1
     precip_conserved = 0.6
     precip_nonconserved = 1
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
  [./NucleationRate]
@@ -211,7 +211,7 @@
     linear_density = 3.755E9
     jump_distance = 2.04E-10
 
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
  [./AuxNucleationProbability]
@@ -220,7 +220,7 @@
     coupled_aux_var = elem_NucleationRate
     coupled_variables = 'n'
     n_OP_vars = 1
-    execute_on = timestep
+    execute_on = timestep_end
     OP_threshold = 1E-4
  [../]
 
@@ -243,7 +243,7 @@
     OP_variable_names = 'n'
     n_OP_variables = 1
     scaling_factor = 2.49410145E-9
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./AuxGrad_C_energy]
@@ -251,7 +251,7 @@
     variable = Grad_C_energy
     field_variable = concentration
     kappa_name = kappa_c
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./AuxGrad_N_energy]
@@ -259,13 +259,13 @@
     variable = Grad_N_energy
     field_variable = n
     kappa_name = kappa_n
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./AuxElasticEnergy]
     type = AuxElasticEnergy
     variable = elastic_energy
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./matl_s11]
@@ -575,7 +575,7 @@
     n_coupled_aux = 1
     dwell_time = 0.3
     num_orientations = 1
-    execute_on = timestep
+    execute_on = timestep_end
     boundary_width = 50
     random_seed = 3000
   [../]

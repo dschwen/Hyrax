@@ -78,7 +78,7 @@
     variable = elemental_Supersaturation
     coupled_var = concentration
     functional_c1 = 0.006
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./NucleationRate]
@@ -96,7 +96,7 @@
     linear_density = 5
     n_OP_vars = 1
     OP_var_names = 'n1'
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 []
 

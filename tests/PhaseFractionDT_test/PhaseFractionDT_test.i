@@ -125,7 +125,7 @@ active = 'Periodic'
     variable = 'n1'
     use_single_map = true
     threshold = 0.75
-    execute_on = timestep
+    execute_on = timestep_end
     mesh_volume = Volume
   [../]
 

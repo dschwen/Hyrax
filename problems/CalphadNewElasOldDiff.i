@@ -113,7 +113,7 @@
     OP_variable_names = 'n'
     n_OP_variables = 1
     scaling_factor = 2.49410145E-9
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./AuxGrad_C_energy]
@@ -121,7 +121,7 @@
     variable = Grad_C_energy
     field_variable = concentration
     kappa_name = kappa_c
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./AuxGrad_N_energy]
@@ -129,13 +129,13 @@
     variable = Grad_N_energy
     field_variable = n
     kappa_name = kappa_n
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./AuxElasticEnergy]
     type = AuxElasticEnergy
     variable = elastic_energy
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 []
 

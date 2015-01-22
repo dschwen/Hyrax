@@ -72,7 +72,7 @@
   [./AuxElasticEnergy]
     type = AuxElasticEnergy
     variable = elastic_energy
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 []
 

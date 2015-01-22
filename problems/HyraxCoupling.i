@@ -252,7 +252,7 @@
     nonconserved_var_number = 1
     precip_conserved = 0.6
     precip_nonconserved = 1.6
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
  [./NucleationRate_n1]
@@ -269,7 +269,7 @@
     linear_density = 50
     OP_var_names = 'n1' # n2 n3'
     n_OP_vars = 1 #3
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
  [./AuxNucleationProbability_n1]
@@ -278,7 +278,7 @@
     coupled_aux_var = elem_NucleationRate_n1
     coupled_variables = 'n1' # n2 n3'
     n_OP_vars = 1 #3
-    execute_on = timestep
+    execute_on = timestep_end
  [../]
 
  # [./ChemElastic_n2]
@@ -289,7 +289,7 @@
   #  nonconserved_var_number = 2
   #  precip_conserved = 0.6
   #  precip_nonconserved = 1.6
-  #  execute_on = timestep
+  #  execute_on = timestep_end
   #[../]
 
  #[./NucleationRate_n2]
@@ -306,7 +306,7 @@
 #    linear_density = 50
 #    OP_var_names = 'n1 n2 n3'
 #    n_OP_vars = 3
-#    execute_on = timestep
+#    execute_on = timestep_end
 #  [../]
 
  #[./AuxNucleationProbability_n2]
@@ -315,7 +315,7 @@
 #    coupled_aux_var = elem_NucleationRate_n2
 #    coupled_variables = 'n1 n2 n3'
 #    n_OP_vars = 3
-#    execute_on = timestep
+#    execute_on = timestep_end
 # [../]
 
 #  [./ChemElastic_n3]
@@ -326,7 +326,7 @@
 #    nonconserved_var_number = 3
 #    precip_conserved = 0.6
 #    precip_nonconserved = 1.6
-#    execute_on = timestep
+#    execute_on = timestep_end
 #  [../]
 
 # [./NucleationRate_n3]
@@ -343,7 +343,7 @@
 #    linear_density = 50
 #    OP_var_names = 'n1 n2 n3'
 #    n_OP_vars = 3
-#    execute_on = timestep
+#    execute_on = timestep_end
 #  [../]
 
 # [./AuxNucleationProbability_n3]
@@ -352,7 +352,7 @@
 #    coupled_aux_var = elem_NucleationRate_n3
 #    coupled_variables = 'n1 n2 n3'
 #    n_OP_vars = 3
-#    execute_on = timestep
+#    execute_on = timestep_end
 # [../]
 []
 
@@ -463,7 +463,7 @@
     variable = 'n1' # n2 n3'
     use_single_map = true
     threshold = 0.75
-    execute_on = timestep
+    execute_on = timestep_end
     mesh_volume = Volume
     output = both
   [../]
@@ -481,7 +481,7 @@
     n_coupled_aux = 1 #3
     dwell_time = 0.1
     num_orientations = 1 #3
-    execute_on = timestep
+    execute_on = timestep_end
     boundary_width = 3.6
   [../]
 

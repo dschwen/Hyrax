@@ -86,7 +86,7 @@
     n_OP_vars = 1
     precip_conserved = 0.6
     precip_nonconserved = 1
-    execute_on = timestep
+    execute_on = timestep_end
     self_energy = 0.12
     scaling_factor = 2.9185832E-9
     use_elastic_energy = false

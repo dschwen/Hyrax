@@ -293,7 +293,7 @@
     dwell_time = 0.1
     num_orientations = 1
     boundary_width = 5
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./NISM]

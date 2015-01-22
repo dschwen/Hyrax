@@ -111,7 +111,7 @@
     variable = elemental_Supersaturation
     coupled_var = concentration
     functional_c1 = 0.006
-    execute_on = timestep#_begin
+    execute_on = timestep_end#_begin
   [../]
 
   [./NucleationRate]
@@ -124,7 +124,7 @@
     linear_density = 50
     Z = 0.001
     Kn2 = 0.033
-    execute_on = timestep#_begin
+    execute_on = timestep_end#_begin
   [../]
 
   [./NucleationProbability]
@@ -133,7 +133,7 @@
     coupled_aux_var = elemental_NucleationRate
     coupled_variables = 'n1'
     n_OP_vars = 1
-    execute_on = timestep#_begin
+    execute_on = timestep_end#_begin
   [../]
 []
 
@@ -177,7 +177,7 @@
     coupled_aux = elemental_NucleationProbability
     dwell_time = 0.1
     num_orientations = 1
-    execute_on = timestep#_begin
+    execute_on = timestep_end#_begin
   [../]
 
   [./NISM]

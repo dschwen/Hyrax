@@ -360,7 +360,7 @@
     precip_conserved = 0.6
     precip_nonconserved = 1.6
   #  functional_c1 = 0.006
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./ChemElastic_n2]
@@ -372,7 +372,7 @@
     precip_conserved = 0.6
     precip_nonconserved = 1.6
   #  functional_c1 = 0.006
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./ChemElastic_n3]
@@ -384,7 +384,7 @@
     precip_conserved = 0.6
     precip_nonconserved = 1.6
   #  functional_c1 = 0.006
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
 
@@ -403,7 +403,7 @@
     linear_density = 5
     OP_var_names = 'n1 n2 n3'
     n_OP_vars = 3
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
   [./NucleationRate_n2]
     type = AuxNucleationRate
@@ -420,7 +420,7 @@
     linear_density = 5
     OP_var_names = 'n1 n2 n3'
     n_OP_vars = 3
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
   [./NucleationRate_n3]
     type = AuxNucleationRate
@@ -437,7 +437,7 @@
     linear_density = 5
     OP_var_names = 'n1 n2 n3'
     n_OP_vars = 3
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
  [./AuxNucleationProbability_n1]
@@ -446,7 +446,7 @@
     coupled_aux_var = elem_NucleationRate_n1
     coupled_variables = 'n1 n2 n3'
     n_OP_vars = 3
-    execute_on = timestep
+    execute_on = timestep_end
  [../]
  [./AuxNucleationProbability_n2]
     type = AuxNucleationProbability
@@ -454,7 +454,7 @@
     coupled_aux_var = elem_NucleationRate_n2
     coupled_variables = 'n1 n2 n3'
     n_OP_vars = 3
-    execute_on = timestep
+    execute_on = timestep_end
  [../]
  [./NucleationProbability_n3]
     type = AuxNucleationProbability
@@ -462,7 +462,7 @@
     coupled_aux_var = elem_NucleationRate_n3
     coupled_variables = 'n1 n2 n3'
     n_OP_vars = 3
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 []
 
@@ -576,7 +576,7 @@
     n_coupled_aux = 3
     dwell_time = 0.1
     num_orientations = 3
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./NISM]

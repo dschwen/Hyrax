@@ -114,7 +114,7 @@
     variable = elemental_Supersaturation
     coupled_var = concentration
     functional_c1 = 0.006
-    execute_on = timestep#_begin
+    execute_on = timestep_end#_begin
   [../]
 
   [./NucleationRate]
@@ -131,7 +131,7 @@
     linear_density = 50
     scale_factor = 1
 
-    execute_on = timestep#_begin
+    execute_on = timestep_end#_begin
   [../]
 
   [./NucleationProbability]
@@ -140,7 +140,7 @@
     coupled_aux_var = elemental_NucleationRate
     coupled_variables = 'n1'
     n_OP_vars = 1
-    execute_on = timestep#_begin
+    execute_on = timestep_end#_begin
   [../]
 []
 
@@ -185,7 +185,7 @@
     n_coupled_aux = 1
     dwell_time = 0.1
     num_orientations = 1
-    execute_on = timestep#_begin
+    execute_on = timestep_end#_begin
     random_seed = 500
   [../]
 

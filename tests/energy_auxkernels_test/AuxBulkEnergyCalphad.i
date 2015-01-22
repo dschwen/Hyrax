@@ -59,7 +59,7 @@
     OP_variable_names = 'n'
     n_OP_variables = 1
     scaling_factor = 2.49410145E-9
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 []
 

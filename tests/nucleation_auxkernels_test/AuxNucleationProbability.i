@@ -85,7 +85,7 @@
     variable = nodal_Supersaturation
     coupled_var = concentration
     functional_c1 = 0.006
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
  [./NucleationRate]
@@ -103,7 +103,7 @@
     linear_density = 5
     OP_var_names = 'n1'
     n_OP_vars = 1
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
  [./AuxNucleationProbability]
@@ -112,7 +112,7 @@
     coupled_aux_var = nodal_NucleationRate
     coupled_variables = 'n1'
     n_OP_vars = 1
-    execute_on = timestep
+    execute_on = timestep_end
  [../]
 []
 

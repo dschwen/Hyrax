@@ -117,7 +117,7 @@
     variable = nodal_Supersaturation
     coupled_var = concentration
     functional_c1 = 0.006
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./NucleationRate]
@@ -126,7 +126,7 @@
     coupled_aux_var = nodal_Supersaturation
     Kn1 = 0.08
     Kn2 = 0.25
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./NucleationProbability]
@@ -134,14 +134,14 @@
     variable = nodal_NucleationProbability
     coupled_aux_var = nodal_NucleationRate
     coupled_variable = n1
-    execute_on = timestep
+    execute_on = timestep_end
   [../]
 
   [./Report_n1]
     type = ReporterAux
     variable = n1_untouched
     coupled = n1
-    execute_on  = timestep
+    execute_on  = timestep_end
    [../]
 []
 

@@ -235,7 +235,7 @@
     n_coupled_aux = 2
     dwell_time = 0.1
     num_orientations = 2
-    execute_on = timestep
+    execute_on = timestep_end
     boundary_width = 0.1
   [../]
 []
