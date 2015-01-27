@@ -311,7 +311,7 @@
 [Executioner]
   type = MeshSolutionModify
   scheme = 'crank-nicolson'
-  num_steps = 5
+  num_steps = 3
   [./TimeStepper]
     type = ConstantDT #SolutionTimeAdaptiveDT
     dt = 0.1
