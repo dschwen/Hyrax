@@ -41,7 +41,7 @@ protected:
   virtual Real computeHeaviside();
   virtual Real computeDHeaviside(unsigned int i);
   virtual Real computeD2Heaviside(unsigned int i);
-  
+
   std::vector<Real> _eigenstrain_matrix_vector;
   RankTwoTensor _eigenstrain_matrix;
 

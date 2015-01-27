@@ -124,12 +124,12 @@ PrecipitateMatrixMisfitMaterial::computeQpElasticityTensor()
   // _dc_elasticity_tensor[_qp] = zeros;
   // _dcdc_elasticity_tensor[_qp] = zeros;
   // _Jacobian_mult[_qp] = (_Cijkl + (_Cijkl_precipitate - _Cijkl)*sum_OP)/inverse;
-  
+
   _elasticity_tensor[_qp] = _Cijkl/inverse;
   _dc_elasticity_tensor[_qp] = zeros;
   _dcdc_elasticity_tensor[_qp] = zeros;
   _Jacobian_mult[_qp] = _Cijkl/inverse;
-  
+
 
 }
 
