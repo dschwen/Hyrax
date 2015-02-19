@@ -150,7 +150,7 @@ HyraxApp::HyraxApp(const std::string & name, InputParameters parameters) :
   HyraxApp::associateSyntax(_syntax, _action_factory);
 }
 
-
+extern "C" void HyraxApp__registerApps() { HyraxApp::registerApps(); }
 void
 HyraxApp::registerApps()
 {
