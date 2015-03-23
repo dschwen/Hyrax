@@ -85,8 +85,14 @@ AuxCalphadElasticity::computeValue()
 
   if(_use_elastic_energy)
     elastic_energy = computeElasticEnergy();
+  //_console<<"chem_matrix_energy = "<<chem_matrix_energy<<std::endl;
+  //_console<<"chem_precip_energy = "<<chem_precip_energy<<std::endl;
+  //_console<<"chem_differential = "<<chem_differential<<std::endl;
+  //_console<<"elastic_energy = "<<elastic_energy<<std::endl;
 
-  return (chem_matrix_energy - chem_precip_energy + chem_differential) + elastic_energy;
+  //_console<<"deltaf_total = "<<(chem_matrix_energy - chem_precip_energy + chem_differential) + elastic_energy<<std::endl;
+
+  return (chem_matrix_energy - chem_precip_energy + chem_differential) - elastic_energy;
 }
 
 Real
@@ -114,7 +120,7 @@ AuxCalphadElasticity::computeElasticEnergy()
 
   Real inverse = 1/_scaling_factor;
 
-  return -1*inverse*( _self_energy
+  return inverse*( _self_energy
                       - _stress[_qp].doubleContraction( (_precipitate_eigenstrain[_qp])[_OP_number-1] ));
 }
 

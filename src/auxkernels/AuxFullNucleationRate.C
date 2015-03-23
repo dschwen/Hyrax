@@ -105,7 +105,9 @@ void
 AuxFullNucleationRate::computeCriticalRadius()
 {
   //this is calculated as if in 3D
-  _r_star = 2*_gamma/_coupled_energy[_qp];
+  //pretty sure this needs a negative
+
+  _r_star = 2.0*_gamma/_coupled_energy[_qp];
 
   // _console<<"r* = "<<_r_star<<std::endl;
 }
@@ -114,9 +116,9 @@ void
 AuxFullNucleationRate::computeCriticalEnergy()
 {
   //this is calculated as if in 3D
-  Real alpha = 16*libMesh::pi/3;
+  Real alpha = 16.0*libMesh::pi/3.0;
 
-  _G_star = alpha*std::pow(_gamma, 3)/std::pow(_coupled_energy[_qp], 2);
+  _G_star = alpha*std::pow(_gamma, 3.0)/std::pow(_coupled_energy[_qp], 2.0);
 
   // _console<<"G* in Joules = "<<_G_star<<std::endl;
 }
@@ -124,14 +126,14 @@ AuxFullNucleationRate::computeCriticalEnergy()
 void
 AuxFullNucleationRate::computeZeldovichFactor()
 {
-  Real critical_volume = 4*libMesh::pi*_r_star*_r_star*_r_star/3;
+  Real critical_volume = 4.0*libMesh::pi*_r_star*_r_star*_r_star/3.0;
 
-  //here I'm assuming that the molar volume is constant across phases.. meh
+  //here I'm assuming that the molar volume is constant across phases.
   Real Nc = critical_volume*6.02214E23/_Omega[_qp];
 
   _Z =std::sqrt( _G_star/( 3*libMesh::pi*Nc*Nc*_Kb*_T[_qp] ));
 
-  //_console<<"Z = "<<_Z<<std::endl;
+  // _console<<"Z = "<<_Z<<std::endl;
 }
 
 void
@@ -140,7 +142,7 @@ AuxFullNucleationRate::computeCriticalFrequency()
   Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density;
 
   // Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density/4;
-  //_console<<"Zc*X = "<<Zc*_X[_qp]<<std::endl;
+  // _console<<"Zc*X = "<<Zc*_X[_qp]<<std::endl;
 
   _beta_star = Zc*_X[_qp]*_D[_qp]/ ( std::pow(_jump_distance,2)) ;
 
