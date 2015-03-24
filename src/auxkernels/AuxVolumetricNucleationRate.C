@@ -72,6 +72,7 @@ AuxVolumetricNucleationRate::computeValue()
   computeCriticalFrequency();
   computeNumAtoms();
 
+  /*
   _console<<"time_scale_factor = "<<_time_scale_factor<<std::endl;
   _console<<"Z = "<<_Z<<std::endl;
   _console<<"N = "<<_N<<std::endl;
@@ -81,6 +82,7 @@ AuxVolumetricNucleationRate::computeValue()
   _console<<"T = "<<_T[_qp]<<std::endl;
   _console<<"exp(-Gstar/kT) = "<<std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) )<<std::endl;
   _console<<"Jstar unscaled = "<< _Z*_N*_beta_star*std::exp( (-1*_G_star)/ (_Kb*_T[_qp]) )<<std::endl;
+  */
 
   Real total_scale_factor = _time_scale_factor*std::pow(_length_scale_factor, 3);
 
@@ -99,7 +101,7 @@ AuxVolumetricNucleationRate::computeCriticalRadius()
   //this is calculated as if in 3D
   _r_star = 2*_gamma/_coupled_energy[_qp];
 
-   _console<<"r* = "<<_r_star<<std::endl;
+  //_console<<"r* = "<<_r_star<<std::endl;
 }
 
 void
@@ -110,7 +112,7 @@ AuxVolumetricNucleationRate::computeCriticalEnergy()
 
   _G_star = alpha*std::pow(_gamma, 3)/std::pow(_coupled_energy[_qp], 2);
 
-  _console<<"G* in Joules = "<<_G_star<<std::endl;
+  //_console<<"G* in Joules = "<<_G_star<<std::endl;
 }
 
 void
@@ -123,7 +125,7 @@ AuxVolumetricNucleationRate::computeZeldovichFactor()
 
   _Z =std::sqrt( _G_star/( 3*libMesh::pi*Nc*Nc*_Kb*_T[_qp] ));
 
-  _console<<"Z = "<<_Z<<std::endl;
+  //_console<<"Z = "<<_Z<<std::endl;
 }
 
 void
@@ -131,14 +133,16 @@ AuxVolumetricNucleationRate::computeCriticalFrequency()
 {
   Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density;
 
+  /*
   _console<<"Zc = "<<Zc<<std::endl;
   _console<<"X = "<<_X[_qp]<<std::endl;
   _console<<"D = "<<_D[_qp]<<std::endl;
   _console<<"jump_dist^2 = "<< ( std::pow(_jump_distance,2))<<std::endl;
+  */
 
   _beta_star = Zc*_X[_qp]*_D[_qp]/ ( std::pow(_jump_distance,2)) ;
 
-  _console<<"beta* = "<<_beta_star<<std::endl;
+  //_console<<"beta* = "<<_beta_star<<std::endl;
 }
 
 void
