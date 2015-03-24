@@ -43,7 +43,7 @@ private:
   Real _OP_threshold;
   Real _2D_mesh_height;
   const unsigned int _mesh_dimension;
-    
+
 };
 
 #endif //AUXAMRNUCLEATIONPROBABILITY_H

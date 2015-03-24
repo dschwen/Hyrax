@@ -60,7 +60,7 @@ protected:
   MaterialProperty<Real> & _Omega;
   Real _OP_threshold;
   Real _length_scale_factor;
-  
+
 private:
   Real _rate_volume;
 
