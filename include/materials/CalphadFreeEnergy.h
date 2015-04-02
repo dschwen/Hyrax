@@ -36,6 +36,11 @@ public:
   std::vector<Real> _L0_coeffs;
   std::vector<Real> _L1_coeffs;
 
+  //low and high taylor expansion cutoff concentrations
+  Real _low_cutoff;
+  Real _high_cutoff;
+
+  //Gas constant
   Real _R;
 
 protected:

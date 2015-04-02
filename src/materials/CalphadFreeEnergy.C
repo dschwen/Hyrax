@@ -9,6 +9,8 @@ CalphadFreeEnergy::CalphadFreeEnergy() :
     _mixture_coeffs(),
     _L0_coeffs(),
     _L1_coeffs(),
+    _low_cutoff(0),
+    _high_cutoff(0),
     _R(0)
 {
 }

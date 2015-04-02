@@ -73,27 +73,19 @@ ZrHCalphadDiffusivity::computeQpProperties()
   //nondimensionalize the mobility here
   //using mobility calculated for interstitial dilute solutions
   Real solute = _c[_qp];
-  if (solute < 0.001)
-    solute = 0.001;
+  if (solute < 0)
+    solute = 0;
 
-  _M[_qp] = ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
-  //_console<<"M = "<<_M[_qp]<<std::endl;
+  // _M[_qp] = ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
 
-//  _L1Q[_qp] = (_Q_transport - _temperature[_qp]*_d2Galpha_dcdT[_qp]);
-  //_console<<"L1Q = "<<_L1Q[_qp]<<std::endl;
-  //_console<<"temp = "<<_temperature[_qp]<<std::endl;
-  //_console<<"d2Galpha_dcdT = "<<_d2Galpha_dcdT[_qp]<<std::endl;
-
-  Real curvature =  (1-Heaviside)*_d2Galpha_dc2[_qp] + Heaviside*_d2Gdelta_dc2[_qp];
-
-  //nasty hack to smooth out the curvature
-  //if (_c[_qp] < 0.001 || _c[_qp] > 0.665)
-  //  curvature  = 1E10;
-  //if (curvature < 1E-10 && curvature > -1E-10)
-  //  curvature = 1E-10;
-
+  //Real curvature =  (1-Heaviside)*_d2Galpha_dc2[_qp] + Heaviside*_d2Gdelta_dc2[_qp];
+  Real curvature = _d2Galpha_dc2[_qp];
   //nondimensionalize the mobility here
-  // _M[_qp] = (_D_alpha[_qp]/curvature)/_mobility_CH_scaling;
+  if(solute > 0.499)
+    _M[_qp] =  ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
+  else
+   _M[_qp] = (_D_alpha[_qp]/curvature)/_mobility_CH_scaling;
+
   //_console<<"earlier M = "<< (_D_alpha[_qp]/curvature)/_mobility_CH_scaling<<std::endl;
   //_console<<"curvature = "<<curvature<<std::endl;
   //_console<<"D_alpha = "<<_D_alpha[_qp]<<std::endl;
