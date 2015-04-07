@@ -84,7 +84,7 @@ Real
 CalphadAB1CD2::computeGMix(const Real & c, const Real & T) const
 {
   Real c1;
-  Real p = 0.001;
+  Real p = 0.0;
   
   //make this piecewise in concentration space
   if( c < _low_cutoff)
@@ -115,7 +115,7 @@ CalphadAB1CD2::computeDGMixDc(const Real & c, const Real & T) const
   Real ref;
   Real ideal;
   Real c1;
-  Real p = 0.001;
+  Real p = 0.0;
   Real second(0);
   Real third(0);
 
@@ -162,7 +162,7 @@ CalphadAB1CD2::computeD2GMixDc2(const Real & c, const Real & T) const
   Real ideal;
   Real second(0);
   Real third(0);
-  Real p = 0.001;
+  Real p = 0.0;
 
   //make this piecewise in concentration space
   if( c < _low_cutoff)
