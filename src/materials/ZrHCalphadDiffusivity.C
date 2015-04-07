@@ -43,6 +43,7 @@ ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const std::string & name, InputPara
       _mobility_CH_scaling(getParam<Real>("CH_mobility_scaling")),
       _d2Galpha_dc2(getMaterialProperty<Real>("d2GAB1CD1_dc2")),
       _d2Gdelta_dc2(getMaterialProperty<Real>("d2GAB1CD2_dc2")),
+      _d2Gdelta_dc2_precip(getMaterialProperty<Real>("d2GAB1CD2_dc2_precip")),
       _D_alpha(declareProperty<Real>("D_alpha")),
       _D_delta(declareProperty<Real>("D_delta")),
       _n_OP_variables(getParam<int>("n_OP_variables")),
@@ -68,7 +69,6 @@ ZrHCalphadDiffusivity::computeQpProperties()
 
   _D_alpha[_qp] = _H_Zr_D0*std::exp(-_H_Zr_Q0/(_R*_temperature[_qp]));
   _D_delta[_qp] = _H_ZrH2_D0*std::exp(-_H_ZrH2_Q0/(_R*_temperature[_qp]));
-  //Dalpha*(1-heaviside) + Ddelta*(heaviside)?
 
   //nondimensionalize the mobility here
   //using mobility calculated for interstitial dilute solutions
@@ -76,19 +76,34 @@ ZrHCalphadDiffusivity::computeQpProperties()
   if (solute < 0)
     solute = 0;
 
-  // _M[_qp] = ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
+  Real OP = (*_OP[0])[_qp];
+  if (OP < 0) OP = 0;
+  if (OP > 1) OP = 1;
 
-  //Real curvature =  (1-Heaviside)*_d2Galpha_dc2[_qp] + Heaviside*_d2Gdelta_dc2[_qp];
-  Real curvature = _d2Galpha_dc2[_qp];
-  //nondimensionalize the mobility here
-  if(solute > 0.499)
-    _M[_qp] =  ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
-  else
-   _M[_qp] = (_D_alpha[_qp]/curvature)/_mobility_CH_scaling;
+  Real heavi = 3*OP*OP - 2*OP*OP*OP;
+
+  //_M[_qp] = ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
+
+  //_M[_qp] = ((1-Heaviside)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + Heaviside*(_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp]))/_mobility_CH_scaling;
+
+// _M[_qp] = ((1-Heaviside)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + solute*(_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp]))/_mobility_CH_scaling;
+
+//  _M[_qp] = ((1-std::sqrt(OP))*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + _D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
+//  _M[_qp] = ((1-OP)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + _D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
+//  _M[_qp] = ((1-OP)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + OP*_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
+   _M[_qp] = ((1-heavi)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + heavi*_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
+
+
+
+
+ if (_M[_qp] < 0)
+   _M[_qp] = 0;
 
   //_console<<"earlier M = "<< (_D_alpha[_qp]/curvature)/_mobility_CH_scaling<<std::endl;
-  //_console<<"curvature = "<<curvature<<std::endl;
-  //_console<<"D_alpha = "<<_D_alpha[_qp]<<std::endl;
+   // _console<<"curvature = "<<curvature<<std::endl;
+//  _console<<"Mobility = "<<_M[_qp]<<std::endl;
+//  _console<<"D_delta = "<<_D_delta[_qp]<<std::endl;
+//  _console<<"D2gdelta_precip = "<<_d2Gdelta_dc2_precip[_qp]<<std::endl;
   //_console<<"mobility scaling = "<<_mobility_CH_scaling<<std::endl;
 
   _grad_M[_qp] = 0.0;
@@ -111,11 +126,19 @@ ZrHCalphadDiffusivity::computeHeaviside()
   Real heaviside_first(0);
   Real heaviside_second(0);
 
+  Real OP;
   //may need to put some checking in here so that OP fixed between 0 and 1
   for(unsigned int i=0; i<_n_OP_variables; i++)
   {
-    heaviside_first += std::pow((*_OP[i])[_qp], 2);
-    heaviside_second += std::pow((*_OP[i])[_qp], 3);
+    if ((*_OP[i])[_qp] < 0 )
+      OP = 0;
+    if ((*_OP[i])[_qp] > 1 )
+      OP = 1;
+    
+    //heaviside_first += std::pow((*_OP[i])[_qp], 2);
+    //heaviside_second += std::pow((*_OP[i])[_qp], 3);
+    heaviside_first += std::pow(OP, 2);
+    heaviside_second += std::pow(OP, 3);
   }
 
   return 3*heaviside_first - 2*heaviside_second;
