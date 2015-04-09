@@ -182,8 +182,7 @@
     type = ZrHCalphadDiffusivity
     block = 0
 
-    n_OP_variables = 1
-    OP_variable_names = 'n'
+    OP_variable = n
     concentration = concentration
 
     H_Zr_D0 = 7.00e-7    #m^2/s

@@ -26,8 +26,6 @@ public:
 
 protected:
   virtual void computeQpProperties();
-  Real computeHeaviside();
-
 
 private:
   //Diffusion coefficient information
@@ -46,11 +44,9 @@ private:
   MaterialProperty<Real> & _D_alpha;
   MaterialProperty<Real> & _D_delta;
 
-  unsigned int _n_OP_variables;
-  std::vector<VariableValue *> _OP;
-
   VariableValue & _c;
-
+  VariableValue & _OP;
+  
   MaterialProperty<Real> & _L1Q;
   Real _Q_transport;
   MaterialProperty<Real> & _d2Galpha_dcdT;

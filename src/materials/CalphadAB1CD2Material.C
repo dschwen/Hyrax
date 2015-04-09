@@ -60,5 +60,5 @@ CalphadAB1CD2Material::computeQpProperties()
   _d2G_dc2[_qp] = _energy.computeD2GMixDc2(_c[_qp], _T[_qp]);
 
   _G_AB1CD2_precip[_qp] = _energy.computeGMix(_precip_conc, _T[_qp]);
-  _d2G_dc2_precip[_qp] = _energy.computeD2GMixDc2(0.578, _T[_qp]);
+  _d2G_dc2_precip[_qp] = _energy.computeD2GMixDc2(_precip_conc, _T[_qp]);
 }
