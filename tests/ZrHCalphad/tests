@@ -11,5 +11,6 @@
     input = 'ZrHCalphad_3OP.i'
     exodiff = 'ZrHCalphad_3OP.e'
     method = 'OPT OPROF'  # Too slow for debug   
+    skip = 'need to remove, not useful'
   [../]
 []

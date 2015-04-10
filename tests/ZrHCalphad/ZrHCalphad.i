@@ -385,7 +385,7 @@
   #nl_abs_tol = 2.15E-6
 
   start_time = 0.0
-  num_steps = 8
+  num_steps = 2
   dtmax = 1E-1
   dtmin = 1E-7
 []

@@ -24,7 +24,7 @@ InputParameters validParams<ZrHCalphadDiffusivity>()
 
   params.addRequiredCoupledVar("OP_variable", "coupled OP variable");
   params.addRequiredCoupledVar("concentration", "coupled concentration variable");
-  
+
   params.addParam<Real>("CH_mobility_scaling", 1, "scaling factor to divide by to nondimensionalize mobility");
   params.addParam<Real>("Q_transport", 0, "heat of transport of H in hcp Zr");
 
@@ -71,7 +71,7 @@ ZrHCalphadDiffusivity::computeQpProperties()
   if (OP > 1) OP = 1;
 
   _M[_qp] = ((1-OP*OP)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + OP*OP*_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
-   
+
   if (_M[_qp] < 0)
    _M[_qp] = 0;
 

@@ -8,6 +8,7 @@
     # Note: use absolute (rather than relative) error tolerances
     # for this test, since the displacements are very small.
     exodiff_opts = '-absolute'
+    skip = 'need to remove this actions system'
   [../]
 
   [./AuxKernels_test]
@@ -19,6 +20,7 @@
     # Note: use absolute (rather than relative) error tolerances
     # for this test, since the displacements are very small.
     exodiff_opts = '-absolute'
+    skip = 'need to remove this actions system'
   [../]
 
   [./Postprocessors_test]
@@ -26,5 +28,6 @@
     input = 'NucleationPostprocessorAction.i'
     csvdiff = 'NucleationPostprocessorAction.csv'
     method = 'OPT OPROF'
+    skip = 'need to remove this actions system'
   [../]
 []
