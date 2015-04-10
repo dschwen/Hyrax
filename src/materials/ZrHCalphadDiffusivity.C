@@ -22,9 +22,9 @@ InputParameters validParams<ZrHCalphadDiffusivity>()
   params.addParam<Real>("R", 8.3144, "gas constant");
   params.addParam<Real>("k", 1.38E-23, "Boltzmann constant");
 
-  params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
-  params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
+  params.addRequiredCoupledVar("OP_variable", "coupled OP variable");
   params.addRequiredCoupledVar("concentration", "coupled concentration variable");
+  
   params.addParam<Real>("CH_mobility_scaling", 1, "scaling factor to divide by to nondimensionalize mobility");
   params.addParam<Real>("Q_transport", 0, "heat of transport of H in hcp Zr");
 
@@ -43,61 +43,37 @@ ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const std::string & name, InputPara
       _mobility_CH_scaling(getParam<Real>("CH_mobility_scaling")),
       _d2Galpha_dc2(getMaterialProperty<Real>("d2GAB1CD1_dc2")),
       _d2Gdelta_dc2(getMaterialProperty<Real>("d2GAB1CD2_dc2")),
+      _d2Gdelta_dc2_precip(getMaterialProperty<Real>("d2GAB1CD2_dc2_precip")),
       _D_alpha(declareProperty<Real>("D_alpha")),
       _D_delta(declareProperty<Real>("D_delta")),
-      _n_OP_variables(getParam<int>("n_OP_variables")),
       _c(coupledValue("concentration")),
+      _OP(coupledValue("OP_variable")),
       _L1Q(declareProperty<Real>("L1Q")),
       _Q_transport(getParam<Real>("Q_transport")),
       _d2Galpha_dcdT(getMaterialProperty<Real>("d2GAB1CD1_dcdT"))
 {
-  // Create a vector of the coupled OP variables and gradients
-  if(_n_OP_variables != coupledComponents("OP_variable_names"))
-    mooseError("Please match the # of orientation variants to coupled OPs (CHCoupledCalphad)");
-
-  _OP.resize(_n_OP_variables);
-
-  for(unsigned int i=0; i< _n_OP_variables; i++)
-    _OP[i] = &coupledValue("OP_variable_names", i);
 }
 
 void
 ZrHCalphadDiffusivity::computeQpProperties()
 {
-  Real Heaviside = computeHeaviside();
-
   _D_alpha[_qp] = _H_Zr_D0*std::exp(-_H_Zr_Q0/(_R*_temperature[_qp]));
   _D_delta[_qp] = _H_ZrH2_D0*std::exp(-_H_ZrH2_Q0/(_R*_temperature[_qp]));
-  //Dalpha*(1-heaviside) + Ddelta*(heaviside)?
 
   //nondimensionalize the mobility here
-  //using mobility calculated for interstitial dilute solutions
+
   Real solute = _c[_qp];
-  if (solute < 0.001)
-    solute = 0.001;
+  if (solute < 0)
+    solute = 0;
 
-  _M[_qp] = ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
-  //_console<<"M = "<<_M[_qp]<<std::endl;
+  Real OP = _OP[_qp];
+  if (OP < 0) OP = 0;
+  if (OP > 1) OP = 1;
 
-//  _L1Q[_qp] = (_Q_transport - _temperature[_qp]*_d2Galpha_dcdT[_qp]);
-  //_console<<"L1Q = "<<_L1Q[_qp]<<std::endl;
-  //_console<<"temp = "<<_temperature[_qp]<<std::endl;
-  //_console<<"d2Galpha_dcdT = "<<_d2Galpha_dcdT[_qp]<<std::endl;
-
-  Real curvature =  (1-Heaviside)*_d2Galpha_dc2[_qp] + Heaviside*_d2Gdelta_dc2[_qp];
-
-  //nasty hack to smooth out the curvature
-  //if (_c[_qp] < 0.001 || _c[_qp] > 0.665)
-  //  curvature  = 1E10;
-  //if (curvature < 1E-10 && curvature > -1E-10)
-  //  curvature = 1E-10;
-
-  //nondimensionalize the mobility here
-  // _M[_qp] = (_D_alpha[_qp]/curvature)/_mobility_CH_scaling;
-  //_console<<"earlier M = "<< (_D_alpha[_qp]/curvature)/_mobility_CH_scaling<<std::endl;
-  //_console<<"curvature = "<<curvature<<std::endl;
-  //_console<<"D_alpha = "<<_D_alpha[_qp]<<std::endl;
-  //_console<<"mobility scaling = "<<_mobility_CH_scaling<<std::endl;
+  _M[_qp] = ((1-OP*OP)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + OP*OP*_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
+   
+  if (_M[_qp] < 0)
+   _M[_qp] = 0;
 
   _grad_M[_qp] = 0.0;
 
@@ -112,21 +88,3 @@ ZrHCalphadDiffusivity::computeQpProperties()
   _thermal_diff[_qp] = _thermal_diffusivity;
   _dThermDiff_dT[_qp] = _dThermal_diffusivity_dT;
 }
-
-Real
-ZrHCalphadDiffusivity::computeHeaviside()
-{
-  Real heaviside_first(0);
-  Real heaviside_second(0);
-
-  //may need to put some checking in here so that OP fixed between 0 and 1
-  for(unsigned int i=0; i<_n_OP_variables; i++)
-  {
-    heaviside_first += std::pow((*_OP[i])[_qp], 2);
-    heaviside_second += std::pow((*_OP[i])[_qp], 3);
-  }
-
-  return 3*heaviside_first - 2*heaviside_second;
-}
-
-

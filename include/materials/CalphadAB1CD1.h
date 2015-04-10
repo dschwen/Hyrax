@@ -10,7 +10,7 @@ class CalphadAB1CD1 : public CalphadFreeEnergy
 public:
   CalphadAB1CD1();
 
-  virtual void parameterize(Real & R, std::vector<Real> & low, std::vector<Real> & high, std::vector<Real> & mix);
+  virtual void parameterize(Real & R, Real & low_conc, Real & high_conc, std::vector<Real> & low, std::vector<Real> & high, std::vector<Real> & mix);
 
   virtual Real calculateReference(const Real & c, const Real & T) const;
   virtual Real calculateIdeal(const Real & c, const Real & T) const;
@@ -24,6 +24,8 @@ public:
   virtual Real computeGMix(const Real & c, const Real & T) const;
   virtual Real computeDGMixDc(const Real & c, const Real & T) const;
   virtual Real computeD2GMixDc2(const Real & c, const Real & T) const;
+  virtual Real computeD3GMixDc3(const Real & c, const Real & T) const;
+  
   virtual Real computeD2GMixDcDT(const Real & c, const Real & T) const;
 
 protected:
