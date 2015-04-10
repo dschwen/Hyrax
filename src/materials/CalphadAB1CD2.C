@@ -85,7 +85,7 @@ CalphadAB1CD2::computeGMix(const Real & c, const Real & T) const
 {
   Real c1;
   Real p = 0.0;
-  
+
   //make this piecewise in concentration space
   if( c < _low_cutoff)
   {
@@ -135,22 +135,22 @@ CalphadAB1CD2::computeDGMixDc(const Real & c, const Real & T) const
   }
   else
     c1 = c;
-  
+
   ref = -1.5*calculateFirstLatticeGminusHser(c1, T) + 0.5*calculateSecondLatticeGminusHser(c1, T);
-  
+
   ideal = _R*T*( std::log(4*c1/(1-c1)) - 3*std::log((2-3*c1)/(1-c1)) );
-  
+
   Real xs;
-  
+
   Real L0 = _L0_coeffs[0] + _L0_coeffs[1]*T;
   Real L1 = _L1_coeffs[0] + _L1_coeffs[1]*T;
-  
+
   Real polynomial = (3*c1*c1*c1 -9*c1*c1 + 8*c1 -2)*L0 + (-6*c1*c1*c1 + 18*c1*c1 -12*c1 +2)*L1;
-  
+
   Real prefactor = 1/(4*(c1-1)*(c1-1)*(c1-1) );
-  
+
   xs = prefactor*polynomial;
-  
+
   return ref + ideal + xs + second + third;
 }
 
@@ -169,11 +169,11 @@ CalphadAB1CD2::computeD2GMixDc2(const Real & c, const Real & T) const
   {
     //Taylor expansion to third ish order
     c1 = _low_cutoff;
-    
+
     second = computeD2GMixDc2(c1,T);
     third = p*computeD3GMixDc3(c1,T)*(c-c1);
   }
-      
+
   else if (c > _high_cutoff)
   {
     //Taylor expansion to third order ish
@@ -181,11 +181,11 @@ CalphadAB1CD2::computeD2GMixDc2(const Real & c, const Real & T) const
     second = computeD2GMixDc2(c1,T);
     third = p*computeD3GMixDc3(c1,T)*(c-c1);
 
-    
+
   }
   else
     c1 = c;
-  
+
     ref = 0;
     ideal = _R*T*( 2/( c1*(3*c1*c1 - 5*c1 + 2)) );
 
@@ -195,7 +195,7 @@ CalphadAB1CD2::computeD2GMixDc2(const Real & c, const Real & T) const
     Real prefactor = 1/(2*std::pow(c1 - 1, 4));
     Real xs = prefactor*polynomial;
 
-    return ref + ideal + xs + second + third;   
+    return ref + ideal + xs + second + third;
 }
 
 Real
@@ -204,7 +204,7 @@ CalphadAB1CD2::computeD3GMixDc3(const Real & c, const Real & T) const
   Real c1;
   Real ref;
   Real ideal;
-  
+
   //might not want the cutoffs here since we don't ever use third order anywhere else?
   if( c < _low_cutoff)
   {

@@ -46,7 +46,7 @@ private:
 
   VariableValue & _c;
   VariableValue & _OP;
-  
+
   MaterialProperty<Real> & _L1Q;
   Real _Q_transport;
   MaterialProperty<Real> & _d2Galpha_dcdT;
