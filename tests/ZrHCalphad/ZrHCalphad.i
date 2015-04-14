@@ -347,37 +347,22 @@
 
 [Executioner]
   type = Transient
-  #scheme = 'crank-nicolson'
   scheme = 'BDF2'
 
   [./TimeStepper]
-    #type = SolutionTimeAdaptiveDT
-    #type = ConstantDT
-    #type = InitialSolutionAdaptiveDT
-    type = PhaseFractionDT
-
-    dt = 1E-3
-    growth_factor = 0.1
-
-    initial_dt = 1E-5
-    has_initial_dt = true
-    n_initial_steps = 10
-
-    postprocessor = volume_fraction
-
+    type = SolutionTimeAdaptiveDT
+    dt = 5e-5
+    percent_change = 0.1
   [../]
-
 
   #Preconditioned JFNK (default)
   solve_type = 'PJFNK'
-  #solve_type = 'FD'
 
   petsc_options_iname = '-pc_type -ksp_gmres_restart'
- petsc_options_value = 'ilu 50'
+  petsc_options_value = 'ilu 50'
 
-
-   l_max_its = 250
-  #l_tol = 1.0e-5
+   l_max_its = 100
+   #l_tol = 1.0e-5
 
   #nl_max_its = 40
   #nl_rel_tol = 3.0e-7

@@ -118,11 +118,15 @@ CHCoupledCalphadSplit::computeHeaviside()
     heaviside_second += std::pow((*_OP[i])[_qp], 3);
   }
 
-  return 3*heaviside_first - 2*heaviside_second;
+  // return 3*heaviside_first - 2*heaviside_second;
+  //testing to see if n works, instead of heaviside
+  return (*_OP[i])[_qp];
 }
 
 Real
 CHCoupledCalphadSplit::computeDHeaviside(unsigned int i)
 {
-  return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
+  //return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
+  //testing to see if n works, instead of heaviside
+  return 0;
 }

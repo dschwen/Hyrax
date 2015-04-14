@@ -162,14 +162,18 @@ ACCoupledCalphad::computeQpOffDiagJacobian(unsigned int jvar)
 Real
 ACCoupledCalphad::computeDHeavisideDOP()
 {
-  return  6*_u[_qp]*(1 - _u[_qp]);
+  //return  6*_u[_qp]*(1 - _u[_qp]);
+  //testing to see if n works, instead of heaviside
+  return 1;
 }
 
 
 Real
 ACCoupledCalphad::computeD2HeavisideDOP2()
 {
-  return 6 - 12*_u[_qp];
+  //  return 6 - 12*_u[_qp];
+  //testing to see if n works, instead of heaviside
+  return 0;
 }
 
 Real
