@@ -163,17 +163,42 @@ Real
 ACCoupledCalphad::computeDHeavisideDOP()
 {
   //return  6*_u[_qp]*(1 - _u[_qp]);
-  //testing to see if n works, instead of heaviside
-  return 1;
+
+  Real OP =_u[_qp];
+  if(OP < 0) OP = 0;
+  if(OP > 1) OP = 1;
+
+  return 6*OP*(1-OP);
+
+  //testing h as 7th order polynomial
+  // return -56.59203*7*OP*OP*OP*OP*OP*OP + 198.28747*6*OP*OP*OP*OP*OP -277.2044*5*OP*OP*OP*OP + 196.95257*4*OP*OP*OP -74.5349*3*OP*OP + 14.1276*2*OP - 0.036161;
+
+  //testing h as 5th order polynomial
+
+  //return -10.957*5*OP*OP*OP*OP + 28.1*4*OP*OP*OP - 25.5071*3*OP*OP - 9.616*2*OP - 0.25672;
+
 }
 
 
 Real
 ACCoupledCalphad::computeD2HeavisideDOP2()
 {
-  //  return 6 - 12*_u[_qp];
-  //testing to see if n works, instead of heaviside
-  return 0;
+  //return 6 - 12*_u[_qp];
+
+  Real OP = _u[_qp];
+  if(OP < 0) return 0;
+  if(OP > 1) return 0;
+
+  return 6 - 12*OP;
+
+
+//testing h as 7th order polynomial
+   //return -56.59203*7*6*OP*OP*OP*OP*OP + 198.28747*6*5*OP*OP*OP*OP -277.2044*5*4*OP*OP*OP  + 196.95257*4*3*OP*OP -74.5349*3*2*OP + 14.1276*2;
+
+  //testing h as 5th order polynomial
+
+//  return -10.957*5*4*OP*OP*OP + 28.1*4*3*OP*OP - 25.5071*3*2*OP - 9.616*2;
+
 }
 
 Real

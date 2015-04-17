@@ -230,13 +230,13 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(CalphadAB1CD2Material);
   registerMaterial(PrecipitateMatrixMisfitMaterial);
   registerMaterial(ZrHCalphadDiffusivity);
-  
+
   registerMaterial(CalphadAB1CD1MaterialOld);
   registerMaterial(CalphadAB1CD2MaterialOld);
   registerMaterial(ZrHCalphadDiffusivityOld);
 
   registerMaterial(FreeEnergy);
-  
+
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
   registerInitialCondition(EllipsoidIC);
