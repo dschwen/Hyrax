@@ -31,7 +31,7 @@ AuxGradientEnergy::AuxGradientEnergy(const std::string & name, InputParameters p
 Real
 AuxGradientEnergy::computeValue()
 {
- return 0.5*_kappa[_qp]*_kappa[_qp]*_grad_var[_qp].size_sq();
+ return 0.5*_kappa[_qp]*_grad_var[_qp].size_sq();
 }
 
 

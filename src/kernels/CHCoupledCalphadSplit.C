@@ -112,17 +112,39 @@ CHCoupledCalphadSplit::computeHeaviside()
   Real heaviside_second(0);
 
   //may need to put some checking in here so that OP fixed between 0 and 1
-  for(unsigned int i=0; i<_n_OP_vars; i++)
+  /*for(unsigned int i=0; i<_n_OP_vars; i++)
   {
     heaviside_first += std::pow((*_OP[i])[_qp], 2);
     heaviside_second += std::pow((*_OP[i])[_qp], 3);
-  }
+    }*/
 
-  return 3*heaviside_first - 2*heaviside_second;
+  Real OP = (*_OP[0])[_qp];
+  if(OP < 0) OP = 0;
+  if(OP > 1) OP = 1;
+
+  //return 3*heaviside_first - 2*heaviside_second;
+  return 3*OP*OP - 2*OP*OP*OP;
+  //
+  //testing h function as 7th order
+  //return -56.59203*OP*OP*OP*OP*OP*OP*OP + 198.28747*OP*OP*OP*OP*OP*OP -277.2044*OP*OP*OP*OP*OP + 196.95257*OP*OP*OP*OP -74.5349*OP*OP*OP + 14.1276*OP*OP - 0.036161*OP + 0.00002144;
+
+  //testing h function as 5th order
+  //return -10.957*OP*OP*OP*OP*OP + 28.1*OP*OP*OP*OP - 25.5071*OP*OP*OP - 9.616*OP*OP - 0.25672*OP + 0.002817;
+
 }
 
 Real
 CHCoupledCalphadSplit::computeDHeaviside(unsigned int i)
 {
-  return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
+   Real OP = (*_OP[0])[_qp];
+   if(OP < 0) OP = 0;
+   if(OP > 1) OP = 1;
+   // return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
+   return 6*OP*(1-OP);
+
+   //testing h function as 7th order
+   //Real OP5 = OP*OP*OP*OP*OP;
+  //return -56.59203*7*OP*OP*OP*OP*OP*OP + 198.28747*6*OP*OP*OP*OP*OP -277.2044*5*OP*OP*OP*OP + 196.95257*4*OP*OP*OP -74.5349*3*OP*OP + 14.1276*2*OP - 0.036161;
+
+  //testing h function as 5th order
 }

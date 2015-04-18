@@ -85,6 +85,12 @@
 #include "PrecipitateMatrixMisfitMaterial.h"
 #include "ZrHCalphadDiffusivity.h"
 
+#include "CalphadAB1CD1MaterialOld.h"
+#include "CalphadAB1CD2MaterialOld.h"
+#include "ZrHCalphadDiffusivityOld.h"
+
+#include "FreeEnergy.h"
+
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
 #include "EllipsoidIC.h"
@@ -100,6 +106,7 @@
 #include "NucleationPostprocessor.h"
 #include "OneSeed.h"
 #include "NucleiInformation.h"
+#include "ElementIntegralFreeEnergy.h"
 
 //TimeSteppers
 #include "InitialSolutionAdaptiveDT.h"
@@ -224,6 +231,12 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(PrecipitateMatrixMisfitMaterial);
   registerMaterial(ZrHCalphadDiffusivity);
 
+  registerMaterial(CalphadAB1CD1MaterialOld);
+  registerMaterial(CalphadAB1CD2MaterialOld);
+  registerMaterial(ZrHCalphadDiffusivityOld);
+
+  registerMaterial(FreeEnergy);
+
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
   registerInitialCondition(EllipsoidIC);
@@ -239,6 +252,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerPostprocessor(NucleationPostprocessor);
   registerPostprocessor(OneSeed);
   registerPostprocessor(NucleiInformation);
+  registerPostprocessor(ElementIntegralFreeEnergy);
 
   //TimeSteppers
   registerTimeStepper(InitialSolutionAdaptiveDT);
