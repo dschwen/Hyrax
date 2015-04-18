@@ -145,6 +145,8 @@ CalphadAB1CD1::computeD2GMixDc2(const Real & c, const Real & T) const
 
   else if (c > _high_cutoff)
   {
+    c1 = _high_cutoff;
+
     //Taylor expansion to third order ish
     second = computeD2GMixDc2(c1,T);
     third = p*computeD3GMixDc3(c1,T)*(c-c1);
