@@ -27,8 +27,6 @@ public:
 protected:
   virtual void computeQpProperties();
 
-private:
-
   CalphadAB1CD1 _energy;
 
   Real _low_cutoff;
@@ -42,6 +40,8 @@ private:
   MaterialProperty<Real> & _d2G_dcdT;
 
   MaterialProperty<Real> & _G_AB1CD1_precip;
+
+private:
 };
 
 #endif //CALPHADAB1CD1MATERIAL_H
