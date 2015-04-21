@@ -3,13 +3,13 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 2 
-  ny = 2 
-  nz = 0 
-  xmin = 0 
-  xmax = 2 
-  ymin = 0 
-  ymax = 2 
+  nx = 2
+  ny = 2
+  nz = 0
+  xmin = 0
+  xmax = 2
+  ymin = 0
+  ymax = 2
   zmin = 0
   zmax = 0
   elem_type = QUAD4

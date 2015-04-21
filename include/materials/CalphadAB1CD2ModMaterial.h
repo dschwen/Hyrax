@@ -66,7 +66,7 @@ private:
   Real _mod;
   Real _dmoddc;
   Real _d2moddc2;
-  
+
 };
 
 #endif //CALPHADAB1CD2MODMATERIAL_H

@@ -54,7 +54,7 @@ CalphadAB1CD2ModMaterial::CalphadAB1CD2ModMaterial(const std::string & name, Inp
 
   if (_A2.size() != 2)
     mooseError("A2 vector needs to be size of 2 (CalphadAB1CD2ModMaterial");
-  
+
   _energy.parameterize(_R, _low_cutoff, _high_cutoff, _pure_endpoint_low_coeffs, _pure_endpoint_high_coeffs, _mixture_coeffs,
                        _L0_coeffs, _L1_coeffs, _pure_EP1_phase1_coeffs);
 }
@@ -72,18 +72,11 @@ CalphadAB1CD2ModMaterial::computeQpProperties()
   else c = _c[_qp];
   */
   computeModFunction();
-  
+
   _G_AB1CD2[_qp] = _energy.computeGMix(_c[_qp], _T[_qp]) + _mod;
   _dG_dc[_qp] = _energy.computeDGMixDc(_c[_qp], _T[_qp]) + _dmoddc;
   _d2G_dc2[_qp] = _energy.computeD2GMixDc2(_c[_qp], _T[_qp]) + _d2moddc2;
 
-  _console<<"GAB1CD2 = "<< _energy.computeGMix(_c[_qp], _T[_qp])<<std::endl;
-  _console<<"mod = "<< _mod<<std::endl;
-  _console<<"dGAB1CD2_dc = "<< _energy.computeDGMixDc(_c[_qp], _T[_qp])<<std::endl;
-  _console<<"dmoddc = "<< _dmoddc<<std::endl;
-  _console<<"d2GAB1CD2_dc2 = "<< _energy.computeD2GMixDc2(_c[_qp], _T[_qp])<<std::endl;
-  _console<<"d2moddc2 = "<< _d2moddc2<<std::endl;
-  
   //this ASSUMES that the mod function concentration cutoff is below the precip
   //concentration used here.  DON'T Screw it up!
   _G_AB1CD2_precip[_qp] = _energy.computeGMix(_precip_conc, _T[_qp]);
@@ -104,46 +97,43 @@ CalphadAB1CD2ModMaterial::computeModFunction()
   }
   else
   {
-    if (_T[_qp] < _A1_to_0) 
+    if (_T[_qp] < _A1_to_0)
       A1 = _A1[0]*_T[_qp] + _A1[1];
     else
       A1 = 0;
 
-    if (_T[_qp] < _A2_to_0) 
+    if (_T[_qp] < _A2_to_0)
       A2 = _A2[0]*_T[_qp] + _A2[1];
     else
       A2 = 0;
-    
+
     Real g(0);
     Real dgdc(0);
     Real d2gdc2(0);
-    
+
     g = std::pow( ((1/_mod_cutoff)*_c[_qp]), 2.0)
       - 2*std::pow( ((1/_mod_cutoff)*_c[_qp]), 3.0)
       + std::pow( ((1/_mod_cutoff)*_c[_qp]), 4.0);
-    
+
     dgdc = (2/_mod_cutoff)*(_c[_qp]/_mod_cutoff)
       - (6/_mod_cutoff)*(std::pow( ((1/_mod_cutoff)*_c[_qp]), 2.0))
       + (4/_mod_cutoff)*(std::pow( ((1/_mod_cutoff)*_c[_qp]), 3.0));
-    
+
     d2gdc2 = (2/_mod_cutoff)*(1/_mod_cutoff)
       - (12/_mod_cutoff)*(1/_mod_cutoff)*((1/_mod_cutoff)*_c[_qp])
       + (12/_mod_cutoff)*(1/_mod_cutoff)*(std::pow( ((1/_mod_cutoff)*_c[_qp]), 2.0));
-    
+
     Real l(0);
     Real dldc(0);
     Real d2ldc2(0);
-    
+
     l = _mod_cutoff - _c[_qp];
     dldc = -1;
     d2ldc2 = 0;
 
-    _console<<"g = "<<g<<std::endl;
-    _console<<"l = "<<l<<std::endl;
-    
     _mod = A1*g + A2*l;
     _dmoddc = A1*dgdc + A2*dldc;
     _d2moddc2 = A1*d2gdc2 + A2*d2ldc2;
   }
-  
+
 }
