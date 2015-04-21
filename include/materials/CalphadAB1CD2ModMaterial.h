@@ -26,6 +26,7 @@ public:
 
 protected:
   virtual void computeQpProperties();
+  virtual void computeModFunction();
 
   /* virtual Real calculateReference(Real c);
   virtual Real calculateIdeal(Real c);
@@ -56,7 +57,16 @@ private:
   MaterialProperty<Real> & _d2G_dc2_precip;
   */
 
-  Real _forcing_cutoff;
+  Real _mod_cutoff;
+  std::vector<Real> _A1;
+  std::vector<Real> _A2;
+  Real _A1_to_0;
+  Real _A2_to_0;
+
+  Real _mod;
+  Real _dmoddc;
+  Real _d2moddc2;
+  
 };
 
 #endif //CALPHADAB1CD2MODMATERIAL_H

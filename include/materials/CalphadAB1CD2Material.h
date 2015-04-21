@@ -38,8 +38,6 @@ protected:
   virtual Real computeD2GMixDc2();
   virtual Real computeD3GMixDc3();*/
 
-private:
-
   CalphadAB1CD2 _energy;
 
   Real _low_cutoff;
@@ -53,6 +51,9 @@ private:
   //MaterialProperty<Real> & _d3G_dc3;
   MaterialProperty<Real> & _G_AB1CD2_precip;
   MaterialProperty<Real> & _d2G_dc2_precip;
+
+private:
+
 };
 
 #endif //CALPHADAB1CD2MATERIAL_H

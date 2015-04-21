@@ -88,7 +88,7 @@
 #include "CalphadAB1CD2MaterialOld.h"
 #include "ZrHCalphadDiffusivityOld.h"
 #include "FreeEnergy.h"
-#include "CalphadAB1CD2MmodMaterial.h"
+#include "CalphadAB1CD2ModMaterial.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
