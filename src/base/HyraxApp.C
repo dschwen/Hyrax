@@ -84,12 +84,11 @@
 #include "CalphadAB1CD2Material.h"
 #include "PrecipitateMatrixMisfitMaterial.h"
 #include "ZrHCalphadDiffusivity.h"
-
 #include "CalphadAB1CD1MaterialOld.h"
 #include "CalphadAB1CD2MaterialOld.h"
 #include "ZrHCalphadDiffusivityOld.h"
-
 #include "FreeEnergy.h"
+#include "CalphadAB1CD2ModMaterial.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -230,12 +229,11 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(CalphadAB1CD2Material);
   registerMaterial(PrecipitateMatrixMisfitMaterial);
   registerMaterial(ZrHCalphadDiffusivity);
-
   registerMaterial(CalphadAB1CD1MaterialOld);
   registerMaterial(CalphadAB1CD2MaterialOld);
   registerMaterial(ZrHCalphadDiffusivityOld);
-
   registerMaterial(FreeEnergy);
+  registerMaterial(CalphadAB1CD2ModMaterial);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
