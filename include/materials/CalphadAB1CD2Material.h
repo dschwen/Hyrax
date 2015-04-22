@@ -51,6 +51,7 @@ protected:
   //MaterialProperty<Real> & _d3G_dc3;
   MaterialProperty<Real> & _G_AB1CD2_precip;
   MaterialProperty<Real> & _d2G_dc2_precip;
+  MaterialProperty<Real> & _d2G_dc2_cutoff;
 
 private:
 

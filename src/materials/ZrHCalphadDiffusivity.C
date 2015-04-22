@@ -44,6 +44,7 @@ ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const std::string & name, InputPara
       _d2Galpha_dc2(getMaterialProperty<Real>("d2GAB1CD1_dc2")),
       _d2Gdelta_dc2(getMaterialProperty<Real>("d2GAB1CD2_dc2")),
       _d2Gdelta_dc2_precip(getMaterialProperty<Real>("d2GAB1CD2_dc2_precip")),
+      _d2Gdelta_dc2_cutoff(getMaterialProperty<Real>("d2GAB1CD2_dc2_cutoff")),
       _D_alpha(declareProperty<Real>("D_alpha")),
       _D_delta(declareProperty<Real>("D_delta")),
       _c(coupledValue("concentration")),
@@ -70,8 +71,17 @@ ZrHCalphadDiffusivity::computeQpProperties()
   if (OP < 0) OP = 0;
   if (OP > 1) OP = 1;
 
-  _M[_qp] = ((1-OP*OP)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + OP*OP*_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
+  // _M[_qp] = ((1-OP*OP)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + OP*OP*_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
 
+  Real h = 3*OP*OP - 2*OP*OP*OP;
+  
+  //_M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
+
+//  if (solute < 0.5)
+//     _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2_cutoff[_qp])/_mobility_CH_scaling;
+//  else
+     _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
+  
   if (_M[_qp] < 0)
    _M[_qp] = 0;
 

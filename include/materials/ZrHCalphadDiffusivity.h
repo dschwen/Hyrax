@@ -40,7 +40,8 @@ private:
   MaterialProperty<Real> & _d2Galpha_dc2;
   MaterialProperty<Real> & _d2Gdelta_dc2;
   MaterialProperty<Real> & _d2Gdelta_dc2_precip;
-
+  MaterialProperty<Real> & _d2Gdelta_dc2_cutoff;
+  
   MaterialProperty<Real> & _D_alpha;
   MaterialProperty<Real> & _D_delta;
 
