@@ -67,20 +67,23 @@ ZrHCalphadDiffusivity::computeQpProperties()
   if (solute < 0)
     solute = 0;
 
-  Real OP = _OP[_qp];
-  if (OP < 0) OP = 0;
-  if (OP > 1) OP = 1;
+//  Real OP = _OP[_qp];
+//  if (OP < 0) OP = 0;
+//  if (OP > 1) OP = 1;
 
   // _M[_qp] = ((1-OP*OP)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + OP*OP*_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
 
-  Real h = 3*OP*OP - 2*OP*OP*OP;
+  Real h = computeHeaviside();
+  Real hd = computeHeavisideDelta();
   
   //_M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
 
 //  if (solute < 0.5)
 //     _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2_cutoff[_qp])/_mobility_CH_scaling;
 //  else
-     _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
+//     _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
+
+       _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + hd*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
   
   if (_M[_qp] < 0)
    _M[_qp] = 0;
@@ -97,4 +100,26 @@ ZrHCalphadDiffusivity::computeQpProperties()
 
   _thermal_diff[_qp] = _thermal_diffusivity;
   _dThermDiff_dT[_qp] = _dThermal_diffusivity_dT;
+}
+
+Real
+ZrHCalphadDiffusivity::computeHeaviside()
+{
+   Real OP = _OP[_qp];
+
+  if(OP > 1)
+    return (OP-1)*(OP-1) + 1;
+  else
+    return 3*OP*OP - 2*OP*OP*OP;
+}
+
+Real
+ZrHCalphadDiffusivity::computeHeavisideDelta()
+{
+  Real OP = _OP[_qp];
+
+  if(OP < 0)
+    return -1*OP*OP;
+  else
+    return 3*OP*OP - 2*OP*OP*OP;
 }

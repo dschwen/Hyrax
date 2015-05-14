@@ -26,6 +26,8 @@ public:
 
 protected:
   virtual void computeQpProperties();
+  virtual Real computeHeaviside();
+  virtual Real computeHeavisideDelta();
 
 private:
   //Diffusion coefficient information
