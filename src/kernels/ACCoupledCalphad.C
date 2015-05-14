@@ -99,7 +99,7 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
 
   Real dgdn, dHeavisidedn, d2gdn2, d2Heavisidedn2;
   Real dHeavisideDeltadn, d2HeavisideDeltadn2;
-  
+
   switch (type)
   {
   case Residual:

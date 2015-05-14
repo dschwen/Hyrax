@@ -75,7 +75,7 @@ ZrHCalphadDiffusivity::computeQpProperties()
 
   Real h = computeHeaviside();
   Real hd = computeHeavisideDelta();
-  
+
   //_M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
 
 //  if (solute < 0.5)
@@ -83,8 +83,9 @@ ZrHCalphadDiffusivity::computeQpProperties()
 //  else
 //     _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + h*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
 
-       _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + hd*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
-  
+//       _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + hd*_D_delta[_qp]/_d2Gdelta_dc2[_qp])/_mobility_CH_scaling;
+     _M[_qp] = ((1-h)*(_D_alpha[_qp]/_d2Galpha_dc2[_qp]) + hd*_D_delta[_qp]/_d2Gdelta_dc2_precip[_qp])/_mobility_CH_scaling;
+
   if (_M[_qp] < 0)
    _M[_qp] = 0;
 

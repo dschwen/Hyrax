@@ -32,7 +32,7 @@ protected:
   Real computeHeavisideDelta();
   Real computeDHeavisideDelta(unsigned int i);
 
-  
+
 private:
   MaterialProperty<Real> & _W;                            //Well height
   MaterialProperty<Real> & _Omega;                        //Molar volume
