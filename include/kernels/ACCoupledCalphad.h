@@ -29,6 +29,9 @@ protected:
 
   Real computeDHeavisideDOP();
   Real computeD2HeavisideDOP2();
+  Real computeDHeavisideDeltaDOP();
+  Real computeD2HeavisideDeltaDOP2();
+
   Real computeDBarrierDOP(Real & SS, Real & QS, Real & SM);
   Real computeD2BarrierDOP2(Real & SS, Real & QS, Real & SM);
 

@@ -98,6 +98,8 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
   // _console<<"quad_sum = "<<quad_sum<<std::endl<<std::endl;
 
   Real dgdn, dHeavisidedn, d2gdn2, d2Heavisidedn2;
+  Real dHeavisideDeltadn, d2HeavisideDeltadn2;
+  
   switch (type)
   {
   case Residual:
@@ -105,16 +107,20 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
     dgdn = computeDBarrierDOP(square_sum, quad_sum, square_mult);
 
     dHeavisidedn = computeDHeavisideDOP();
+    dHeavisideDeltadn = computeDHeavisideDeltaDOP();
 
-    return _scaling_factor*( ( (_G_delta[_qp] - _G_alpha[_qp])*dHeavisidedn + _W[_qp]*dgdn ) / _Omega[_qp] );
+    return _scaling_factor*( ( _G_delta[_qp]*dHeavisideDeltadn
+                               - _G_alpha[_qp]*dHeavisidedn + _W[_qp]*dgdn ) / _Omega[_qp] );
 
   case Jacobian:
 
     d2gdn2 = computeD2BarrierDOP2(square_sum, quad_sum, square_mult);
 
     d2Heavisidedn2 = computeD2HeavisideDOP2();
+    d2HeavisideDeltadn2 = computeD2HeavisideDeltaDOP2();
 
-    return  _scaling_factor*( ( ( _G_delta[_qp] - _G_alpha[_qp])*d2Heavisidedn2*_phi[_j][_qp]
+    return  _scaling_factor*( (  _G_delta[_qp]*d2HeavisideDeltadn2*_phi[_j][_qp]
+                                 - _G_alpha[_qp]*d2Heavisidedn2*_phi[_j][_qp]
                  + _W[_qp]*d2gdn2*_phi[_j][_qp] ) / _Omega[_qp] );
   }
   mooseError("Invalid type passed in");
@@ -123,28 +129,11 @@ ACCoupledCalphad::computeDFDOP(PFFunctionType type)
 Real
 ACCoupledCalphad::computeQpOffDiagJacobian(unsigned int jvar)
 {
-  /* for (unsigned int i=0; i< _n_OP_vars; i++)
-    {
-    if (i != _OP_number)
-    {
-      if (jvar == _n_var[i])
-      {
-        //Real val = (*_coupled_OP_vars[i])[_qp];
-        //Real s = (*_coupled_OP_vars[_n_OP_vars - (i+_OP_number)%_n_OP_vars -1])[_qp];
-
-        //Real ans = 2*val*val*(2*_u[_qp] + 2*val*val*_u[_qp] + 4*_u[_qp]*_u[_qp]*_u[_qp] + 2*_u[_qp]*s*s );
-        //ans /= _Omega[_qp];
-        //ans *= _test[_i][_qp]*_phi[_j][_qp];
-        //return ans;
-        return 0;
-      }
-
-    }
-    }*/
 
   if (jvar == _c_var)
     return _L[_qp]*_test[_i][_qp]*_phi[_j][_qp]*
-      (_scaling_factor*( computeDHeavisideDOP()*(_dGdelta_dc[_qp] - _dGalpha_dc[_qp]) )/_Omega[_qp] );
+      (_scaling_factor*( computeDHeavisideDeltaDOP()*_dGdelta_dc[_qp]
+                         - computeDHeavisideDOP()*_dGalpha_dc[_qp] )/_Omega[_qp] );
 
   else if (jvar == _w_var)
     return 0;
@@ -158,48 +147,50 @@ ACCoupledCalphad::computeQpOffDiagJacobian(unsigned int jvar)
     // mooseError("Screwed up ACCoupledCalphad::computeQpOffDiagJacobian()");
 }
 
-
 Real
 ACCoupledCalphad::computeDHeavisideDOP()
 {
-  //return  6*_u[_qp]*(1 - _u[_qp]);
-
   Real OP =_u[_qp];
-  if(OP < 0) OP = 0;
-  if(OP > 1) OP = 1;
 
-  return 6*OP*(1-OP);
-
-  //testing h as 7th order polynomial
-  // return -56.59203*7*OP*OP*OP*OP*OP*OP + 198.28747*6*OP*OP*OP*OP*OP -277.2044*5*OP*OP*OP*OP + 196.95257*4*OP*OP*OP -74.5349*3*OP*OP + 14.1276*2*OP - 0.036161;
-
-  //testing h as 5th order polynomial
-
-  //return -10.957*5*OP*OP*OP*OP + 28.1*4*OP*OP*OP - 25.5071*3*OP*OP - 9.616*2*OP - 0.25672;
-
+   if(OP > 1)
+     return 2*OP - 2;
+   else
+     return 6*OP*(1-OP);
 }
-
 
 Real
 ACCoupledCalphad::computeD2HeavisideDOP2()
 {
-  //return 6 - 12*_u[_qp];
-
   Real OP = _u[_qp];
-  if(OP < 0) return 0;
-  if(OP > 1) return 0;
 
-  return 6 - 12*OP;
-
-
-//testing h as 7th order polynomial
-   //return -56.59203*7*6*OP*OP*OP*OP*OP + 198.28747*6*5*OP*OP*OP*OP -277.2044*5*4*OP*OP*OP  + 196.95257*4*3*OP*OP -74.5349*3*2*OP + 14.1276*2;
-
-  //testing h as 5th order polynomial
-
-//  return -10.957*5*4*OP*OP*OP + 28.1*4*3*OP*OP - 25.5071*3*2*OP - 9.616*2;
-
+  if(OP > 1)
+    return 2;
+  else
+    return 6*(1-2*OP);
 }
+
+Real
+ACCoupledCalphad::computeDHeavisideDeltaDOP()
+{
+  Real OP =_u[_qp];
+
+  if(OP < 0)
+    return -2*OP;
+  else
+    return 6*OP*(1-OP);
+}
+
+Real
+ACCoupledCalphad::computeD2HeavisideDeltaDOP2()
+{
+  Real OP = _u[_qp];
+
+  if(OP < 0)
+    return -2;
+  else
+    return 6*OP*(1-OP);
+}
+
 
 Real
 ACCoupledCalphad::computeDBarrierDOP(Real & SS, Real & QS, Real & SM)
