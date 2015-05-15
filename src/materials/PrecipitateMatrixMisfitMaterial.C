@@ -226,7 +226,7 @@ PrecipitateMatrixMisfitMaterial::computeQpMisfitStrain()
   _dcdc_misfit_strain[_qp] = zeros;
 }
 
-
+/*
 Real
 PrecipitateMatrixMisfitMaterial::computeHeaviside()
 {
@@ -239,10 +239,10 @@ PrecipitateMatrixMisfitMaterial::computeHeaviside()
   for(unsigned int i=0; i<_n_variants; i++)
   {
     OP = (*_OP[i])[_qp];
-    if (OP < 0)
-      OP = 0;
-    if (OP > 1)
-      OP = 1;
+    // if (OP < 0)
+    //  OP = 0;
+    //if (OP > 1)
+    //  OP = 1;
 
     heaviside_first += std::pow(OP, 2);
     heaviside_second += std::pow(OP, 3);
@@ -255,10 +255,10 @@ Real
 PrecipitateMatrixMisfitMaterial::computeDHeaviside(unsigned int i)
 {
   Real OP = (*_OP[i])[_qp];
-  if (OP < 0)
-    OP = 0;
-  if (OP > 1)
-    OP = 1;
+  //if (OP < 0)
+  //  OP = 0;
+  //if (OP > 1)
+  //  OP = 1;
 
   return 6*OP*(1 - OP);
 }
@@ -267,10 +267,11 @@ Real
 PrecipitateMatrixMisfitMaterial::computeD2Heaviside(unsigned int i)
 {
   Real OP = (*_OP[i])[_qp];
-  if (OP < 0)
-    OP = 0;
-  if (OP > 1)
-    OP = 1;
+  //if (OP < 0)
+  //  OP = 0;
+  //if (OP > 1)
+  //  OP = 1;
 
   return 6*(1 - OP);
 }
+*/

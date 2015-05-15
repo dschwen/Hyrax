@@ -61,19 +61,21 @@ CHCoupledCalphadSplit::CHCoupledCalphadSplit(const std::string & name, InputPara
 Real
 CHCoupledCalphadSplit::computeDFDC(PFFunctionType type)
 {
-  Real Heaviside, dHeaviside;
+  Real Heaviside;
+  Real HeavisideDelta;
 
   Heaviside = computeHeaviside();
+  HeavisideDelta = computeHeavisideDelta();
 
   switch (type)
   {
   case Residual:
     return _scaling_factor*
-      ( ( (1 - Heaviside)*_dGalpha_dc[_qp] + Heaviside*_dGdelta_dc[_qp] )/_Omega[_qp]);
+      ( ( (1 - Heaviside)*_dGalpha_dc[_qp] + HeavisideDelta*_dGdelta_dc[_qp] )/_Omega[_qp]);
 
   case Jacobian:
     return _scaling_factor*
-      ( _phi[_j][_qp]*((1 - Heaviside)*_d2Galpha_dc2[_qp] + Heaviside*_d2Gdelta_dc2[_qp] )/_Omega[_qp]);
+      ( _phi[_j][_qp]*((1 - Heaviside)*_d2Galpha_dc2[_qp] + HeavisideDelta*_d2Gdelta_dc2[_qp] )/_Omega[_qp]);
 
   }
   mooseError("invalid type passed in");
@@ -86,7 +88,8 @@ CHCoupledCalphadSplit::computeQpOffDiagJacobian(unsigned int jvar)
   {
     if (jvar == _n_var[i])
         return _scaling_factor*_phi[_j][_qp]*_test[_i][_qp]*
-          ( computeDHeaviside(i)*(_dGdelta_dc[_qp] - _dGalpha_dc[_qp]) )/_Omega[_qp];
+          ( computeDHeavisideDelta(i)*_dGdelta_dc[_qp]
+            - computeDHeaviside(i)*_dGalpha_dc[_qp] )/_Omega[_qp];
   }
 
 
@@ -108,43 +111,43 @@ CHCoupledCalphadSplit::computeQpOffDiagJacobian(unsigned int jvar)
 Real
 CHCoupledCalphadSplit::computeHeaviside()
 {
-  Real heaviside_first(0);
-  Real heaviside_second(0);
+   Real OP = (*_OP[0])[_qp];
 
-  //may need to put some checking in here so that OP fixed between 0 and 1
-  /*for(unsigned int i=0; i<_n_OP_vars; i++)
-  {
-    heaviside_first += std::pow((*_OP[i])[_qp], 2);
-    heaviside_second += std::pow((*_OP[i])[_qp], 3);
-    }*/
-
-  Real OP = (*_OP[0])[_qp];
-  if(OP < 0) OP = 0;
-  if(OP > 1) OP = 1;
-
-  //return 3*heaviside_first - 2*heaviside_second;
-  return 3*OP*OP - 2*OP*OP*OP;
-  //
-  //testing h function as 7th order
-  //return -56.59203*OP*OP*OP*OP*OP*OP*OP + 198.28747*OP*OP*OP*OP*OP*OP -277.2044*OP*OP*OP*OP*OP + 196.95257*OP*OP*OP*OP -74.5349*OP*OP*OP + 14.1276*OP*OP - 0.036161*OP + 0.00002144;
-
-  //testing h function as 5th order
-  //return -10.957*OP*OP*OP*OP*OP + 28.1*OP*OP*OP*OP - 25.5071*OP*OP*OP - 9.616*OP*OP - 0.25672*OP + 0.002817;
-
+  if(OP > 1)
+    return (OP-1)*(OP-1) + 1;
+  else
+    return 3*OP*OP - 2*OP*OP*OP;
 }
 
 Real
 CHCoupledCalphadSplit::computeDHeaviside(unsigned int i)
 {
    Real OP = (*_OP[0])[_qp];
-   if(OP < 0) OP = 0;
-   if(OP > 1) OP = 1;
-   // return 6*(*_OP[i])[_qp]*(1 - (*_OP[i])[_qp]);
-   return 6*OP*(1-OP);
 
-   //testing h function as 7th order
-   //Real OP5 = OP*OP*OP*OP*OP;
-  //return -56.59203*7*OP*OP*OP*OP*OP*OP + 198.28747*6*OP*OP*OP*OP*OP -277.2044*5*OP*OP*OP*OP + 196.95257*4*OP*OP*OP -74.5349*3*OP*OP + 14.1276*2*OP - 0.036161;
+   if(OP > 1)
+     return 2*OP - 2;
+   else
+     return 6*OP*(1-OP);
+}
 
-  //testing h function as 5th order
+Real
+CHCoupledCalphadSplit::computeHeavisideDelta()
+{
+  Real OP = (*_OP[0])[_qp];
+
+  if(OP < 0)
+    return -1*OP*OP;
+  else
+    return 3*OP*OP - 2*OP*OP*OP;
+}
+
+Real
+CHCoupledCalphadSplit::computeDHeavisideDelta(unsigned int i)
+{
+   Real OP = (*_OP[0])[_qp];
+
+   if(OP < 0)
+     return -2*OP;
+   else
+     return 6*OP*(1-OP);
 }

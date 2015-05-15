@@ -29,6 +29,9 @@ protected:
 
   Real computeHeaviside();
   Real computeDHeaviside(unsigned int i);
+  Real computeHeavisideDelta();
+  Real computeDHeavisideDelta(unsigned int i);
+
 
 private:
   MaterialProperty<Real> & _W;                            //Well height
@@ -40,17 +43,7 @@ private:
   MaterialProperty<Real> & _dGdelta_dc;
   MaterialProperty<Real> & _d2Gdelta_dc2;
 
-
-
-  //VariableValue & _OP;
-
-  //unsigned int _OP_var;
-
   Real _scaling_factor;
-
-  //unsigned int _n_OP_variables;
-  //std::vector<VariableValue *> _OP;
-  //std::vector<VariableGradient *> _grad_OP;
 
   // unsigned int _n_var;
   unsigned int _w_var;

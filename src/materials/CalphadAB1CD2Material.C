@@ -36,7 +36,8 @@ CalphadAB1CD2Material::CalphadAB1CD2Material(const std::string & name, InputPara
     _d2G_dc2(declareProperty<Real>("d2GAB1CD2_dc2")),
     // _d3G_dc3(declareProperty<Real>("d3GAB1CD2_dc3"))
     _G_AB1CD2_precip(declareProperty<Real>("G_AB1CD2_precip")),
-    _d2G_dc2_precip(declareProperty<Real>("d2GAB1CD2_dc2_precip"))
+    _d2G_dc2_precip(declareProperty<Real>("d2GAB1CD2_dc2_precip")),
+    _d2G_dc2_cutoff(declareProperty<Real>("d2GAB1CD2_dc2_cutoff"))
 {
   _energy.parameterize(_R, _low_cutoff, _high_cutoff, _pure_endpoint_low_coeffs, _pure_endpoint_high_coeffs, _mixture_coeffs,
                        _L0_coeffs, _L1_coeffs, _pure_EP1_phase1_coeffs);
@@ -61,4 +62,6 @@ CalphadAB1CD2Material::computeQpProperties()
 
   _G_AB1CD2_precip[_qp] = _energy.computeGMix(_precip_conc, _T[_qp]);
   _d2G_dc2_precip[_qp] = _energy.computeD2GMixDc2(_precip_conc, _T[_qp]);
+
+  _d2G_dc2_cutoff[_qp] = _energy.computeD2GMixDc2(0.5, _T[_qp]);
 }
