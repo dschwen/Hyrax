@@ -65,10 +65,10 @@
 [Executioner]
   type = Steady
 
-  #Preconditioned JFNK (default)
+  # Preconditioned JFNK (default)
   solve_type = 'PJFNK'
-
-
+  petsc_options_iname = '-pc_factor_shift_type'
+  petsc_options_value = 'nonzero'
 []
 
 [Outputs]
