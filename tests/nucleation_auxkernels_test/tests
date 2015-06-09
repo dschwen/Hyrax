@@ -23,6 +23,7 @@
     input = 'AuxNucleationRate_refine1.i'
     exodiff = 'AuxNucleationRate_refine1.e'
     petsc_version = '>=3.1.0'
+    skip = 'ill-posed'
   [../]
 
   [./AuxNucleationRate_refine0_test]
@@ -30,6 +31,7 @@
     input = 'AuxNucleationRate_refine0.i'
     exodiff = 'AuxNucleationRate_refine0.e'
     petsc_version = '>=3.1.0'
+    skip = 'ill-posed'
   [../]
 
   [./AuxNucleationRate_refine0Elemental_test]
@@ -61,6 +63,7 @@
     type = 'Exodiff'
     input = 'AuxDeltaGStar.i'
     exodiff = 'AuxDeltaGStar.e'
+    skip = 'ill-posed'
   [../]
 
   [./AuxDeltaGStar_AuxChemElastic_test]
