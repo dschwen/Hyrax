@@ -41,9 +41,9 @@ protected:
 
 
 
-  MaterialProperty<Real> & _a1;  ///< Landau polynomial parameters (see Guo, 2008)
-  MaterialProperty<Real> & _a2;
-  MaterialProperty<Real> & _c1;  ///< position-ish of 1st energy well in c-space (terminal solid solubility)
+  const MaterialProperty<Real> & _a1;  ///< Landau polynomial parameters (see Guo, 2008)
+  const MaterialProperty<Real> & _a2;
+  const MaterialProperty<Real> & _c1;  ///< position-ish of 1st energy well in c-space (terminal solid solubility)
 
   VariableValue & _coupled_OP_var;  ///< Allen-Cahn equation variable (order parameter, probably)
   VariableGradient & _coupled_OP_grad;  ///< gradient of AC variable

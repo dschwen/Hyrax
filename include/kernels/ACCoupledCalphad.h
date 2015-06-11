@@ -38,12 +38,12 @@ protected:
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
 private:
-  MaterialProperty<Real> & _W;                            //Well height
-  MaterialProperty<Real> & _Omega;                        //Molar volume
-  MaterialProperty<Real> & _G_alpha;                      //Gmix_alpha
-  MaterialProperty<Real> & _G_delta;                      //Gmix_delta
-  MaterialProperty<Real> & _dGalpha_dc;
-  MaterialProperty<Real> & _dGdelta_dc;
+  const MaterialProperty<Real> & _W;                            //Well height
+  const MaterialProperty<Real> & _Omega;                        //Molar volume
+  const MaterialProperty<Real> & _G_alpha;                      //Gmix_alpha
+  const MaterialProperty<Real> & _G_delta;                      //Gmix_delta
+  const MaterialProperty<Real> & _dGalpha_dc;
+  const MaterialProperty<Real> & _dGdelta_dc;
 
   unsigned int _n_OP_vars;
   unsigned int _OP_number;

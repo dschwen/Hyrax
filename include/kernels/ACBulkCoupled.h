@@ -38,10 +38,10 @@ protected:
    */
   virtual Real computeDFDOP(PFFunctionType type);
 
-  MaterialProperty<Real> & _a2;  ///< coefficients for the landau polynomial (see Guo, 2008)
-  MaterialProperty<Real> & _a3;
-  MaterialProperty<Real> & _a4;
-  MaterialProperty<Real> & _c2;  ///< energy well position in c-space for the 2nd phase, ish
+  const MaterialProperty<Real> & _a2;  ///< coefficients for the landau polynomial (see Guo, 2008)
+  const MaterialProperty<Real> & _a3;
+  const MaterialProperty<Real> & _a4;
+  const MaterialProperty<Real> & _c2;  ///< energy well position in c-space for the 2nd phase, ish
 
   VariableValue & _coupled_CH_var;  ///< the Cahn-Hilliard variable (concentration, probably)
 
@@ -51,4 +51,3 @@ private:
 };
 
 #endif //ACBULKCOUPLED_H
-

@@ -31,9 +31,9 @@ private:
   VariableValue & _X;
   VariableValue & _OP;
 
-  MaterialProperty<Real> & _Omega;
-  MaterialProperty<Real> & _dGalpha_dc;
-  MaterialProperty<Real> & _dGdelta_dc;
+  const MaterialProperty<Real> & _Omega;
+  const MaterialProperty<Real> & _dGalpha_dc;
+  const MaterialProperty<Real> & _dGdelta_dc;
 
 //Real _scaling_factor;
 

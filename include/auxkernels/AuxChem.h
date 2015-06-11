@@ -42,12 +42,12 @@ protected:
   Real _precip_conserved;
   Real _precip_nonconserved;
 
-  MaterialProperty<Real> & _a1;
-  MaterialProperty<Real> & _a2;
-  MaterialProperty<Real> & _a3;
-  MaterialProperty<Real> & _a4;
-  MaterialProperty<Real> & _c1;
-  MaterialProperty<Real> & _c2;
+  const MaterialProperty<Real> & _a1;
+  const MaterialProperty<Real> & _a2;
+  const MaterialProperty<Real> & _a3;
+  const MaterialProperty<Real> & _a4;
+  const MaterialProperty<Real> & _c1;
+  const MaterialProperty<Real> & _c2;
 
   // unsigned int _n_variants;
   unsigned int _noncons_var_num;

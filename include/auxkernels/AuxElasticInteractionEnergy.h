@@ -30,8 +30,8 @@ protected:
 
 private:
 
-  MaterialProperty<RankTwoTensor> & _stress;
-  MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
+  const MaterialProperty<RankTwoTensor> & _stress;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
 
   unsigned int _OP_number;
 

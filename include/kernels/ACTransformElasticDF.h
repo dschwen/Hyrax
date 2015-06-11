@@ -58,13 +58,13 @@ protected:
   //virtual Real calculateSecondJacobianTerm();
 
   // system elasticity tensor, varies in space
-  MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
-  MaterialProperty<std::vector<RankTwoTensor > > & _eigenstrains_rotated_MP;
-  MaterialProperty<RankTwoTensor> & _local_strain;
+  const MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
+  const MaterialProperty<std::vector<RankTwoTensor > > & _eigenstrains_rotated_MP;
+  const MaterialProperty<RankTwoTensor> & _local_strain;
 
   //MaterialProperty<std::vector<SymmElasticityTensor> > & _d_elasticity_tensor;
-  MaterialProperty<RankTwoTensor> & _elastic_strain;
-  MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
+  const MaterialProperty<RankTwoTensor> & _elastic_strain;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
 
   // number of orientation variants
   unsigned int _n_OP_vars;

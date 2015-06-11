@@ -33,7 +33,7 @@ protected:
 private:
   //duplicating some things from SplitCHWRes...
   std::string _mob_name;
-  MaterialProperty<Real> & _mob;
+  const MaterialProperty<Real> & _mob;
 
   unsigned int _c_var;
   //unsigned int _n_var;

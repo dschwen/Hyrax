@@ -30,9 +30,9 @@ protected:
 
 private:
 
-  MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
-  MaterialProperty<RankTwoTensor> & _elastic_strain;
-  MaterialProperty<RankTwoTensor> & _dc_misfit_strain;
+  const MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
+  const MaterialProperty<RankTwoTensor> & _elastic_strain;
+  const MaterialProperty<RankTwoTensor> & _dc_misfit_strain;
 
 //Real _scaling_factor;
 

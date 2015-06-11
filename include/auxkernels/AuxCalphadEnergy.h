@@ -46,28 +46,28 @@ protected:
   Real _precip_cons;
   Real _precip_noncons;
 
-  MaterialProperty<Real> & _G_alpha;
-  MaterialProperty<Real> & _G_delta;
-  MaterialProperty<Real> & _G_alpha_precip;
-  MaterialProperty<Real> & _G_delta_precip;
-  MaterialProperty<Real> & _dG_alpha;
-  MaterialProperty<Real> & _dG_delta;
+  const MaterialProperty<Real> & _G_alpha;
+  const MaterialProperty<Real> & _G_delta;
+  const MaterialProperty<Real> & _G_alpha_precip;
+  const MaterialProperty<Real> & _G_delta_precip;
+  const MaterialProperty<Real> & _dG_alpha;
+  const MaterialProperty<Real> & _dG_delta;
 
-  MaterialProperty<std::vector<RankTwoTensor> > & _dn_misfit_strain;
-  MaterialProperty<RankTwoTensor> & _dc_misfit_strain;
-  MaterialProperty<RankTwoTensor> & _elastic_strain;
-  MaterialProperty<RankTwoTensor> & _local_strain;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _dn_misfit_strain;
+  const MaterialProperty<RankTwoTensor> & _dc_misfit_strain;
+  const MaterialProperty<RankTwoTensor> & _elastic_strain;
+  const MaterialProperty<RankTwoTensor> & _local_strain;
 
-  MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
-  MaterialProperty<ElasticityTensorR4> & _Cijkl_MP;  //matrix
-  MaterialProperty<ElasticityTensorR4> & _Cijkl_precipitate_MP; //precipitate
+  const MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
+  const MaterialProperty<ElasticityTensorR4> & _Cijkl_MP;  //matrix
+  const MaterialProperty<ElasticityTensorR4> & _Cijkl_precipitate_MP; //precipitate
 
 
-  MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
-  MaterialProperty<RankTwoTensor> & _matrix_eigenstrain;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
+  const MaterialProperty<RankTwoTensor> & _matrix_eigenstrain;
 
-  MaterialProperty<Real> & _Omega;
-  MaterialProperty<Real> & _W;
+  const MaterialProperty<Real> & _Omega;
+  const MaterialProperty<Real> & _W;
 
   unsigned int _OP_number;
   unsigned int _n_OP_vars;

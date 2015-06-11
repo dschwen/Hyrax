@@ -33,8 +33,8 @@ protected:
 
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
-  MaterialProperty<Real> & _diffusivity;
-//  MaterialProperty<Real> & _dDiffusivity_dT;
+  const MaterialProperty<Real> & _diffusivity;
+//  const MaterialProperty<Real> & _dDiffusivity_dT;
 
 private:
   unsigned int _w_var;

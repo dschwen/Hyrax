@@ -30,8 +30,8 @@ protected:
 
 private:
 
-  MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
-  MaterialProperty<RankTwoTensor> & _elastic_strain;
+  const MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
+  const MaterialProperty<RankTwoTensor> & _elastic_strain;
 
 //Real _scaling_factor;
 

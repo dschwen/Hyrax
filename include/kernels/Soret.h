@@ -33,7 +33,7 @@ protected:
 
   // virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
-  MaterialProperty<Real> & _L1Q;
+  const MaterialProperty<Real> & _L1Q;
 
 private:
   VariableValue & _T;

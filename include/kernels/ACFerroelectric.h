@@ -27,9 +27,9 @@ public:
 protected:
   virtual Real computeDFDOP(PFFunctionType type);
 
-  MaterialProperty<Real> & _a1;
-  MaterialProperty<Real> & _a11;
-  MaterialProperty<Real> & _a12;
+  const MaterialProperty<Real> & _a1;
+  const MaterialProperty<Real> & _a11;
+  const MaterialProperty<Real> & _a12;
 
   unsigned int _n_OP_vars;
   unsigned int _OP_number;
