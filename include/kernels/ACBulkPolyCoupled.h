@@ -36,9 +36,9 @@ protected:
   unsigned int _n_OP_vars;
   unsigned int _OP_number;
 
-  MaterialProperty<Real> & _a5;
-  MaterialProperty<Real> & _a6;
-  MaterialProperty<Real> & _a7;
+  const MaterialProperty<Real> & _a5;
+  const MaterialProperty<Real> & _a6;
+  const MaterialProperty<Real> & _a7;
 
   std::vector<VariableValue *> _coupled_OP_vars;
 

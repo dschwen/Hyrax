@@ -49,18 +49,18 @@ protected:
   Real _precip_noncons;
   Real _self_energy;
 
-  MaterialProperty<Real> & _G_alpha;
-  MaterialProperty<Real> & _G_delta;
-  MaterialProperty<Real> & _G_alpha_precip;
-  MaterialProperty<Real> & _G_delta_precip;
-  MaterialProperty<Real> & _dG_alpha;
-  MaterialProperty<Real> & _dG_delta;
+  const MaterialProperty<Real> & _G_alpha;
+  const MaterialProperty<Real> & _G_delta;
+  const MaterialProperty<Real> & _G_alpha_precip;
+  const MaterialProperty<Real> & _G_delta_precip;
+  const MaterialProperty<Real> & _dG_alpha;
+  const MaterialProperty<Real> & _dG_delta;
 
-  MaterialProperty<RankTwoTensor> & _stress;
-  MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
+  const MaterialProperty<RankTwoTensor> & _stress;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
 
-  MaterialProperty<Real> & _Omega;
-  MaterialProperty<Real> & _W;
+  const MaterialProperty<Real> & _Omega;
+  const MaterialProperty<Real> & _W;
 
   unsigned int _OP_number;
   unsigned int _n_OP_vars;

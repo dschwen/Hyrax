@@ -30,7 +30,7 @@ private:
 
   VariableGradient & _grad_var;
   std::string _kappa_name;
-  MaterialProperty<Real> & _kappa;
+  const MaterialProperty<Real> & _kappa;
 
 
 };

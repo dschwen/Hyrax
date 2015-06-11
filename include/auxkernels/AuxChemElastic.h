@@ -51,24 +51,24 @@ protected:
   Real _precip_nonconserved;
 
   /*MaterialProperty<Real> & _a1;
-  MaterialProperty<Real> & _a2;
-  MaterialProperty<Real> & _a3;
-  MaterialProperty<Real> & _a4;
-  MaterialProperty<Real> & _c1;
-  MaterialProperty<Real> & _c2; */
+  const MaterialProperty<Real> & _a2;
+  const MaterialProperty<Real> & _a3;
+  const MaterialProperty<Real> & _a4;
+  const MaterialProperty<Real> & _c1;
+  const MaterialProperty<Real> & _c2; */
 
   // unsigned int _n_variants;
   unsigned int _noncons_var_num;
 
-  MaterialProperty<std::vector<RankTwoTensor> > & _eigenstrains_rotated_MP;
-  MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _eigenstrains_rotated_MP;
+  const MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
 
-  MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain_rotated;
-  MaterialProperty<ElasticityTensorR4> & _precipitate_elasticity;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain_rotated;
+  const MaterialProperty<ElasticityTensorR4> & _precipitate_elasticity;
 
-  MaterialProperty<RankTwoTensor> & _local_strain;
+  const MaterialProperty<RankTwoTensor> & _local_strain;
 
-  MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
 
 private:
 };

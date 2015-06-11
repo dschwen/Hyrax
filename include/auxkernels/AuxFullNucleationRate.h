@@ -59,11 +59,11 @@ protected:
   VariableValue & _T;
   VariableValue & _X;
 
-  MaterialProperty<Real> & _D;
+  const MaterialProperty<Real> & _D;
 
   Real _jump_distance;
 
-  MaterialProperty<Real> & _Omega;
+  const MaterialProperty<Real> & _Omega;
   Real _OP_threshold;
   Real _length_scale;
 };

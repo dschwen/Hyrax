@@ -39,10 +39,10 @@ private:
 
   Real _scaling_factor;
 
-  MaterialProperty<Real> & _W;                            //Well height
-  MaterialProperty<Real> & _Omega;                        //Molar volume
-  MaterialProperty<Real> & _G_alpha;                      //Gmix_alpha
-  MaterialProperty<Real> & _G_delta;                      //Gmix_delta
+  const MaterialProperty<Real> & _W;                            //Well height
+  const MaterialProperty<Real> & _Omega;                        //Molar volume
+  const MaterialProperty<Real> & _G_alpha;                      //Gmix_alpha
+  const MaterialProperty<Real> & _G_delta;                      //Gmix_delta
 
 };
 

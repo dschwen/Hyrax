@@ -32,13 +32,13 @@ protected:
   virtual Real computeQpOffDiagJacobian(unsigned int jvar);
 
   // system elasticity tensor, varies in space
-  MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
-  MaterialProperty<std::vector<ElasticityTensorR4> > & _dn_elasticity_tensor;
+  const MaterialProperty<ElasticityTensorR4> & _elasticity_tensor;
+  const MaterialProperty<std::vector<ElasticityTensorR4> > & _dn_elasticity_tensor;
 
-  MaterialProperty<RankTwoTensor> & _elastic_strain;
-  MaterialProperty<RankTwoTensor> & _dc_misfit_strain;
-  MaterialProperty<std::vector<RankTwoTensor> > & _dn_misfit_strain;
-  MaterialProperty<std::vector<RankTwoTensor> > & _dcdn_misfit_strain;
+  const MaterialProperty<RankTwoTensor> & _elastic_strain;
+  const MaterialProperty<RankTwoTensor> & _dc_misfit_strain;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _dn_misfit_strain;
+  const MaterialProperty<std::vector<RankTwoTensor> > & _dcdn_misfit_strain;
 
   Real _scaling_factor;
 

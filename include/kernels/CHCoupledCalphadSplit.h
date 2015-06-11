@@ -34,14 +34,14 @@ protected:
 
 
 private:
-  MaterialProperty<Real> & _W;                            //Well height
-  MaterialProperty<Real> & _Omega;                        //Molar volume
+  const MaterialProperty<Real> & _W;                            //Well height
+  const MaterialProperty<Real> & _Omega;                        //Molar volume
 
-  MaterialProperty<Real> & _dGalpha_dc;
-  MaterialProperty<Real> & _d2Galpha_dc2;
+  const MaterialProperty<Real> & _dGalpha_dc;
+  const MaterialProperty<Real> & _d2Galpha_dc2;
 
-  MaterialProperty<Real> & _dGdelta_dc;
-  MaterialProperty<Real> & _d2Gdelta_dc2;
+  const MaterialProperty<Real> & _dGdelta_dc;
+  const MaterialProperty<Real> & _d2Gdelta_dc2;
 
   Real _scaling_factor;
 

@@ -22,13 +22,13 @@ public:
 protected:
   virtual Real computeQpIntegral();
 
-  MaterialProperty<Real> & _phase1_energy;
-  MaterialProperty<Real> & _phase2_energy;
+  const MaterialProperty<Real> & _phase1_energy;
+  const MaterialProperty<Real> & _phase2_energy;
 
-  MaterialProperty<Real> & _grad_OP_term;
-  MaterialProperty<Real> & _grad_C_term;
+  const MaterialProperty<Real> & _grad_OP_term;
+  const MaterialProperty<Real> & _grad_C_term;
 
-  MaterialProperty<Real> & _Heaviside;
+  const MaterialProperty<Real> & _Heaviside;
 
 };
 
