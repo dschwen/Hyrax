@@ -97,6 +97,7 @@
 #include "EllipsoidIC.h"
 #include "SmoothBoxIC.h"
 #include "DiamondIC.h"
+#include "DepletionRegionIC.h"
 
 //Dampers
 
@@ -252,6 +253,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerInitialCondition(EllipsoidIC);
   registerInitialCondition(SmoothBoxIC);
   registerInitialCondition(DiamondIC);
+  registerInitialCondition(DepletionRegionIC);
 
   //Dampers
 
