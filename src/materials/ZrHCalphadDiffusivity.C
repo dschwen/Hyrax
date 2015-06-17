@@ -41,17 +41,17 @@ ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const std::string & name, InputPara
       _R(getParam<Real>("R")),
       _k(getParam<Real>("k")),
       _mobility_CH_scaling(getParam<Real>("CH_mobility_scaling")),
-      _d2Galpha_dc2(getMaterialProperty<Real>("d2GAB1CD1_dc2")),
-      _d2Gdelta_dc2(getMaterialProperty<Real>("d2GAB1CD2_dc2")),
-      _d2Gdelta_dc2_precip(getMaterialProperty<Real>("d2GAB1CD2_dc2_precip")),
-      _d2Gdelta_dc2_cutoff(getMaterialProperty<Real>("d2GAB1CD2_dc2_cutoff")),
+      _d2Galpha_dc2(getMaterialPropertyByName<Real>("d2GAB1CD1_dc2")),
+      _d2Gdelta_dc2(getMaterialPropertyByName<Real>("d2GAB1CD2_dc2")),
+      _d2Gdelta_dc2_precip(getMaterialPropertyByName<Real>("d2GAB1CD2_dc2_precip")),
+      _d2Gdelta_dc2_cutoff(getMaterialPropertyByName<Real>("d2GAB1CD2_dc2_cutoff")),
       _D_alpha(declareProperty<Real>("D_alpha")),
       _D_delta(declareProperty<Real>("D_delta")),
       _c(coupledValue("concentration")),
       _OP(coupledValue("OP_variable")),
       _L1Q(declareProperty<Real>("L1Q")),
       _Q_transport(getParam<Real>("Q_transport")),
-      _d2Galpha_dcdT(getMaterialProperty<Real>("d2GAB1CD1_dcdT"))
+      _d2Galpha_dcdT(getMaterialPropertyByName<Real>("d2GAB1CD1_dcdT"))
 {
 }
 
