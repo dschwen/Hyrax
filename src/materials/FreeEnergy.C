@@ -20,12 +20,12 @@ FreeEnergy::FreeEnergy(const std::string & name, InputParameters parameters)
     : Material(name, parameters),
       _length_scale(getParam<Real>("length_scale_factor")),
       _energy_scale(getParam<Real>("energy_scale_factor")),
-      _kappa_c(getMaterialProperty<Real>("kappa_c")),
-      _kappa_n(getMaterialProperty<Real>("kappa_n")),
-      _W(getMaterialProperty<Real>("well_height")),
-      _molar_vol(getMaterialProperty<Real>("molar_volume")),
-      _alpha_energy(getMaterialProperty<Real>("G_AB1CD1")),
-      _delta_energy(getMaterialProperty<Real>("G_AB1CD2")),
+      _kappa_c(getMaterialPropertyByName<Real>("kappa_c")),
+      _kappa_n(getMaterialPropertyByName<Real>("kappa_n")),
+      _W(getMaterialPropertyByName<Real>("well_height")),
+      _molar_vol(getMaterialPropertyByName<Real>("molar_volume")),
+      _alpha_energy(getMaterialPropertyByName<Real>("G_AB1CD1")),
+      _delta_energy(getMaterialPropertyByName<Real>("G_AB1CD2")),
       _c(coupledValue("coupled_conc")),
       _n(coupledValue("coupled_n")),
       _grad_c(coupledGradient("coupled_conc")),
@@ -77,4 +77,3 @@ FreeEnergy::computeQpProperties()
 
   _constant_phases_energy_density[_qp] = alpha_energy_density + delta_energy_density;
 }
-

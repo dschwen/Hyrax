@@ -19,7 +19,7 @@ InputParameters validParams<SplitCoupledCHWRes>()
     // params.addRequiredCoupledVar("n", "structural order parameter");
     params.addRequiredCoupledVar("T", "temperature");
 
-    params.addParam<std::string>("mob_name","mobtemp","The mobility used with the kernel");
+    params.addParam<MaterialPropertyName>("mob_name","mobtemp","The mobility used with the kernel");
 
     params.addRequiredParam<int>("n_OP_vars", "# of coupled OP variables");
     params.addRequiredCoupledVar("OP_var_names", "Array of coupled OP variable names");
@@ -29,9 +29,9 @@ InputParameters validParams<SplitCoupledCHWRes>()
 
 SplitCoupledCHWRes::SplitCoupledCHWRes(const std::string & name, InputParameters parameters) :
     SplitCHWRes(name, parameters),
-    _mob_name(getParam<std::string>("mob_name")),
-    _mob(getMaterialProperty<Real>(_mob_name)),
-//  This _c_var is needed to compute off-diagonal Jacobian.
+    _mob(getMaterialProperty<Real>("mob_name")),
+
+    // This _c_var is needed to compute off-diagonal Jacobian.
     _c_var(coupled("c")),
     //_n_var(coupled("n")),
     _T_var(coupled("T")),
@@ -84,5 +84,3 @@ SplitCoupledCHWRes::computeQpOffDiagJacobian(unsigned int jvar)
   else
     mooseError("Screwed up SplitCoupledCHWRes::computeQpOffDiagonalJacobian.");
 }
-
-
