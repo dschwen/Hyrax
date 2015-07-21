@@ -22,7 +22,7 @@ InputParameters validParams<ZrHCalphad>();
 class ZrHCalphadDiffusivity : public ZrHCalphad
 {
 public:
-  ZrHCalphadDiffusivity(const std::string & name, InputParameters parameters);
+  ZrHCalphadDiffusivity(const InputParameters & parameters);
 
 protected:
   virtual void computeQpProperties();

@@ -15,7 +15,7 @@ InputParameters validParams<FreeEnergy>();
 class FreeEnergy : public Material
 {
 public:
-  FreeEnergy(const std::string & name, InputParameters parameters);
+  FreeEnergy(const InputParameters & parameters);
 
 protected:
   virtual void computeQpProperties();
