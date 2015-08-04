@@ -39,7 +39,11 @@ protected:
   VariableGradient & _grad_n;
 
   MaterialProperty<Real> & _free_energy_density;  //free energy functional energy density
-  MaterialProperty<Real> & _constant_phases_energy_density;  //free energy density of ONLY the alpha+delta phases
+
+  MaterialProperty<Real> & _alpha_energy_density; //free energy density of only the alpha phase
+  MaterialProperty<Real> & _delta_energy_density; //free energy density of only the delta phase
+
+private:
 };
 
 #endif //FREEENERGY_H

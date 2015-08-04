@@ -43,8 +43,6 @@ ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const InputParameters & parameters)
       _mobility_CH_scaling(getParam<Real>("CH_mobility_scaling")),
       _d2Galpha_dc2(getMaterialPropertyByName<Real>("d2GAB1CD1_dc2")),
       _d2Gdelta_dc2(getMaterialPropertyByName<Real>("d2GAB1CD2_dc2")),
-      _d2Gdelta_dc2_precip(getMaterialPropertyByName<Real>("d2GAB1CD2_dc2_precip")),
-      _d2Gdelta_dc2_cutoff(getMaterialPropertyByName<Real>("d2GAB1CD2_dc2_cutoff")),
       _D_alpha(declareProperty<Real>("D_alpha")),
       _D_delta(declareProperty<Real>("D_delta")),
       _c(coupledValue("concentration")),
@@ -82,9 +80,12 @@ ZrHCalphadDiffusivity::computeQpProperties()
 
   // _M[_qp] = ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
 
+  //multiply by molar volume to get the units to actually work out
+  _M[_qp] *= _molar_volume;
+  
   if (_M[_qp] < 0)
   {
-    _console<<"negative mobility"<<std::endl;
+    //   _console<<"negative mobility"<<std::endl;
        _M[_qp] = 0;
   }
 //  if ( _c[_qp] < 0)

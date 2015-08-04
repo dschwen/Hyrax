@@ -102,6 +102,7 @@ AuxVolumetricNucleationRate::computeCriticalRadius()
   _r_star = 2*_gamma/_coupled_energy[_qp];
 
   _console<<"r* = "<<_r_star<<std::endl;
+  _console<<"delta f = "<<_coupled_energy[_qp]<<std::endl;
 }
 
 void

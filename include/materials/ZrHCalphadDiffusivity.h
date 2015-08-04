@@ -41,8 +41,6 @@ private:
 
   const MaterialProperty<Real> & _d2Galpha_dc2;
   const MaterialProperty<Real> & _d2Gdelta_dc2;
-  const MaterialProperty<Real> & _d2Gdelta_dc2_precip;
-  const MaterialProperty<Real> & _d2Gdelta_dc2_cutoff;
 
   MaterialProperty<Real> & _D_alpha;
   MaterialProperty<Real> & _D_delta;

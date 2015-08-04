@@ -109,7 +109,7 @@ AuxFullNucleationRate::computeCriticalRadius()
 
   _r_star = 2.0*_gamma/_coupled_energy[_qp];
 
-  // _console<<"r* = "<<_r_star<<std::endl;
+//   _console<<"r* = "<<_r_star<<std::endl;
 }
 
 void
