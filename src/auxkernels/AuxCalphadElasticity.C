@@ -99,7 +99,8 @@ Real
 AuxCalphadElasticity::computeChemMatrixEnergy()
 {
   //Joules/meter^3
-  return ( (1 - _H)*_G_alpha[_qp] + _H*_G_delta[_qp] + _W[_qp]*_g) / _Omega[_qp];
+  //return ( (1 - _H)*_G_alpha[_qp] + _H*_G_delta[_qp] + _W[_qp]*_g) / _Omega[_qp];
+  return _G_alpha[_qp]/_Omega[_qp];
 }
 
 Real
@@ -132,11 +133,16 @@ AuxCalphadElasticity::computeDifferential()
 
   Real dfchem_dX = ( (1-_H)*_dG_alpha[_qp] + _H*_dG_delta[_qp] ) / _Omega[_qp];
 
-  Real dfdc = dfchem_dX*(_precip_cons - _X[_qp]);
+  // Real dfdc = dfchem_dX*(_precip_cons - _X[_qp]);
+   Real dfdc = _dG_alpha[_qp]*(_precip_cons - _X[_qp])/_Omega[_qp];
 
   Real dfdOP = dfchem_dOP*(_precip_noncons - (*_OP[_OP_number-1])[_qp]);
 
-  return dfdc + dfdOP;
+//  _console<<"dfdc = "<<dfdc<<std::endl;
+//  _console<<"dfdOP = "<<dfdOP<<std::endl;
+
+  //return dfdc + dfdOP;
+  return dfdc;
 }
 
 void
