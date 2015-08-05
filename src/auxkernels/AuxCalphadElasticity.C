@@ -140,7 +140,7 @@ AuxCalphadElasticity::computeDifferential()
 
 //  _console<<"dfdc = "<<dfdc<<std::endl;
 //  _console<<"dfdOP = "<<dfdOP<<std::endl;
-  
+
   //return dfdc + dfdOP;
   return dfdc;
 }

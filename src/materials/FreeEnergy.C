@@ -53,7 +53,7 @@ FreeEnergy::computeQpProperties()
 
   Real fchem_scale_factor = (_length_scale*_length_scale*_length_scale/_molar_vol[_qp]);
   Real grad_scale_factor = _energy_scale*_length_scale*_length_scale;
-  
+
   //the energies are in J/mol
   Real fchem = (1 - Heaviside)*_alpha_energy[_qp] + Heaviside*_delta_energy[_qp] + _W[_qp]*g;
 
@@ -64,7 +64,7 @@ FreeEnergy::computeQpProperties()
   //convert energy to J/nm^3 and J/nm
   grad_c_term *= _length_scale;
   grad_n_term *= _length_scale;
-  
+
   _free_energy_density[_qp] = fchem*fchem_scale_factor + grad_c_term + grad_n_term;
 
 

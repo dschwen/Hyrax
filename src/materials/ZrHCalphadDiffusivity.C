@@ -82,7 +82,7 @@ ZrHCalphadDiffusivity::computeQpProperties()
 
   //multiply by molar volume to get the units to actually work out
   _M[_qp] *= _molar_volume;
-  
+
   if (_M[_qp] < 0)
   {
     //   _console<<"negative mobility"<<std::endl;
