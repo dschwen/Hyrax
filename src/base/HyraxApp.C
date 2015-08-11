@@ -165,20 +165,12 @@ extern "C" void HyraxApp__registerApps() { HyraxApp::registerApps(); }
 void
 HyraxApp::registerApps()
 {
-#undef  registerApp
-#define registerApp(name) AppFactory::instance().reg<name>(#name)
   registerApp(HyraxApp);
-
-#undef  registerApp
-#define registerApp(name) AppFactory::instance().regLegacy<name>(#name)
 }
 
 void
 HyraxApp::registerObjects(Factory & factory)
 {
-#undef registerObject
-#define registerObject(name) factory.reg<name>(stringifyName(name))
-
   //Kernels
   registerKernel(CHBulkCoupled);
   registerKernel(ACBulkCoupled);
@@ -278,17 +270,11 @@ HyraxApp::registerObjects(Factory & factory)
   // Markers
   registerMarker(NucleationMarker);
   registerMarker(ErrorFractionMaxHMarker);
-
-#undef registerObject
-#define registerObject(name) factory.regLegacy<name>(stringifyName(name))
 }
 
 void
 HyraxApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
 {
-#undef registerAction
-#define registerAction(tplt, action) action_factory.reg<tplt>(stringifyName(tplt), action)
-
   // Actions
   registerAction(OPVariantKernelAction, "add_kernel");
   registerAction(NucleationAuxAction, "add_aux_kernel");
@@ -297,7 +283,4 @@ HyraxApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
   syntax.registerActionSyntax("OPVariantKernelAction", "OPVariantKernel");
   syntax.registerActionSyntax("NucleationAuxAction", "NucleationAux");
   syntax.registerActionSyntax("NucleationPostprocessorAction", "NucleationPostprocessor");
-
-#undef registerAction
-#define registerAction(tplt, action) action_factory.regLegacy<tplt>(stringifyName(tplt), action)
 }
