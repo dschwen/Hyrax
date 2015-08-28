@@ -31,8 +31,8 @@ InputParameters validParams<ZrHCalphadDiffusivity>()
   return params;
 }
 
-ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const std::string & name, InputParameters parameters)
-    : ZrHCalphad(name, parameters),
+ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const InputParameters & parameters)
+    : ZrHCalphad(parameters),
 
       _H_Zr_D0(getParam<Real>("H_Zr_D0")),
       _H_ZrH2_D0(getParam<Real>("H_ZrH2_D0")),
@@ -41,17 +41,15 @@ ZrHCalphadDiffusivity::ZrHCalphadDiffusivity(const std::string & name, InputPara
       _R(getParam<Real>("R")),
       _k(getParam<Real>("k")),
       _mobility_CH_scaling(getParam<Real>("CH_mobility_scaling")),
-      _d2Galpha_dc2(getMaterialProperty<Real>("d2GAB1CD1_dc2")),
-      _d2Gdelta_dc2(getMaterialProperty<Real>("d2GAB1CD2_dc2")),
-      _d2Gdelta_dc2_precip(getMaterialProperty<Real>("d2GAB1CD2_dc2_precip")),
-      _d2Gdelta_dc2_cutoff(getMaterialProperty<Real>("d2GAB1CD2_dc2_cutoff")),
+      _d2Galpha_dc2(getMaterialPropertyByName<Real>("d2GAB1CD1_dc2")),
+      _d2Gdelta_dc2(getMaterialPropertyByName<Real>("d2GAB1CD2_dc2")),
       _D_alpha(declareProperty<Real>("D_alpha")),
       _D_delta(declareProperty<Real>("D_delta")),
       _c(coupledValue("concentration")),
       _OP(coupledValue("OP_variable")),
       _L1Q(declareProperty<Real>("L1Q")),
       _Q_transport(getParam<Real>("Q_transport")),
-      _d2Galpha_dcdT(getMaterialProperty<Real>("d2GAB1CD1_dcdT"))
+      _d2Galpha_dcdT(getMaterialPropertyByName<Real>("d2GAB1CD1_dcdT"))
 {
 }
 
@@ -82,9 +80,12 @@ ZrHCalphadDiffusivity::computeQpProperties()
 
   // _M[_qp] = ((solute*_D_alpha[_qp])/(_R*_temperature[_qp]))/_mobility_CH_scaling;
 
+  //multiply by molar volume to get the units to actually work out
+  _M[_qp] *= _molar_volume;
+
   if (_M[_qp] < 0)
   {
-    _console<<"negative mobility"<<std::endl;
+    //   _console<<"negative mobility"<<std::endl;
        _M[_qp] = 0;
   }
 //  if ( _c[_qp] < 0)

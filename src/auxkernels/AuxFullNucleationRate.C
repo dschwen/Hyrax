@@ -42,8 +42,8 @@ InputParameters validParams<AuxFullNucleationRate>()
   return params;
 }
 
-AuxFullNucleationRate::AuxFullNucleationRate(const std::string & name, InputParameters parameters)
-    : AuxKernel(name, parameters),
+AuxFullNucleationRate::AuxFullNucleationRate(const InputParameters & parameters)
+    : AuxKernel(parameters),
       _mesh_dimension(_mesh.dimension()),
       _coupled_energy(coupledValue("coupled_bulk_energy_change")),
       _Z(),
@@ -109,7 +109,7 @@ AuxFullNucleationRate::computeCriticalRadius()
 
   _r_star = 2.0*_gamma/_coupled_energy[_qp];
 
-  // _console<<"r* = "<<_r_star<<std::endl;
+//   _console<<"r* = "<<_r_star<<std::endl;
 }
 
 void

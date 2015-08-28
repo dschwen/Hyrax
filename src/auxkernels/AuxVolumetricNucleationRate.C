@@ -39,8 +39,8 @@ InputParameters validParams<AuxVolumetricNucleationRate>()
   return params;
 }
 
-AuxVolumetricNucleationRate::AuxVolumetricNucleationRate(const std::string & name, InputParameters parameters)
-    : AuxKernel(name, parameters),
+AuxVolumetricNucleationRate::AuxVolumetricNucleationRate(const InputParameters & parameters)
+    : AuxKernel(parameters),
       _coupled_energy(coupledValue("coupled_bulk_energy_change")),
       _Z(),
       _beta_star(),
@@ -102,6 +102,7 @@ AuxVolumetricNucleationRate::computeCriticalRadius()
   _r_star = 2*_gamma/_coupled_energy[_qp];
 
   _console<<"r* = "<<_r_star<<std::endl;
+  _console<<"delta f = "<<_coupled_energy[_qp]<<std::endl;
 }
 
 void
