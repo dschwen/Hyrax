@@ -18,7 +18,7 @@ class CHLarry;
 template<>
 InputParameters validParams<CHLarry>();
 
-class CHLarry : public CHBulk
+class CHLarry : public CHBulk<Real>
 {
 public:
   CHLarry(const InputParameters & parameters);

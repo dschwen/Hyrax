@@ -24,7 +24,7 @@ class CHBulkCoupled;
 template<>
 InputParameters validParams<CHBulkCoupled>();
 
-class CHBulkCoupled : public CHBulk
+class CHBulkCoupled : public CHBulk<Real>
 {
 public:
 

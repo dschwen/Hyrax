@@ -18,14 +18,14 @@
 template<>
 InputParameters validParams<CHBulkCoupled>()
 {
-  InputParameters params = validParams<CHBulk>();
+  InputParameters params = CHBulk<Real>::validParams();
   params.addRequiredCoupledVar("coupled_OP_var", "The order parameter coupled to the CH eqn");
 
   return params;
 }
 
 CHBulkCoupled::CHBulkCoupled(const InputParameters & parameters)
-  :CHBulk(parameters),
+  :CHBulk<Real>(parameters),
    // Get the material properties for the Landau coefficients
    _a1(getMaterialProperty<Real>("A1")),
    _a2(getMaterialProperty<Real>("A2")),

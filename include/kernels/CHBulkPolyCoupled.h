@@ -25,7 +25,7 @@ class CHBulkPolyCoupled;
 template<>
 InputParameters validParams<CHBulkPolyCoupled>();
 
-class CHBulkPolyCoupled : public CHBulk
+class CHBulkPolyCoupled : public CHBulk<Real>
 {
 public:
   CHBulkPolyCoupled(const InputParameters & parameters);

@@ -28,7 +28,7 @@ class CHCoupledCalphad;
 template<>
 InputParameters validParams<CHCoupledCalphad>();
 
-class CHCoupledCalphad : public CHBulk
+class CHCoupledCalphad : public CHBulk<Real>
 {
 public:
   CHCoupledCalphad(const InputParameters & parameters);
