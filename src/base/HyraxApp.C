@@ -28,23 +28,15 @@
 #include "ACTransformElasticDF.h"
 #include "CHBulkPolyCoupled.h"
 #include "ACBulkPolyCoupled.h"
-#include "Value.h"
-#include "CHBulkSimmons.h"
-#include "ACBulkSimmons.h"
 #include "CHCoupledCalphad.h"
 #include "ACCoupledCalphad.h"
-//#include "ACFerroelectric.h"
 #include "CHLarry.h"
 #include "CHLarrySplit.h"
-#include "Heat.h"
 #include "CHCoupledSplit.h"
 #include "CHCoupledCalphadSplit.h"
 #include "SplitCoupledCHWRes.h"
 #include "CHPrecipMatrixElasticity.h"
 #include "ACPrecipMatrixElasticity.h"
-#include "Soret.h"
-#include "SimpleConstantDiffusion.h"
-#include "NonlinearDiffusion.h"
 
 //Auxiliary Kernels
 #include "AuxNucleationProbability.h"
@@ -79,18 +71,13 @@
 //Materials
 #include "PFMobilityLandau.h"
 #include "LinearSingleCrystalPrecipitateMaterial.h"
-//#include "FerroelectricBulk.h"
 #include "ZrHCalphad.h"
 #include "CalphadEnergyMaterial.h"
 #include "CalphadAB1CD1Material.h"
 #include "CalphadAB1CD2Material.h"
 #include "PrecipitateMatrixMisfitMaterial.h"
 #include "ZrHCalphadDiffusivity.h"
-#include "CalphadAB1CD1MaterialOld.h"
-#include "CalphadAB1CD2MaterialOld.h"
-#include "ZrHCalphadDiffusivityOld.h"
 #include "FreeEnergy.h"
-#include "CalphadAB1CD2ModMaterial.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -126,7 +113,6 @@
 
 //Markers
 #include "NucleationMarker.h"
-#include "ErrorFractionMaxHMarker.h"
 
 
 template<>
@@ -177,23 +163,15 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(ACTransformElasticDF);
   registerKernel(ACBulkPolyCoupled);
   registerKernel(CHBulkPolyCoupled);
-  registerKernel(Value);
-  registerKernel(ACBulkSimmons);
-  registerKernel(CHBulkSimmons);
   registerKernel(CHCoupledCalphad);
   registerKernel(ACCoupledCalphad);
-  //registerKernel(ACFerroelectric);
   registerKernel(CHLarry);
   registerKernel(CHLarrySplit);
-  registerKernel(Heat);
   registerKernel(CHCoupledSplit);
   registerKernel(CHCoupledCalphadSplit);
   registerKernel(SplitCoupledCHWRes);
   registerKernel(CHPrecipMatrixElasticity);
   registerKernel(ACPrecipMatrixElasticity);
-  registerKernel(Soret);
-  registerKernel(SimpleConstantDiffusion);
-  registerKernel(NonlinearDiffusion);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
@@ -228,17 +206,12 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(PFMobilityLandau);
   registerMaterial(LinearSingleCrystalPrecipitateMaterial);
   registerMaterial(ZrHCalphad);
-  //registerMaterial(FerroelectricBulk);
   registerMaterial(CalphadEnergyMaterial);
   registerMaterial(CalphadAB1CD1Material);
   registerMaterial(CalphadAB1CD2Material);
   registerMaterial(PrecipitateMatrixMisfitMaterial);
   registerMaterial(ZrHCalphadDiffusivity);
-  registerMaterial(CalphadAB1CD1MaterialOld);
-  registerMaterial(CalphadAB1CD2MaterialOld);
-  registerMaterial(ZrHCalphadDiffusivityOld);
   registerMaterial(FreeEnergy);
-  registerMaterial(CalphadAB1CD2ModMaterial);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
@@ -269,7 +242,7 @@ HyraxApp::registerObjects(Factory & factory)
 
   // Markers
   registerMarker(NucleationMarker);
-  registerMarker(ErrorFractionMaxHMarker);
+
 }
 
 void
