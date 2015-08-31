@@ -13,15 +13,15 @@
 template<>
 InputParameters validParams<CHLarry>()
 {
-  InputParameters params = validParams<CHBulk>();
+  InputParameters params = CHBulk<Real>::validParams();
   params.addRequiredParam<Real>("W", "well height of the double-well functional");
 
   return params;
 }
 
-CHLarry::CHLarry(const std::string & name, InputParameters parameters)
-    :CHBulk(name, parameters),
-     _W(getParam<Real>("W"))
+CHLarry::CHLarry(const InputParameters & parameters)
+    :CHBulk<Real>(parameters),
+    _W(getParam<Real>("W"))
 {
 }
 

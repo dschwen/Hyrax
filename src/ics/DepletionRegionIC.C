@@ -24,8 +24,8 @@ InputParameters validParams<DepletionRegionIC>()
   return params;
 }
 
-DepletionRegionIC::DepletionRegionIC(const std::string & name, InputParameters parameters)
-    : EllipsoidIC(name, parameters),
+DepletionRegionIC::DepletionRegionIC(const InputParameters &  parameters)
+    : EllipsoidIC(parameters),
       _depletion_width(getParam<Real>("depletion_width")),
       _depletion_outvalue(getParam<Real>("depletion_outvalue"))
 {
@@ -70,7 +70,7 @@ DepletionRegionIC::value(const Point & p)
 Real
 DepletionRegionIC::shapeValue(const Point &p, const int j)
 {
- 
+
   Real value = 0;
   Real sum = 0;
 
@@ -82,24 +82,24 @@ DepletionRegionIC::shapeValue(const Point &p, const int j)
   {
     value = _invalue;
   }
-  
+
   else if (sum < 1 + _int_width/2)
   {
     // no division by zero because we are in the finite interface width case
     //no idea if this is right
     Real int_pos = (sum - 1 + _int_width/2)/_int_width;
-    
+
     value = _depletion_outvalue + (_invalue - _depletion_outvalue)*(1 + std::cos(int_pos*libMesh::pi))/2;
-    
+
   }
   //depletion region
   else if (sum < 1 + _int_width + _depletion_width)
   {
-    
+
     value = _depletion_outvalue;
   //smooth the interface of the depletion region
   }
-  
+
   else if (sum < 1 + _int_width + _depletion_width + _int_width)
   {
     Real int_pos = (sum -1 + _depletion_width + _int_width/2)/_int_width
@@ -107,11 +107,11 @@ DepletionRegionIC::shapeValue(const Point &p, const int j)
     value = _depletion_outvalue + (_outvalue - _depletion_outvalue)*(1+std::sin(int_pos*libMesh::pi))/2;
 
   }
-    
+
   else
   {
     value = _outvalue;
   }
-  
+
   return value;
 }

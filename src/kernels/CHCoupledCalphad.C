@@ -22,15 +22,15 @@
 template<>
 InputParameters validParams<CHCoupledCalphad>()
 {
-  InputParameters params = validParams<CHBulk>();
+  InputParameters params = CHBulk<Real>::validParams();
   params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
 
   return params;
 }
 
-CHCoupledCalphad::CHCoupledCalphad(const std::string & name, InputParameters parameters)
-    : CHBulk(name, parameters),
+CHCoupledCalphad::CHCoupledCalphad(const InputParameters & parameters)
+    : CHBulk<Real>(parameters),
       _W(getMaterialProperty<Real>("well_height")),
       _Omega(getMaterialProperty<Real>("molar_volume")),
       _dGalpha_dc(getMaterialProperty<Real>("dGAB1CD1_dc")),

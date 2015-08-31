@@ -15,7 +15,7 @@ InputParameters validParams<FreeEnergy>();
 class FreeEnergy : public Material
 {
 public:
-  FreeEnergy(const std::string & name, InputParameters parameters);
+  FreeEnergy(const InputParameters & parameters);
 
 protected:
   virtual void computeQpProperties();
@@ -23,14 +23,14 @@ protected:
   Real _length_scale;
   Real _energy_scale;
 
-  MaterialProperty<Real> & _kappa_c;      //CH gradient energy coefficient (isotropic)
-  MaterialProperty<Real> & _kappa_n;      //AC gradient energy coefficient (isotropic)
+  const MaterialProperty<Real> & _kappa_c;      //CH gradient energy coefficient (isotropic)
+  const MaterialProperty<Real> & _kappa_n;      //AC gradient energy coefficient (isotropic)
 
-  MaterialProperty<Real> & _W;            //well height
-  MaterialProperty<Real> & _molar_vol;    //molar volume
+  const MaterialProperty<Real> & _W;            //well height
+  const MaterialProperty<Real> & _molar_vol;    //molar volume
 
-  MaterialProperty<Real> & _alpha_energy;
-  MaterialProperty<Real> & _delta_energy;
+  const MaterialProperty<Real> & _alpha_energy;
+  const MaterialProperty<Real> & _delta_energy;
 
   //COUPLED VARIABLES
   VariableValue & _c;   //coupled concentration
@@ -39,10 +39,11 @@ protected:
   VariableGradient & _grad_n;
 
   MaterialProperty<Real> & _free_energy_density;  //free energy functional energy density
-  MaterialProperty<Real> & _constant_phases_energy_density;  //free energy density of ONLY the alpha+delta phases
+
+  MaterialProperty<Real> & _alpha_energy_density; //free energy density of only the alpha phase
+  MaterialProperty<Real> & _delta_energy_density; //free energy density of only the delta phase
 
 private:
-
 };
 
 #endif //FREEENERGY_H

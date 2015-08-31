@@ -18,10 +18,10 @@ class CHLarry;
 template<>
 InputParameters validParams<CHLarry>();
 
-class CHLarry : public CHBulk
+class CHLarry : public CHBulk<Real>
 {
 public:
-  CHLarry(const std::string & name, InputParameters parameters);
+  CHLarry(const InputParameters & parameters);
 
 protected:
   virtual RealGradient computeGradDFDCons(PFFunctionType type);

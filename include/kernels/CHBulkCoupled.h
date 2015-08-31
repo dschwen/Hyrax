@@ -24,11 +24,11 @@ class CHBulkCoupled;
 template<>
 InputParameters validParams<CHBulkCoupled>();
 
-class CHBulkCoupled : public CHBulk
+class CHBulkCoupled : public CHBulk<Real>
 {
 public:
 
-  CHBulkCoupled(const std::string & name, InputParameters parameters);
+  CHBulkCoupled(const InputParameters & parameters);
 
 protected:
 

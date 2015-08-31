@@ -18,15 +18,15 @@
 template<>
 InputParameters validParams<CHBulkPolyCoupled>()
 {
-  InputParameters params = validParams<CHBulk>();
+  InputParameters params = CHBulk<Real>::validParams();
   params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >= 1");
   params.addRequiredCoupledVar("OP_variable_names", "Array of coupled OP variable names");
 
   return params;
 }
 
-CHBulkPolyCoupled::CHBulkPolyCoupled(const std::string & name, InputParameters parameters)
-    :CHBulk(name, parameters),
+CHBulkPolyCoupled::CHBulkPolyCoupled(const InputParameters & parameters)
+    :CHBulk<Real>(parameters),
      _a1(getMaterialProperty<Real>("A1")),
      _a2(getMaterialProperty<Real>("A2")),
      _c1(getMaterialProperty<Real>("C1")),

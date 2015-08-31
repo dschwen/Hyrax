@@ -25,10 +25,10 @@ class CHBulkPolyCoupled;
 template<>
 InputParameters validParams<CHBulkPolyCoupled>();
 
-class CHBulkPolyCoupled : public CHBulk
+class CHBulkPolyCoupled : public CHBulk<Real>
 {
 public:
-  CHBulkPolyCoupled(const std::string & name, InputParameters parameters);
+  CHBulkPolyCoupled(const InputParameters & parameters);
 
 protected:
   virtual RealGradient computeGradDFDCons(PFFunctionType type);
