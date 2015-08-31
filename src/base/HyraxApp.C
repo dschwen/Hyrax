@@ -102,9 +102,6 @@
 #include "PhaseFractionDT.h"
 
 //Actions
-#include "OPVariantKernelAction.h"
-#include "NucleationAuxAction.h"
-#include "NucleationPostprocessorAction.h"
 
 //UserObjects
 #include "NucleationLocationUserObject.h"
@@ -249,11 +246,4 @@ void
 HyraxApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
 {
   // Actions
-  registerAction(OPVariantKernelAction, "add_kernel");
-  registerAction(NucleationAuxAction, "add_aux_kernel");
-  registerAction(NucleationPostprocessorAction, "add_postprocessor");
-
-  syntax.registerActionSyntax("OPVariantKernelAction", "OPVariantKernel");
-  syntax.registerActionSyntax("NucleationAuxAction", "NucleationAux");
-  syntax.registerActionSyntax("NucleationPostprocessorAction", "NucleationPostprocessor");
 }
