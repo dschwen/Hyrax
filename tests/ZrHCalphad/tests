@@ -6,13 +6,6 @@
     method = 'OPT OPROF'  # Too slow for debug     
   [../]
 
- [./ZrHCalphadMod_test]
-    type = 'Exodiff'
-    input = 'ZrHCalphadMod.i'
-    exodiff = 'ZrHCalphadMod.e'
-    method = 'OPT OPROF'  # Too slow for debug
-  [../]
-
   [./ZrHCalphad_3OP_test]
     type = 'Exodiff'
     input = 'ZrHCalphad_3OP.i'

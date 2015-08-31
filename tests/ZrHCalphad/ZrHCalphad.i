@@ -32,14 +32,13 @@
     order = FIRST
     family = LAGRANGE
   [../]
-
-  [./temperature]
-    order = FIRST
-    family = LAGRANGE
-  [../]
 []
 
 [AuxVariables]
+  [./temperature]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
   [./Galpha]
     order = CONSTANT
     family = MONOMIAL
@@ -144,8 +143,8 @@
  active = 'SMP'
   [./SMP]
    type = SMP
-   off_diag_row = 'concentration concentration concentration mu mu mu n n n temperature temperature temperature'
-   off_diag_column = 'mu n temperature concentration n temperature concentration mu temperature concentration mu n'
+   off_diag_row = 'concentration concentration mu mu n n'
+   off_diag_column = 'mu n concentration n concentration mu'
   [../]
 []
 
@@ -202,20 +201,6 @@
     variable = n
     mob_name = L
     kappa_name = kappa_n
-  [../]
-
-  [./dTdt]
-    type = TimeDerivative
-    variable = temperature
-  [../]
-
-  [./THeat]
-    type = Heat
-    variable = temperature
-    w = mu
-    c = concentration
-    OP_var_names = 'n'
-    n_OP_vars = 1
   [../]
 []
 
