@@ -18,8 +18,7 @@ InputParameters validParams<AuxVolumetricNucleationRate>()
   InputParameters params = validParams<AuxKernel>();
   params.addRequiredParam<Real>("rate_volume", "volume for which the nucleation rate is calculated, ensure correct dimensionality");
   params.addRequiredCoupledVar("coupled_bulk_energy_change","coupled auxiliary variable for free energy change");
-  // I'd have line in input file, coupled_aux_var = supersaturation, or chem_elastic, or whatever
-
+ 
   params.addRequiredParam<Real>("gamma", "Surface energy");
   params.addParam<Real>("Kb", 1.3806503e-23, "Boltzmann's constant, make sure units all match");
   params.addParam<Real>("time_scale_factor", 1, "time factor to scale (multiply) nucleation rate by");
@@ -31,9 +30,6 @@ InputParameters validParams<AuxVolumetricNucleationRate>()
 
   params.addRequiredParam<Real>("jump_distance", "atomic distance for hopping");
 
-  //params.addRequiredParam<int>("n_OP_variables", "# of coupled OP variables, >=1");
-  params.addRequiredCoupledVar("OP_variable_name", "coupled OP variable name");
-  params.addParam<Real>("OP_threshold", 0.0001, "threshold below which not to calculate nucleation rate");
   params.addParam<Real>("length_scale_factor", "characteristic length the simulation is scaled by");
 
   return params;
@@ -50,13 +46,11 @@ AuxVolumetricNucleationRate::AuxVolumetricNucleationRate(const InputParameters &
       _gamma(getParam<Real>("gamma")),
       _Kb(getParam<Real>("Kb")),
       _time_scale_factor(getParam<Real>("time_scale_factor")),
-      _OP(coupledValue("OP_variable_name")),
       _T(coupledValue("T")),
       _X(coupledValue("X")),
       _D(getMaterialProperty<Real>("D_alpha")),
       _jump_distance(getParam<Real>("jump_distance")),
       _Omega(getMaterialProperty<Real>("molar_volume")),
-      _OP_threshold(getParam<Real>("OP_threshold")),
       _length_scale_factor(getParam<Real>("length_scale_factor")),
       _rate_volume(getParam<Real>("rate_volume"))
 {
@@ -99,10 +93,11 @@ void
 AuxVolumetricNucleationRate::computeCriticalRadius()
 {
   //this is calculated as if in 3D
+  //assuming spherical nucleus shape
   _r_star = 2*_gamma/_coupled_energy[_qp];
 
-  _console<<"r* = "<<_r_star<<std::endl;
-  _console<<"delta f = "<<_coupled_energy[_qp]<<std::endl;
+  //_console<<"r* = "<<_r_star<<std::endl;
+  //_console<<"delta f = "<<_coupled_energy[_qp]<<std::endl;
 }
 
 void
@@ -119,6 +114,7 @@ AuxVolumetricNucleationRate::computeCriticalEnergy()
 void
 AuxVolumetricNucleationRate::computeZeldovichFactor()
 {
+  //assuming spherical nucleus shape
   Real critical_volume = 4*libMesh::pi*_r_star*_r_star*_r_star/3;
 
   //here I'm assuming that the molar volume is constant across phases.. meh

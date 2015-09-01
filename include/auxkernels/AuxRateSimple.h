@@ -19,8 +19,9 @@ template<>
 InputParameters validParams<AuxRateSimple>();
 
 /**
- *  AuxRateSimple handles the nucleation rate (j_star) calculation in the concurrent
- *  nucleation and growth algorithm first proposed by J.P. Simmons (2000).
+ * AuxRateSimple is designed to work with AuxSupersaturation (following
+ * algorithm in J. P. Simmons (2000) paper).  It results in a volumetric
+ * nucleation rate (does not take into account mesh volume).
  */
 
 class AuxRateSimple : public AuxKernel
@@ -41,12 +42,10 @@ protected:
 private:
   const unsigned int _mesh_dimension;
 
-  VariableValue & _coupled_energy; ///< area/volume free energy change of transformation
-  Real _Kn1;                       ///< First nucleation rate value
-  Real _Kn2;                       ///< Second nucleation rate value
-
-  unsigned int _n_OP_vars;
-  std::vector<VariableValue *> _coupled_OP_vars;
+  VariableValue & _coupled_energy; //free energy change of transformation
+  Real _Kn1;                       //First nucleation rate value
+  Real _Kn2;                       //Second nucleation rate value
+  
 };
 
 #endif //AUXRATESIMPLE_H

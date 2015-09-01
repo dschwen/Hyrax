@@ -45,7 +45,7 @@
     type = AuxSupersaturation
     variable = nodal_Supersaturation
     coupled_var = concentration
-    functional_c1 = 0.006
+    c1 = 0.1
     execute_on = timestep_end
   [../]
 []
@@ -73,9 +73,6 @@
 
   #Preconditioned JFNK (default)
   solve_type = 'PJFNK'
-
-
-
 
   petsc_options_iname = '-pc_type -pc_hypre_type -ksp_gmres_restart'
   petsc_options_value = 'hypre boomeramg 101'

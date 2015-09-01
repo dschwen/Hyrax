@@ -39,10 +39,10 @@ AuxAMRNucleationProbability::AuxAMRNucleationProbability(const InputParameters &
     _mesh_dimension(_mesh.dimension())
 {
   if(_mesh_dimension == 2 && _2D_mesh_height < 0)
-    mooseError("Please supply a mesh height (AuxAMRNucleationProbability");
+    mooseError("Please supply a mesh height (AuxAMRNucleationProbability)");
 
   if(_mesh_dimension == 1)
-    mooseError("Only works in 2 and 3 dimensions (AuxAMRNucleationProbability");
+    mooseError("Only works in 2 and 3 dimensions (AuxAMRNucleationProbability)");
 }
 
 Real
@@ -64,7 +64,7 @@ AuxAMRNucleationProbability::computeValue()
   the simulation! Note that if using MeshSolutionModify executioner, mesh refinement
   is applied AFTER the values are computed. Therefore, nucleation probability with AMR
   is going to be useless output.*/
-
+  
   return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt*vol);
 }
 

@@ -17,7 +17,7 @@
 class AuxSupersaturation;
 
 /**
- * AuxSupersaturation handles the supersaturation calculation (tyically C - C1) in the concurrent
+ * AuxSupersaturation handles the supersaturation calculation (typically C - C1) in the concurrent
  * nucleation and growth algorithm first proposed by J.P. Simmons (2000).
  */
 
@@ -40,9 +40,9 @@ protected:
 
 private:
 
-  VariableValue & _coupled_conc;  ///< PDE variable (concentration)
-  Real _c1;   ///< parameter from landau polynomial (first energy well position in c-space)
-  Real _supersaturation;  ///< C-C1
+  VariableValue & _coupled_conc;  //PDE variable (concentration)
+  Real _c1;                       //phase boundary composition limit
+  Real _supersaturation;          //C - C1
 };
 
 #endif //AUXSUPERSATURATION_H

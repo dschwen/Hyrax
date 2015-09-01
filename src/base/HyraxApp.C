@@ -78,6 +78,7 @@
 #include "PrecipitateMatrixMisfitMaterial.h"
 #include "ZrHCalphadDiffusivity.h"
 #include "FreeEnergy.h"
+#include "MatlAuxVolNucRate.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -209,6 +210,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(PrecipitateMatrixMisfitMaterial);
   registerMaterial(ZrHCalphadDiffusivity);
   registerMaterial(FreeEnergy);
+  registerMaterial(MatlAuxVolNucRate);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);

@@ -9,7 +9,7 @@
 #include "AuxSupersaturation.h"
 
 /**
- * AuxSupersaturation handles the supersaturation calculation (tyically C - C1) in the concurrent
+ * AuxSupersaturation handles the supersaturation calculation (typically C - C1) in the concurrent
  * nucleation and growth algorithm first proposed by J.P. Simmons (2000).
  */
 
@@ -17,16 +17,15 @@ template<>
 InputParameters validParams<AuxSupersaturation>()
 {
   InputParameters params = validParams<AuxKernel>();
-  params.addRequiredCoupledVar("coupled_var","coupled variable: concentration");
-  // I'd have line in input file, coupled_var = concentration
-  params.addRequiredParam<Real>("functional_c1", "C1 for the free energy functional, related to terminal solid solubility");
+  params.addRequiredCoupledVar("coupled_var","concentration");
+  params.addRequiredParam<Real>("c1", "phase boundary solubility limit");
   return params;
 }
 
 AuxSupersaturation::AuxSupersaturation(const InputParameters & parameters)
   : AuxKernel(parameters),
   _coupled_conc(coupledValue("coupled_var")),
-  _c1(getParam<Real>("functional_c1"))
+  _c1(getParam<Real>("c1"))
 {
 }
 

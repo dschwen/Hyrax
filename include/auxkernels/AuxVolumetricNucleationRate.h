@@ -15,6 +15,14 @@
 
 class AuxVolumetricNucleationRate;
 
+/**
+ *AuxVolumetricNucleationRate calculates the nucleation rate given the full
+ *list of variables (see Balluffi, Chapter 19).  It returns a volumetric nucleation rate!
+ *It also has scaling factors for time and length, so make sure you comprehend
+ *the dimensionality of what you are doing/calculating.  It assumes a spherical
+ *nucleus shape
+ */
+
 template<>
 InputParameters validParams<AuxVolumetricNucleationRate>();
 
@@ -49,7 +57,6 @@ protected:
   Real _Kb;
   Real _time_scale_factor;
 
-  VariableValue & _OP;
   VariableValue & _T;
   VariableValue & _X;
 
@@ -58,7 +65,6 @@ protected:
   Real _jump_distance;
 
   const MaterialProperty<Real> & _Omega;
-  Real _OP_threshold;
   Real _length_scale_factor;
 
 private:
