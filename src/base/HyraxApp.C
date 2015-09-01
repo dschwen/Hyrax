@@ -39,8 +39,6 @@
 #include "ACPrecipMatrixElasticity.h"
 
 //Auxiliary Kernels
-//#include "AuxNucleationProbability.h"
-#include "AuxNucleationRate.h"
 #include "AuxSupersaturation.h"
 #include "AuxChemElastic.h"
 #include "AuxDeltaGStar.h"
@@ -54,10 +52,8 @@
 #include "AuxBulkEnergyCalphad.h"
 #include "AuxGradientEnergy.h"
 #include "AuxElasticEnergy.h"
-#include "AuxFullNucleationRate.h"
 #include "AuxCalphadElasticity.h"
 #include "AuxElasticInteractionEnergy.h"
-#include "AuxVolumetricFullNucleationRate.h"
 #include "AuxAMRNucleationProbability.h"
 #include "AuxVolumetricNucleationRate.h"
 #include "AuxDFchemDC.h"
@@ -173,8 +169,6 @@ HyraxApp::registerObjects(Factory & factory)
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
-  registerAux(AuxNucleationRate);
-  //registerAux(AuxNucleationProbability);
   registerAux(AuxChemElastic);
   registerAux(AuxDeltaGStar);
   registerAux(ReporterAux);
@@ -186,10 +180,8 @@ HyraxApp::registerObjects(Factory & factory)
   registerAux(AuxBulkEnergyCalphad);
   registerAux(AuxGradientEnergy);
   registerAux(AuxElasticEnergy);
-  registerAux(AuxFullNucleationRate);
   registerAux(AuxCalphadElasticity);
   registerAux(AuxElasticInteractionEnergy);
-  registerAux(AuxVolumetricFullNucleationRate);
   registerAux(AuxAMRNucleationProbability);
   registerAux(AuxVolumetricNucleationRate);
   registerAux(AuxDFchemDC);
