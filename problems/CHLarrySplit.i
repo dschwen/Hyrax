@@ -61,7 +61,7 @@ active = 'SMP'
 
 [Kernels]
   [./dcdt]
-    type = CoupledImplicitEuler
+    type = CoupledTimeDerivative
     variable = mu
     v = concentration
   [../]
