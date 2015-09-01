@@ -1,6 +1,5 @@
-# This input file demonstrates the coupled multiple Allen-Cahn, Cahn-Hilliard
-# equations and explicit nucleation.  It tests calculation of nucleation rate
-# with mesh adaptivity.  Uses ELEMENTAL aux variables.
+# This input file tests the AuxAMRNucleationProbability auxkernel.  
+#Uses ELEMENTAL aux variables!
 
 [Mesh]
   type = GeneratedMesh
@@ -15,7 +14,6 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-#  uniform_refine = 1
 []
 
 [Variables]
@@ -24,7 +22,6 @@
     family = LAGRANGE
     [./InitialCondition]
       type = RandomIC
-    #  value = 1.0
     [../]
   [../]
 
@@ -34,7 +31,7 @@
    [./InitialCondition]
       type = RandomIC
       min = 0.0
-      max = 0.2
+      max = 1e-6
     [../]
   [../]
  []
@@ -49,6 +46,21 @@
     order = CONSTANT
     family = MONOMIAL
   [../]
+
+  [./elemental_temperature]
+    order = CONSTANT
+    family = MONOMIAL
+    [./InitialCondition]
+       type = ConstantIC
+       value = 600
+    [../]
+  [../]  
+
+  [./elemental_NucleationProbability]
+    order = CONSTANT
+    family = MONOMIAL
+  [../]
+[../]
 
 [Kernels]
   [./time_deriv_diff]
@@ -77,26 +89,48 @@
     type = AuxSupersaturation
     variable = elemental_Supersaturation
     coupled_var = concentration
-    functional_c1 = 0.006
+    c1 = 0.1
     execute_on = timestep_end
   [../]
 
-  [./NucleationRate]
-    type = AuxNucleationRate
+ [./NucleationRate]
+    type = AuxVolumetricNucleationRate
     variable = elemental_NucleationRate
-    coupled_aux_var = elemental_Supersaturation
-    #Kn1 = 0.008
-    #Kn2 = 0.3
+    coupled_bulk_energy_change = elemental_Supersaturation
 
     gamma = 0.18
-    scale_factor = 900e-22
+    time_scale_factor = 1
+    Kb = 1 
 
-    Z = 0.1
-    Beta_star = 100
     linear_density = 5
-    n_OP_vars = 1
-    OP_var_names = 'n1'
+    T = elemental_temperature
+    X = concentration
+    
+    jump_distance = 1
+    length_scale_factor = 1
+    rate_volume = 1
+
     execute_on = timestep_end
+  [../]
+
+  [./AuxNucleationProbability]
+    type = AuxAMRNucleationProbability
+    variable = elemental_NucleationProbability
+    coupled_aux_var = elemental_NucleationRate
+    coupled_variable = n1
+ 
+    2D_mesh_height = 1
+
+    execute_on = timestep_end
+ [../]
+[]
+
+[Materials]
+  [./simple_material]
+    type = MatlAuxVolNucRate
+    D_alpha = 2
+    molar_vol = 3
+    block = 0
   [../]
 []
 
@@ -116,16 +150,10 @@
 
   #Preconditioned JFNK (default)
   solve_type = 'PJFNK'
-
-
-  print_linear_residuals = true
-
 []
 
 [Outputs]
-  file_base = AuxNucleationRateElemental_refine0
+  file_base = AuxAMRNucleationProbability
   output_initial = true
   exodus = true
-  print_linear_residuals = true
-  print_perf_log = true
 []
