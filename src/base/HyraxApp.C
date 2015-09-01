@@ -39,7 +39,7 @@
 #include "ACPrecipMatrixElasticity.h"
 
 //Auxiliary Kernels
-#include "AuxNucleationProbability.h"
+//#include "AuxNucleationProbability.h"
 #include "AuxNucleationRate.h"
 #include "AuxSupersaturation.h"
 #include "AuxChemElastic.h"
@@ -173,7 +173,7 @@ HyraxApp::registerObjects(Factory & factory)
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
   registerAux(AuxNucleationRate);
-  registerAux(AuxNucleationProbability);
+  //registerAux(AuxNucleationProbability);
   registerAux(AuxChemElastic);
   registerAux(AuxDeltaGStar);
   registerAux(ReporterAux);
