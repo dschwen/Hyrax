@@ -1,4 +1,4 @@
-# This input file tests the AuxAMRNucleationProbability auxkernel.  
+# This input file tests the AuxAMRNucleationProbability auxkernel.
 #Uses ELEMENTAL aux variables!
 
 [Mesh]
@@ -54,7 +54,7 @@
        type = ConstantIC
        value = 600
     [../]
-  [../]  
+  [../]
 
   [./elemental_NucleationProbability]
     order = CONSTANT
@@ -100,12 +100,12 @@
 
     gamma = 0.18
     time_scale_factor = 1
-    Kb = 1 
+    Kb = 1
 
     linear_density = 5
     T = elemental_temperature
     X = concentration
-    
+
     jump_distance = 1
     length_scale_factor = 1
     rate_volume = 1
@@ -118,7 +118,7 @@
     variable = elemental_NucleationProbability
     coupled_aux_var = elemental_NucleationRate
     coupled_variable = n1
- 
+
     2D_mesh_height = 1
 
     execute_on = timestep_end

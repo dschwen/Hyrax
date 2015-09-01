@@ -45,7 +45,7 @@ private:
   VariableValue & _coupled_energy; //free energy change of transformation
   Real _Kn1;                       //First nucleation rate value
   Real _Kn2;                       //Second nucleation rate value
-  
+
 };
 
 #endif //AUXRATESIMPLE_H

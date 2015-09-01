@@ -54,7 +54,7 @@ AuxAMRNucleationProbability::computeValue()
 
   /*get mesh area in 2D or volume in 3D - this will have whatever dimension or
   nondimensionalized scale you supply in input file*/
-  
+
   Real vol;
   if (_mesh_dimension == 2)
     vol = _current_elem_volume*_2D_mesh_height;
@@ -64,7 +64,7 @@ AuxAMRNucleationProbability::computeValue()
   the simulation! Note that if using MeshSolutionModify executioner, mesh refinement
   is applied AFTER the values are computed. Therefore, nucleation probability with AMR
   is going to be useless output.*/
-  
+
   return 1.0 - exp(-1.0*_coupled_nuc_rate[_qp]*_dt*vol);
 }
 

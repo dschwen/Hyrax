@@ -18,7 +18,7 @@ InputParameters validParams<AuxVolumetricNucleationRate>()
   InputParameters params = validParams<AuxKernel>();
   params.addRequiredParam<Real>("rate_volume", "volume for which the nucleation rate is calculated, ensure correct dimensionality");
   params.addRequiredCoupledVar("coupled_bulk_energy_change","coupled auxiliary variable for free energy change");
- 
+
   params.addRequiredParam<Real>("gamma", "Surface energy");
   params.addParam<Real>("Kb", 1.3806503e-23, "Boltzmann's constant, make sure units all match");
   params.addParam<Real>("time_scale_factor", 1, "time factor to scale (multiply) nucleation rate by");

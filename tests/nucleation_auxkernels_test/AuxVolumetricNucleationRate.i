@@ -1,6 +1,6 @@
 # This input file demonstrates the coupled multiple Allen-Cahn, Cahn-Hilliard
 # equations and explicit nucleation.  It tests calculation of the volumetric
-# nucleation rate using the full nucleation rate equation. 
+# nucleation rate using the full nucleation rate equation.
 # Uses ELEMENTAL aux variables.
 
 [Mesh]
@@ -56,7 +56,7 @@
        type = ConstantIC
        value = 600
     [../]
-  [../]  
+  [../]
 [../]
 
 [Kernels]
@@ -97,12 +97,12 @@
 
     gamma = 0.18
     time_scale_factor = 1
-    Kb = 1 
+    Kb = 1
 
     linear_density = 5
     T = elemental_temperature
     X = concentration
-    
+
     jump_distance = 1
     length_scale_factor = 1
     rate_volume = 1
