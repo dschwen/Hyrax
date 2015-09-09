@@ -470,7 +470,6 @@
 
 [Output]
   file_base = CHCoupledCalphadSplit
-  output_initial = true
   interval = 1
   linear_residuals = true
   exodus = true

@@ -229,7 +229,4 @@ active = 'bottom top'
 [Outputs]
   file_base = PF_mobility_Landau_out
   exodus = true
-  output_initial = true
-  print_linear_residuals = true
-  print_perf_log = true
 []

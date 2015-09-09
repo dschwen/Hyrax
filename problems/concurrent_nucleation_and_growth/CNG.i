@@ -527,14 +527,12 @@
 [Output]
   linear_residuals = true
   file_base = CNG_1
-  output_initial = true
   interval = 5
   exodus = true
   perf_log = true
   [./OverSampling]
     refinements = 3
     exodus = true
-    output_initial = true
     interval = 5
   [../]
 []

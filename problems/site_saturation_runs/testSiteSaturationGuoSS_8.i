@@ -201,7 +201,6 @@
 [Output]
   file_base = testSiteSaturationGuoSS_8
   postprocessor_csv = true
-  output_initial = true
   interval = 50
   exodus = true
   perf_log = true

@@ -67,8 +67,5 @@ active = 'bottom top'
 
 [Outputs]
   file_base = ellipsoid_IC
-  output_initial = true
   exodus = true
-  print_linear_residuals = true
-  print_perf_log = true
 []

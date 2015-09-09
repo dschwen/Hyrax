@@ -456,7 +456,6 @@
 
 [Output]
   file_base = CalphadNewElasNewDiff3
-  output_initial = true
   interval = 1
   linear_residuals = true
   exodus = true

@@ -202,7 +202,6 @@
 
 [Output]
   file_base = n1_OPnuc
-  output_initial = true
   interval = 10
   exodus = true
   perf_log = true

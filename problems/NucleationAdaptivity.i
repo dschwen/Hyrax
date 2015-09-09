@@ -354,7 +354,6 @@
 [Output]
 # what output should come out of the application is specified here.
   file_base = NucleationAdaptivity
-  output_initial = true
   interval = 10
   exodus = true
   perf_log = true

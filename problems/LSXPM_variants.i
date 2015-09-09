@@ -454,7 +454,6 @@
 
 [Output]
   file_base = LSXPM_n1_dt01_Dirichlet
-  output_initial = true
   interval = 100
   exodus = true
   perf_log = true

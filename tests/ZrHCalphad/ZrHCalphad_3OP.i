@@ -401,7 +401,6 @@
 
 [Outputs]
   file_base = ZrHCalphad_3OP
-  output_initial = true
   exodus = true
   [./console]
     type = Console

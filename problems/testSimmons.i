@@ -142,7 +142,6 @@
 
 [Output]
   file_base = testSimmons
-  output_initial = true
   interval = 1
   exodus = true
   perf_log = true
@@ -150,7 +149,7 @@
 #  [./OverSampling]
 #    exodus = true
 #    refinements = 4
-#    output_initial = true
+#
 #    interval = 1
 #  [../]
 []

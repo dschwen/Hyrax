@@ -444,7 +444,6 @@
 
 [Output]
   file_base = CalphadOldElasOldDiff
-  output_initial = true
   interval = 1
   linear_residuals = true
   exodus = true

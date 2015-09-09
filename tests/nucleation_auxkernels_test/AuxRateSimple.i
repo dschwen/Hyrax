@@ -112,6 +112,5 @@
 
 [Outputs]
   file_base = AuxRateSimple
-  output_initial = true
   exodus = true
 []

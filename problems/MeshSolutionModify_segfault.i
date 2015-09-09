@@ -754,7 +754,6 @@
 
 [Output]
   file_base = Calphad_singleParticle_2
-  output_initial = true
   interval = 2
 #  linear_residuals = true
   exodus = true

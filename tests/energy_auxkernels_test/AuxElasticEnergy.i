@@ -351,7 +351,6 @@
 
 [Outputs]
   file_base = AuxElasticEnergy
-  output_initial = true
   exodus = true
   [./console]
     type = Console

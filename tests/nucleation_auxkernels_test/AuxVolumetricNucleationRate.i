@@ -140,6 +140,5 @@
 
 [Outputs]
   file_base = AuxVolumetricNucleationRate
-  output_initial = true
   exodus = true
 []

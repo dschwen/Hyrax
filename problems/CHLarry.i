@@ -100,7 +100,6 @@
 [Output]
   linear_residuals = true
   file_base = CHLarry3D
-  output_initial = true
   interval = 1
   exodus = true
   perf_log = true

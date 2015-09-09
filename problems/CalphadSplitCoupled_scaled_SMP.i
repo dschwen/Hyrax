@@ -405,7 +405,6 @@
 
 [Output]
   file_base = SplitScaledSMP_rand
-  output_initial = true
   interval = 1
   #inear_residuals = true
   exodus = true

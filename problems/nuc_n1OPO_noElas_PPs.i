@@ -311,7 +311,6 @@
 
 [Output]
   file_base = LSXPM_n1_OPnuc_dt1em3_OneSeedPP
-  output_initial = true
   interval = 100
   exodus = true
   perf_log = true

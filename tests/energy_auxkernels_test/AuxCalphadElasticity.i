@@ -336,16 +336,13 @@
 
 [Outputs]
   file_base = AuxCalphadElasticity
-  output_initial = true
   output_final = true
   exodus = true
-  interval = 1
   checkpoint = 1
   csv = true
 
   [./console]
     type = Console
-    interval = 1
-    max_rows = 10
+      max_rows = 10
   [../]
 []

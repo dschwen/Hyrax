@@ -315,7 +315,6 @@
 [Output]
   linear_residuals = true
   file_base = testMultiPrecipitates.swappedStrains
-  output_initial = true
   interval = 1
   exodus = true
   perf_log = true
@@ -323,7 +322,6 @@
   [./OverSampling]
     exodus = true
     refinements = 3
-    output_initial = true
     interval = 1
   [../]
 []

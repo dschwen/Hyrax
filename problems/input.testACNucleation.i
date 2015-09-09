@@ -144,7 +144,6 @@ active = 'Periodic'
 
 [Output]
   file_base = testACNucleation5
-  output_initial = true
   interval = 1
   exodus = true
   perf_log = true
@@ -152,7 +151,6 @@ active = 'Periodic'
   [./OverSampling]
     exodus = true
     refinements = 4
-    output_initial = true
     interval = 1
   [../]
 []

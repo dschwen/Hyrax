@@ -94,15 +94,9 @@
   #Preconditioned JFNK (default)
   solve_type = 'PJFNK'
 
-
-  print_linear_residuals = true
-
 []
 
 [Outputs]
   file_base = AuxDeltaGStar
-  output_initial = true
   exodus = true
-  print_linear_residuals = true
-  print_perf_log = true
 []
