@@ -287,7 +287,6 @@
 
 [Outputs]
   file_base = AuxBulkEnergyCalphad
-  output_initial = true
   exodus = true
   [./console]
     type = Console

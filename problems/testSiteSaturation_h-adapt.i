@@ -200,7 +200,6 @@
 [Output]
   file_base = testSiteSaturation_h-adapt
   postprocessor_csv = true
-  output_initial = true
   interval = 100
   exodus = true
   perf_log = true
@@ -208,7 +207,6 @@
  [./OverSampling]
    exodus = true
    refinements = 5
-   output_initial = true
 #   interval = 5
  [../]
 []

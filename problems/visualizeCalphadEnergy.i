@@ -443,7 +443,6 @@
 
 [Output]
   file_base = visualizeCalphadEnergy
-  output_initial = true
   interval = 20
   #linear_residuals = true
   exodus = true

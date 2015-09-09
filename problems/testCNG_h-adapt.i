@@ -277,7 +277,6 @@
 
 [Output]
   file_base = testCNG_h-adapt
-  output_initial = true
   interval = 100
   exodus = true
   perf_log = true
@@ -286,7 +285,6 @@
  [./OverSampling]
    exodus = true
    refinements = 5
-   output_initial = true
 #   interval = 5
  [../]
 []

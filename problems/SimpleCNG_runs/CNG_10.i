@@ -322,7 +322,6 @@
 
 [Output]
   file_base = testCNG_HT_10
-  output_initial = true
   interval = 50
   exodus = true
   perf_log = true

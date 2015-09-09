@@ -458,7 +458,6 @@
 
 [Output]
   file_base = Calphad_3OP
-  output_initial = true
   interval = 1
   #inear_residuals = true
   exodus = true

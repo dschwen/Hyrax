@@ -154,6 +154,5 @@
 
 [Outputs]
   file_base = AuxAMRNucleationProbability
-  output_initial = true
   exodus = true
 []

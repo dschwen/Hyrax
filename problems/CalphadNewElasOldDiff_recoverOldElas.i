@@ -450,7 +450,6 @@
 
 [Output]
   file_base = CalphadNewElasOldDiff_recoverOldElas
-  output_initial = true
   interval = 1
   linear_residuals = true
   exodus = true

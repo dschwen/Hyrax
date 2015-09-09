@@ -824,7 +824,6 @@
 
 [Output]
   file_base = Calphad_CNG_0mpa_new_solute_misfit
-  output_initial = true
   interval = 2
 #  linear_residuals = true
   exodus = true

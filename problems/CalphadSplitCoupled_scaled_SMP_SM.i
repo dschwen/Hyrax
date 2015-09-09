@@ -471,7 +471,6 @@
 
 [Output]
   file_base = SplitScaledSMP_SM
-  output_initial = true
   interval = 1
   #linear_residuals = true
   exodus = true

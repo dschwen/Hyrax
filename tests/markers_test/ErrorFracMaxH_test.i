@@ -84,7 +84,6 @@
 
 [Outputs]
   file_base = ErrorFracMaxH_test
-  output_initial = true
   exodus = true
   [./console]
     type = Console

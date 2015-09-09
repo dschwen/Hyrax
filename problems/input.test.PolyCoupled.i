@@ -242,7 +242,6 @@ active = 'Periodic'
 [Output]
   linear_residuals = true
   file_base = testPolyCoupled.4
-  output_initial = true
   interval = 1
   exodus = true
   perf_log = true

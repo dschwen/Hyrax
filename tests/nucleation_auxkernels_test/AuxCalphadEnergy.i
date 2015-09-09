@@ -353,7 +353,6 @@
 
 [Outputs]
   file_base = AuxCalphadEnergy
-  output_initial = true
   exodus = true
   [./console]
     type = Console

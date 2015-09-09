@@ -302,7 +302,6 @@ active = 'Periodic'
 
 [Output]
   file_base = Nucleation2
-  output_initial = true
   interval = 1
   exodus = true
   perf_log = true
