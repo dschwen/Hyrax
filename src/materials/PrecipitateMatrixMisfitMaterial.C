@@ -10,6 +10,9 @@
 
 #include "PrecipitateMatrixMisfitMaterial.h"
 
+// libMesh includes
+#include "libmesh/quadrature.h"
+
 template<>
 InputParameters validParams<PrecipitateMatrixMisfitMaterial>()
 {

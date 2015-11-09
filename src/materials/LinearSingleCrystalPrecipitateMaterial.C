@@ -10,6 +10,9 @@
 
 #include "LinearSingleCrystalPrecipitateMaterial.h"
 
+// libMesh includes
+#include "libmesh/quadrature.h"
+
 /**
  * LinearSingleCrystalPrecipitateMaterial handles anisotropic,
  * single-crystal material elastic constants.  It handles a single
