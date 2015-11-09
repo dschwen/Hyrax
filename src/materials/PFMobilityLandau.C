@@ -10,6 +10,9 @@
 
 #include "PFMobilityLandau.h"
 
+// libMesh includes
+#include "libmesh/quadrature.h"
+
 /**
  * PFMobilityLandau holds the materials information for a phase field model using a Landau polynomial for
  * the bulk (chemical) free energy term.
