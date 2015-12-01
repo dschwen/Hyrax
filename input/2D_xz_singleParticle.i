@@ -3,8 +3,8 @@
 [Mesh]
   type = GeneratedMesh
   dim = 2
-  nx = 100
-  ny = 100
+  nx = 25
+  ny = 25
   nz = 0
   xmin = 0
   xmax = 250
@@ -13,7 +13,7 @@
   zmin = 0
   zmax = 0
   elem_type = QUAD4
-  uniform_refine = 2
+  #uniform_refine = 2
 []
 
 [MeshModifiers]
@@ -33,13 +33,13 @@
       type = EllipsoidIC
       variable = concentration
       n_seeds = 1
-      int_width = 0.5
+      int_width = 1
       invalue = 0.6
       outvalue = 0.05
       x_positions = '125'
       y_positions = '125'
       z_positions = '0'
-      coefficients = '8 8 7.27'
+      coefficients = '8 7 8'
     [../]
   [../]
 
@@ -55,13 +55,13 @@
       type = EllipsoidIC
       variable = n
       n_seeds = 1
-      int_width = 0.5
+      int_width = 1
       invalue = 1
       outvalue = 0
       x_positions = '125'
       y_positions = '125'
       z_positions = '0'
-      coefficients = '8 8 7.27'
+      coefficients = '8 7 8'
     [../]
   [../]
 
@@ -184,7 +184,7 @@
   [../]
 
   [./dcdt]
-    type = CoupledImplicitEuler
+    type = CoupledTimeDerivative
     variable = mu
     v = concentration
   [../]
@@ -257,8 +257,8 @@
     type = ZrHCalphadDiffusivity
     block = 0
 
-    n_OP_variables = 1
-    OP_variable_names = 'n'
+    #n_OP_variables = 1
+    OP_variable = 'n'
     concentration = concentration
 
     H_Zr_D0 = 7.00e-7    #m^2/s
@@ -469,38 +469,38 @@
 
 [Adaptivity]
   marker = combo
-  initial_steps = 2
+  initial_steps = 4
   initial_marker = EFM_1
-  max_h_level = 2
-
+  max_h_level = 4
+  [./Markers]
     [./EFM_1]
       type = ErrorFractionMarker
       coarsen = 0.075
-      refine = 0.5
+      refine = 0.75
       indicator = GJI_1
     [../]
     [./EFM_2]
       type = ErrorFractionMarker
       coarsen = 0.075
-      refine = 0.5
+      refine = 0.75
       indicator = GJI_2
     [../]
     [./EFM_3]
       type = ErrorFractionMarker
       coarsen = 0.075
-      refine = 0.5
+      refine = 0.75
       indicator = GJI_3
     [../]
     [./EFM_4]
       type = ErrorFractionMarker
       coarsen = 0.075
-      refine = 0.5
+      refine = 0.75
       indicator = GJI_4
     [../]
 
      [./combo]
        type = ComboMarker
-       markers = 'NM EFM_1 EFM_2 EFM_3 EFM_4'
+       markers = 'EFM_1 EFM_2 EFM_3 EFM_4'
      [../]
   [../]
 
@@ -538,7 +538,7 @@
   adapt_nucleus = 4
   adapt_cycles = 1
 
-  use_nucleation_userobject = true
+  use_nucleation_userobject = false
   nucleation_userobject = NLUO
 
   #Preconditioned JFNK (default)
@@ -553,7 +553,7 @@
   nl_max_its = 20
 
   start_time = 0
-  #num_steps = 1
+  num_steps = 1
   end_time = 50
   dtmax = 1E0
   dtmin = 1E-5
@@ -562,10 +562,8 @@
 [Outputs]
   file_base = 2D_xz_singleParticle
 
-  output_initial = true
-  output_final = true
   exodus = true
-  interval = 30
+  interval = 1
   checkpoint = 1
   csv = true
 
