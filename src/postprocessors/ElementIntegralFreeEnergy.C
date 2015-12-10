@@ -37,8 +37,8 @@ ElementIntegralFreeEnergy::computeQpIntegral()
 
   Real energy(0);
   Real fchem(0);
-  Real grad_OP(0);
-  Real grad_C(0);
+  // Real grad_OP(0);
+  // Real grad_C(0);
 
   fchem = (1-_Heaviside[_qp])*_phase1_energy[_qp] + _Heaviside[_qp]*_phase2_energy[_qp];
 

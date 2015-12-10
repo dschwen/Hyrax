@@ -7,7 +7,7 @@ template<>
 InputParameters validParams<SmoothBoxIC>()
 {
   InputParameters params = validParams<InitialCondition>();
-  params.addParam<int>("problem_dimension", 2, "the problem dimension");
+  params.addParam<unsigned int>("problem_dimension", 2, "the problem dimension");
   params.addRequiredParam<Real>("length", "length of the side of the cube");
 
   return params;
@@ -16,7 +16,7 @@ InputParameters validParams<SmoothBoxIC>()
 
 SmoothBoxIC::SmoothBoxIC(const InputParameters & parameters):
     InitialCondition(parameters),
-    _prob_dim(getParam<int>("problem_dimension")),
+    _prob_dim(getParam<unsigned int>("problem_dimension")),
     _length(getParam<Real>("length"))
 {
 }

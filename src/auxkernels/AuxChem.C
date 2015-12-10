@@ -55,7 +55,7 @@ AuxChem::computeValue()
 }
 
 Real
-AuxChem::computeEnergy(Real & conserved, Real & nonconserved, bool matrix)
+AuxChem::computeEnergy(Real & conserved, Real & nonconserved, bool /*matrix*/)
 {
   Real fchem(0.0);
 

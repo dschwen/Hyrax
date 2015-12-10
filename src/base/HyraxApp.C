@@ -14,6 +14,7 @@
 #include "Factory.h"
 #include "AppFactory.h"
 #include "ActionFactory.h"
+#include "MooseSyntax.h"
 
 //Module Includes
 #include "SolidMechanicsApp.h"
@@ -238,7 +239,7 @@ HyraxApp::registerObjects(Factory & factory)
 }
 
 void
-HyraxApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
+HyraxApp::associateSyntax(Syntax & /*syntax*/, ActionFactory & /*action_factory*/)
 {
   // Actions
 }

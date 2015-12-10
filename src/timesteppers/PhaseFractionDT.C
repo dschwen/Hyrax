@@ -55,10 +55,10 @@ PhaseFractionDT::computeInitialDT()
 Real
 PhaseFractionDT::computeDT()
 {
-  if (_t_step <= _n_initial_steps && _has_initial_dt)
+  if (_t_step <= static_cast<int>(_n_initial_steps) && _has_initial_dt)
     return _initial_dt;
 
-  else if (_t_step == _n_initial_steps + 1 && _has_initial_dt)
+  else if (_t_step == static_cast<int>(_n_initial_steps) + 1 && _has_initial_dt)
     return _main_dt;
 
   else

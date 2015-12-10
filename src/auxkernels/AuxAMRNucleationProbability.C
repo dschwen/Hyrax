@@ -7,6 +7,7 @@
 *************************************************************************/
 
 #include "AuxAMRNucleationProbability.h"
+#include "MooseMesh.h"
 
 /**
  *  AuxAMRNucleationProbability handles the nucleation probability (P_nm)

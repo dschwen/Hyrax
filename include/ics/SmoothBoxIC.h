@@ -20,7 +20,7 @@ public:
 
 private:
 
-  int _prob_dim;
+  unsigned int _prob_dim;
   Real _length;
 };
 

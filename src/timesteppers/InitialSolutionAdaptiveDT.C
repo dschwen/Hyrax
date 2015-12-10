@@ -57,7 +57,7 @@ InitialSolutionAdaptiveDT::computeDT()
 {
   _total_t_step += 1;
 
-  if (_total_t_step == _n_initial_steps + 1 && _has_initial_dt)
+  if (_total_t_step == static_cast<int>(_n_initial_steps) + 1 && _has_initial_dt)
       return getParam<Real>("dt");
     else
       return SolutionTimeAdaptiveDT::computeDT();
