@@ -129,17 +129,17 @@ Real
 AuxCalphadElasticity::computeDifferential()
 {
   //Joules/meter^3
-  Real dfchem_dOP = ( (_G_delta[_qp] - _G_alpha[_qp])*_dH_dOP + _W[_qp]*_dg_dOP ) / _Omega[_qp];
+  // Real dfchem_dOP = ( (_G_delta[_qp] - _G_alpha[_qp])*_dH_dOP + _W[_qp]*_dg_dOP ) / _Omega[_qp];
 
-  Real dfchem_dX = ( (1-_H)*_dG_alpha[_qp] + _H*_dG_delta[_qp] ) / _Omega[_qp];
+  // Real dfchem_dX = ( (1-_H)*_dG_alpha[_qp] + _H*_dG_delta[_qp] ) / _Omega[_qp];
 
   // Real dfdc = dfchem_dX*(_precip_cons - _X[_qp]);
-   Real dfdc = _dG_alpha[_qp]*(_precip_cons - _X[_qp])/_Omega[_qp];
+  Real dfdc = _dG_alpha[_qp]*(_precip_cons - _X[_qp])/_Omega[_qp];
 
-  Real dfdOP = dfchem_dOP*(_precip_noncons - (*_OP[_OP_number-1])[_qp]);
+  // Real dfdOP = dfchem_dOP*(_precip_noncons - (*_OP[_OP_number-1])[_qp]);
 
-//  _console<<"dfdc = "<<dfdc<<std::endl;
-//  _console<<"dfdOP = "<<dfdOP<<std::endl;
+  // _console<<"dfdc = "<<dfdc<<std::endl;
+  // _console<<"dfdOP = "<<dfdOP<<std::endl;
 
   //return dfdc + dfdOP;
   return dfdc;

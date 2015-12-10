@@ -110,7 +110,7 @@ AuxChemElastic::computeDifferential(Real & coupled_conserved, Real & coupled_non
 
 
 Real
-AuxChemElastic::computeFchem(Real & conserved, Real & nonconserved)
+AuxChemElastic::computeFchem(Real & /*conserved*/, Real & /*nonconserved*/)
 {
   return 0;
 }
@@ -164,7 +164,7 @@ AuxChemElastic::computeInteractionElasticEnergy(bool matrix)
 
 
 Real
-AuxChemElastic::computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserved)
+AuxChemElastic::computeDfchemDcons(Real & /*coupled_conserved*/, Real & /*coupled_nonconserved*/)
 {
   return 0;
 }
@@ -182,7 +182,7 @@ AuxChemElastic::computeDintDcons()
 }
 
 Real
-AuxChemElastic::computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_nonconserved)
+AuxChemElastic::computeDfchemDnoncons(Real & /*coupled_conserved*/, Real & /*coupled_nonconserved*/)
 {
   return 0;
 }

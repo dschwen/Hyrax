@@ -66,6 +66,6 @@ NucleiInformation::getValue()
 }
 
 void
-NucleiInformation::threadJoin(const UserObject & y)
+NucleiInformation::threadJoin(const UserObject & /*y*/)
 {
 }

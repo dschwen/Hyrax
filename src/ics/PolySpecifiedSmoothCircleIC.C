@@ -63,7 +63,7 @@ PolySpecifiedSmoothCircleIC::PolySpecifiedSmoothCircleIC(const InputParameters &
     mooseError("Please match the number of seeds to the size of the position vectors.");
 
   if(_multiple_radii)
-    if(_n_seeds != _radii.size())
+    if(_n_seeds != static_cast<int>(_radii.size()))
       mooseError("Please match the number of seeds to the size of the radii vector.");
 
   //fill in our radii vector if we don't have multiple radii

@@ -239,7 +239,7 @@ HyraxApp::registerObjects(Factory & factory)
 }
 
 void
-HyraxApp::associateSyntax(Syntax & syntax, ActionFactory & action_factory)
+HyraxApp::associateSyntax(Syntax & /*syntax*/, ActionFactory & /*action_factory*/)
 {
   // Actions
 }

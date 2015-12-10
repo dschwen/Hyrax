@@ -120,7 +120,7 @@ CHCoupledCalphadSplit::computeHeaviside()
 }
 
 Real
-CHCoupledCalphadSplit::computeDHeaviside(unsigned int i)
+CHCoupledCalphadSplit::computeDHeaviside(unsigned int /*i*/)
 {
    Real OP = (*_OP[0])[_qp];
 
@@ -142,7 +142,7 @@ CHCoupledCalphadSplit::computeHeavisideDelta()
 }
 
 Real
-CHCoupledCalphadSplit::computeDHeavisideDelta(unsigned int i)
+CHCoupledCalphadSplit::computeDHeavisideDelta(unsigned int /*i*/)
 {
    Real OP = (*_OP[0])[_qp];
 

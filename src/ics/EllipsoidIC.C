@@ -50,9 +50,9 @@ EllipsoidIC::EllipsoidIC(const InputParameters & parameters)
       //_radii(getParam<std::vector<Real> >("radii"))
 {
   // check to make sure the input file is set up correctly
-  if ( _n_seeds != _x_positions.size() ||
-       _n_seeds != _y_positions.size() ||
-       _n_seeds != _z_positions.size() )
+  if ( _n_seeds != static_cast<int>(_x_positions.size()) ||
+       _n_seeds != static_cast<int>(_y_positions.size()) ||
+       _n_seeds != static_cast<int>(_z_positions.size()) )
     mooseError("Please match the number of seeds to the size of the position vectors (EllipsoidIC).");
 
   // check to make sure we have 3 coefficients for ellipsoid

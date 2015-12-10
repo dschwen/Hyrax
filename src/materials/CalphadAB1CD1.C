@@ -36,13 +36,13 @@ CalphadAB1CD1::calculateIdeal(const Real & c, const Real & T) const
 }
 
 Real
-CalphadAB1CD1::calculateExcess(const Real & c, const Real & T) const
+CalphadAB1CD1::calculateExcess(const Real & /*c*/, const Real & /*T*/) const
 {
   return 0;
 }
 
 Real
-CalphadAB1CD1::calculateSecondLatticeGminusHser(const Real & c, const Real & T) const
+CalphadAB1CD1::calculateSecondLatticeGminusHser(const Real & /*c*/, const Real & T) const
 {
   Real first_term = _mixture_coeffs[0] + _mixture_coeffs[1]*T;
 
@@ -216,7 +216,7 @@ CalphadAB1CD1::computeD2GMixDcDT(const Real & c, const Real & T) const
 }
 
 Real
-CalphadAB1CD1::calculateDFirstLatticeGminusHserDT(const Real & c, const Real & T) const
+CalphadAB1CD1::calculateDFirstLatticeGminusHserDT(const Real & /*c*/, const Real & T) const
 {
   return _pure_endpoint_1_coeffs[1]
     + _pure_endpoint_1_coeffs[2]*(1 + std::log(T))
@@ -225,7 +225,7 @@ CalphadAB1CD1::calculateDFirstLatticeGminusHserDT(const Real & c, const Real & T
 }
 
 Real
-CalphadAB1CD1::calculateDSecondLatticeGminusHserDT(const Real & c, const Real & T) const
+CalphadAB1CD1::calculateDSecondLatticeGminusHserDT(const Real & /*c*/, const Real & T) const
 {
   Real first_term = _mixture_coeffs[1];
 

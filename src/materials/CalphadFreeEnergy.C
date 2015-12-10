@@ -16,7 +16,7 @@ CalphadFreeEnergy::CalphadFreeEnergy() :
 }
 
 Real
-CalphadFreeEnergy::calculateFirstLatticeGminusHser(const Real & c, const Real & T) const
+CalphadFreeEnergy::calculateFirstLatticeGminusHser(const Real & /*c*/, const Real & T) const
 {
   return _pure_endpoint_1_coeffs[0]
     + _pure_endpoint_1_coeffs[1]*T

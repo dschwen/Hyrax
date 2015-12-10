@@ -109,7 +109,7 @@ PrecipitateMatrixMisfitMaterial::computeQpElasticityTensor()
   _Cijkl_MP[_qp] = _Cijkl/inverse;
   _Cijkl_precipitates_MP[_qp] = _Cijkl_precipitate/inverse;
 
-  Real sum_OP = 0;
+  // Real sum_OP = 0;
   for (unsigned int i=0; i<_n_variants; i++)
   {
     //  (_dn_elasticity_tensor[_qp])[i] = ( (_Cijkl_precipitate - _Cijkl)*2*(*_OP[i])[_qp] )/inverse;
