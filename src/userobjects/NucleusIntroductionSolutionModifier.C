@@ -10,6 +10,10 @@
 
 #include "NucleusIntroductionSolutionModifier.h"
 #include "NucleationLocationUserObject.h"
+
+// MOOSE includes
+#include "NonlinearSystem.h"
+
 #include <ostream>
 
 template<>

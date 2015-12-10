@@ -9,6 +9,7 @@
 *************************************************************************/
 
 #include "AuxDeltaGStar.h"
+#include "MooseMesh.h"
 
 #include <cmath>
 

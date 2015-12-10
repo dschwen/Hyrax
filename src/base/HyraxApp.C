@@ -14,6 +14,7 @@
 #include "Factory.h"
 #include "AppFactory.h"
 #include "ActionFactory.h"
+#include "MooseSyntax.h"
 
 //Module Includes
 #include "SolidMechanicsApp.h"

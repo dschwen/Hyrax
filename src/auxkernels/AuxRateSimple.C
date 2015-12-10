@@ -9,6 +9,7 @@
 *************************************************************************/
 
 #include "AuxRateSimple.h"
+#include "MooseMesh.h"
 
 #include <cmath>
 #include <ostream>
