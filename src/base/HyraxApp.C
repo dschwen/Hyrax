@@ -38,9 +38,9 @@
 #include "SplitCoupledCHWRes.h"
 #include "CHPrecipMatrixElasticity.h"
 #include "ACPrecipMatrixElasticity.h"
-#include "CHCoupledSplitHackathon.h"
-#include "ACBulkPolyCoupledHackathon.h"
-#include "SplitCoupledCHWResHackathon.h"
+//#include "CHCoupledSplitHackathon.h"
+//#include "ACBulkPolyCoupledHackathon.h"
+//#include "SplitCoupledCHWResHackathon.h"
 
 //Auxiliary Kernels
 #include "AuxSupersaturation.h"
@@ -80,7 +80,7 @@
 #include "ZrHCalphadDiffusivity.h"
 #include "FreeEnergy.h"
 #include "MatlAuxVolNucRate.h"
-#include "HackathonFreeEnergy.h"
+//#include "HackathonFreeEnergy.h"
 
 //Initial Conditions
 #include "PolySpecifiedSmoothCircleIC.h"
@@ -173,9 +173,9 @@ HyraxApp::registerObjects(Factory & factory)
   registerKernel(SplitCoupledCHWRes);
   registerKernel(CHPrecipMatrixElasticity);
   registerKernel(ACPrecipMatrixElasticity);
-  registerKernel(CHCoupledSplitHackathon);
-  registerKernel(ACBulkPolyCoupledHackathon);
-  registerKernel(SplitCoupledCHWResHackathon);
+  //registerKernel(CHCoupledSplitHackathon);
+  //registerKernel(ACBulkPolyCoupledHackathon);
+  //registerKernel(SplitCoupledCHWResHackathon);
 
   //Auxiliary Kernels
   registerAux(AuxSupersaturation);
@@ -214,7 +214,7 @@ HyraxApp::registerObjects(Factory & factory)
   registerMaterial(ZrHCalphadDiffusivity);
   registerMaterial(FreeEnergy);
   registerMaterial(MatlAuxVolNucRate);
-  registerMaterial(HackathonFreeEnergy);
+  //registerMaterial(HackathonFreeEnergy);
 
   //Initial Conditions
   registerInitialCondition(PolySpecifiedSmoothCircleIC);
