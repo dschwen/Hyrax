@@ -174,8 +174,8 @@
     CH_mobility_scaling = 1E-23
 
     #interface energies are scaled
-    kappa_CH = 3
-    kappa_AC = 3
+    kappa_CH = 2.5
+    kappa_AC = 2.5
 
     #well height and molar volume remain unscaled.
     well_height = 0
@@ -340,7 +340,7 @@
 []
 
 [Outputs]
-  file_base = 1D_interfaceEnergy_650K_kckn3
+  file_base = 1D_interfaceEnergy_650K_kckn2p5
 
   exodus = true
   interval = 10
