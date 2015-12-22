@@ -59,6 +59,7 @@
 #include "AuxVolumetricNucleationRate.h"
 #include "AuxDFchemDC.h"
 #include "AuxDFelDC.h"
+#include "AuxCanonicalEnsemble.h"
 
 //Dirac Kernels
 
@@ -188,6 +189,8 @@ HyraxApp::registerObjects(Factory & factory)
   registerAux(AuxVolumetricNucleationRate);
   registerAux(AuxDFchemDC);
   registerAux(AuxDFelDC);
+  registerAux(AuxCanonicalEnsemble);
+
 
   //Dirac Kernels
 
