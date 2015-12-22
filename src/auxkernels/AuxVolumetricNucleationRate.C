@@ -106,7 +106,7 @@ AuxVolumetricNucleationRate::computeCriticalEnergy()
   //this is calculated as if in 3D
   Real alpha = 16*libMesh::pi/3;
 
-  _G_star = alpha*std::pow(_gamma, 3)/std::pow(_coupled_energy[_qp], 2);
+  _G_star = alpha*std::pow(_gamma, 3)/std::pow(_coupled_energy[_qp], 2.0);
 
   //_console<<"G* in Joules = "<<_G_star<<std::endl;
 }
@@ -115,20 +115,23 @@ void
 AuxVolumetricNucleationRate::computeZeldovichFactor()
 {
   //assuming spherical nucleus shape
-  Real critical_volume = 4*libMesh::pi*_r_star*_r_star*_r_star/3;
+  //Real critical_volume = 4*libMesh::pi*_r_star*_r_star*_r_star/3;
 
   //here I'm assuming that the molar volume is constant across phases.. meh
-  Real Nc = critical_volume*6.02214E23/_Omega[_qp];
+  //Real Nc = critical_volume*6.02214E23/_Omega[_qp];
 
-  _Z =std::sqrt( _G_star/( 3*libMesh::pi*Nc*Nc*_Kb*_T[_qp] ));
+  //_Z =std::sqrt( _G_star/( 3*libMesh::pi*Nc*Nc*_Kb*_T[_qp] ));
 
-  //_console<<"Z = "<<_Z<<std::endl;
+  //following Robson's 2004 formulation for Z
+  _Z = (_Omega[_qp]/6.02214E23)*std::pow(_coupled_energy[_qp], 2.0)/(8*libMesh::pi*std::sqrt(_gamma*_gamma*_gamma*_Kb*_T[_qp]));
+
+  _console<<"Z = "<<_Z<<std::endl;
 }
 
 void
 AuxVolumetricNucleationRate::computeCriticalFrequency()
 {
-  Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density;
+  //Real Zc = 4*libMesh::pi*_r_star*_r_star*_linear_density*_linear_density;
 
   /*
   _console<<"Zc = "<<Zc<<std::endl;
@@ -137,18 +140,29 @@ AuxVolumetricNucleationRate::computeCriticalFrequency()
   _console<<"jump_dist^2 = "<< ( std::pow(_jump_distance,2))<<std::endl;
   */
 
-  _beta_star = Zc*_X[_qp]*_D[_qp]/ ( std::pow(_jump_distance,2)) ;
 
-  //_console<<"beta* = "<<_beta_star<<std::endl;
+  //see Robson 2004 paper
+  _beta_star = (16*libMesh::pi*_X[_qp]*_D[_qp])/(std::pow(_coupled_energy[_qp], 2.0)*std::pow(_jump_distance, 4.0) );
+
+  // _beta_star = Zc*_X[_qp]*_D[_qp]/ ( std::pow(_jump_distance,2)) ;
+
+  _console<<"beta* = "<<_beta_star<<std::endl;
 }
 
 void
 AuxVolumetricNucleationRate::computeNumAtoms()
 {
  // molar volume divided by number of atoms per mol
- Real atomic_volume = _Omega[_qp]/6.02214E23;
+ //Real atomic_volume = _Omega[_qp]/6.02214E23;
 
  //the rate volume is the volume in real dimensions that the rate is calculated for
- _N = _rate_volume/atomic_volume;
+// _N = _rate_volume/atomic_volume;
+
+  //N is the number of hydrogen-filled tetrahedral sites for 1 volume (probably m^3)
+  //
+  //see Robson (2004) paper
+  //this is hard-coded as: H at fraction* density of Zr in g/cm^3 converted to g/m^3 * Avogadro's # * #tetrahedral sites/zr atom in hcp (2) / atomic mass of Zr
+  _N = _X[_qp]*6.52*100*100*100*6.02214E23*2/91.224;
+  _console<<"N = "<<_N<<std::endl;
 
 }
