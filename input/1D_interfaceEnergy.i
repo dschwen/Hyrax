@@ -77,7 +77,7 @@
   [./auxtemp]
     type = AuxTemperature
     variable = temperature
-    temp_in_K = 650
+    temp_in_K = 485
   [../]
 
   [./omega_calc]
@@ -85,7 +85,7 @@
     variable = omega
     OP = n
     concentration = concentration
-    omega_eq = -2.1247e-18 #650K -1.90922e-18 #600K
+    omega_eq = -1.451e-18 #485K #-1.7036e-18 #550K #-2.1247e-18 #650K -1.90922e-18 #600K
     length_scale_factor = 1e-9
     energy_scale_factor = 4.009e8
   [../]
@@ -340,7 +340,7 @@
 []
 
 [Outputs]
-  file_base = 1D_interfaceEnergy_650K_kckn2p5
+  file_base = 1D_interfaceEnergy_485K_kckn2p5
 
   exodus = true
   interval = 10
