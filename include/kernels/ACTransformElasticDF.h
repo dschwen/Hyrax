@@ -35,7 +35,7 @@ InputParameters validParams<ACTransformElasticDF>();
  * ACTransformElasticDF handles the elastic energy term for a solid-solid transformation
  * in a phase field model, with coupled conserved and non-conserved parameters.
  */
-class ACTransformElasticDF : public ACBulk
+class ACTransformElasticDF : public ACBulk<Real>
 {
 public:
 

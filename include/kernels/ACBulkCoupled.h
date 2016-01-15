@@ -20,11 +20,11 @@ template<>
 InputParameters validParams<ACBulkCoupled>();
 
 /**
- * AcBulkCoupled couples the bulk Alan-Cahn equation term with order parameter eta to the
+ * ACBulkCoupled couples the bulk Alan-Cahn equation term with order parameter eta to the
  * conserved field variable term from the Cahn-Hilliard equation (typically concentration).
  * It uses the PFMobilityLandau materials class.
  */
-class ACBulkCoupled : public ACBulk
+class ACBulkCoupled : public ACBulk<Real>
 {
 public:
 

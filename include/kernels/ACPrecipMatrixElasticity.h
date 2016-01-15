@@ -20,7 +20,7 @@ class ACPrecipMatrixElasticity;
 template<>
 InputParameters validParams<ACPrecipMatrixElasticity>();
 
-class ACPrecipMatrixElasticity : public ACBulk
+class ACPrecipMatrixElasticity : public ACBulk<Real>
 {
 public:
 

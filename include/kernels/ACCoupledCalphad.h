@@ -19,7 +19,7 @@ class ACCoupledCalphad;
 template<>
 InputParameters validParams<ACCoupledCalphad>();
 
-class ACCoupledCalphad : public ACBulk
+class ACCoupledCalphad : public ACBulk<Real>
 {
 public:
   ACCoupledCalphad(const InputParameters & parameters);
