@@ -13,7 +13,7 @@
 template<>
 InputParameters validParams<ACCoupledCalphad>()
 {
-  InputParameters params = validParams<ACBulk>();
+  InputParameters params = ACBulk<Real>::validParams();
   params.addRequiredParam<int>("n_OP_vars", "# of coupled OP variables");
   params.addRequiredCoupledVar("OP_var_names", "Array of coupled OP variable names");
   params.addRequiredParam<int>("OP_number","# of the order parameter for this kernel, starting from 1");
@@ -27,7 +27,7 @@ InputParameters validParams<ACCoupledCalphad>()
 }
 
 ACCoupledCalphad::ACCoupledCalphad(const InputParameters & parameters) :
-    ACBulk(parameters),
+    ACBulk<Real>(parameters),
     _W(getMaterialProperty<Real>("well_height")),
     _Omega(getMaterialProperty<Real>("molar_volume")),
     _G_alpha(getMaterialProperty<Real>("G_AB1CD1")),

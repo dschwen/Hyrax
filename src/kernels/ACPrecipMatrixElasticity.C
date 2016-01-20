@@ -13,23 +13,23 @@
 template<>
 InputParameters validParams<ACPrecipMatrixElasticity>()
 {
-  InputParameters params = validParams<ACBulk>();
+  InputParameters params = ACBulk<Real>::validParams();
   params.addRequiredParam<int>("OP_number","# of the order parameter for this kernel, starting from 1");
  params.addParam<Real>("scaling_factor", 1, "elastic energy scaling factor for nondimensionalization");
 
   return params;
 }
 
-ACPrecipMatrixElasticity::ACPrecipMatrixElasticity(const InputParameters & parameters)
-    : ACBulk(parameters),
-      _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
-      _dn_elasticity_tensor(getMaterialProperty<std::vector<ElasticityTensorR4> >("dn_elasticity_tensor")),
-      _dndn_elasticity_tensor(getMaterialProperty<std::vector<ElasticityTensorR4> >("dndn_elasticity_tensor")),
-      _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
-      _dn_misfit_strain(getMaterialProperty<std::vector<RankTwoTensor> >("dn_misfit_strain")),
-      _dndn_misfit_strain(getMaterialProperty<std::vector<RankTwoTensor> >("dndn_misfit_strain")),
-      _OP_number(getParam<int>("OP_number")),
-      _scaling_factor(getParam<Real>("scaling_factor"))
+ACPrecipMatrixElasticity::ACPrecipMatrixElasticity(const InputParameters & parameters) :
+    ACBulk<Real>(parameters),
+    _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
+    _dn_elasticity_tensor(getMaterialProperty<std::vector<ElasticityTensorR4> >("dn_elasticity_tensor")),
+    _dndn_elasticity_tensor(getMaterialProperty<std::vector<ElasticityTensorR4> >("dndn_elasticity_tensor")),
+    _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
+    _dn_misfit_strain(getMaterialProperty<std::vector<RankTwoTensor> >("dn_misfit_strain")),
+    _dndn_misfit_strain(getMaterialProperty<std::vector<RankTwoTensor> >("dndn_misfit_strain")),
+    _OP_number(getParam<int>("OP_number")),
+    _scaling_factor(getParam<Real>("scaling_factor"))
 {
 }
 
@@ -69,4 +69,3 @@ ACPrecipMatrixElasticity::computeDFDOP(PFFunctionType type)
 
   mooseError("invalid type passed in");
 }
-

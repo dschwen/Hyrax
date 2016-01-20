@@ -11,7 +11,7 @@
 #include "ACBulkCoupled.h"
 
 /**
- * AcBulkCoupled couples the bulk Alan-Cahn equation term with order parameter eta to the
+ * ACBulkCoupled couples the bulk Alan-Cahn equation term with order parameter eta to the
  * conserved field variable term from the Cahn-Hilliard equation (typically concentration).
  * It uses the PFMobilityLandau materials class.
  */
@@ -19,21 +19,21 @@
 template<>
 InputParameters validParams<ACBulkCoupled>()
 {
-  InputParameters params = validParams<ACBulk>();
+  InputParameters params = ACBulk<Real>::validParams();
   params.addRequiredCoupledVar("coupled_CH_var", "The concentration to be coupled to the AC equation");
 
   return params;
 }
 
-ACBulkCoupled::ACBulkCoupled(const InputParameters & parameters)
-  :ACBulk(parameters),
-   // Get the material properties for the Landau coefficients
-   _a2(getMaterialProperty<Real>("A2")),
-   _a3(getMaterialProperty<Real>("A3")),
-   _a4(getMaterialProperty<Real>("A4")),
-   _c2(getMaterialProperty<Real>("C2")),
-// Make the coupled value whatever is directed in the input file
-   _coupled_CH_var(coupledValue("coupled_CH_var"))
+ACBulkCoupled::ACBulkCoupled(const InputParameters & parameters):
+    ACBulk<Real>(parameters),
+    // Get the material properties for the Landau coefficients
+    _a2(getMaterialProperty<Real>("A2")),
+    _a3(getMaterialProperty<Real>("A3")),
+    _a4(getMaterialProperty<Real>("A4")),
+    _c2(getMaterialProperty<Real>("C2")),
+    // Make the coupled value whatever is directed in the input file
+    _coupled_CH_var(coupledValue("coupled_CH_var"))
 {
 }
 

@@ -20,26 +20,26 @@
 template<>
 InputParameters validParams<ACTransformElasticDF>()
 {
-  InputParameters params = validParams<ACBulk>();
-  params.addRequiredCoupledVar("OP_var_names","Array of coupled variable names");
+  InputParameters params = ACBulk<Real>::validParams();
+  params.addRequiredCoupledVar("OP_var_names", "Array of coupled variable names");
   params.addRequiredParam<int>("n_OP_vars", "# of orientation variants for precips in single crystal");
-  params.addRequiredParam<int>("OP_number","# of the order parameter for this kernel, starting from 1");
+  params.addRequiredParam<int>("OP_number", "# of the order parameter for this kernel, starting from 1");
 
   params.addParam<Real>("scaling_factor", 1, "elastic energy scaling factor for nondimensionalization");
 
   return params;
 }
 
-ACTransformElasticDF::ACTransformElasticDF(const InputParameters & parameters)
-    : ACBulk(parameters),
-      _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
-      _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
-      _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
-      _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
-      _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor > >("d_eigenstrains_MP")),
-      _n_OP_vars(getParam<int>("n_OP_vars")),
-      _OP_number(getParam<int>("OP_number")),
-      _scaling_factor(getParam<Real>("scaling_factor"))
+ACTransformElasticDF::ACTransformElasticDF(const InputParameters & parameters) :
+    ACBulk<Real>(parameters),
+    _elasticity_tensor(getMaterialProperty<ElasticityTensorR4>("elasticity_tensor")),
+    _eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor> >("eigenstrains_MP")),
+    _local_strain(getMaterialProperty<RankTwoTensor>("local_strain")),
+    _elastic_strain(getMaterialProperty<RankTwoTensor>("elastic_strain")),
+    _d_eigenstrains_rotated_MP(getMaterialProperty<std::vector<RankTwoTensor > >("d_eigenstrains_MP")),
+    _n_OP_vars(getParam<int>("n_OP_vars")),
+    _OP_number(getParam<int>("OP_number")),
+    _scaling_factor(getParam<Real>("scaling_factor"))
 {
   // Create a vector of the coupled variables and set = 0 the one that the kernel
   // is operating on
@@ -131,4 +131,3 @@ ACTransformElasticDF::calculateSecondJacobianTerm()
   return 0.0;
 }
   */
-
