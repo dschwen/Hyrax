@@ -29,23 +29,23 @@ public:
 protected:
   virtual Real computeValue();
 
-  virtual Real computeEnergy(Real & conserved, Real & nonconserved, bool matrix);
-  virtual Real computeDifferential(Real & coupled_conserved,Real & nonconserved);
+  virtual Real computeEnergy(const Real & conserved, const Real & nonconserved, bool matrix);
+  virtual Real computeDifferential(const Real & coupled_conserved, const Real & nonconserved);
 
-  virtual Real computeFchem(Real & conserved, Real & nonconserved);
+  virtual Real computeFchem(const Real & conserved, const Real & nonconserved);
   virtual Real computeSelfElasticEnergy(bool matrix);
   virtual Real computeInteractionElasticEnergy(bool matrix);
 
-  virtual Real computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserved);
+  virtual Real computeDfchemDcons(const Real & coupled_conserved, const Real & coupled_nonconserved);
   virtual Real computeDselfDcons();
   virtual Real computeDintDcons();
 
-  virtual Real computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_nonconserved);
+  virtual Real computeDfchemDnoncons(const Real & coupled_conserved, const Real & coupled_nonconserved);
   virtual Real computeDselfDnoncons();
   virtual Real computeDintDnoncons();
 
-  VariableValue & _coupled_cons;
-  VariableValue & _coupled_noncons;
+  const VariableValue & _coupled_cons;
+  const VariableValue & _coupled_noncons;
 
   Real _precip_conserved;
   Real _precip_nonconserved;
@@ -69,8 +69,6 @@ protected:
   const MaterialProperty<RankTwoTensor> & _local_strain;
 
   const MaterialProperty<std::vector<RankTwoTensor> > & _d_eigenstrains_rotated_MP;
-
-private:
 };
 
 #endif //AUXCHEMELASTIC_H

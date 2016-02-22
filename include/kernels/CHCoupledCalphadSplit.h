@@ -49,13 +49,13 @@ private:
   unsigned int _w_var;
   unsigned int _T_var;
 
-  //VariableValue & _n;
-  VariableValue & _w;
-  VariableValue & _T;
+  //const VariableValue & _n;
+  const VariableValue & _w;
+  const VariableValue & _T;
 
   unsigned int _n_OP_vars;
   std::vector<unsigned int> _n_var;
-  std::vector<VariableValue *> _OP;
+  std::vector<const VariableValue *> _OP;
 };
 
 #endif //CHCOUPLEDCALPHADSPLIT_H

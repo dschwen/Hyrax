@@ -44,7 +44,7 @@ protected:
   std::vector<Real> _stress_vector;
 
   RankTwoTensor _boundary_stress;
-  std::vector<VariableValue *> _boundary_stress_vars;
+  std::vector<const VariableValue *> _boundary_stress_vars;
 
   const MaterialProperty<ElasticityTensorR4> & _Jacobian_mult;
 

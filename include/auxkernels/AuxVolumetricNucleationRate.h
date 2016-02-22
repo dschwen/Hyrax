@@ -42,7 +42,7 @@ protected:
   virtual void computeCriticalFrequency();
   virtual void computeNumAtoms();
 
-  VariableValue & _coupled_energy;          // J/m^3 free energy change of transformation
+  const VariableValue & _coupled_energy;          // J/m^3 free energy change of transformation
 
   Real _Z;                                  // Zeldovich non-equilibrium factor
   Real _N;                                  // Number of atoms in the computational volume
@@ -57,8 +57,8 @@ protected:
   Real _Kb;
   Real _time_scale_factor;
 
-  VariableValue & _T;
-  VariableValue & _X;
+  const VariableValue & _T;
+  const VariableValue & _X;
 
   const MaterialProperty<Real> & _D;
 

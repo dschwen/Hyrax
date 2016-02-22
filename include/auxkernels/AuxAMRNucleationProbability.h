@@ -43,8 +43,8 @@ protected:
   virtual Real computeValue();
 
 private:
-  VariableValue & _coupled_nuc_rate;
-  VariableValue & _coupled_OP;
+  const VariableValue & _coupled_nuc_rate;
+  const VariableValue & _coupled_OP;
   Real _OP_threshold;
   Real _2D_mesh_height;
   const unsigned int _mesh_dimension;

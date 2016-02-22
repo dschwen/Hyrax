@@ -33,8 +33,8 @@ protected:
   const MaterialProperty<Real> & _delta_energy;
 
   //COUPLED VARIABLES
-  VariableValue & _c;   //coupled concentration
-  VariableValue & _n;   //coupled order parameter
+  const VariableValue & _c;   //coupled concentration
+  const VariableValue & _n;   //coupled order parameter
   VariableGradient & _grad_c;
   VariableGradient & _grad_n;
 

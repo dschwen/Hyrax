@@ -49,7 +49,7 @@ private:
   unsigned int _OP_number;
 
   std::vector<unsigned int> _n_var;
-  std::vector<VariableValue *> _coupled_OP_vars;
+  std::vector<const VariableValue *> _coupled_OP_vars;
 
   Real _scaling_factor;
 
@@ -57,10 +57,9 @@ private:
   unsigned int _w_var;
   unsigned int _T_var;
 
-  VariableValue & _c;
-  VariableValue & _w;
-  VariableValue & _T;
-
+  const VariableValue & _c;
+  const VariableValue & _w;
+  const VariableValue & _T;
 };
 
 #endif //ACCOUPLEDCALPHAD_H

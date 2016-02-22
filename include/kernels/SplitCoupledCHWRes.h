@@ -38,13 +38,13 @@ private:
   //unsigned int _n_var;
   unsigned int _T_var;
 
-  VariableValue & _c;
-  //VariableValue & _n;
-  VariableValue & _T;
+  const VariableValue & _c;
+  //const VariableValue & _n;
+  const VariableValue & _T;
 
   unsigned int _n_OP_vars;
   std::vector<unsigned int> _n_var;
-  std::vector<VariableValue *> _OP;
+  std::vector<const VariableValue *> _OP;
 };
 
 #endif //SPLITCOUPLEDCHWRES_H

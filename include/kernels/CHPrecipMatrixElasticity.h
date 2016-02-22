@@ -44,7 +44,7 @@ protected:
 
   unsigned int _n_OP_vars;
   std::vector<unsigned int> _n_var;
-  std::vector<VariableValue *> _OP;
+  std::vector<const VariableValue *> _OP;
 
   unsigned int _w_var;
   unsigned int _T_var;

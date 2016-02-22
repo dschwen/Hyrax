@@ -73,12 +73,9 @@ protected:
   unsigned int _OP_number;
 
   // Vector of references to the coupled order parameters
-  std::vector<VariableValue *> _coupled_vars;
+  std::vector<const VariableValue *> _coupled_vars;
 
   Real _scaling_factor;
-
-private:
-
 };
 
 #endif //ACTRANSFORMELASTICDF_H

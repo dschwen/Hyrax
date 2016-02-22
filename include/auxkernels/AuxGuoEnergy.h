@@ -45,8 +45,8 @@ protected:
   //virtual Real computeDintDnoncons();
 
   /*
-  VariableValue & _coupled_cons;
-  VariableValue & _coupled_noncons;
+  const VariableValue & _coupled_cons;
+  const VariableValue & _coupled_noncons;
 
   Real _precip_conserved;
   Real _precip_nonconserved;

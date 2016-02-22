@@ -63,7 +63,7 @@ protected:
   MaterialProperty<RankTwoTensor> & _dcdc_misfit_strain;
   MaterialProperty<std::vector<RankTwoTensor> > & _dcdn_misfit_strain;
 
-  VariableValue & _solute;
+  const VariableValue & _solute;
 
   Real _percent_matrix_misfit;
   RankTwoTensor _current_matrix_misfit;

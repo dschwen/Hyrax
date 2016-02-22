@@ -53,7 +53,7 @@ private:
   const MaterialProperty<Real> & _d3Gdelta_dc3;
 
   unsigned int _n_OP_variables;
-  std::vector<VariableValue *> _OP;
+  std::vector<const VariableValue *> _OP;
   std::vector<VariableGradient *> _grad_OP;
 
   Real _Heaviside;

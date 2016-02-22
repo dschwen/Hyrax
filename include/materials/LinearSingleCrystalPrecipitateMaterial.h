@@ -72,7 +72,7 @@ protected:
   ElasticityTensorR4 _Cijkl_precipitate;
   RankTwoTensor _eigenstrain;
 
-  VariableValue & _T;
+  const VariableValue & _T;
 
   // number of orientation variants for the precipitate in a single matrix crystal
   unsigned int _n_variants;
@@ -95,7 +95,7 @@ protected:
    MaterialProperty<std::vector<RankTwoTensor> > & _precipitate_eigenstrain;
 
   // Vector of references to the coupled order parameters
-  std::vector<VariableValue *> _OP;
+  std::vector<const VariableValue *> _OP;
 
   std::vector<Real> _misfit_T_coeffs_vector;
   RankTwoTensor _misfit_T_coeffs;

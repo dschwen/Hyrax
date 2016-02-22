@@ -55,7 +55,7 @@ AuxChem::computeValue()
 }
 
 Real
-AuxChem::computeEnergy(Real & conserved, Real & nonconserved, bool /*matrix*/)
+AuxChem::computeEnergy(const Real & conserved, const Real & nonconserved, bool /*matrix*/)
 {
   Real fchem(0.0);
 
@@ -65,7 +65,7 @@ AuxChem::computeEnergy(Real & conserved, Real & nonconserved, bool /*matrix*/)
 }
 
 Real
-AuxChem::computeDifferential(Real & coupled_conserved, Real & coupled_nonconserved)
+AuxChem::computeDifferential(const Real & coupled_conserved, const Real & coupled_nonconserved)
 {
   // partial derivative of f_chem with respect to conserved variable
   Real dfchem_dcons(0.0);
@@ -86,7 +86,7 @@ AuxChem::computeDifferential(Real & coupled_conserved, Real & coupled_nonconserv
 }
 
 Real
-AuxChem::computeFchem(Real & conserved, Real & nonconserved)
+AuxChem::computeFchem(const Real & conserved, const Real & nonconserved)
 {
   Real first_term;
   Real second_term;
@@ -102,7 +102,7 @@ AuxChem::computeFchem(Real & conserved, Real & nonconserved)
 }
 
 Real
-AuxChem::computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserved)
+AuxChem::computeDfchemDcons(const Real & coupled_conserved, const Real & coupled_nonconserved)
 {
   Real first_term;
   Real second_term;
@@ -114,7 +114,7 @@ AuxChem::computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserve
 }
 
 Real
-AuxChem::computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_nonconserved)
+AuxChem::computeDfchemDnoncons(const Real & coupled_conserved, const Real & coupled_nonconserved)
 {
   Real first_term;
   Real second_term;

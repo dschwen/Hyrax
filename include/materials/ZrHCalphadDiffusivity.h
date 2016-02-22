@@ -45,8 +45,8 @@ private:
   MaterialProperty<Real> & _D_alpha;
   MaterialProperty<Real> & _D_delta;
 
-  VariableValue & _c;
-  VariableValue & _OP;
+  const VariableValue & _c;
+  const VariableValue & _OP;
 
   MaterialProperty<Real> & _L1Q;
   Real _Q_transport;
