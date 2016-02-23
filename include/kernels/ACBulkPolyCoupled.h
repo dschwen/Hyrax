@@ -40,10 +40,7 @@ protected:
   const MaterialProperty<Real> & _a6;
   const MaterialProperty<Real> & _a7;
 
-  std::vector<VariableValue *> _coupled_OP_vars;
-
-private:
-
+  std::vector<const VariableValue *> _coupled_OP_vars;
 };
 
 

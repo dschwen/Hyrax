@@ -33,8 +33,8 @@ protected:
 
 private:
 
-  VariableValue & _C;
-  std::vector<VariableValue *> _OP;
+  const VariableValue & _C;
+  std::vector<const VariableValue *> _OP;
   unsigned int _n_OP_variables;
 
   Real _scaling_factor;

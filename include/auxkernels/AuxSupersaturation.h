@@ -40,7 +40,7 @@ protected:
 
 private:
 
-  VariableValue & _coupled_conc;  //PDE variable (concentration)
+  const VariableValue & _coupled_conc;  //PDE variable (concentration)
   Real _c1;                       //phase boundary composition limit
   Real _supersaturation;          //C - C1
 };

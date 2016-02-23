@@ -51,8 +51,8 @@ protected:
   Real _R;                                      //Universal gas constant
 
   //COUPLED VARIABLES
-  VariableValue & _T;                           //coupled Temperature field
-  VariableValue & _c;                           //coupled concentration field
+  const VariableValue & _T;                           //coupled Temperature field
+  const VariableValue & _c;                           //coupled concentration field
 
 private:
 

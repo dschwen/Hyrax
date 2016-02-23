@@ -28,8 +28,8 @@ protected:
 
 private:
 
-  VariableValue & _X;
-  VariableValue & _OP;
+  const VariableValue & _X;
+  const VariableValue & _OP;
 
   const MaterialProperty<Real> & _Omega;
   const MaterialProperty<Real> & _dGalpha_dc;

@@ -28,8 +28,8 @@ protected:
 
 private:
 
-  VariableValue & _X;
-  VariableValue & _OP;
+  const VariableValue & _X;
+  const VariableValue & _OP;
 
   VariableGradient & _grad_X;
   VariableGradient & _grad_OP;

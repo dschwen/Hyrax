@@ -61,7 +61,7 @@ protected:
   MaterialProperty<Real> & _dThermDiff_dT;      //d(Thermal diffusivity)/dTemperature
 
   //COUPLED VARIABLES
-  VariableValue & _temperature;                 //coupled Temperature field
+  const VariableValue & _temperature;                 //coupled Temperature field
 
 private:
 

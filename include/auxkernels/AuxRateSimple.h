@@ -42,7 +42,7 @@ protected:
 private:
   const unsigned int _mesh_dimension;
 
-  VariableValue & _coupled_energy; //free energy change of transformation
+  const VariableValue & _coupled_energy; //free energy change of transformation
   Real _Kn1;                       //First nucleation rate value
   Real _Kn2;                       //Second nucleation rate value
 

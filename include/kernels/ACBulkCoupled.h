@@ -43,11 +43,7 @@ protected:
   const MaterialProperty<Real> & _a4;
   const MaterialProperty<Real> & _c2;  ///< energy well position in c-space for the 2nd phase, ish
 
-  VariableValue & _coupled_CH_var;  ///< the Cahn-Hilliard variable (concentration, probably)
-
-
-private:
-
+  const VariableValue & _coupled_CH_var;  ///< the Cahn-Hilliard variable (concentration, probably)
 };
 
 #endif //ACBULKCOUPLED_H

@@ -27,17 +27,17 @@ public:
 protected:
   virtual Real computeValue();
 
-  virtual Real computeEnergy(Real & conserved, Real & nonconserved, bool matrix);
-  virtual Real computeDifferential(Real & coupled_conserved,Real & nonconserved);
+  virtual Real computeEnergy(const Real & conserved, const Real & nonconserved, bool matrix);
+  virtual Real computeDifferential(const Real & coupled_conserved, const Real & nonconserved);
 
-  virtual Real computeFchem(Real & conserved, Real & nonconserved);
+  virtual Real computeFchem(const Real & conserved, const Real & nonconserved);
 
-  virtual Real computeDfchemDcons(Real & coupled_conserved, Real & coupled_nonconserved);
+  virtual Real computeDfchemDcons(const Real & coupled_conserved, const Real & coupled_nonconserved);
 
-  virtual Real computeDfchemDnoncons(Real & coupled_conserved, Real & coupled_nonconserved);
+  virtual Real computeDfchemDnoncons(const Real & coupled_conserved, const Real & coupled_nonconserved);
 
-  VariableValue & _coupled_cons;
-  VariableValue & _coupled_noncons;
+  const VariableValue & _coupled_cons;
+  const VariableValue & _coupled_noncons;
 
   Real _precip_conserved;
   Real _precip_nonconserved;
@@ -51,8 +51,6 @@ protected:
 
   // unsigned int _n_variants;
   unsigned int _noncons_var_num;
-
-private:
 };
 
 #endif //AUXCHEM_H

@@ -40,7 +40,7 @@ public:
 protected:
   virtual Real computeValue();
 
-  VariableValue & _coupled_val;                 ///< Coupled variable
+  const VariableValue & _coupled_val;                 ///< Coupled variable
 };
 
 #endif //REPORTERAUX_H

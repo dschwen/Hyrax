@@ -71,9 +71,9 @@ protected:
 
   unsigned int _OP_number;
   unsigned int _n_OP_vars;
-  std::vector<VariableValue *> _OP;
+  std::vector<const VariableValue *> _OP;
 
-  VariableValue & _X;
+  const VariableValue & _X;
 
   Real _H;
   Real _g;

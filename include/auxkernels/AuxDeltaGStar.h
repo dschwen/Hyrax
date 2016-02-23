@@ -39,7 +39,7 @@ protected:
 private:
   const unsigned int _mesh_dimension;
 
-  VariableValue & _coupled_energy; ///< area/volume free energy change of transformation
+  const VariableValue & _coupled_energy; ///< area/volume free energy change of transformation
 
   Real _gamma;
 };
