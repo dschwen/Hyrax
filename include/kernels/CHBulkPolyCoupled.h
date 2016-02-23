@@ -43,7 +43,7 @@ private:
   unsigned int _n_OP_variables;
 
   std::vector<const VariableValue *>  _coupled_OP_variables;  ///< Allen-Cahn equation variable (order parameter, probably)
-  std::vector<VariableGradient *>  _coupled_OP_grads;  ///< gradient of AC variable
+  std::vector<const VariableGradient *>  _coupled_OP_grads;  ///< gradient of AC variable
 
 };
 

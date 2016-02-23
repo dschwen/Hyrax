@@ -28,11 +28,9 @@ protected:
 
 private:
 
-  VariableGradient & _grad_var;
+  const VariableGradient & _grad_var;
   std::string _kappa_name;
   const MaterialProperty<Real> & _kappa;
-
-
 };
 
 #endif //AUXGRADIENTENERGY_H

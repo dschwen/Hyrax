@@ -44,7 +44,7 @@ protected:
   const MaterialProperty<Real> & _c1;  ///< position-ish of 1st energy well in c-space (terminal solid solubility)
 
   const VariableValue & _coupled_OP_var;  ///< Allen-Cahn equation variable (order parameter, probably)
-  VariableGradient & _coupled_OP_grad;  ///< gradient of AC variable
+  const VariableGradient & _coupled_OP_grad;  ///< gradient of AC variable
 };
 
 #endif //CHBULKCOUPLED_H

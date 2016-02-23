@@ -54,7 +54,7 @@ private:
 
   unsigned int _n_OP_variables;
   std::vector<const VariableValue *> _OP;
-  std::vector<VariableGradient *> _grad_OP;
+  std::vector<const VariableGradient *> _grad_OP;
 
   Real _Heaviside;
   std::vector<Real> _dHeaviside;

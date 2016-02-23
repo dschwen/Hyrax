@@ -35,15 +35,13 @@ protected:
   //COUPLED VARIABLES
   const VariableValue & _c;   //coupled concentration
   const VariableValue & _n;   //coupled order parameter
-  VariableGradient & _grad_c;
-  VariableGradient & _grad_n;
+  const VariableGradient & _grad_c;
+  const VariableGradient & _grad_n;
 
   MaterialProperty<Real> & _free_energy_density;  //free energy functional energy density
 
   MaterialProperty<Real> & _alpha_energy_density; //free energy density of only the alpha phase
   MaterialProperty<Real> & _delta_energy_density; //free energy density of only the delta phase
-
-private:
 };
 
 #endif //FREEENERGY_H
