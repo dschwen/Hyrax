@@ -31,8 +31,8 @@ private:
   const VariableValue & _X;
   const VariableValue & _OP;
 
-  VariableGradient & _grad_X;
-  VariableGradient & _grad_OP;
+  const VariableGradient & _grad_X;
+  const VariableGradient & _grad_OP;
   
   const MaterialProperty<Real> & _molar_vol;
 
