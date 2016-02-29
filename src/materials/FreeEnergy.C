@@ -58,8 +58,8 @@ FreeEnergy::computeQpProperties()
   Real fchem = (1 - Heaviside)*_alpha_energy[_qp] + Heaviside*_delta_energy[_qp] + _W[_qp]*g;
 
   //this puts kappas as J/m
-  Real grad_c_term = 0.5*grad_scale_factor*_kappa_c[_qp]*_grad_c[_qp].size_sq();
-  Real grad_n_term = 0.5*grad_scale_factor*_kappa_n[_qp]*_grad_n[_qp].size_sq();
+  Real grad_c_term = 0.5*grad_scale_factor*_kappa_c[_qp]*_grad_c[_qp].norm_sq();
+  Real grad_n_term = 0.5*grad_scale_factor*_kappa_n[_qp]*_grad_n[_qp].norm_sq();
 
   //convert energy to J/nm^3 and J/nm
   grad_c_term *= _length_scale;

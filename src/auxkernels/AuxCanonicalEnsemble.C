@@ -60,8 +60,8 @@ AuxCanonicalEnsemble::computeValue()
   
   Real kappa_scale_factor = _length_scale_factor*_length_scale_factor*_energy_scale_factor;
   
-  Real fgrad = 0.5*_kappa_X[_qp]*kappa_scale_factor*_grad_X[_qp].size_sq()
-    + 0.5*_kappa_OP[_qp]*kappa_scale_factor*_grad_OP[_qp].size_sq();
+  Real fgrad = 0.5*_kappa_X[_qp]*kappa_scale_factor*_grad_X[_qp].norm_sq()
+    + 0.5*_kappa_OP[_qp]*kappa_scale_factor*_grad_OP[_qp].norm_sq();
 
   Real mu_c = ((1 - H)*_dGalpha_dc[_qp] + H*_dGdelta_dc[_qp])/_molar_vol[_qp];
   
