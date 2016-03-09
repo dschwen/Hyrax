@@ -80,7 +80,7 @@ MeshSolutionModify::endStep(Real input_time)
 }
 #endif
     }
-    _problem.computeUserObjects(EXEC_CUSTOM, UserObjectWarehouse::ALL);
+    _problem.computeUserObjects(EXEC_CUSTOM, Moose::AuxGroup::ALL);
 
     // indicate a forced output if at a sync point
     if (_at_sync_point)
