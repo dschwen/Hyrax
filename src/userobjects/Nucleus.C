@@ -21,22 +21,6 @@ Nucleus::Nucleus():
   _location.zero();
 }
 
-Nucleus::Nucleus(const Nucleus &a)
-{
-  *this = a;
-}
-
-Nucleus &
-Nucleus::operator= (const Nucleus &a)
-{
-  _location = a._location;
-  _start_time = a._start_time;
-  _end_time = a._end_time;
-  _orientation = a._orientation;
-
-  return *this;
-}
-
 Point
 Nucleus::getLocation() const
 {
@@ -147,4 +131,22 @@ Nucleus::unpack(const std::vector<Real> & packed_data, std::vector<Nucleus> & un
   //might want to include some error message in here in case unpacking screws up
 }
 
+template<>
+void
+dataStore(std::ostream & stream, Nucleus & n, void * context)
+{
+  dataStore(stream, n._location, context);
+  dataStore(stream, n._start_time, context);
+  dataStore(stream, n._end_time, context);
+  dataStore(stream, n._orientation, context);
+}
 
+template<>
+void
+dataLoad(std::istream & stream, Nucleus & n, void * context)
+{
+  dataLoad(stream, n._location, context);
+  dataLoad(stream, n._start_time, context);
+  dataLoad(stream, n._end_time, context);
+  dataLoad(stream, n._orientation, context);
+}
