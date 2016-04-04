@@ -1,9 +1,0 @@
-[Tests]
-  [./PhaseFractionDT_test]
-    type = 'Exodiff'
-    input = 'PhaseFractionDT_test.i'
-    exodiff = 'PhaseFractionDT_test.e'
-    method = 'OPT OPROF'
-    abs_zero = 1e-9
-  [../]
-[]
